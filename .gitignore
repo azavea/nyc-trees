@@ -52,3 +52,10 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# Vagrant
+.vagrant
+
+# Ansible
+deployment/ansible/roles/*
+!deployment/ansible/roles/.gitkeep

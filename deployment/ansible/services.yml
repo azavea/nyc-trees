@@ -1,0 +1,11 @@
+---
+- hosts: services
+  sudo: True
+
+  roles:
+    - { role: "nyc-trees.common" }
+
+    - { role: "azavea.postgresql" }
+    - { role: "azavea.redis" }
+    - { role: "azavea.kibana" }
+    - { role: "nyc-trees.logstash" }

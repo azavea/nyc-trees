@@ -1,0 +1,17 @@
+app ansible_ssh_host=33.33.33.10
+tiler ansible_ssh_host=33.33.33.20
+services ansible_ssh_host=33.33.33.30
+
+[app-servers]
+app
+
+[tile-servers]
+tiler
+
+[services]
+services
+
+[development:children]
+app-servers
+tile-servers
+services

@@ -1,0 +1,8 @@
+---
+- hosts: app-servers
+  sudo: True
+
+  roles:
+    - { role: "nyc-trees.common" }
+
+    - { role: "azavea.pip" }
