@@ -1,0 +1,6 @@
+---
+redis_port: 6379
+
+postgresql_port: 5432
+
+relp_port: 20514

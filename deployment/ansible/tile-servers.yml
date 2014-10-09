@@ -1,0 +1,9 @@
+---
+- hosts: tile-servers
+  sudo: True
+
+  roles:
+    - { role: "nyc-trees.common" }
+
+    - { role: "azavea.nodejs" }
+    - { role: "azavea.mapnik" }
