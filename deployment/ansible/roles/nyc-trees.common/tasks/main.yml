@@ -1,0 +1,13 @@
+---
+- name: Check if Puppet service definition exists
+  stat: path=/etc/init.d/puppet
+  register: puppet_installed
+  when: "'development' in group_names"
+
+- name: Stop Puppet service
+  service: name=puppet state=stopped
+  when: puppet_installed.stat.exists and 'development' in group_names
+
+- name: Remove Puppet service
+  file: path=/etc/init.d/puppet state=absent
+  when: puppet_installed.stat.exists and 'development' in group_names

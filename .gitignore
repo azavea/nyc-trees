@@ -58,4 +58,4 @@ target/
 
 # Ansible
 deployment/ansible/roles/*
-!deployment/ansible/roles/.gitkeep
+!deployment/ansible/roles/nyc-trees.*

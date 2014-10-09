@@ -37,5 +37,5 @@ $ VAGRANT_PROXYCONF_ENDPOINT="http://192.168.96.10:8123/" vagrant up
 In order to view the Kibana web UI, navigate to the following URL from a browser on the virtual machine host:
 
 ```
-http://localhost:8081/index.html#/dashboard/file/logstash.json` 
+http://localhost:8081/index.html#/dashboard/file/logstash.json
 ```
