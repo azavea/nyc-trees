@@ -6,6 +6,6 @@ azavea.redis,0.1.0
 azavea.nginx,0.1.1
 azavea.mapnik,0.1.0
 azavea.logstash,0.1.0
-azavea.relp,0.1.0
+azavea.relp,0.1.1
 azavea.kibana,0.1.0
 azavea.unzip,0.1.0
