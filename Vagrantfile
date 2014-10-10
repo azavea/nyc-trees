@@ -10,7 +10,10 @@ def install_dependent_roles
     role_path = "deployment/ansible/roles/#{line.split(",").first}"
 
     if !File.directory?(role_path) && !File.symlink?(role_path)
-      system("ansible-galaxy install -f -r deployment/ansible/roles.txt -p #{File.dirname(role_path)}")
+      unless system("ansible-galaxy install -f -r deployment/ansible/roles.txt -p #{File.dirname(role_path)}")
+        $stderr.puts "\nERROR: An attempt to install Ansible role dependencies failed."
+        exit(1)
+      end
 
       break
     end
