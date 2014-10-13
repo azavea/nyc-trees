@@ -60,6 +60,9 @@ target/
 deployment/ansible/roles/*
 !deployment/ansible/roles/nyc-trees.*
 
+# Troposphere
+deployment/troposphere/*.json
+
 # NodeJS / Browserify stuff
 node_modules/
 npm-debug.log

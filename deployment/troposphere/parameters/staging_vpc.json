@@ -1,0 +1,26 @@
+[
+  {
+    "ParameterKey": "NotificationEmailAddress",
+    "ParameterValue": "hcastro@azavea.com"
+  },
+  {
+    "ParameterKey": "KeyName",
+    "ParameterValue": "nyc-trees-test"
+  },
+  {
+    "ParameterKey": "OfficeCIDR",
+    "ParameterValue": "216.158.51.82/32"
+  },
+  {
+    "ParameterKey": "NATInstanceType",
+    "ParameterValue": "t1.micro"
+  },
+  {
+    "ParameterKey": "BastionInstanceType",
+    "ParameterValue": "t2.micro"
+  },
+  {
+    "ParameterKey": "BastionHostAMI",
+    "ParameterValue": "ami-d87dc6b0"
+  }
+]

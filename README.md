@@ -17,6 +17,8 @@ The `app` virtual machine contains an instance of the Django application, `tiler
 - Redis
 - Logstash
 - Kibana
+- Graphite
+- Statsite
 
 Use the following command to bring up a local development environment:
 
@@ -51,4 +53,88 @@ In order to view the Kibana web UI, navigate to the following URL from a browser
 
 ```
 http://localhost:8081/index.html#/dashboard/file/logstash.json
+```
+
+## Deployment
+
+Deployment is driven by the [Amazon Web Services CLI](http://aws.amazon.com/cli/), but expects the following resources to exist in the target AWS account:
+
+- An EC2 key pair
+- Access keys to sign API requests
+- An IAM role for the application and tile servers
+
+In order to get started, install the deployment dependencies:
+
+```bash
+$ pip install -r deployment/troposphere/requirements.txt
+```
+
+Then, generate all of the CloudFormation templates:
+
+```bash
+$ cd deployment/troposphere
+$ make
+```
+
+### Launch the AWS Virtual Private Cloud
+
+From the root of the repository, submit the CloudFormation stack template to AWS:
+
+```
+$ aws cloudformation create-stack --profile nyc-trees-test --stack-name NYCTreesVPC \
+--parameters file://deployment/troposphere/parameters/staging_vpc.json \
+--template-body file://deployment/troposphere/vpc_template.json
+```
+
+### Launch the Data Store Servers
+
+First, update the following parameters for the CloudFormation data store stack in `deployment/troposphere/parameters/staging_data_store.json`:
+
+- `GlobalNotificationsARN`: Created by the VPC stack
+- `sgDatabaseServer`: Created by the VPC stack
+- `sgCacheCluster`: Created by the VPC stack
+- `DataStoreServerSubnets`: Created by the VPC stack (private subnets)
+
+Then, launch the apply the tile server stack template:
+
+```
+$ aws cloudformation create-stack --profile nyc-trees-test --stack-name NYCTreesDataStores \
+--parameters file://deployment/troposphere/parameters/staging_data_store.json \
+--template-body file://deployment/troposphere/data_store_template.json
+```
+
+### Launch the Application Servers
+
+First, update the following parameters for the CloudFormation application stack in `deployment/troposphere/parameters/staging_app.json`:
+
+- `GlobalNotificationsARN`: Created by the VPC stack
+- `AppServerInstanceProfile`: One the prerequisites listed above
+- `elbAppServer` - Created by the VPC stack
+- `sgAppServer` - Created by the VPC stack
+- `AppServerSubnets`: Created by the VPC stack (public subnets)
+
+Then, launch the application server stack template:
+
+```
+$ aws cloudformation create-stack --profile nyc-trees-test --stack-name NYCTreesAppServers \
+--parameters file://deployment/troposphere/parameters/staging_app.json \
+--template-body file://deployment/troposphere/app_template.json
+```
+
+### Launch the Tile Servers
+
+First, update the following parameters for the CloudFormation tiler stack in `deployment/troposphere/parameters/staging_tiler.json`:
+
+- `GlobalNotificationsARN`: Created by the VPC stack
+- `TileServerInstanceProfile`: One the prerequisites listed above
+- `elbTileServer` - Created by the VPC stack
+- `sgTileServer` - Created by the VPC stack
+- `TileServerSubnets`: Created by the VPC stack (public subnets)
+
+Then, launch the apply the tile server stack template:
+
+```
+$ aws cloudformation create-stack --profile nyc-trees-test --stack-name NYCTreesTileServers \
+--parameters file://deployment/troposphere/parameters/staging_tiler.json \
+--template-body file://deployment/troposphere/tiler_template.json
 ```
