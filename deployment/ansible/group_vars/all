@@ -4,3 +4,11 @@ redis_port: 6379
 postgresql_port: 5432
 
 relp_port: 20514
+
+graphite_port: 2003
+
+statsite_port: 8125
+
+apache_port: 8080
+
+graphite_web_port: 8080

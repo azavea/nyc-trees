@@ -13,3 +13,4 @@
     - { role: "azavea.redis" }
     - { role: "azavea.kibana" }
     - { role: "nyc-trees.logstash" }
+    - { role: "nyc-trees.graphite" }

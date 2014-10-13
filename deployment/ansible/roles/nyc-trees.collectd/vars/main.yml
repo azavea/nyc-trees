@@ -1,0 +1,11 @@
+collectd_load_plugins:
+  - syslog
+  - cpu
+  - df
+  - disk
+  - interface
+  - load
+  - memory
+  - processes
+  - write_graphite
+collectd_hostname: "{{ ansible_hostname }}"

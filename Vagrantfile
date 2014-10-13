@@ -44,18 +44,32 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.proxy.no_proxy = "localhost,127.0.0.1"
   end
 
-  config.vm.define "app" do |app|
-    app.vm.network "private_network", ip: "33.33.33.10"
-    app.vm.network "forwarded_port", guest: 80, host: 8080
+  config.vm.define "services" do |services|
+    config.vm.hostname = "services"
+    services.vm.network "private_network", ip: "33.33.33.30"
 
-    app.vm.provision "ansible" do |ansible|
-      ansible.playbook = "deployment/ansible/app-servers.yml"
+    # Kibana
+    services.vm.network "forwarded_port", guest: 80, host: 8081
+    # Graphite Web
+    services.vm.network "forwarded_port", guest: 8080, host: 8082
+    # PortgreSQL
+    services.vm.network "forwarded_port", guest: 5432, host: 5432
+    # Redis
+    services.vm.network "forwarded_port", guest: 6379, host: 6379
+
+    services.vm.provider "virtualbox" do |v|
+      v.memory = 1024
+    end
+
+    services.vm.provision "ansible" do |ansible|
+      ansible.playbook = "deployment/ansible/services.yml"
       ansible.inventory_path = ANSIBLE_INVENTORY_PATH
       ansible.raw_arguments = ["--timeout=60"]
     end
   end
 
   config.vm.define "tiler" do |tiler|
+    config.vm.hostname = "tiler"
     tiler.vm.network "private_network", ip: "33.33.33.20"
 
     tiler.vm.provision "ansible" do |ansible|
@@ -65,18 +79,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
   end
 
-  config.vm.define "services" do |db|
-    db.vm.network "private_network", ip: "33.33.33.30"
-    db.vm.network "forwarded_port", guest: 80, host: 8081
-    db.vm.network "forwarded_port", guest: 5432, host: 5432
-    db.vm.network "forwarded_port", guest: 6379, host: 6379
+  config.vm.define "app" do |app|
+    config.vm.hostname = "app"
+    app.vm.network "private_network", ip: "33.33.33.10"
 
-    db.vm.provider "virtualbox" do |v|
-      v.memory = 1024
-    end
+    # Django application
+    app.vm.network "forwarded_port", guest: 80, host: 8080
 
-    db.vm.provision "ansible" do |ansible|
-      ansible.playbook = "deployment/ansible/services.yml"
+    app.vm.provision "ansible" do |ansible|
+      ansible.playbook = "deployment/ansible/app-servers.yml"
       ansible.inventory_path = ANSIBLE_INVENTORY_PATH
       ansible.raw_arguments = ["--timeout=60"]
     end

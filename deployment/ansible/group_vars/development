@@ -8,3 +8,7 @@ postgresql_host: "33.33.33.30"
 relp_host: "33.33.33.30"
 
 kibana_port: 8081
+
+graphite_host: "33.33.33.30"
+
+statsite_host: "33.33.33.30"
