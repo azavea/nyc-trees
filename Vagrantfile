@@ -51,6 +51,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     app.vm.provision "ansible" do |ansible|
       ansible.playbook = "deployment/ansible/app-servers.yml"
       ansible.inventory_path = ANSIBLE_INVENTORY_PATH
+      ansible.raw_arguments = ["--timeout=60"]
     end
   end
 
@@ -60,6 +61,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     tiler.vm.provision "ansible" do |ansible|
       ansible.playbook = "deployment/ansible/tile-servers.yml"
       ansible.inventory_path = ANSIBLE_INVENTORY_PATH
+      ansible.raw_arguments = ["--timeout=60"]
     end
   end
 
@@ -76,6 +78,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     db.vm.provision "ansible" do |ansible|
       ansible.playbook = "deployment/ansible/services.yml"
       ansible.inventory_path = ANSIBLE_INVENTORY_PATH
+      ansible.raw_arguments = ["--timeout=60"]
     end
   end
 end
