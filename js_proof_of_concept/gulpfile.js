@@ -10,14 +10,26 @@ var gulp = require('gulp'),
     sourcemaps = require('gulp-sourcemaps'),
     minimist = require('minimist'),
     watchify = require('watchify'),
-    gutil = require('gulp-util');
+    gutil = require('gulp-util'),
+    revall = require('gulp-rev-all');
 
 var args = minimist(process.argv.slice(2),
                     {default: {debug: false}}),
 
     entries = ['home.js', 'user.js'],
     entryFiles = entries.map(function(file) { return './js/' + file; }),
-    bundleDir = 'bundle/';
+    intermediaryDir = './assets/',
+    bundleDir = intermediaryDir + 'js/',
+    versionedDir = 'static/';
+
+gulp.task('version', ['browserify'], function() {
+    return gulp.src(intermediaryDir + '**')
+         // Don't version source map files
+        .pipe(revall({ ignore: [ /\.js\.map$/ ]}))
+        .pipe(gulp.dest(versionedDir))
+        .pipe(revall.manifest())
+        .pipe(gulp.dest(versionedDir));
+});
 
 gulp.task('browserify', function() {
     return browserifyTask(browserify({
@@ -78,5 +90,5 @@ function browserifyTask(bundler) {
     return merge.apply(this, bundles);
 }
 
-gulp.task('default', ['browserify']);
+gulp.task('default', ['version']);
 gulp.task('watch', ['watchify']);
