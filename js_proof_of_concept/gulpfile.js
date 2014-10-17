@@ -27,9 +27,10 @@ var args = minimist(process.argv.slice(2),
     intermediaryDir = './assets/',
     bundleDir = intermediaryDir + 'js/',
     versionedDir = 'static/',
-    cssDir = intermediaryDir + 'css/';
+    cssDir = intermediaryDir + 'css/',
+    buildTasks = ['browserify', 'sass', 'vendor-css'];
 
-gulp.task('version', ['browserify', 'sass', 'vendor-css'], function() {
+gulp.task('version', buildTasks, function() {
     return gulp.src(intermediaryDir + '**')
          // Don't version source map files
         .pipe(revall({ ignore: [ /\.(js|css)\.map$/ ]}))
@@ -118,6 +119,8 @@ gulp.task('vendor-css', function() {
 });
 
 gulp.task('default', ['version']);
+gulp.task('build', buildTasks);
+
 gulp.task('watch', ['watchify'], function() {
     // Note: JS rebuilding is handled by watchify, in order to utilize it's
     // caching behaviour

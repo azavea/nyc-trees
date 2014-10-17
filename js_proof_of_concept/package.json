@@ -28,7 +28,7 @@
   },
   "scripts": {
     "build": "gulp",
-    "build-debug": "gulp --debug",
+    "build-debug": "gulp build --debug",
     "watch": "gulp watch --debug"
   },
   "repository": {
