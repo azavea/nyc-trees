@@ -8,7 +8,9 @@ var gulp = require('gulp'),
     buffer = require('vinyl-buffer'),
     uglify = require('gulp-uglify'),
     sourcemaps = require('gulp-sourcemaps'),
-    minimist = require('minimist');
+    minimist = require('minimist'),
+    watchify = require('watchify'),
+    gutil = require('gulp-util');
 
 var args = minimist(process.argv.slice(2),
                     {default: {debug: false}}),
@@ -18,19 +20,42 @@ var args = minimist(process.argv.slice(2),
     bundleDir = 'bundle/';
 
 gulp.task('browserify', function() {
+    return browserifyTask(browserify({
+        entries: entryFiles,
+        debug: true
+    }));
+});
+
+gulp.task('watchify', function() {
+    var bundler = watchify(browserify({
+        entries: entryFiles,
+        debug: true,
+        // Watchify requires these
+        cache: {},
+        packageCache: {},
+        fullPaths: true
+    }));
+
+    bundler.on('update', function() {
+        gutil.log("Rebundling JS");
+        return browserifyTask(bundler);
+    });
+
+    return browserifyTask(bundler);
+});
+
+function browserifyTask(bundler) {
     // We need to use a through-stream for entry bundles so we can minify them
     var bundleStreams = entries.map(function() { return through(); });
 
-    var commonBundle = browserify({
-        entries: entryFiles,
-        debug: true
-    })
-    .plugin(factor, {
-        entries: entryFiles,
-        o: bundleStreams
-    })
-    .bundle()
-    .pipe(source('common.js'));
+    var commonBundle = bundler
+        .plugin(factor, {
+            entries: entryFiles,
+            o: bundleStreams
+        })
+        .bundle()
+        .on('error', gutil.log.bind(gutil, 'Browserify Error'))
+        .pipe(source('common.js'));
 
     var entryBundles = bundleStreams.map(function(stream, i) {
         return bundleStreams[i].pipe(source(entries[i]));
@@ -51,6 +76,7 @@ gulp.task('browserify', function() {
     });
 
     return merge.apply(this, bundles);
-});
+}
 
 gulp.task('default', ['browserify']);
+gulp.task('watch', ['watchify']);
