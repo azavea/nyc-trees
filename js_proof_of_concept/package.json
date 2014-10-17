@@ -17,7 +17,9 @@
     "minimist": "~1.1.0",
     "watchify": "~2.0.0",
     "gulp-util": "~3.0.1",
-    "gulp-rev-all": "~0.6.6"
+    "gulp-rev-all": "~0.6.6",
+    "gulp-sass": "~1.2.0",
+    "orchestrator": "~0.3.7"
   },
   "scripts": {
     "build": "gulp",

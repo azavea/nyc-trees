@@ -11,7 +11,8 @@ var gulp = require('gulp'),
     minimist = require('minimist'),
     watchify = require('watchify'),
     gutil = require('gulp-util'),
-    revall = require('gulp-rev-all');
+    revall = require('gulp-rev-all'),
+    sass = require('gulp-sass');
 
 var args = minimist(process.argv.slice(2),
                     {default: {debug: false}}),
@@ -20,12 +21,13 @@ var args = minimist(process.argv.slice(2),
     entryFiles = entries.map(function(file) { return './js/' + file; }),
     intermediaryDir = './assets/',
     bundleDir = intermediaryDir + 'js/',
-    versionedDir = 'static/';
+    versionedDir = 'static/',
+    cssDir = intermediaryDir + 'css/';
 
-gulp.task('version', ['browserify'], function() {
+gulp.task('version', ['browserify', 'sass'], function() {
     return gulp.src(intermediaryDir + '**')
          // Don't version source map files
-        .pipe(revall({ ignore: [ /\.js\.map$/ ]}))
+        .pipe(revall({ ignore: [ /\.(js|css)\.map$/ ]}))
         .pipe(gulp.dest(versionedDir))
         .pipe(revall.manifest())
         .pipe(gulp.dest(versionedDir));
@@ -90,5 +92,17 @@ function browserifyTask(bundler) {
     return merge.apply(this, bundles);
 }
 
+gulp.task('sass', function() {
+    return gulp.src('sass/main.scss')
+        .pipe(sourcemaps.init())
+        .pipe(sass({outputStyle: 'compressed'}))
+        .pipe(sourcemaps.write('./'))
+        .pipe(gulp.dest(cssDir));
+});
+
 gulp.task('default', ['version']);
-gulp.task('watch', ['watchify']);
+gulp.task('watch', ['watchify'], function() {
+    // Note: JS rebuilding is handled by watchify, in order to utilize it's
+    // caching behaviour
+    return gulp.watch('sass/**/*.scss', ['sass']);
+});
