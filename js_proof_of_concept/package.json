@@ -13,10 +13,12 @@
     "gulp-sourcemaps": "~1.2.4",
     "gulp-uglify": "~1.0.1",
     "through2": "~0.6.3",
-    "merge-stream": "~0.1.6"
+    "merge-stream": "~0.1.6",
+    "minimist": "~1.1.0"
   },
   "scripts": {
-    "build": "gulp"
+    "build": "gulp",
+    "build-debug": "gulp --debug"
   },
   "repository": {
     "type": "git",

@@ -7,9 +7,13 @@ var gulp = require('gulp'),
     merge = require('merge-stream'),
     buffer = require('vinyl-buffer'),
     uglify = require('gulp-uglify'),
-    sourcemaps = require('gulp-sourcemaps');
+    sourcemaps = require('gulp-sourcemaps'),
+    minimist = require('minimist');
 
-var entries = ['home.js', 'user.js'],
+var args = minimist(process.argv.slice(2),
+                    {default: {debug: false}}),
+
+    entries = ['home.js', 'user.js'],
     entryFiles = entries.map(function(file) { return './js/' + file; }),
     bundleDir = 'bundle/';
 
@@ -35,6 +39,9 @@ gulp.task('browserify', function() {
     var bundles = entryBundles.concat(commonBundle);
 
     bundles = bundles.map(function(bundle) {
+        if (args.debug) {
+            return bundle.pipe(gulp.dest(bundleDir));
+        }
         return bundle
             .pipe(buffer())
             .pipe(sourcemaps.init({loadMaps: true}))
