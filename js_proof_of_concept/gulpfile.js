@@ -12,7 +12,11 @@ var gulp = require('gulp'),
     watchify = require('watchify'),
     gutil = require('gulp-util'),
     revall = require('gulp-rev-all'),
-    sass = require('gulp-sass');
+    sass = require('gulp-sass'),
+    concat = require('gulp-concat'),
+    postcss = require('gulp-postcss'),
+    csswring = require('csswring'),
+    gulpif = require('gulp-if');
 
 var args = minimist(process.argv.slice(2),
                     {default: {debug: false}}),
@@ -24,7 +28,7 @@ var args = minimist(process.argv.slice(2),
     versionedDir = 'static/',
     cssDir = intermediaryDir + 'css/';
 
-gulp.task('version', ['browserify', 'sass'], function() {
+gulp.task('version', ['browserify', 'sass', 'vendor-css'], function() {
     return gulp.src(intermediaryDir + '**')
          // Don't version source map files
         .pipe(revall({ ignore: [ /\.(js|css)\.map$/ ]}))
@@ -96,6 +100,15 @@ gulp.task('sass', function() {
     return gulp.src('sass/main.scss')
         .pipe(sourcemaps.init())
         .pipe(sass({outputStyle: 'compressed'}))
+        .pipe(sourcemaps.write('./'))
+        .pipe(gulp.dest(cssDir));
+});
+
+gulp.task('vendor-css', function() {
+    return gulp.src('css/**/*.css')
+        .pipe(sourcemaps.init())
+        .pipe(concat('vendor.css'))
+        .pipe(gulpif(! args.debug, postcss([csswring])))
         .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest(cssDir));
 });
