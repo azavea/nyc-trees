@@ -3,13 +3,17 @@
   "version": "0.0.0",
   "description": "New York City Tree Census 2015",
   "main": "gulpfile.js",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "factor-bundle": "~2.2.4",
     "vinyl-source-stream": "~1.0.0",
     "gulp": "~3.8.8",
-    "browserify": "~6.1.0"
+    "browserify": "~6.1.0",
+    "vinyl-buffer": "~1.0.0",
+    "gulp-sourcemaps": "~1.2.4",
+    "gulp-uglify": "~1.0.1",
+    "through2": "~0.6.3",
+    "merge-stream": "~0.1.6"
   },
   "scripts": {
     "build": "gulp"
