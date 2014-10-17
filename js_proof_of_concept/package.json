@@ -1,0 +1,26 @@
+{
+  "name": "nyc-trees",
+  "version": "0.0.0",
+  "description": "New York City Tree Census 2015",
+  "main": "gulpfile.js",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "factor-bundle": "~2.2.4",
+    "vinyl-source-stream": "~1.0.0",
+    "gulp": "~3.8.8",
+    "browserify": "~6.1.0"
+  },
+  "scripts": {
+    "build": "gulp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/azavea/nyc-trees.git"
+  },
+  "author": "",
+  "license": "Apache-2",
+  "bugs": {
+    "url": "https://github.com/azavea/nyc-trees/issues"
+  }
+}
