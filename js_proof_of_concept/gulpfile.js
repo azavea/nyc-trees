@@ -16,7 +16,8 @@ var gulp = require('gulp'),
     concat = require('gulp-concat'),
     postcss = require('gulp-postcss'),
     csswring = require('csswring'),
-    gulpif = require('gulp-if');
+    gulpif = require('gulp-if'),
+    livereload = require('gulp-livereload');
 
 var args = minimist(process.argv.slice(2),
                     {default: {debug: false}}),
@@ -83,7 +84,9 @@ function browserifyTask(bundler) {
 
     bundles = bundles.map(function(bundle) {
         if (args.debug) {
-            return bundle.pipe(gulp.dest(bundleDir));
+            return bundle
+                .pipe(gulp.dest(bundleDir))
+                .pipe(livereload({ auto: false }));
         }
         return bundle
             .pipe(buffer())
@@ -101,7 +104,8 @@ gulp.task('sass', function() {
         .pipe(sourcemaps.init())
         .pipe(sass({outputStyle: 'compressed'}))
         .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest(cssDir));
+        .pipe(gulp.dest(cssDir))
+        .pipe(livereload({ auto: false }));
 });
 
 gulp.task('vendor-css', function() {
@@ -117,5 +121,6 @@ gulp.task('default', ['version']);
 gulp.task('watch', ['watchify'], function() {
     // Note: JS rebuilding is handled by watchify, in order to utilize it's
     // caching behaviour
+    livereload.listen();
     return gulp.watch('sass/**/*.scss', ['sass']);
 });
