@@ -59,3 +59,7 @@ target/
 # Ansible
 deployment/ansible/roles/*
 !deployment/ansible/roles/nyc-trees.*
+
+# NodeJS / Browserify stuff
+node_modules/
+npm-debug.log
