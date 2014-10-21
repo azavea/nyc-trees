@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+{% include 'framing/head.html' %}
+
+<body class="body-navbar-padding">
+{% include 'menus/main_navigation.html' %}
+{% include 'sections/header.html' %}
+
+<div class="page-content">
+{% block content %}
+
+
+<section id="hero" class="palette">    
+<div id="hero-banner">
+
+  <div class="container container-narrow">
+  <div class="row">
+  
+    <h1 class="">Django 1.7 Template</h1>
+    <p class="lead">The goal is to have a standardized baseline Django 1.7 application skeleton to build web applications from.</p>
+
+  </div><!-- /.row -->
+  </div><!-- /.container -->
+  
+</div><!-- /#hero-banner -->
+</section><!-- /#hero -->
+
+
+{% endblock content %}
+</div>
+
+{% include 'framing/foot.html' %}
+
+</body>
+</html>
