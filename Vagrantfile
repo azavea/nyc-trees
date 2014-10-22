@@ -81,6 +81,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "app" do |app|
     config.vm.hostname = "app"
+    app.vm.synced_folder "src/nyc_trees", "/opt/app/"
+
     app.vm.network "private_network", ip: "33.33.33.10"
 
     # Django application
