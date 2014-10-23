@@ -2,6 +2,7 @@ azavea.ntp,0.1.0
 azavea.pip,0.1.0
 azavea.nodejs,0.1.1
 azavea.postgresql,0.1.1
+azavea.postgis,0.1.1
 azavea.redis,0.1.0
 azavea.nginx,0.1.1
 azavea.mapnik,0.1.0
