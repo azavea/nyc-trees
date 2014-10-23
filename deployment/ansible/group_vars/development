@@ -4,6 +4,8 @@ redis_host: "33.33.33.30"
 
 postgresql_listen_addresses: "*"
 postgresql_host: "33.33.33.30"
+postgresql_hba_mapping:
+  - { type: "host", database: "all", user: "all", address: "33.33.33.1/24", method: "md5" }
 
 relp_host: "33.33.33.30"
 
