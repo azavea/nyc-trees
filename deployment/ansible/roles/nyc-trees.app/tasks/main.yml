@@ -1,0 +1,4 @@
+---
+- name: Install application dependencies for development
+  pip: chdir={{ app_home }}/requirements requirements=development.txt
+  when: "'development' in group_names"
