@@ -45,8 +45,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.define "services" do |services|
-    config.vm.hostname = "services"
+    services.vm.hostname = "services"
     services.vm.network "private_network", ip: "33.33.33.30"
+
+    services.vm.synced_folder ".", "/vagrant", disabled: true
 
     # Kibana
     services.vm.network "forwarded_port", guest: 80, host: 8081
@@ -69,8 +71,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.define "tiler" do |tiler|
-    config.vm.hostname = "tiler"
+    tiler.vm.hostname = "tiler"
     tiler.vm.network "private_network", ip: "33.33.33.20"
+
+    tiler.vm.synced_folder ".", "/vagrant", disabled: true
 
     tiler.vm.provision "ansible" do |ansible|
       ansible.playbook = "deployment/ansible/tile-servers.yml"
@@ -80,10 +84,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.define "app" do |app|
-    config.vm.hostname = "app"
-    app.vm.synced_folder "src/nyc_trees", "/opt/app/"
-
+    app.vm.hostname = "app"
     app.vm.network "private_network", ip: "33.33.33.10"
+
+    app.vm.synced_folder ".", "/vagrant", disabled: true
+    app.vm.synced_folder "src/nyc_trees", "/opt/app/"
 
     # Django application
     app.vm.network "forwarded_port", guest: 80, host: 8080
