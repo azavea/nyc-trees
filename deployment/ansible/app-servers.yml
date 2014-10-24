@@ -9,5 +9,4 @@
   roles:
     - { role: "nyc-trees.common" }
     - { role: "nyc-trees.collectd" }
-
-    - { role: "azavea.pip" }
+    - { role: "nyc-trees.app" }
