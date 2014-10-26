@@ -13,3 +13,4 @@ azavea.kibana,0.1.0
 azavea.unzip,0.1.0
 azavea.graphite,0.2.0
 azavea.statsite,0.1.0
+azavea.daemontools,0.1.0

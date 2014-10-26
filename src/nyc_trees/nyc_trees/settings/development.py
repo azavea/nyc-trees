@@ -1,6 +1,7 @@
 """Development settings and globals."""
 
 
+from os import environ
 from os.path import join, normpath
 
 from base import *
@@ -26,11 +27,11 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'nyc',
-        'USER': 'nyc',
-        'PASSWORD': 'nyc',
-        'HOST': '33.33.33.30',
-        'PORT': '5432',
+        'NAME': environ.get('NYC_TREES_DB_NAME', 'nyc_trees'),
+        'USER': environ.get('NYC_TREES_DB_USER', 'nyc_trees'),
+        'PASSWORD': environ.get('NYC_TREES_DB_PASSWORD', 'nyc_trees'),
+        'HOST': environ.get('NYC_TREES_DB_HOST', 'localhost'),
+        'PORT': environ.get('NYC_TREES_DB_PORT', 5432)
     }
 }
 # END DATABASE CONFIGURATION

@@ -1,4 +1,43 @@
 ---
-- name: Install application dependencies for development
-  pip: chdir={{ app_home }}/requirements requirements=development.txt
+- name: Create service account for application
+  user: name=nyc-trees
+        system=yes
+        createhome=no
+        shell=/bin/false
+        state=present
+
+- name: Add Vagrant user to the nyc-trees group
+  user: name=vagrant
+        append=yes
+        group=nyc-trees
+        state=present
+  when: "'development' in group_names"
+
+- name: Create configuration file directory
+  file: path={{ app_config_home }}
+        owner=root
+        group=nyc-trees
+        mode=0750
+        state=directory
+
+- name: Configure application
+  copy: content={{ item.content }}
+        dest={{ app_config_home }}/{{ item.file }}
+        owner=root
+        group=nyc-trees
+        mode=0750
+  with_items: app_config
+
+- name: Install Geospatial libraries
+  apt: pkg={{ item }} state=present
+  with_items:
+    - binutils=2.24-5ubuntu3
+    - libproj-dev=4.8.0-2ubuntu2
+    - gdal-bin=1.10.1+dfsg-5ubuntu1
+
+- name: Install application dependencies for development and test
+  pip: chdir={{ app_home }}/requirements requirements={{ item }}.txt
+  with_items:
+    - development
+    - test
   when: "'development' in group_names"

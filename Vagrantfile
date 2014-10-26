@@ -50,9 +50,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # Graphite Web
     services.vm.network "forwarded_port", guest: 8080, host: 8082
     # PortgreSQL
-    services.vm.network "forwarded_port", guest: 5432, host: 5432
+    services.vm.network "forwarded_port", guest: 5432, host: 15432
     # Redis
-    services.vm.network "forwarded_port", guest: 6379, host: 6379
+    services.vm.network "forwarded_port", guest: 6379, host: 16379
 
     services.vm.provider "virtualbox" do |v|
       v.memory = 1024
@@ -85,8 +85,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     app.vm.synced_folder ".", "/vagrant", disabled: true
     app.vm.synced_folder "src/nyc_trees", "/opt/app/"
 
-    # Django application
-    app.vm.network "forwarded_port", guest: 80, host: 8080
+    # Django runserver
+    app.vm.network "forwarded_port", guest: 8000, host: 8000
 
     app.vm.provision "ansible" do |ansible|
       ansible.playbook = "deployment/ansible/app-servers.yml"

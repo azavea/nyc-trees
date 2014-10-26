@@ -8,10 +8,9 @@
 
   roles:
     - { role: "nyc-trees.common" }
+    - { role: "nyc-trees.postgresql", when: "'development' in group_names" }
 
-    - { role: "azavea.postgresql" }
-    - { role: "azavea.postgis" }
-    - { role: "azavea.redis" }
+    - { role: "azavea.redis", when: "'development' in group_names" }
     - { role: "azavea.kibana" }
     - { role: "nyc-trees.logstash" }
     - { role: "nyc-trees.graphite" }
