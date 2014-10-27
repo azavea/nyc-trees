@@ -11,3 +11,16 @@
 - name: Remove Puppet service
   file: path=/etc/init.d/puppet state=absent
   when: puppet_installed.stat.exists and 'development' in group_names
+
+- name: Check if Chef service definition exists
+  stat: path=/etc/init.d/chef-client
+  register: chef_installed
+  when: "'development' in group_names"
+
+- name: Stop Chef service
+  service: name=chef-client state=stopped
+  when: chef_installed.stat.exists and 'development' in group_names
+
+- name: Remove Chef service
+  file: path=/etc/init.d/chef-client state=absent
+  when: chef_installed.stat.exists and 'development' in group_names
