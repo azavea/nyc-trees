@@ -3,20 +3,15 @@
 
 Vagrant.require_version ">= 1.5"
 
-# Uses the contents of roles.txt to ensure that ansible-galaxy is run if any
-# dependencies are missing.
+# Wipe azavea.* roles and download them using ansible-galaxy
 def install_dependent_roles
-  File.foreach("deployment/ansible/roles.txt") do |line|
-    role_path = "deployment/ansible/roles/#{line.split(",").first}"
+  ansible_path = File.join("deployment", "ansible")
 
-    if !File.directory?(role_path) && !File.symlink?(role_path)
-      unless system("ansible-galaxy install -f -r deployment/ansible/roles.txt -p #{File.dirname(role_path)}")
-        $stderr.puts "\nERROR: An attempt to install Ansible role dependencies failed."
-        exit(1)
-      end
+  FileUtils.rm_rf(Dir.glob(File.join("deployment", "ansible", "roles", "azavea.*")))
 
-      break
-    end
+  unless system("ansible-galaxy install -f -r #{File.join(ansible_path, "roles.txt")} -p #{File.join(ansible_path, "roles")}")
+    $stderr.puts "\nERROR: An attempt to install Ansible role dependencies failed."
+    exit(1)
   end
 end
 
