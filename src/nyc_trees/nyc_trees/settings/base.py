@@ -186,6 +186,14 @@ THIRD_PARTY_APPS = (
 
 # Apps specific for this project go here.
 LOCAL_APPS = (
+    'apps.core',
+    'apps.achievement',
+    'apps.census_admin',
+    'apps.event',
+    'apps.home',
+    'apps.registration',
+    'apps.survey',
+    'apps.users',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

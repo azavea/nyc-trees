@@ -63,3 +63,5 @@ deployment/ansible/roles/*
 # NodeJS / Browserify stuff
 node_modules/
 npm-debug.log
+
+src/nyc_trees/.idea
