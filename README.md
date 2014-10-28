@@ -1,4 +1,4 @@
-nyc-trees
+nyc-trees [![Build Status](https://secure.travis-ci.org/azavea/nyc-trees.png?branch=develop)](http://travis-ci.org/azavea/nyc-trees)
 =========
 
 NYC Parks Trees Count! 2015 tree census
