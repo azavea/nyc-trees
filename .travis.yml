@@ -17,6 +17,7 @@ env:
     - NYC_TREES_DB_PASSWORD=nyc_trees
     - NYC_TREES_DB_HOST=localhost
     - NYC_TREES_DB_PORT=5432
+    - DJANGO_SETTINGS_MODULE=nyc_trees.settings.test
 
 before_script:
   - psql -U postgres -c "create database nyc_trees;"
