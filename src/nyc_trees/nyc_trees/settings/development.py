@@ -22,21 +22,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # END EMAIL CONFIGURATION
 
 
-# DATABASE CONFIGURATION
-# See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': environ.get('NYC_TREES_DB_NAME', 'nyc_trees'),
-        'USER': environ.get('NYC_TREES_DB_USER', 'nyc_trees'),
-        'PASSWORD': environ.get('NYC_TREES_DB_PASSWORD', 'nyc_trees'),
-        'HOST': environ.get('NYC_TREES_DB_HOST', 'localhost'),
-        'PORT': environ.get('NYC_TREES_DB_PORT', 5432)
-    }
-}
-# END DATABASE CONFIGURATION
-
-
 # CACHE CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#caches
 CACHES = {
