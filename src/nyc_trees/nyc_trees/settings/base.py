@@ -34,12 +34,12 @@ TEMPLATE_DEBUG = DEBUG
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.',
-        'NAME': '',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': environ.get('NYC_TREES_DB_NAME', 'nyc_trees'),
+        'USER': environ.get('NYC_TREES_DB_USER', 'nyc_trees'),
+        'PASSWORD': environ.get('NYC_TREES_DB_PASSWORD', 'nyc_trees'),
+        'HOST': environ.get('NYC_TREES_DB_HOST', 'localhost'),
+        'PORT': environ.get('NYC_TREES_DB_PORT', 5432)
     }
 }
 # END DATABASE CONFIGURATION
