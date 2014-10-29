@@ -1,0 +1,9 @@
+# Auto-detect text files (being explicit when necessary)
+
+*  text=auto
+*.png  binary
+
+# When a text file is committed, convert line endings to LF.
+# When a text file is checked out, do nothing.
+
+*  eol=lf

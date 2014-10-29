@@ -63,6 +63,10 @@ USE_L10N = False
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#use-tz
 USE_TZ = True
+
+# This generates false positives and is being removed
+# (https://code.djangoproject.com/ticket/23469)
+SILENCED_SYSTEM_CHECKS = ['1_6.W001']
 # END GENERAL CONFIGURATION
 
 
@@ -186,6 +190,14 @@ THIRD_PARTY_APPS = (
 
 # Apps specific for this project go here.
 LOCAL_APPS = (
+    'apps.core',
+    'apps.achievement',
+    'apps.census_admin',
+    'apps.event',
+    'apps.home',
+    'apps.registration',
+    'apps.survey',
+    'apps.users',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
