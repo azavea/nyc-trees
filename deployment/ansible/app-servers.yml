@@ -8,5 +8,6 @@
 
   roles:
     - { role: "nyc-trees.common" }
-    - { role: "nyc-trees.collectd" }
+    - { role: "nyc-trees.monitoring", when: not_testing }
+
     - { role: "nyc-trees.app" }

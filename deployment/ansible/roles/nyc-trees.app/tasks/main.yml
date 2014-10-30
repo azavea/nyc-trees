@@ -11,7 +11,7 @@
         append=yes
         group=nyc-trees
         state=present
-  when: "'development' in group_names"
+  when: developing_or_testing
 
 - name: Create configuration file directory
   file: path={{ app_config_home }}
@@ -40,4 +40,4 @@
   with_items:
     - development
     - test
-  when: "'development' in group_names"
+  when: developing_or_testing

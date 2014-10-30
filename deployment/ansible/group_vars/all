@@ -1,4 +1,7 @@
 ---
+not_testing: "'test' not in group_names"
+developing_or_testing: "'development' in group_names or 'test' in group_names"
+
 redis_port: 6379
 
 postgresql_port: 5432

@@ -1,4 +1,3 @@
 ---
 dependencies:
   - { role: "azavea.ntp" }
-  - { role: "azavea.relp" }

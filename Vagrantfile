@@ -20,7 +20,12 @@ if [ "up", "provision" ].include?(ARGV.first)
   install_dependent_roles
 end
 
-ANSIBLE_INVENTORY_PATH = "deployment/ansible/inventory"
+ANSIBLE_INVENTORY_PATH = if !ENV["VAGRANT_ENV"].nil? && ENV["VAGRANT_ENV"] == "TEST"
+  "deployment/ansible/inventory/test"
+else
+  "deployment/ansible/inventory/development"
+end
+
 VAGRANT_PROXYCONF_ENDPOINT = ENV["VAGRANT_PROXYCONF_ENDPOINT"]
 VAGRANTFILE_API_VERSION = "2"
 
