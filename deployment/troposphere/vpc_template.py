@@ -166,6 +166,12 @@ bastion_security_group = utils.create_security_group(
 
 bastion_host = t.add_resource(ec2.Instance(
     'BastionHost',
+    BlockDeviceMappings=[
+        {
+            "DeviceName": "/dev/sda1",
+            "Ebs": {"VolumeSize": "128"}
+        }
+    ],
     InstanceType=Ref(bastion_instance_type_param),
     KeyName=Ref(keyname_param),
     ImageId=Ref(bastion_host_ami_param),
