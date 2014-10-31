@@ -12,8 +12,8 @@ EC2_REGIONS = [
     'us-east-1'
 ]
 EC2_AVAILABILITY_ZONES = [
-    'a',
-    'b'
+    'b',
+    'd'
 ]
 EC2_INSTANCE_TYPES = [
     't1.micro',

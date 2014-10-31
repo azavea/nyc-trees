@@ -3,15 +3,10 @@ not_testing: "'test' not in group_names"
 developing_or_testing: "'development' in group_names or 'test' in group_names"
 
 redis_port: 6379
-
 postgresql_port: 5432
-
+kibana_port: 8081
 relp_port: 20514
-
 graphite_port: 2003
-
 statsite_port: 8125
-
 apache_port: 8080
-
-graphite_web_port: 8080
+graphite_web_port: "{{ apache_port }}"

@@ -67,75 +67,66 @@ Deployment is driven by the [Amazon Web Services CLI](http://aws.amazon.com/cli/
 In order to get started, install the deployment dependencies:
 
 ```bash
-$ pip install -r deployment/troposphere/requirements.txt
+$ pip install -r deployment/requirements.txt
 ```
 
 Then, generate all of the CloudFormation templates:
 
 ```bash
-$ cd deployment/troposphere
+$ cd deployment
 $ make
 ```
 
-### Launch the AWS Virtual Private Cloud
+### Launch the AWS Virtual Private Cloud (VPC)
 
-From the root of the repository, submit the CloudFormation stack template to AWS:
+From within the `deployment` directory, create the VPC CloudFormation stack:
 
 ```
-$ aws cloudformation create-stack --profile nyc-trees-test --stack-name NYCTreesVPC \
---parameters file://deployment/troposphere/parameters/staging_vpc.json \
---template-body file://deployment/troposphere/vpc_template.json
+$ make vpc-stack
 ```
 
 ### Launch the Data Store Servers
 
-First, update the following parameters for the CloudFormation data store stack in `deployment/troposphere/parameters/staging_data_store.json`:
-
-- `GlobalNotificationsARN`: One of the prerequisites listed above
-- `sgDatabaseServer`: Created by the VPC stack
-- `sgCacheCluster`: Created by the VPC stack
-- `DataStoreServerSubnets`: Created by the VPC stack (private subnets)
-
-Then, launch the apply the tile server stack template:
+When the VPC stack is complete, create the data store CloudFormation stack:
 
 ```
-$ aws cloudformation create-stack --profile nyc-trees-test --stack-name NYCTreesDataStores \
---parameters file://deployment/troposphere/parameters/staging_data_store.json \
---template-body file://deployment/troposphere/data_store_template.json
+$ make data-store-stack
 ```
 
-### Launch the Application Servers
+### Create Private DNS stack
 
-First, update the following parameters for the CloudFormation application stack in `deployment/troposphere/parameters/staging_app.json`:
-
-- `GlobalNotificationsARN`: One of the prerequisites listed above
-- `AppServerInstanceProfile`: One of the prerequisites listed above
-- `elbAppServer` - Created by the VPC stack
-- `sgAppServer` - Created by the VPC stack
-- `AppServerSubnets`: Created by the VPC stack (public subnets)
-
-Then, launch the application server stack template:
+After the data store stack is complete, create the private DNS stack:
 
 ```
-$ aws cloudformation create-stack --profile nyc-trees-test --stack-name NYCTreesAppServers \
---parameters file://deployment/troposphere/parameters/staging_app.json \
---template-body file://deployment/troposphere/app_template.json
+$ make private-dns-stack
 ```
 
-### Launch the Tile Servers
+### Create Monitoring Server AMI
 
-First, update the following parameters for the CloudFormation tiler stack in `deployment/troposphere/parameters/staging_tiler.json`:
-
-- `GlobalNotificationsARN`: One of the prerequisites listed above
-- `TileServerInstanceProfile`: One of the prerequisites listed above
-- `elbTileServer` - Created by the VPC stack
-- `sgTileServer` - Created by the VPC stack
-- `TileServerSubnets`: Created by the VPC stack (public subnets)
-
-Then, launch the apply the tile server stack template:
+Now that both the VPC, data store, and private DNS stacks are complete, we can generate the monitoring server AMI. This needs to occur *after* the data store stack is complete because Redis (part of the data store stack) is used as a buffer for inbound messages into Logstash:
 
 ```
-$ aws cloudformation create-stack --profile nyc-trees-test --stack-name NYCTreesTileServers \
---parameters file://deployment/troposphere/parameters/staging_tiler.json \
---template-body file://deployment/troposphere/tiler_template.json
+$ make monitoring-ami
+```
+
+After the monitoring server AMI is created, we need to update the VPC and private DNS stacks so that the bastion host uses the new monitoring server AMI. The bastion host has dual roles (VPC bastion and monitoring server):
+
+```
+$ make update-vpc-stack
+$ make update-private-dns-stack
+```
+
+### Launch the Tile and Application Servers
+
+Now that the VPC, data store, and monitoring stacks are setup, we can begin working on the tile and applications servers. First, we need to create their AMIs:
+
+```
+$ make app-and-tiler-amis
+```
+
+Next, we can create each server stack, which will make use of the most recent AMIs available:
+
+```
+$ make tiler-stack
+$ make app-stack
 ```

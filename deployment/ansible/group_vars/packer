@@ -1,0 +1,13 @@
+---
+ntp_servers:
+  - 0.amazon.pool.ntp.org
+  - 1.amazon.pool.ntp.org
+  - 2.amazon.pool.ntp.org
+  - 3.amazon.pool.ntp.org
+
+redis_host: "cache.service.nyc-trees.internal"
+postgresql_host: "database.service.nyc-trees.internal"
+relp_host: "monitoring.service.nyc-trees.internal"
+graphite_host: "monitoring.service.nyc-trees.internal"
+statsite_host: "monitoring.service.nyc-trees.internal"
+tile_server_endpoint: "tile.service.nyc-trees.internal"

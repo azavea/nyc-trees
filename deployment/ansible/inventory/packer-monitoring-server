@@ -1,0 +1,8 @@
+[nyc-trees-monitoring]
+localhost ansible_ssh_user=ubuntu
+
+[monitoring-servers]
+nyc-trees-monitoring
+
+[packer:children]
+monitoring-servers

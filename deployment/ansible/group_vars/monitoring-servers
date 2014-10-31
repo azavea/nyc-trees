@@ -1,0 +1,3 @@
+---
+relp_host: "127.0.0.1"
+graphite_host: "127.0.0.1"

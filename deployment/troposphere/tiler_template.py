@@ -1,5 +1,4 @@
 from troposphere import Template, Parameter, Ref
-from os.path import basename
 
 import template_utils as utils
 import troposphere.autoscaling as asg
@@ -43,7 +42,7 @@ tile_server_instance_type_param = t.add_parameter(Parameter(
 ))
 
 tile_server_load_balancer = t.add_parameter(Parameter(
-    'elbTileServer', Type='String',
+    'elbTileServer', Type='String', Default='elbTileServer',
     Description='Name of an AWS::ElasticLoadBalancing::LoadBalancer'
 ))
 
@@ -98,7 +97,7 @@ tile_server_auto_scaling_group = t.add_resource(asg.AutoScalingGroup(
 if __name__ == '__main__':
     utils.validate_cloudformation_template(t.to_json())
 
-    file_name = basename(__file__).replace('.py', '.json')
+    file_name = __file__.replace('.py', '.json')
 
     with open(file_name, 'w') as f:
         f.write(t.to_json())

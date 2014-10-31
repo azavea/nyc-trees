@@ -11,7 +11,11 @@ tiler
 [services]
 services
 
+[monitoring-servers]
+services
+
 [development:children]
 app-servers
 tile-servers
 services
+monitoring-servers

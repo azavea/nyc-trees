@@ -1,0 +1,8 @@
+[nyc-trees-app]
+localhost ansible_ssh_user=ubuntu
+
+[app-servers]
+nyc-trees-app
+
+[packer:children]
+app-servers
