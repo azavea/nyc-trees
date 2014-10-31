@@ -88,8 +88,8 @@ database_server_instance = t.add_resource(rds.DBInstance(
     MasterUsername=Ref(database_server_master_username_param),
     MasterUserPassword=Ref(database_server_master_password_param),
     MultiAZ=True,
-    PreferredBackupWindow='01:00-01:30',
-    PreferredMaintenanceWindow='mon:01:00-mon:01:30',  # 9PM ET
+    PreferredBackupWindow='01:00-01:30',  # 9:00-9:30PM ET
+    PreferredMaintenanceWindow='mon:01:30-mon:02:30',  # 9:30PM-10:30PM ET
     VPCSecurityGroups=[Ref(database_server_security_group)],
     Tags=Tags(Name='DatabaseServer')
 ))
@@ -120,7 +120,7 @@ cache_cluster = t.add_resource(ec.CacheCluster(
     EngineVersion='2.8.6',
     NotificationTopicArn=Ref(notification_arn_param),
     NumCacheNodes=1,
-    PreferredMaintenanceWindow='mon:01:00-mon:01:30',  # 9PM ET
+    PreferredMaintenanceWindow='mon:01:30-mon:02:30',  # 9:30PM-10:30PM ET
     VpcSecurityGroupIds=[Ref(cache_cluster_security_group)]
 ))
 
