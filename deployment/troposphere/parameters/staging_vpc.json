@@ -1,9 +1,5 @@
 [
   {
-    "ParameterKey": "NotificationEmailAddress",
-    "ParameterValue": "hcastro@azavea.com"
-  },
-  {
     "ParameterKey": "KeyName",
     "ParameterValue": "nyc-trees-test"
   },

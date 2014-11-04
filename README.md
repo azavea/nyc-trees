@@ -62,6 +62,7 @@ Deployment is driven by the [Amazon Web Services CLI](http://aws.amazon.com/cli/
 - An EC2 key pair
 - Access keys to sign API requests
 - An IAM role for the application and tile servers
+- An SNS topic for global notifications
 
 In order to get started, install the deployment dependencies:
 
@@ -90,7 +91,7 @@ $ aws cloudformation create-stack --profile nyc-trees-test --stack-name NYCTrees
 
 First, update the following parameters for the CloudFormation data store stack in `deployment/troposphere/parameters/staging_data_store.json`:
 
-- `GlobalNotificationsARN`: Created by the VPC stack
+- `GlobalNotificationsARN`: One of the prerequisites listed above
 - `sgDatabaseServer`: Created by the VPC stack
 - `sgCacheCluster`: Created by the VPC stack
 - `DataStoreServerSubnets`: Created by the VPC stack (private subnets)
@@ -107,8 +108,8 @@ $ aws cloudformation create-stack --profile nyc-trees-test --stack-name NYCTrees
 
 First, update the following parameters for the CloudFormation application stack in `deployment/troposphere/parameters/staging_app.json`:
 
-- `GlobalNotificationsARN`: Created by the VPC stack
-- `AppServerInstanceProfile`: One the prerequisites listed above
+- `GlobalNotificationsARN`: One of the prerequisites listed above
+- `AppServerInstanceProfile`: One of the prerequisites listed above
 - `elbAppServer` - Created by the VPC stack
 - `sgAppServer` - Created by the VPC stack
 - `AppServerSubnets`: Created by the VPC stack (public subnets)
@@ -125,8 +126,8 @@ $ aws cloudformation create-stack --profile nyc-trees-test --stack-name NYCTrees
 
 First, update the following parameters for the CloudFormation tiler stack in `deployment/troposphere/parameters/staging_tiler.json`:
 
-- `GlobalNotificationsARN`: Created by the VPC stack
-- `TileServerInstanceProfile`: One the prerequisites listed above
+- `GlobalNotificationsARN`: One of the prerequisites listed above
+- `TileServerInstanceProfile`: One of the prerequisites listed above
 - `elbTileServer` - Created by the VPC stack
 - `sgTileServer` - Created by the VPC stack
 - `TileServerSubnets`: Created by the VPC stack (public subnets)

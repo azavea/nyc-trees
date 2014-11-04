@@ -3,7 +3,6 @@ from troposphere import Template, Parameter, Ref, FindInMap, Output, GetAtt, \
 from os.path import basename
 
 import template_utils as utils
-import troposphere.sns as sns
 import troposphere.elasticloadbalancing as elb
 
 t = Template()
@@ -14,11 +13,6 @@ t.add_description('A VPC stack for the nyc-trees project.')
 #
 # Parameters
 #
-notificaiton_email = t.add_parameter(Parameter(
-    'NotificationEmailAddress', Type='String', Default='hcastro@azavea.com',
-    Description='Email address for global notifications'
-))
-
 keyname_param = t.add_parameter(Parameter(
     'KeyName', Type='String', Default='nyc-trees-test',
     Description='Name of an existing EC2 key pair'
@@ -92,15 +86,6 @@ nat_security_group = utils.create_security_group(
         for p in [80, 443]
     ]
 )
-
-notification_topic = t.add_resource(sns.Topic(
-    'topicGlobalNotifications',
-    Subscription=[sns.Subscription(
-        Endpoint=Ref(notificaiton_email),
-        Protocol='email'
-    )],
-    TopicName='topicGlobalNotifications'
-))
 
 public_subnets = []
 private_subnets = []
@@ -403,12 +388,6 @@ t.add_output([
         'BastionIPAddress',
         Description='IP address of the BastionHost',
         Value=GetAtt(bastion_host.title, 'PublicIp')
-    ),
-    Output(
-        'GlobalNotificationsARN',
-        Description='Physical resource ID of an AWS::SNS::Topic for '
-                    'notifications',
-        Value=Ref(notification_topic)
     ),
     Output(
         'AppServerSubnets',
