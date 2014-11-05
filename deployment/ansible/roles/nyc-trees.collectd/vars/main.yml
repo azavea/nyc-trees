@@ -8,4 +8,3 @@ collectd_load_plugins:
   - memory
   - processes
   - write_graphite
-collectd_hostname: "{{ ansible_hostname }}"
