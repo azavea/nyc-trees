@@ -2,6 +2,7 @@
 # vi: set ft=ruby :
 
 Vagrant.require_version ">= 1.5"
+require "yaml"
 
 # Deserialize Ansible Galaxy installation metadata for a role
 def galaxy_install_info(role_name)
@@ -11,7 +12,7 @@ def galaxy_install_info(role_name)
   if File.directory?(role_path) && File.exists?(galaxy_install_info)
     YAML.load_file(galaxy_install_info)
   else
-    { install_date: "", version: "0.0.0" }.to_yaml
+    { install_date: "", version: "0.0.0" }
   end
 end
 

@@ -1,4 +1,4 @@
-azavea.apache,0.2.1
+azavea.apache2,0.2.1
 azavea.ntp,0.1.0
 azavea.pip,0.1.0
 azavea.nodejs,0.2.0
