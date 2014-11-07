@@ -12,6 +12,7 @@ DJANGO_ROOT = dirname(dirname(abspath(__file__)))
 # Absolute filesystem path to the top-level nyc_trees/ folder:
 SITE_ROOT = dirname(DJANGO_ROOT)
 
+
 # Site name:
 SITE_NAME = basename(DJANGO_ROOT)
 
@@ -51,9 +52,6 @@ TIME_ZONE = 'America/New_York'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#language-code
 LANGUAGE_CODE = 'en-us'
-
-# See: https://docs.djangoproject.com/en/dev/ref/settings/#site-id
-SITE_ID = 1
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#use-i18n
 USE_I18N = False
@@ -172,7 +170,6 @@ DJANGO_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
