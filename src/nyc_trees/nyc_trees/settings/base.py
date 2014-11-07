@@ -185,8 +185,16 @@ DJANGO_APPS = (
 )
 
 THIRD_PARTY_APPS = (
-    # Database migration helpers:
+    'registration',
 )
+
+# THIRD-PARTY CONFIGURATION
+
+# django-registration-redux
+ACCOUNT_ACTIVATION_DAYS = 7
+REGISTRATION_AUTO_LOGIN = True
+
+# END THIRD-PARTY CONFIGURATION
 
 # Apps specific for this project go here.
 LOCAL_APPS = (
@@ -195,7 +203,7 @@ LOCAL_APPS = (
     'apps.census_admin',
     'apps.event',
     'apps.home',
-    'apps.registration',
+    'apps.login',
     'apps.survey',
     'apps.users',
 )
