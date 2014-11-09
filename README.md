@@ -30,7 +30,7 @@ After provisioning is complete, you can bring up the Django `runserver` from wit
 
 ```bash
 $ vagrant ssh app
-vagrant@app:~$ envdir /etc/nyc-trees.d/env /opt/app/manage.py runserver
+vagrant@app:~$ envdir /etc/nyc-trees.d/env /opt/app/manage.py runserver 0.0.0.0:8000
 ```
 
 **Note**: If you get an error that resembles the following, try logging into the `app` virtual machine again for the group permissions changes to take effect:
