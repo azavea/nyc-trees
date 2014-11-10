@@ -1,6 +1,6 @@
 <Plugin apache>
 	<Instance "graphite-web">
-		URL "http://127.0.0.1/server-status?auto"
+		URL "http://127.0.0.1:{{ apache_port }}/server-status?auto"
 		VerifyPeer false
 		VerifyHost false
 	</Instance>

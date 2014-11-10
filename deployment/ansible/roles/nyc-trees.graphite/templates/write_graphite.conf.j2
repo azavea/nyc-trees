@@ -1,7 +1,7 @@
 <Plugin write_graphite>
 	<Carbon>
-		Host "localhost"
-		Port "2003"
+		Host "{{ graphite_host }}"
+		Port "{{ graphite_port }}"
 		Prefix "collectd."
 		Protocol "tcp"
 	</Carbon>

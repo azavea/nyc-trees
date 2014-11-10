@@ -73,14 +73,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     services.vm.synced_folder ".", "/vagrant", disabled: true
 
-    # Kibana
-    services.vm.network "forwarded_port", guest: 80, host: 8081
     # Graphite Web
-    services.vm.network "forwarded_port", guest: 8080, host: 8082
+    services.vm.network "forwarded_port", guest: 8080, host: ENV.fetch("NYC_TREES_PORT_8080", 8080)
+    # Kibana
+    services.vm.network "forwarded_port", guest: 8081, host: ENV.fetch("NYC_TREES_PORT_8081", 8081)
     # PortgreSQL
-    services.vm.network "forwarded_port", guest: 5432, host: 15432
+    services.vm.network "forwarded_port", guest: 5432, host: ENV.fetch("NYC_TREES_PORT_5432", 15432)
     # Redis
-    services.vm.network "forwarded_port", guest: 6379, host: 16379
+    services.vm.network "forwarded_port", guest: 6379, host: ENV.fetch("NYC_TREES_PORT_6379", 16379)
 
     services.vm.provider "virtualbox" do |v|
       v.memory = 1024
@@ -114,7 +114,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     app.vm.synced_folder "src/nyc_trees", "/opt/app/"
 
     # Django runserver
-    app.vm.network "forwarded_port", guest: 8000, host: 8000
+    app.vm.network "forwarded_port", guest: 8000, host: ENV.fetch("NYC_TREES_PORT_8000", 8000)
 
     app.vm.provision "ansible" do |ansible|
       ansible.playbook = "deployment/ansible/app-servers.yml"

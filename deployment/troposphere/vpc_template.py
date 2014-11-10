@@ -1,6 +1,5 @@
 from troposphere import Template, Parameter, Ref, FindInMap, Output, GetAtt, \
     Join, Tags, ec2
-from os.path import basename
 
 import template_utils as utils
 import troposphere.elasticloadbalancing as elb
@@ -150,7 +149,15 @@ bastion_security_group = utils.create_security_group(
     ingress=[
         ec2.SecurityGroupRule(IpProtocol='tcp', CidrIp=Ref(office_cidr_param),
                               FromPort=p, ToPort=p)
-        for p in [22, 8081, 8082]
+        for p in [22, 8080, 8081]
+    ] + [
+        ec2.SecurityGroupRule(IpProtocol='tcp', CidrIp=utils.VPC_CIDR,
+                              FromPort=p, ToPort=p)
+        for p in [2003, 8125, 20514]
+    ] + [
+        ec2.SecurityGroupRule(IpProtocol='udp', CidrIp=utils.VPC_CIDR,
+                              FromPort=p, ToPort=p)
+        for p in [8125]
     ],
     egress=[
         ec2.SecurityGroupRule(
@@ -248,12 +255,17 @@ app_server_security_group = utils.create_security_group(
         ec2.SecurityGroupRule(
             IpProtocol='tcp', CidrIp=utils.VPC_CIDR, FromPort=p, ToPort=p
         )
-        for p in [80, 2003, 5432, 6379, 8125]
+        for p in [80, 2003, 5432, 6379, 8125, 20514]
     ] + [
         ec2.SecurityGroupRule(
             IpProtocol='udp', CidrIp=utils.VPC_CIDR, FromPort=p, ToPort=p
         )
         for p in [8125]
+    ] + [
+        ec2.SecurityGroupRule(
+            IpProtocol='tcp', CidrIp=utils.ALLOW_ALL_CIDR, FromPort=p, ToPort=p
+        )
+        for p in [80, 443]
     ]
 )
 
@@ -278,12 +290,17 @@ tile_server_security_group = utils.create_security_group(
         ec2.SecurityGroupRule(
             IpProtocol='tcp', CidrIp=utils.VPC_CIDR, FromPort=p, ToPort=p
         )
-        for p in [80, 2003, 5432, 6379, 8125]
+        for p in [80, 2003, 5432, 6379, 8125, 20514]
     ] + [
         ec2.SecurityGroupRule(
             IpProtocol='udp', CidrIp=utils.VPC_CIDR, FromPort=p, ToPort=p
         )
         for p in [8125]
+    ] + [
+        ec2.SecurityGroupRule(
+            IpProtocol='tcp', CidrIp=utils.ALLOW_ALL_CIDR, FromPort=p, ToPort=p
+        )
+        for p in [80, 443]
     ]
 )
 
@@ -391,9 +408,24 @@ tile_server_load_balancer = t.add_resource(elb.LoadBalancer(
 #
 t.add_output([
     Output(
-        'BastionIPAddress',
-        Description='IP address of the BastionHost',
+        'VpcId',
+        Description='VPC ID',
+        Value=Ref(vpc)
+    ),
+    Output(
+        'BastionPublicIPAddress',
+        Description='Public IP address of the BastionHost',
         Value=GetAtt(bastion_host.title, 'PublicIp')
+    ),
+    Output(
+        'BastionPrivateIPAddress',
+        Description='Private IP address of the BastionHost',
+        Value=GetAtt(bastion_host.title, 'PrivateIp')
+    ),
+    Output(
+        'BastionSubnet',
+        Description='Subnet associated with the BastionHost',
+        Value=Ref(public_subnets[0])
     ),
     Output(
         'AppServerSubnets',
@@ -448,7 +480,7 @@ t.add_output([
     ),
     Output(
         'TileServerLoadBalancerEndpoint',
-        Description='Tile servers endpoint',
+        Description='Tile server endpoint',
         Value=GetAtt(tile_server_load_balancer, 'DNSName')
     )
 ])
@@ -456,7 +488,7 @@ t.add_output([
 if __name__ == '__main__':
     utils.validate_cloudformation_template(t.to_json())
 
-    file_name = basename(__file__).replace('.py', '.json')
+    file_name = __file__.replace('.py', '.json')
 
     with open(file_name, 'w') as f:
         f.write(t.to_json())
