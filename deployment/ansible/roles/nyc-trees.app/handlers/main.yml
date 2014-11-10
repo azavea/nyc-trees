@@ -1,0 +1,3 @@
+---
+- name: Restart nyc-trees-app
+  service: name=nyc-trees-app state=restarted

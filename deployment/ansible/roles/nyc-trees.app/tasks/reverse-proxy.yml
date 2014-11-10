@@ -1,0 +1,18 @@
+---
+- name: Configure service definition
+  template: src=upstart-nyc-trees-app.conf.j2 dest=/etc/init/nyc-trees-app.conf
+  notify:
+    - Restart nyc-trees-app
+
+- name: Configure Nginx site
+  template: src=nginx-nyc-trees-app.conf.j2
+            dest=/etc/nginx/sites-available/nyc-trees-app.conf
+  notify:
+    - Restart Nginx
+
+- name: Enable Nginx site
+  file: src=/etc/nginx/sites-available/nyc-trees-app.conf
+        dest=/etc/nginx/sites-enabled/nyc-trees-app
+        state=link
+  notify:
+    - Restart Nginx

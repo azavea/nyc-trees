@@ -1,0 +1,31 @@
+server {
+  listen *:80;
+  server_name _;
+
+  root {{ app_home }}/static;
+
+  log_format logstash_json '{ "@timestamp": "$time_iso8601", '
+                          '"@fields": { '
+                          '"remote_addr": "$remote_addr", '
+                          '"remote_user": "$remote_user", '
+                          '"body_bytes_sent": "$body_bytes_sent", '
+                          '"request_time": "$request_time", '
+                          '"status": "$status", '
+                          '"request": "$request", '
+                          '"request_method": "$request_method", '
+                          '"http_referrer": "$http_referer", '
+                          '"http_user_agent": "$http_user_agent" } }';
+
+  access_log /var/log/nginx/nyc-trees-app.access.log logstash_json;
+
+  location / {
+    try_files $uri @gunicorn_proxy;
+  }
+
+  location @gunicorn_proxy {
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+    proxy_redirect off;
+    proxy_pass http://127.0.0.1:8000;
+  }
+}

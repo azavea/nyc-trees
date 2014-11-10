@@ -1,0 +1,16 @@
+description	"nyc-trees-app"
+
+start on ({{ "vagrant-mounted" if developing_or_testing else "local-filesystems and net-device-up IFACE!=lo" }})
+stop on shutdown
+
+respawn
+setuid nyc-trees
+chdir {{ app_home }}
+
+exec envdir /etc/nyc-trees.d/env gunicorn \
+	-b 127.0.0.1:8000 \
+	--workers {{ 2 * ansible_processor_count }} \
+	--log-file "{{ app_log }}" \
+	--timeout 300 \
+	{{ "--reload" if developing_or_testing else "--preload" }} \
+	nyc_trees.wsgi

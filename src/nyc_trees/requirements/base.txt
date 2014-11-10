@@ -3,3 +3,4 @@ ipython==2.3.0
 psycopg2==2.5.4
 Pillow==2.6.1
 django-registration-redux==1.1
+gunicorn==19.1.1
