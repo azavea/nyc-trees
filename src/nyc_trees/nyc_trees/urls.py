@@ -16,11 +16,10 @@ urlpatterns = patterns(
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^accounts/', include('registration.backends.default.urls')),
-    url(r'^accounts/', include('django.contrib.auth.urls')),
 
     url(r'^', include('apps.home.urls')),
-    url(r'^login/', include('apps.login.urls')),
+    url(r'^login/', include('apps.login.urls.login')),
+    url(r'^accounts/', include('apps.login.urls.accounts')),
     url(r'^blockface/', include('apps.survey.urls.blockface')),
     url(r'^census_admin/', include('apps.census_admin.urls')),
     url(r'^census_admin/', include('apps.survey.urls.census_admin')),
