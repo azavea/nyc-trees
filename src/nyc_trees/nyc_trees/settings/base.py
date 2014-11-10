@@ -164,6 +164,9 @@ ROOT_URLCONF = '%s.urls' % SITE_NAME
 # END URL CONFIGURATION
 
 
+AUTH_USER_MODEL = 'core.User'
+
+
 # APP CONFIGURATION
 DJANGO_APPS = (
     # Default Django apps:
