@@ -1,10 +1,6 @@
 """Development settings and globals."""
 
-
-from os import environ
-from os.path import join, normpath
-
-from base import *
+from base import *  # NOQA
 
 
 # DEBUG CONFIGURATION
@@ -18,7 +14,8 @@ TEMPLATE_DEBUG = DEBUG
 
 # EMAIL CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = '/opt/django-emails'
 # END EMAIL CONFIGURATION
 
 
@@ -33,22 +30,23 @@ CACHES = {
 
 
 # TOOLBAR CONFIGURATION
-# See: https://github.com/django-debug-toolbar/django-debug-toolbar#installation
+# See https://github.com/django-debug-toolbar/django-debug-toolbar#installation
 INSTALLED_APPS += (
     'debug_toolbar',
 )
 
-# See: https://github.com/django-debug-toolbar/django-debug-toolbar#installation
-INTERNAL_IPS = ('127.0.0.1',)
+# See https://github.com/django-debug-toolbar/django-debug-toolbar#installation
+INTERNAL_IPS = ('10.0.2.2')
 
-# See: https://github.com/django-debug-toolbar/django-debug-toolbar#installation
+# See https://github.com/django-debug-toolbar/django-debug-toolbar#installation
 MIDDLEWARE_CLASSES += (
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
-# See: https://github.com/django-debug-toolbar/django-debug-toolbar#installation
+# See https://github.com/django-debug-toolbar/django-debug-toolbar#installation
 DEBUG_TOOLBAR_CONFIG = {
     'INTERCEPT_REDIRECTS': False,
     'SHOW_TEMPLATE_CONTEXT': True,
 }
+
 # END TOOLBAR CONFIGURATION

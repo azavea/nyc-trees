@@ -18,7 +18,8 @@ urlpatterns = patterns(
     url(r'^admin/', include(admin.site.urls)),
 
     url(r'^', include('apps.home.urls')),
-    url(r'^', include('apps.registration.urls')),
+    url(r'^login/', include('apps.login.urls.login')),
+    url(r'^accounts/', include('apps.login.urls.accounts')),
     url(r'^blockface/', include('apps.survey.urls.blockface')),
     url(r'^census_admin/', include('apps.census_admin.urls')),
     url(r'^census_admin/', include('apps.survey.urls.census_admin')),

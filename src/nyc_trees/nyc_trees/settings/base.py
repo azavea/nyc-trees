@@ -12,6 +12,7 @@ DJANGO_ROOT = dirname(dirname(abspath(__file__)))
 # Absolute filesystem path to the top-level nyc_trees/ folder:
 SITE_ROOT = dirname(DJANGO_ROOT)
 
+
 # Site name:
 SITE_NAME = basename(DJANGO_ROOT)
 
@@ -52,9 +53,6 @@ TIME_ZONE = 'America/New_York'
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#language-code
 LANGUAGE_CODE = 'en-us'
 
-# See: https://docs.djangoproject.com/en/dev/ref/settings/#site-id
-SITE_ID = 1
-
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#use-i18n
 USE_I18N = False
 
@@ -81,7 +79,7 @@ MEDIA_URL = '/media/'
 
 # STATIC FILE CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-root
-STATIC_ROOT = normpath(join(SITE_ROOT, 'assets'))
+STATIC_ROOT = normpath(join(SITE_ROOT, 'collected_static'))
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-url
 STATIC_URL = '/static/'
@@ -166,13 +164,15 @@ ROOT_URLCONF = '%s.urls' % SITE_NAME
 # END URL CONFIGURATION
 
 
+AUTH_USER_MODEL = 'core.User'
+
+
 # APP CONFIGURATION
 DJANGO_APPS = (
     # Default Django apps:
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
@@ -185,8 +185,16 @@ DJANGO_APPS = (
 )
 
 THIRD_PARTY_APPS = (
-    # Database migration helpers:
+    'registration',
 )
+
+# THIRD-PARTY CONFIGURATION
+
+# django-registration-redux
+ACCOUNT_ACTIVATION_DAYS = 7
+REGISTRATION_AUTO_LOGIN = True
+
+# END THIRD-PARTY CONFIGURATION
 
 # Apps specific for this project go here.
 LOCAL_APPS = (
@@ -195,7 +203,7 @@ LOCAL_APPS = (
     'apps.census_admin',
     'apps.event',
     'apps.home',
-    'apps.registration',
+    'apps.login',
     'apps.survey',
     'apps.users',
 )
