@@ -1,4 +1,4 @@
-{% load i18n %}{% trans "Account activation on" %} {{ site.name }}
+{% load i18n %}{% trans "Account activation on" %} NYC TreesCount!
 
 
 {% comment %}
