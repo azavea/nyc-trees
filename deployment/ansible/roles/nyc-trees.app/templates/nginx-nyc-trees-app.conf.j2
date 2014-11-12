@@ -2,7 +2,7 @@ server {
   listen *:80;
   server_name _;
 
-  root {{ app_home }}/static;
+  root {{ app_home }}/collected_static;
 
   log_format logstash_json '{ "@timestamp": "$time_iso8601", '
                           '"@fields": { '
