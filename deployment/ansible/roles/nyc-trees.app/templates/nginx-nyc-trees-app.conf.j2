@@ -2,7 +2,7 @@ server {
   listen *:80;
   server_name _;
 
-  root {{ app_home }}/collected_static;
+  root {{ app_home }}/static;
 
   log_format logstash_json '{ "@timestamp": "$time_iso8601", '
                           '"@fields": { '
@@ -18,11 +18,11 @@ server {
 
   access_log /var/log/nginx/nyc-trees-app.access.log logstash_json;
 
-  location / {
-    try_files $uri @gunicorn_proxy;
+  location /static/ {
+    alias {{ app_home }}/collected_static/;
   }
 
-  location @gunicorn_proxy {
+  location / {
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header Host $http_host;
     proxy_redirect off;
