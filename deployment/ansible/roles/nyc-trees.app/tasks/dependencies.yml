@@ -1,0 +1,14 @@
+---
+- name: Install Geospatial libraries
+  apt: pkg={{ item }} state=present
+  with_items:
+    - binutils=2.24-5ubuntu3
+    - libproj-dev=4.8.0-2ubuntu2
+    - gdal-bin=1.10.1+dfsg-5ubuntu1
+
+- name: Install application dependencies for development and test
+  pip: chdir={{ app_home }}/requirements requirements={{ item }}.txt
+  with_items:
+    - development
+    - test
+  when: developing_or_testing

@@ -113,8 +113,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     app.vm.synced_folder ".", "/vagrant", disabled: true
     app.vm.synced_folder "src/nyc_trees", "/opt/app/"
 
-    # Django runserver
-    app.vm.network "forwarded_port", guest: 8000, host: ENV.fetch("NYC_TREES_PORT_8000", 8000)
+    # Django via Nginx/Gunicorn
+    app.vm.network "forwarded_port", guest: 80, host: 8000
 
     app.vm.provision "ansible" do |ansible|
       ansible.playbook = "deployment/ansible/app-servers.yml"

@@ -1,0 +1,10 @@
+description	"nyc-trees-app"
+
+start on ({{ "vagrant-mounted" if developing_or_testing else "local-filesystems and net-device-up IFACE!=lo" }})
+stop on shutdown
+
+respawn
+setuid nyc-trees
+chdir {{ app_home }}
+
+exec envdir /etc/nyc-trees.d/env gunicorn --config /etc/nyc-trees.d/gunicorn.py nyc_trees.wsgi

@@ -1,4 +1,6 @@
 ---
+django_settings_module: "nyc_trees.settings.development"
+
 redis_bind_address: "0.0.0.0"
 redis_host: "33.33.33.30"
 

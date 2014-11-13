@@ -26,11 +26,11 @@ Use the following command to bring up a local development environment:
 $ vagrant up
 ```
 
-After provisioning is complete, you can bring up the Django `runserver` from within the `app` virtual machine with the following commands:
+After provisioning is complete, you can login to the application server to execute Django management commands:
 
 ```bash
 $ vagrant ssh app
-vagrant@app:~$ envdir /etc/nyc-trees.d/env /opt/app/manage.py runserver 0.0.0.0:8000
+vagrant@app:~$ envdir /etc/nyc-trees.d/env /opt/app/manage.py test
 ```
 
 **Note**: If you get an error that resembles the following, try logging into the `app` virtual machine again for the group permissions changes to take effect:

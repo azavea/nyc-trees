@@ -1,0 +1,19 @@
+bind = "127.0.0.1:8000"
+
+{% if developing_or_testing -%}
+accesslog = "-"
+errorlog = "-"
+loglevel = 'debug'
+preload_app = False
+reload = True
+timeout = 1800
+workers = 1
+{% else %}
+accesslog = None
+errorlog = "{{ app_log }}"
+loglevel = 'info'
+preload_app = True
+reload = False
+timeout = 60
+workers = 2 * {{ ansible_processor_count }}
+{% endif %}
