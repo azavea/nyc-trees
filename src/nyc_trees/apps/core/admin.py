@@ -5,4 +5,6 @@ from __future__ import division
 
 from django.contrib import admin
 
-# Register your models here.
+import apps.core.models as m
+admin.site.register(m.User)
+admin.site.register(m.Group)

@@ -4,5 +4,9 @@ from __future__ import unicode_literals
 from __future__ import division
 
 from django.contrib import admin
-
-# Register your models here.
+import apps.survey.models as m
+admin.site.register(m.Blockface)
+admin.site.register(m.Territory)
+admin.site.register(m.Survey)
+admin.site.register(m.Tree)
+admin.site.register(m.BlockfaceReservation)
