@@ -9,8 +9,6 @@
   roles:
     - { role: "nyc-trees.common" }
 
-    # Keep nyc-trees.graphite ahead of nyc-trees.logstash because the
-    # apache2 package clobbers whatever exists in /var/www/html
     - { role: "nyc-trees.graphite", when: not_testing }
-    - { role: "azavea.kibana", when: not_testing }
     - { role: "nyc-trees.logstash", when: not_testing }
+    - { role: "azavea.kibana", when: not_testing }

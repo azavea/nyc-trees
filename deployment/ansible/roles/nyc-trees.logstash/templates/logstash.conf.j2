@@ -1,8 +1,8 @@
 input {
   relp {
-  	port => {{ relp_port }}
-  	codec => "json"
-  	tags => [ "syslog" ]
+    port => {{ relp_port }}
+    codec => "json"
+    tags => [ "syslog" ]
   }
   redis {
     key => "logstash"
@@ -12,5 +12,10 @@ input {
 }
 
 output {
-  elasticsearch { embedded => true }
+  elasticsearch {
+    embedded => false
+    host => "localhost"
+    protocol => "http"
+    cluster => "{{ elasticsearch_cluster_name }}"
+  }
 }

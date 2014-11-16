@@ -9,7 +9,7 @@ def galaxy_install_info(role_name)
   role_path = File.join("deployment", "ansible", "roles", role_name)
   galaxy_install_info = File.join(role_path, "meta", ".galaxy_install_info")
 
-  if File.directory?(role_path) && File.exists?(galaxy_install_info)
+  if (File.directory?(role_path) || File.symlink?(role_path)) && File.exists?(galaxy_install_info)
     YAML.load_file(galaxy_install_info)
   else
     { install_date: "", version: "0.0.0" }
@@ -76,7 +76,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # Graphite Web
     services.vm.network "forwarded_port", guest: 8080, host: ENV.fetch("NYC_TREES_PORT_8080", 8080)
     # Kibana
-    services.vm.network "forwarded_port", guest: 8081, host: ENV.fetch("NYC_TREES_PORT_8081", 8081)
+    services.vm.network "forwarded_port", guest: 5601, host: ENV.fetch("NYC_TREES_PORT_5601", 15601)
     # PortgreSQL
     services.vm.network "forwarded_port", guest: 5432, host: ENV.fetch("NYC_TREES_PORT_5432", 15432)
     # Pgweb

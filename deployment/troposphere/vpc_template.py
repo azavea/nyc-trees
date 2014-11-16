@@ -149,7 +149,7 @@ bastion_security_group = utils.create_security_group(
     ingress=[
         ec2.SecurityGroupRule(IpProtocol='tcp', CidrIp=Ref(office_cidr_param),
                               FromPort=p, ToPort=p)
-        for p in [22, 8080, 8081]
+        for p in [22, 5601, 8080]
     ] + [
         ec2.SecurityGroupRule(IpProtocol='tcp', CidrIp=utils.VPC_CIDR,
                               FromPort=p, ToPort=p)

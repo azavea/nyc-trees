@@ -1,4 +1,5 @@
 ---
 dependencies:
   - { role: "azavea.relp" }
+  - { role: "azavea.elasticsearch" }
   - { role: "azavea.logstash" }
