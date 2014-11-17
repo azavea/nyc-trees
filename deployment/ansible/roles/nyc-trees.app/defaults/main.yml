@@ -9,6 +9,18 @@ app_config:
   - { file: "NYC_TREES_DB_PORT", content: "{{ postgresql_port }}" }
   - { file: "DJANGO_SETTINGS_MODULE", content: "{{ django_settings_module }}" }
 
+app_sauce_labs_config:
+  - { file: "SELENIUM_HOST", content: "{{ lookup('env', 'SELENIUM_HOST') }}" }
+  - { file: "SELENIUM_PORT", content: "{{ lookup('env', 'SELENIUM_PORT') }}" }
+  - { file: "SELENIUM_PLATFORM", content: "{{ lookup('env', 'SELENIUM_PLATFORM') }}" }
+  - { file: "SELENIUM_VERSION", content: "{{ lookup('env', 'SELENIUM_VERSION') }}" }
+  - { file: "SAUCE_USER_NAME", content: "{{ lookup('env', 'SAUCE_USER_NAME') }}" }
+  - { file: "SAUCE_API_KEY", content: "{{ lookup('env', 'SAUCE_API_KEY') }}" }
+  - { file: "SAUCE_TUNNEL_ID", content: "{{ lookup('env', 'SAUCE_TUNNEL_ID') }}" }
+  - { file: "BUILD_NUMBER", content: "{{ lookup('env', 'BUILD_NUMBER') }}" }
+  - { file: "JOB_NAME", content: "{{ lookup('env', 'JOB_NAME') }}" }
+  - { file: "DJANGO_LIVE_TEST_SERVER_ADDRESS", content: "{{ lookup('env', 'DJANGO_LIVE_TEST_SERVER_ADDRESS') }}" }
+
 app_log: /var/log/nyc-trees-app.log
 app_log_rotate_count: 5
 app_log_rotate_interval: daily
