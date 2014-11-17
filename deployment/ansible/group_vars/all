@@ -10,3 +10,6 @@ graphite_port: 2003
 statsite_port: 8125
 apache_port: 8080
 graphite_web_port: "{{ apache_port }}"
+
+postgresql_version: "9.3"
+postgresql_package_version: "9.3.5-1.pgdg14.04+1"

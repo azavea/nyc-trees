@@ -6,6 +6,9 @@
     - libproj-dev=4.8.0-2ubuntu2
     - gdal-bin=1.10.1+dfsg-5ubuntu1
 
+- name: Install PostgreSQL client
+  apt: pkg=postgresql-client-{{ postgresql_version }}={{ postgresql_package_version }}
+
 - name: Install application dependencies for development and test
   pip: chdir={{ app_home }}/requirements requirements={{ item }}.txt
   with_items:
