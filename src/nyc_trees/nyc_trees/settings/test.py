@@ -1,3 +1,5 @@
+import os
+
 from base import *  # NOQA
 
 # TEST SETTINGS
@@ -7,5 +9,8 @@ PASSWORD_HASHERS = (
 
 SELENIUM_DEFAULT_BROWSER = 'firefox'
 SELENIUM_TEST_COMMAND_OPTIONS = {'pattern': 'uitest*.py'}
+
+DJANGO_LIVE_TEST_SERVER_ADDRESS = os.environ.get(
+    'DJANGO_LIVE_TEST_SERVER_ADDRESS', 'localhost:9001')
 
 INSTALLED_APPS += ('sbo_selenium',)

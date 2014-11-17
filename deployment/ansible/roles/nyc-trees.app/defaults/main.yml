@@ -19,6 +19,7 @@ app_sauce_labs_config:
   - { file: "SAUCE_TUNNEL_ID", content: "{{ lookup('env', 'SAUCE_TUNNEL_ID') }}" }
   - { file: "BUILD_NUMBER", content: "{{ lookup('env', 'BUILD_NUMBER') }}" }
   - { file: "JOB_NAME", content: "{{ lookup('env', 'JOB_NAME') }}" }
+  - { file: "DJANGO_LIVE_TEST_SERVER_ADDRESS", content: "{{ lookup('env', 'DJANGO_LIVE_TEST_SERVER_ADDRESS') }}" }
 
 app_log: /var/log/nyc-trees-app.log
 app_log_rotate_count: 5
