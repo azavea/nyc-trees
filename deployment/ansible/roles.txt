@@ -16,3 +16,4 @@ azavea.graphite,0.2.0
 azavea.statsite,0.1.0
 azavea.daemontools,0.1.0
 azavea.collectd,0.1.1
+azavea.git,0.1.0

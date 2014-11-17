@@ -116,6 +116,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # Django via Nginx/Gunicorn
     app.vm.network "forwarded_port", guest: 80, host: 8000
 
+    app.ssh.forward_x11 = true
+
     app.vm.provision "ansible" do |ansible|
       ansible.playbook = "deployment/ansible/app-servers.yml"
       ansible.inventory_path = ANSIBLE_INVENTORY_PATH

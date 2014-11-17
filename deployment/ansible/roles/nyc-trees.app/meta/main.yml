@@ -2,6 +2,7 @@
 dependencies:
   - { role: "azavea.python", python_development: True }
   - { role: "azavea.pip" }
+  - { role: "azavea.git", when: developing_or_testing }
   - { role: "azavea.postgresql-support" }
   - { role: "azavea.daemontools" }
   - { role: "azavea.nginx", nginx_delete_default_site: True }
