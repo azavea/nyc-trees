@@ -10,6 +10,7 @@
     - { role: "nyc-trees.common" }
 
     - { role: "nyc-trees.postgresql", when: developing_or_testing }
+    - { role: "nyc-trees.pgweb", when: developing_or_testing }
     - { role: "azavea.redis", when: developing_or_testing }
 
 - hosts: monitoring-servers

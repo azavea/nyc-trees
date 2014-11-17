@@ -79,6 +79,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     services.vm.network "forwarded_port", guest: 8081, host: ENV.fetch("NYC_TREES_PORT_8081", 8081)
     # PortgreSQL
     services.vm.network "forwarded_port", guest: 5432, host: ENV.fetch("NYC_TREES_PORT_5432", 15432)
+    # Pgweb
+    services.vm.network "forwarded_port", guest: 5433, host: ENV.fetch("NYC_TREES_PORT_5433", 15433)
     # Redis
     services.vm.network "forwarded_port", guest: 6379, host: ENV.fetch("NYC_TREES_PORT_6379", 16379)
 
