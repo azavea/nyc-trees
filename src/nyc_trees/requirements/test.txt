@@ -5,3 +5,4 @@ selenium==2.44
 # There is a PR for these changes at:
 # https://github.com/safarijv/sbo-selenium/pull/5
 git+https://github.com/azavea/sbo-selenium.git@67bb63ac3687
+flake8==2.2.5
