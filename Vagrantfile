@@ -115,6 +115,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     # Django via Nginx/Gunicorn
     app.vm.network "forwarded_port", guest: 80, host: 8000
+    # Support accessing the test live server (for Sauce Labs)
+    app.vm.network "forwarded_port", guest: 9001, host: ENV.fetch("NYC_TREES_PORT_9001", 9001)
 
     app.ssh.forward_x11 = true
 
