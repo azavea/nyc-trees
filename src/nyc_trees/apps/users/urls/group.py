@@ -23,8 +23,8 @@ urlpatterns = patterns(
 
     url(r'^(?P<group_name>\w+)/$',
         route(GET=group_detail,
-              PUT=is_group_admin(edit_group),
-        name='group_detail')),
+              PUT=is_group_admin(edit_group)),
+        name='group_detail'),
 
     url(r'^(?P<group_name>\w+)/follow/$',
         is_logged_in(route(POST=follow_group)),
@@ -45,6 +45,6 @@ urlpatterns = patterns(
 
     url(r'^(?P<group_name>\w+)/individual-mapper/(?P<username>\w+)/$',
         is_group_admin(route(PUT=give_user_mapping_priveleges,
-                          DELETE=remove_user_mapping_priveleges)),
+                             DELETE=remove_user_mapping_priveleges)),
         name='edit_user_mapping_priveleges'),
 )

@@ -20,6 +20,6 @@ urlpatterns = patterns(
         # We could maybe let people start, but not complete a quiz
         # when not loggged in
         is_logged_in(route(GET=quiz_page,
-                        POST=complete_quiz)),
+                           POST=complete_quiz)),
         name='quiz'),
     )

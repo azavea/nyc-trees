@@ -15,8 +15,8 @@ class Event(models.Model):
     description = models.TextField(default='', blank=True)
     contact_email = models.EmailField(null=True)
     contact_info = models.TextField(default='', blank=True)
-    begins_at =  models.DateTimeField()
-    ends_at =  models.DateTimeField()
+    begins_at = models.DateTimeField()
+    ends_at = models.DateTimeField()
     location = models.PointField(srid=3857, db_column='the_geom_webmercator')
     max_attendees = models.IntegerField()
     includes_training = models.BooleanField(default=False)
@@ -37,4 +37,3 @@ class EventRegistration(models.Model):
     did_attend = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-

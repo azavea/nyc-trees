@@ -3,7 +3,7 @@
 
 from os import environ
 
-from base import *
+from base import *  # NOQA
 
 # Normally you should not import ANYTHING from Django directly
 # into your settings, but ImproperlyConfigured is an exception.
@@ -19,7 +19,7 @@ def get_env_setting(setting):
         raise ImproperlyConfigured(error_msg)
 
 # HOST CONFIGURATION
-# See: https://docs.djangoproject.com/en/1.5/releases/1.5/#allowed-hosts-required-in-production
+# See: https://docs.djangoproject.com/en/1.5/releases/1.5/#allowed-hosts-required-in-production  # NOQA
 ALLOWED_HOSTS = []
 # END HOST CONFIGURATION
 

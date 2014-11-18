@@ -27,12 +27,12 @@ urlpatterns = patterns(
 
     url(r'^(?P<blockface_id>\d+)/cart/$',
         is_individual_mapper(route(POST=add_blockface_to_cart,
-                              DELETE=remove_blockface_from_cart)),
+                                   DELETE=remove_blockface_from_cart)),
         name='edit_cart_for_blockface'),
 
     url(r'^checkout/$',
         is_individual_mapper(route(GET=blockface_cart_page,
-                              POST=reserve_blockfaces)),
+                                   POST=reserve_blockfaces)),
         name='reserve_blockfaces'),
 
     url(r'^checkout-confirmation/$',
