@@ -6,11 +6,11 @@ from __future__ import division
 from django.conf.urls import patterns, url
 
 from apps.core.decorators import route, is_logged_in
-from apps.users.views import (user_detail, update_user,
-                              request_individual_mapper_status,
-                              start_form_for_reservation_job,
-                              start_map_for_reservation_job,
-                              start_map_for_tool_depots_job)
+from apps.users.views.user import (user_detail, update_user,
+                                   request_individual_mapper_status,
+                                   start_form_for_reservation_job,
+                                   start_map_for_reservation_job,
+                                   start_map_for_tool_depots_job)
 
 
 # These URLs have the prefix 'user/'
