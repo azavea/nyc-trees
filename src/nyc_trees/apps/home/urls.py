@@ -29,5 +29,6 @@ urlpatterns = patterns(
     # url(r'^faq/$', route(GET=faq_page)),
     # url(r'^about/$', route(GET=about_page)),
     # url(r'^training/$', route(GET=training_material_list_page)),
-    # url(r'^training/(?P<training_material_url_name>\w+)/$', route(GET=training_material__detail_page)),
+    # url(r'^training/(?P<training_material_url_name>\w+)/$',
+    #     route(GET=training_material__detail_page)),
 )

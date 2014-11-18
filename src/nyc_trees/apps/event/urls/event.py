@@ -56,7 +56,7 @@ urlpatterns = patterns(
 
     url(r'^(?P<event_url_name>\w+)/checkin/(?P<username>\w+)/$',
         is_group_admin(route(POST=check_in_user_to_event,
-                          DELETE=un_check_in_user_to_event)),
+                             DELETE=un_check_in_user_to_event)),
         name='event_check_in'),
 
     url(r'^(?P<event_url_name>\w+)/email/$',

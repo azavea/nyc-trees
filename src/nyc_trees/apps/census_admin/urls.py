@@ -36,21 +36,21 @@ urlpatterns = patterns(
 
     url(r'^training/$',
         is_census_admin(route(GET=admin_training_material_list,
-                           # POST=add_training_material
-                           )),
+                              # POST=add_training_material
+        )),
         name='admin_training_material_list'),
 
     url(r'^training/(?P<training_material_url_name>\w+)/$',
         is_census_admin(route(GET=admin_training_material,
-                           # PUT=edit_training_material
-                           )),
+                              # PUT=edit_training_material
+        )),
         name='admin_training_material'),
 
     # TODO: Verify that these are provided by the django admin, then delete
     #
-    # url(r'^admin/users/(?P<username>\w+)/individual-mapper-request/$', census_admin(route(POST=confirm_individual_mapper, DELETE=deny_individual_mapper))),
-    # url(r'^admin/users/individual-mapper-requests/$', census_admin(route(GET=individual_mapper_requests_page))),
-    # url(r'^admin/group/(?P<group_name>\w+)/$', census_admin(route(GET=admin_group_detail, PUT=admin_update_group))),  # admin_update_group includes editing blockface reservations and setting admin
-    # url(r'^admin/group/(?P<group_name>\w+)/enable/$', census_admin(route(POST=enable_group))),
-    # url(r'^admin/group/(?P<group_name>\w+)/disable/$', census_admin(route(POST=disable_group))),
+    # url(r'^admin/users/(?P<username>\w+)/individual-mapper-request/$', census_admin(route(POST=confirm_individual_mapper, DELETE=deny_individual_mapper))),  # NOQA
+    # url(r'^admin/users/individual-mapper-requests/$', census_admin(route(GET=individual_mapper_requests_page))),  # NOQA
+    # url(r'^admin/group/(?P<group_name>\w+)/$', census_admin(route(GET=admin_group_detail, PUT=admin_update_group))),  # admin_update_group includes editing blockface reservations and setting admin  # NOQA
+    # url(r'^admin/group/(?P<group_name>\w+)/enable/$', census_admin(route(POST=enable_group))),  # NOQA
+    # url(r'^admin/group/(?P<group_name>\w+)/disable/$', census_admin(route(POST=disable_group))),  # NOQA
 )
