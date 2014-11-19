@@ -55,6 +55,14 @@ In order to view the Kibana web UI, navigate to the following URL from a browser
 http://localhost:8081/index.html#/dashboard/file/logstash.json
 ```
 
+### Statistics Aggregation
+
+In order to view the Graphite Web UI, navigate to the following URL from a browser on the virtual machine host:
+
+```
+http://localhost:8080/
+```
+
 ## Deployment
 
 Deployment is driven by the [Amazon Web Services CLI](http://aws.amazon.com/cli/), but expects the following resources to exist in the target AWS account:

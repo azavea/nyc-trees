@@ -31,6 +31,12 @@ TEMPLATE_DEBUG = DEBUG
 # END DEBUG CONFIGURATION
 
 
+# STATSD CONFIGURATION
+STATSD_CLIENT = 'django_statsd.clients.normal'
+STATSD_HOST = environ.get('NYC_TREES_STATSD_HOST', 'localhost')
+# END STATSD CONFIGURATION
+
+
 # DATABASE CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
@@ -154,6 +160,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_statsd.middleware.GraphiteRequestTimingMiddleware',
+    'django_statsd.middleware.GraphiteMiddleware',
 )
 # END MIDDLEWARE CONFIGURATION
 
@@ -184,6 +192,7 @@ DJANGO_APPS = (
 
 THIRD_PARTY_APPS = (
     'registration',
+    'django_statsd',
 )
 
 # THIRD-PARTY CONFIGURATION
