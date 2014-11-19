@@ -1,5 +1,5 @@
 ---
 dependencies:
   - { role: "azavea.relp" }
-  - { role: "azavea.elasticsearch" }
+  - { role: "nyc-trees.elasticsearch" }
   - { role: "azavea.logstash" }
