@@ -4,10 +4,10 @@ from __future__ import unicode_literals
 from __future__ import division
 
 from django.conf.urls import patterns, url
+from django.contrib.auth.decorators import login_required
 
 from django_tinsel.decorators import route
 
-from apps.core.decorators import is_logged_in
 from apps.users.views.user import (user_detail, update_user,
                                    request_individual_mapper_status,
                                    start_form_for_reservation_job,
@@ -20,11 +20,11 @@ urlpatterns = patterns(
     '',
     url(r'^(?P<username>\w+)/$',
         route(GET=user_detail,
-              PUT=is_logged_in(update_user)),
+              PUT=login_required(update_user)),
         name='user_detail'),
 
     url(r'^(?P<username>\w+)/request-individual-mapper-status/$',
-        is_logged_in(route(POST=request_individual_mapper_status)),
+        login_required(route(POST=request_individual_mapper_status)),
         name='request_individual_mapper_status'),
 
     url(r'^(?P<username>\w+)/printable-survey-form/$',

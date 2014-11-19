@@ -6,14 +6,6 @@ from __future__ import division
 from functools import wraps
 
 
-def is_logged_in(view_fn):
-    # TODO: implement
-    @wraps(view_fn)
-    def wrapper(request, *args, **kwargs):
-        return view_fn(request, *args, **kwargs)
-    return wrapper
-
-
 def is_census_admin(view_fn):
     # TODO: implement
     @wraps(view_fn)

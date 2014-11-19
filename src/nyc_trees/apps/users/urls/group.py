@@ -4,10 +4,11 @@ from __future__ import unicode_literals
 from __future__ import division
 
 from django.conf.urls import patterns, url
+from django.contrib.auth.decorators import login_required
 
 from django_tinsel.decorators import route
 
-from apps.core.decorators import is_logged_in, is_group_admin
+from apps.core.decorators import is_group_admin
 from apps.users.views.group import (group_list_page, group_detail, edit_group,
                                     follow_group, unfollow_group,
                                     start_group_map_print_job,
@@ -29,11 +30,11 @@ urlpatterns = patterns(
         name='group_detail'),
 
     url(r'^(?P<group_name>\w+)/follow/$',
-        is_logged_in(route(POST=follow_group)),
+        login_required(route(POST=follow_group)),
         name='follow_group'),
 
     url(r'^(?P<group_name>\w+)/unfollow/$',
-        is_logged_in(route(POST=unfollow_group)),
+        login_required(route(POST=unfollow_group)),
         name='unfollow_group'),
 
     url(r'^(?P<group_name>\w+)/printable-map/$',
