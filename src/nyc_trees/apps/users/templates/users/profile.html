@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% include "users/partials/profile/privacy_indicator.html" with public=user.profile_is_public %}
+    <h2>{{user.username}}</h2>
+
+    {% if show_username %}
+        <div>{{user.first_name}} {{user.last_name}}</div>
+    {% endif %}
+
+    {% if show_individual_mapper %}
+        <div>Tree Mapper</div>
+    {% endif %}
+
+    {% if viewing_own_profile %}
+        <div style="float:right;">
+            <a
+                {# href="{% url 'user_settings' username=user.username %}" #}
+                >Settings</a>
+        </div>
+        <div>This is your user profile</div>
+    {% endif %}
+
+    {% if show_contributions %}
+        {% with title="Contributions" section_id="contributions" public=user.contributions_are_public %}
+            {% include "users/partials/profile/contributions.html"%}
+        {% endwith %}
+    {% endif %}
+
+    {% if show_groups %}
+        {% with title="Groups" section_id="groups" public=user.group_follows_are_public %}
+            {% include "users/partials/profile/groups.html" %}
+        {% endwith %}
+    {% endif %}
+
+    {% if show_achievements %}
+        {% with title="Achievements" section_id="achievements" public=user.achievements_are_public %}
+            {% include "users/partials/profile/achievements.html" with section_id="achievements" %}
+        {% endwith %}
+    {% endif %}
+
+    {% if viewing_own_profile and not user.profile_is_public%}
+        <div>
+            Want to share your progress and information with the tree mapping community?
+            <a>Make your profile public!</a>
+        </div>
+    {% endif %}
+
+{% endblock %}

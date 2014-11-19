@@ -1,0 +1,12 @@
+{% include "users/partials/profile/privacy_indicator.html" %}
+
+<div>
+   <a href="javascript:;" data-toggle="collapse" data-target="#{{ section_id }}">
+      {{ title }}
+   </a>
+</div>
+
+<div id="{{ section_id }}">
+    {% block section_content %}
+    {% endblock section_content %}
+</div>
