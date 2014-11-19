@@ -6,12 +6,12 @@ from __future__ import division
 from django.conf.urls import patterns, url
 
 from apps.core.decorators import route, is_logged_in, is_group_admin
-from apps.users.views import (group_list_page, group_detail, edit_group,
-                              follow_group, unfollow_group,
-                              start_group_map_print_job,
-                              group_mapping_priveleges_page,
-                              give_user_mapping_priveleges,
-                              remove_user_mapping_priveleges)
+from apps.users.views.group import (group_list_page, group_detail, edit_group,
+                                    follow_group, unfollow_group,
+                                    start_group_map_print_job,
+                                    group_mapping_priveleges_page,
+                                    give_user_mapping_priveleges,
+                                    remove_user_mapping_priveleges)
 
 
 # These URLs have the prefix 'group/'

@@ -13,10 +13,22 @@ class User(AbstractUser):
     individual_mapper = models.BooleanField(default=False)
     requested_individual_mapping_at = models.DateTimeField(null=True,
                                                            blank=True)
+
+    profile_is_public = models.BooleanField(default=False)
+    real_name_is_public = models.BooleanField(default=False)
+    group_follows_are_public = models.BooleanField(default=False)
+    contributions_are_public = models.BooleanField(default=False)
+    achievements_are_public = models.BooleanField(default=False)
+
     is_flagged = models.BooleanField(default=False)
     is_banned = models.BooleanField(default=False)
     is_census_admin = models.BooleanField(default=False)
     is_ambassador = models.BooleanField(default=False)
+    is_minor = models.BooleanField(default=False)
+
+    opt_in_events_info = models.BooleanField(default=False)
+    opt_in_stewardship_info = models.BooleanField(default=False)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
