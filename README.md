@@ -39,6 +39,23 @@ vagrant@app:~$ envdir /etc/nyc-trees.d/env /opt/app/manage.py test
 envdir: fatal: unable to switch to directory /etc/nyc-trees.d/env: access denied
 ```
 
+
+### Ports
+
+The Vagrant configuration maps the following host ports to services
+running in the VMs. You can change the host port numbers by setting
+the environment variables listed in the ``Env Variable Override``
+column.
+
+Service                | Port  | URL                                              | Env Variable Override
+---------------------- | ----- | ------------------------------------------------ | ---------------------
+Django Web Application | 8000  | [http://localhost:8000](http://localhost:8000)   | (no variable)
+Graphite Dashboard     | 8080  | [http://localhost:8080](http://localhost:8080)   | NYC_TREES_PORT_8080
+Kibana Dashboard       | 8081  | [http://localhost:8081](http://localhost:8081)   | NYC_TREES_PORT_8081
+pgweb                  | 15433 | [http://localhost:15433](http://localhost:15433) | NYC_TREES_PORT_5433
+Redis                  | 16379 | (not web browsable)                              | NYC_TREES_PORT_6379
+
+
 ### Caching
 
 In order to speed up things up, you may want to consider using a local caching proxy. The `VAGRANT_PROXYCONF_ENDPOINT` environmental variable provides a way to supply a caching proxy endpoint for the virtual machines to use:
