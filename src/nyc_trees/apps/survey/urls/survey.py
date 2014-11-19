@@ -5,7 +5,9 @@ from __future__ import division
 
 from django.conf.urls import patterns, url
 
-from apps.core.decorators import route, has_training
+from django_tinsel.decorators import route
+
+from apps.core.decorators import has_training
 from apps.survey.views import choose_blockface_survey_page
 
 

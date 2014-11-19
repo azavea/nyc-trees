@@ -5,7 +5,9 @@ from __future__ import division
 
 from django.conf.urls import patterns, url
 
-from apps.core.decorators import is_group_admin, route, has_training
+from django_tinsel.decorators import route
+
+from apps.core.decorators import is_group_admin, has_training
 from apps.event.views import (events_list_page, events_list_page_partial,
                               events_list_feed, delete_event, edit_event,
                               event_popup_partial, register_for_event,

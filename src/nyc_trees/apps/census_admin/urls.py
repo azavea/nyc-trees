@@ -5,7 +5,9 @@ from __future__ import division
 
 from django.conf.urls import patterns, url
 
-from apps.core.decorators import is_census_admin, route
+from django_tinsel.decorators import route
+
+from apps.core.decorators import is_census_admin
 from apps.census_admin.views import (start_admin_users_job,
                                      start_admin_surveys_job, admin_edits_page,
                                      admin_edits_partial,

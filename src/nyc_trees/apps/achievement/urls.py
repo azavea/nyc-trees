@@ -5,7 +5,9 @@ from __future__ import division
 
 from django.conf.urls import patterns, url
 
-from apps.core.decorators import route, is_logged_in
+from django_tinsel.decorators import route
+
+from apps.core.decorators import is_logged_in
 from apps.achievement.views import quiz_list_page, quiz_page, complete_quiz
 
 

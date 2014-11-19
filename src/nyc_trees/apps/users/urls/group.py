@@ -5,7 +5,9 @@ from __future__ import division
 
 from django.conf.urls import patterns, url
 
-from apps.core.decorators import route, is_logged_in, is_group_admin
+from django_tinsel.decorators import route
+
+from apps.core.decorators import is_logged_in, is_group_admin
 from apps.users.views.group import (group_list_page, group_detail, edit_group,
                                     follow_group, unfollow_group,
                                     start_group_map_print_job,
