@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block page_title %} | Recover Your Username{% endblock %}
+
+{% block content %}
+<div class="content login-signup">
+  <div class="well login-signup-panel">
+    <form method="POST">
+      <fieldset>
+        {% csrf_token %}
+        <legend>Retrieve your Username</legend>
+        <p>Forgot the username for your account? Enter your email address and click \"Send\" to receive an email with your username.</p>
+        <h5>Fields marked with an asterisk (*) are required.</h5>
+        {{ form.non_field_errors }}
+        <div class="fieldWrapper">
+          {{ form.email.errors }}
+          <label for="{{ form.email.id_for_label }}">Email Address:</label> *
+          {{ form.email }}
+        </div>
+        <input type="submit" class="btn btn-block btn-primary" value="'Send'" />
+      </fieldset>
+    </form>
+  </div>
+</div>
+{% endblock %}
