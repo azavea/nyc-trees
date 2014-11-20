@@ -3,13 +3,19 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
-from django.http import Http404
+from django.core.urlresolvers import reverse
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 
 from django_tinsel.decorators import render_template
 from django_tinsel.utils import decorate as do
 
 from apps.core.models import User
+
+
+def user_detail_redirect(request):
+    return HttpResponseRedirect(
+        reverse('user_detail', kwargs={'username': request.user.username}))
 
 
 def user_profile_context(request, username):
