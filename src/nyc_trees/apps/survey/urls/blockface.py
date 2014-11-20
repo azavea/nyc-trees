@@ -5,7 +5,9 @@ from __future__ import division
 
 from django.conf.urls import patterns, url
 
-from apps.core.decorators import route, is_individual_mapper, has_training
+from django_tinsel.decorators import route
+
+from apps.core.decorators import is_individual_mapper, has_training
 from apps.survey.views import (reserve_blockface_page, cancel_reservation,
                                add_blockface_to_cart,
                                remove_blockface_from_cart, blockface_cart_page,

@@ -6,7 +6,9 @@ from __future__ import division
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 
-from apps.core.decorators import decorate as do, render_template
+from django_tinsel.decorators import render_template
+from django_tinsel.utils import decorate as do
+
 from apps.core.models import User
 
 

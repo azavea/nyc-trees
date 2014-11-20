@@ -5,7 +5,8 @@ from __future__ import division
 
 from django.conf.urls import patterns, url
 
-from apps.core.decorators import route
+from django_tinsel.decorators import route
+
 from apps.home.views import home_page, progress_page, retrieve_job_status
 
 

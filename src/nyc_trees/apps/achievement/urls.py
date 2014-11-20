@@ -4,8 +4,10 @@ from __future__ import unicode_literals
 from __future__ import division
 
 from django.conf.urls import patterns, url
+from django.contrib.auth.decorators import login_required
 
-from apps.core.decorators import route, is_logged_in
+from django_tinsel.decorators import route
+
 from apps.achievement.views import quiz_list_page, quiz_page, complete_quiz
 
 
@@ -19,7 +21,7 @@ urlpatterns = patterns(
     url(r'^(?P<quiz_id>\d+)/$',
         # We could maybe let people start, but not complete a quiz
         # when not loggged in
-        is_logged_in(route(GET=quiz_page,
-                           POST=complete_quiz)),
+        login_required(route(GET=quiz_page,
+                             POST=complete_quiz)),
         name='quiz'),
     )

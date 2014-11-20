@@ -4,7 +4,9 @@ from __future__ import unicode_literals
 from __future__ import division
 
 from django.conf.urls import patterns, url
-from apps.core.decorators import route
+
+from django_tinsel.decorators import route
+
 from apps.login.views import (
     forgot_username_page, forgot_username, forgot_username_email_sent_page
 )
