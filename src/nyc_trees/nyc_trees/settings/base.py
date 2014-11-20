@@ -248,3 +248,5 @@ LOGGING = {
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#wsgi-application
 WSGI_APPLICATION = '%s.wsgi.application' % SITE_NAME
 # END WSGI CONFIGURATION
+
+LOGIN_REDIRECT_URL = 'user_detail_redirect'

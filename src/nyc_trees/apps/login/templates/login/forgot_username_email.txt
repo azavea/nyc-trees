@@ -1,0 +1,10 @@
+{% with email=user.email username=user.username %}
+Hello,
+
+"{{ username }}" is the username for the account with email {{ email }}.
+If you didn't ask to recover your username, just ignore this email. No additional action is required.
+
+If you want to reset your password, go to {{ password_url }}
+
+- NYC TreesCount!
+{% endwith %}
