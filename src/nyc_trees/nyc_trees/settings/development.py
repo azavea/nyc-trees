@@ -14,8 +14,7 @@ TEMPLATE_DEBUG = DEBUG
 
 # EMAIL CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
-EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-EMAIL_FILE_PATH = '/opt/django-emails'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # END EMAIL CONFIGURATION
 
 
