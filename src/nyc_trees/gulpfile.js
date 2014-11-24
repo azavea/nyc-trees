@@ -18,7 +18,8 @@ var gulp = require('gulp'),
     csswring = require('csswring'),
     gulpif = require('gulp-if'),
     livereload = require('gulp-livereload'),
-    tmp = require('temporary');
+    tmp = require('temporary'),
+    del = require('del');
 
 var args = minimist(process.argv.slice(2),
                     {default: {debug: false}}),
@@ -40,14 +41,14 @@ gulp.task('version', buildTasks, function() {
         .pipe(gulp.dest(versionedDir));
 });
 
-gulp.task('browserify', function() {
+gulp.task('browserify', ['clean'], function() {
     return browserifyTask(browserify({
         entries: entryFiles,
         debug: true
     }));
 });
 
-gulp.task('watchify', function() {
+gulp.task('watchify', ['clean'], function() {
     var bundler = watchify(browserify({
         entries: entryFiles,
         debug: true,
@@ -101,7 +102,7 @@ function browserifyTask(bundler) {
     return merge.apply(this, bundles);
 }
 
-gulp.task('sass', function() {
+gulp.task('sass', ['clean'], function() {
     return gulp.src('sass/main.scss')
         .pipe(sourcemaps.init())
         .pipe(sass({outputStyle: 'compressed'}))
@@ -110,13 +111,17 @@ gulp.task('sass', function() {
         .pipe(livereload({ auto: false }));
 });
 
-gulp.task('vendor-css', function() {
+gulp.task('vendor-css', ['clean'], function() {
     return gulp.src('css/**/*.css')
         .pipe(sourcemaps.init())
         .pipe(concat('vendor.css'))
         .pipe(gulpif(! args.debug, postcss([csswring])))
         .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest(cssDir));
+});
+
+gulp.task('clean', function(cb) {
+    del([versionedDir + '*', '!' + versionedDir + '.gitignore'], cb);
 });
 
 gulp.task('default', ['version']);
