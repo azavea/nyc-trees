@@ -42,6 +42,9 @@ class User(AbstractUser):
                 'Please supply a different email address.']
             })
 
+        self.first_name = self.first_name.strip()
+        self.last_name = self.last_name.strip()
+
     def save(self, *args, **kwargs):
         self.full_clean()
         super(User, self).save(*args, **kwargs)

@@ -4,13 +4,12 @@ from __future__ import unicode_literals
 from __future__ import division
 from django.http import Http404
 
-from django.shortcuts import render_to_response
 from django.test import TestCase
 
 from apps.core.models import User
 from apps.core.test_utils import make_request
 
-from apps.users.views.user import user_profile_context
+from apps.users.views.user import user_detail
 
 
 class ProfileTemplateTests(TestCase):
@@ -31,8 +30,7 @@ class ProfileTemplateTests(TestCase):
     def _render_profile(self, its_me):
         viewer = self.user if its_me else self.other_user
         request = make_request(user=viewer)
-        context = user_profile_context(request, self.user.username)
-        return render_to_response('users/profile.html', context)
+        return user_detail(request, self.user.username)
 
     def _assert_profile_contains(self, text, its_me=True):
         response = self._render_profile(its_me)

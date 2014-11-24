@@ -8,12 +8,13 @@ from django.contrib.auth.decorators import login_required
 
 from django_tinsel.decorators import route
 
-from apps.users.views.user import (user_detail, update_user,
+from apps.users.views.user import (user_detail,
                                    request_individual_mapper_status,
                                    start_form_for_reservation_job,
                                    start_map_for_reservation_job,
                                    start_map_for_tool_depots_job,
-                                   user_detail_redirect)
+                                   user_detail_redirect, profile_settings,
+                                   update_profile_settings)
 
 
 # These URLs have the prefix 'user/'
@@ -22,9 +23,13 @@ urlpatterns = patterns(
     url(r'^profile/$', login_required(route(GET=user_detail_redirect)),
         name='user_detail_redirect'),
 
+    url(r'settings/$',
+        login_required(route(GET=profile_settings,
+                             POST=update_profile_settings)),
+        name='user_profile_settings'),
+
     url(r'^(?P<username>\w+)/$',
-        route(GET=user_detail,
-              PUT=login_required(update_user)),
+        route(GET=user_detail),
         name='user_detail'),
 
     url(r'^(?P<username>\w+)/request-individual-mapper-status/$',
