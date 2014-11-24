@@ -76,7 +76,7 @@ SILENCED_SYSTEM_CHECKS = ['1_6.W001']
 
 # MEDIA CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#media-root
-MEDIA_ROOT = normpath(join(SITE_ROOT, 'media'))
+MEDIA_ROOT = environ['DJANGO_MEDIA_ROOT']
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#media-url
 MEDIA_URL = '/media/'
@@ -85,7 +85,7 @@ MEDIA_URL = '/media/'
 
 # STATIC FILE CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-root
-STATIC_ROOT = normpath(join(SITE_ROOT, 'collected_static'))
+STATIC_ROOT = environ['DJANGO_STATIC_ROOT']
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-url
 STATIC_URL = '/static/'

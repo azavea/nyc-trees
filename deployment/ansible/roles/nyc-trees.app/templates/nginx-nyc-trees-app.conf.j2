@@ -19,7 +19,11 @@ server {
   access_log /var/log/nginx/nyc-trees-app.access.log logstash_json;
 
   location /static/ {
-    alias {{ app_home }}/collected_static/;
+    alias {{ app_static_root }};
+  }
+
+  location /media/ {
+    alias {{ app_media_root }};
   }
 
   location / {

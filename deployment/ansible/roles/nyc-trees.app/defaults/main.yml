@@ -9,6 +9,8 @@ app_config:
   - { file: "NYC_TREES_DB_PORT", content: "{{ postgresql_port }}" }
   - { file: "NYC_TREES_STATSD_HOST", content: "{{ statsite_host }}" }
   - { file: "DJANGO_SETTINGS_MODULE", content: "{{ django_settings_module }}" }
+  - { file: "DJANGO_STATIC_ROOT", content: "{{ app_static_root }}" }
+  - { file: "DJANGO_MEDIA_ROOT", content: "{{ app_media_root }}" }
 
 app_sauce_labs_config:
   - { file: "SELENIUM_HOST", content: "{{ lookup('env', 'SELENIUM_HOST') }}" }
@@ -25,3 +27,6 @@ app_sauce_labs_config:
 app_log: /var/log/nyc-trees-app.log
 app_log_rotate_count: 5
 app_log_rotate_interval: daily
+
+app_static_root: /var/www/nyc-trees/static/
+app_media_root: /var/www/nyc-trees/media/
