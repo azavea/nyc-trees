@@ -17,17 +17,18 @@ var gulp = require('gulp'),
     postcss = require('gulp-postcss'),
     csswring = require('csswring'),
     gulpif = require('gulp-if'),
-    livereload = require('gulp-livereload');
+    livereload = require('gulp-livereload'),
+    tmp = require('temporary');
 
 var args = minimist(process.argv.slice(2),
                     {default: {debug: false}}),
 
-    entries = ['home.js', 'user.js'],
-    entryFiles = entries.map(function(file) { return './js/' + file; }),
-    intermediaryDir = './assets/',
+    entries = ['forgot_username.js'],
+    entryFiles = entries.map(function(file) { return './js/src/' + file; }),
+    intermediaryDir = new tmp.Dir().path + '/',
     bundleDir = intermediaryDir + 'js/',
-    versionedDir = 'static/',
     cssDir = intermediaryDir + 'css/',
+    versionedDir = 'static/',
     buildTasks = ['browserify', 'sass', 'vendor-css'];
 
 gulp.task('version', buildTasks, function() {

@@ -1,8 +1,9 @@
 """Common settings and globals."""
 
 from os import environ
-from os.path import abspath, basename, dirname, join, normpath
+from os.path import abspath, basename, dirname, join, normpath, exists
 from sys import path
+import json
 
 
 # PATH CONFIGURATION
@@ -91,8 +92,9 @@ STATIC_ROOT = environ['DJANGO_STATIC_ROOT']
 STATIC_URL = '/static/'
 
 # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS  # NOQA
+STATICFILES_DIR = normpath(join(SITE_ROOT, 'static'))
 STATICFILES_DIRS = (
-    normpath(join(SITE_ROOT, 'static')),
+    STATICFILES_DIR,
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#staticfiles-finders  # NOQA
@@ -100,6 +102,14 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
+
+# parse manifest created by gulp-rev-all
+_STATIC_FILES_MAP = join(STATICFILES_DIR, 'rev-manifest.json')
+if exists(_STATIC_FILES_MAP):
+    with open(_STATIC_FILES_MAP) as json_file:
+        STATIC_FILES_MAPPING = json.load(json_file)
+else:
+    STATIC_FILES_MAPPING = {}
 # END STATIC FILE CONFIGURATION
 
 

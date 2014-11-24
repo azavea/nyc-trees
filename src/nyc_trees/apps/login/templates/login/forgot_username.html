@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load utils %}
 
 {% block page_title %} | Recover Your Username{% endblock %}
 
 {% block content %}
 <div class="content login-signup">
   <div class="well login-signup-panel">
-    <form method="POST">
+    <form method="POST" id="forgot-username-form">
       <fieldset>
         {% csrf_token %}
         <legend>Retrieve your Username</legend>
@@ -24,3 +25,7 @@
   </div>
 </div>
 {% endblock %}
+
+{% block page_js %}
+<script type="text/javascript" src="{{ "js/forgot_username.js"|static_url }}"></script>
+{% endblock page_js %}

@@ -1,3 +1,4 @@
+{% load utils %}
 <!DOCTYPE html>
 <html>
   <head>
@@ -8,4 +9,7 @@
     {% block content %}
     {% endblock content %}
   </body>
+  <script type="text/javascript" src="{{ "js/common.js"|static_url }}"></script>
+  {% block page_js %}
+  {% endblock page_js %}
 </html>
