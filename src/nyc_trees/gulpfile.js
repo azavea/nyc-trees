@@ -19,7 +19,9 @@ var gulp = require('gulp'),
     gulpif = require('gulp-if'),
     livereload = require('gulp-livereload'),
     tmp = require('temporary'),
-    del = require('del');
+    del = require('del'),
+    exec = require('child_process').exec,
+    runSequence = require('run-sequence');
 
 var args = minimist(process.argv.slice(2),
                     {default: {debug: false}}),
@@ -32,13 +34,31 @@ var args = minimist(process.argv.slice(2),
     versionedDir = 'static/',
     buildTasks = ['browserify', 'sass', 'vendor-css'];
 
-gulp.task('version', buildTasks, function() {
-    return gulp.src(intermediaryDir + '**')
+var collectstatic = function(cb) {
+    exec('envdir /etc/nyc-trees.d/env /opt/app/manage.py collectstatic --noinput --clear', function(err) {
+        gutil.log('Collected static');
+        cb(err);
+    });
+};
+
+gulp.task('version', buildTasks, function(cb) {
+    gulp.src(intermediaryDir + '**')
          // Don't version source map files
         .pipe(revall({ ignore: [ /\.(js|css)\.map$/ ]}))
         .pipe(gulp.dest(versionedDir))
         .pipe(revall.manifest())
-        .pipe(gulp.dest(versionedDir));
+        .pipe(gulp.dest(versionedDir))
+        .on('end', function() {
+            collectstatic(cb);
+        });
+});
+
+gulp.task('copy-assets', function(cb) {
+    gulp.src(intermediaryDir + '**')
+        .pipe(gulp.dest(versionedDir))
+        .on('end', function() {
+            collectstatic(cb);
+        });
 });
 
 gulp.task('browserify', ['clean'], function() {
@@ -48,7 +68,7 @@ gulp.task('browserify', ['clean'], function() {
     }));
 });
 
-gulp.task('watchify', ['clean'], function() {
+gulp.task('watchify', function() {
     var bundler = watchify(browserify({
         entries: entryFiles,
         debug: true,
@@ -125,11 +145,15 @@ gulp.task('clean', function(cb) {
 });
 
 gulp.task('default', ['version']);
-gulp.task('build', buildTasks);
+gulp.task('build', function(cb) {
+    runSequence(buildTasks, 'copy-assets', cb);
+});
 
 gulp.task('watch', ['watchify'], function() {
     // Note: JS rebuilding is handled by watchify, in order to utilize it's
     // caching behaviour
     livereload.listen();
-    return gulp.watch('sass/**/*.scss', ['sass']);
+    gulp.watch('sass/**/*.scss', ['sass']);
+    // Rerun collectstatic whenever files are added to the static files dir
+    gulp.watch(intermediaryDir + '**', ['copy-assets']);
 });
