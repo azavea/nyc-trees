@@ -1,0 +1,26 @@
+<div>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas scelerisque porta diam vel
+    consectetur. Sed aliquam odio risus, rhoncus suscipit est vulputate eget.
+</div>
+
+<table>
+    <tbody>
+    {% for category in privacy_categories %}
+        <tr>
+            <td>
+                {# TODO: use locked/unlocked icons instead of text#}
+                {% if category.is_public %}(public){% else %}(private){% endif %}
+                {{ category.form_field.as_hidden }}
+            </td>
+            <td>{{ category.title }}</td>
+            <td>
+                <a href="javascript:;">
+                    {% if category.is_public %}Lock{% else %}Unlock{% endif %}
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+

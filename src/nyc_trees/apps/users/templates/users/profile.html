@@ -14,9 +14,7 @@
 
     {% if viewing_own_profile %}
         <div style="float:right;">
-            <a
-                {# href="{% url 'user_settings' username=user.username %}" #}
-                >Settings</a>
+            <a class="btn" href="{% url 'user_profile_settings' %}">Settings</a>
         </div>
         <div>This is your user profile</div>
     {% endif %}

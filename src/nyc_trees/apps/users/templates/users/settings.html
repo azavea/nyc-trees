@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <ul class="nav nav-tabs">
+        <li class="active">
+            <a href="#account-pane" data-toggle="tab">Account</a>
+        </li>
+        <li>
+            <a href="#emails-pane" data-toggle="tab">Emails</a>
+        </li>
+        <li>
+            <a href="#privacy-pane" data-toggle="tab">Privacy</a>
+        </li>
+    </ul>
+
+    <form method="POST">
+        <fieldset>
+            {% csrf_token %}
+
+            <div class="tab-pane active" id="account-pane">
+                <div class="fieldWrapper">
+                    {{ form.first_name.label_tag }}
+                    {{ form.first_name }}
+                </div>
+                <div class="fieldWrapper">
+                    {{ form.last_name.label_tag }}
+                    {{ form.last_name }}
+                </div>
+            </div>
+
+            <div class="tab-pane" id="emails-pane">
+                <h3>Events</h3>
+                <div>I am okay with receiving emails or notifications for events that I have registered for.</div>
+                <div class="fieldWrapper">
+                    {{ form.opt_in_events_info }}
+                    {{ form.opt_in_events_info.label_tag }}
+                </div>
+                <h3>NYC Parks</h3>
+                <div>I am interested in receiving additional information on stewardship opportunities available through NYC Parks.</div>
+                <div class="fieldWrapper">
+                    {{ form.opt_in_stewardship_info }}
+                    {{ form.opt_in_stewardship_info.label_tag }}
+                </div>
+            </div>
+
+            <div class="tab-pane" id="privacy-pane">
+                {% include 'users/partials/privacy_controls.html' %}
+            </div>
+
+            <div style="float:right;">
+                <input type="submit" class="btn" value="Save" />
+            </div>
+            <a class="btn" href="{% url 'user_detail' username=username %}">Cancel</a>
+
+        </fieldset>
+    </form>
+
+{% endblock %}
