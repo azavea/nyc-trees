@@ -16,10 +16,6 @@
     - test
   when: developing_or_testing
 
-- name: Install application javascript dependencies for development and test
-  npm: path={{ app_home }}
-  when: developing_or_testing
-
 - name: Install Firefox and Xvfb for headless UI tests
   apt: pkg={{ item }} state=present
   with_items:

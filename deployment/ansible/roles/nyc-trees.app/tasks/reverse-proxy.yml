@@ -21,17 +21,3 @@
         state=link
   notify:
     - Restart Nginx
-
-- name: Create collected static folder
-  file: path={{ app_static_root }}
-        state=directory
-        owner=root
-        group=nyc-trees
-        mode=0775
-
-- name: Create media folder
-  file: path={{ app_media_root }}
-        state=directory
-        owner=root
-        group=nyc-trees
-        mode=0775

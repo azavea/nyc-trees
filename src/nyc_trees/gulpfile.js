@@ -31,7 +31,7 @@ var args = minimist(process.argv.slice(2),
     intermediaryDir = new tmp.Dir().path + '/',
     bundleDir = intermediaryDir + 'js/',
     cssDir = intermediaryDir + 'css/',
-    versionedDir = 'static/',
+    versionedDir = '/var/cache/nyc-trees/static/',
     buildTasks = ['browserify', 'sass', 'vendor-css', 'copy'],
     collectstatic = 'envdir /etc/nyc-trees.d/env /opt/app/manage.py collectstatic --noinput';
 
@@ -42,9 +42,9 @@ gulp.task('version', buildTasks, function(cb) {
     return gulp.src(intermediaryDir + '**')
          // Don't version source map files
         .pipe(revall({ ignore: [ /\.(js|css)\.map$/ ]}))
-        .pipe(gulp.dest(versionedDir))
+        .pipe(gulp.dest(versionedDir, {mode: '0775'}))
         .pipe(revall.manifest())
-        .pipe(gulp.dest(versionedDir));
+        .pipe(gulp.dest(versionedDir, {mode: '0775'}));
 });
 
 // Images and fonts need to be copied in order to be versioned and collected
@@ -55,7 +55,7 @@ gulp.task('copy', function() {
 
 gulp.task('copy-dev-assets', function(cb) {
     return gulp.src(intermediaryDir + '**')
-        .pipe(gulp.dest(versionedDir));
+        .pipe(gulp.dest(versionedDir, {mode: '0775'}));
 });
 
 gulp.task('browserify', ['clean'], function() {
@@ -136,7 +136,7 @@ gulp.task('vendor-css', ['clean'], function() {
 });
 
 gulp.task('clean', function(cb) {
-    del([versionedDir + '*', '!' + versionedDir + '.gitignore'], cb);
+    del([versionedDir + '*'], {force: true}, cb);
 });
 
 gulp.task('default', ['collect-prod']);

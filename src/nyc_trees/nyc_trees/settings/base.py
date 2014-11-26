@@ -92,7 +92,7 @@ STATIC_ROOT = environ['DJANGO_STATIC_ROOT']
 STATIC_URL = '/static/'
 
 # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS  # NOQA
-STATICFILES_DIR = normpath(join(SITE_ROOT, 'static'))
+STATICFILES_DIR = '/var/cache/nyc-trees/static/'
 STATICFILES_DIRS = (
     STATICFILES_DIR,
 )

@@ -1,6 +1,8 @@
 ---
 not_testing: "'test' not in group_names"
 developing_or_testing: "'development' in group_names or 'test' in group_names"
+developing: "'development' in group_names"
+not_developing: "'development' not in group_names"
 
 sauce_labs_api_key_is_defined: lookup('env', 'SAUCE_API_KEY') != ''
 

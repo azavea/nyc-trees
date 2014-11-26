@@ -33,9 +33,9 @@
     "watchify": "~2.0.0"
   },
   "scripts": {
-    "build": "gulp",
-    "build-debug": "gulp build --debug",
-    "watch": "gulp watch --debug"
+    "build": "sudo -u nyc-trees ./node_modules/.bin/gulp",
+    "build-debug": "sudo -u nyc-trees ./node_modules/.bin/gulp build --debug",
+    "watch": "sudo -u nyc-trees ./node_modules/.bin/gulp watch --debug"
   },
   "repository": {
     "type": "git",
