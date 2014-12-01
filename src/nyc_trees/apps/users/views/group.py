@@ -9,41 +9,41 @@ def group_list_page(request):
     pass
 
 
-def group_detail(request, group_name):
+def group_detail(request, group_slug):
     # TODO: implement
     pass
 
 
-def edit_group(request, group_name):
+def edit_group(request, group_slug):
     # TODO: implement
     pass
 
 
-def follow_group(request, group_name):
+def follow_group(request, group_slug):
     # TODO: implement
     pass
 
 
-def unfollow_group(request, group_name):
+def unfollow_group(request, group_slug):
     # TODO: implement
     pass
 
 
-def start_group_map_print_job(request, group_name):
+def start_group_map_print_job(request, group_slug):
     # TODO: implement
     pass
 
 
-def group_mapping_priveleges_page(request, group_name):
+def group_mapping_priveleges_page(request, group_slug):
     # TODO: implement
     pass
 
 
-def give_user_mapping_priveleges(request, group_name, username):
+def give_user_mapping_priveleges(request, group_slug, username):
     # TODO: implement
     pass
 
 
-def remove_user_mapping_priveleges(request, group_name, username):
+def remove_user_mapping_priveleges(request, group_slug, username):
     # TODO: implement
     pass

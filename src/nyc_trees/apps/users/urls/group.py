@@ -24,29 +24,29 @@ urlpatterns = patterns(
         route(GET=group_list_page),
         name='group_list_page'),
 
-    url(r'^(?P<group_name>\w+)/$',
+    url(r'^(?P<group_slug>[\w-]+)/$',
         route(GET=group_detail,
               PUT=is_group_admin(edit_group)),
         name='group_detail'),
 
-    url(r'^(?P<group_name>\w+)/follow/$',
+    url(r'^(?P<group_slug>[\w-]+)/follow/$',
         login_required(route(POST=follow_group)),
         name='follow_group'),
 
-    url(r'^(?P<group_name>\w+)/unfollow/$',
+    url(r'^(?P<group_slug>[\w-]+)/unfollow/$',
         login_required(route(POST=unfollow_group)),
         name='unfollow_group'),
 
-    url(r'^(?P<group_name>\w+)/printable-map/$',
+    url(r'^(?P<group_slug>[\w-]+)/printable-map/$',
         # TODO: should this have group_admin()
         route(POST=start_group_map_print_job),
         name='start_group_map_print_job'),
 
-    url(r'^(?P<group_name>\w+)/individual-mapper/$',
+    url(r'^(?P<group_slug>[\w-]+)/individual-mapper/$',
         is_group_admin(route(GET=group_mapping_priveleges_page)),
         name='group_mapping_priveleges_page'),
 
-    url(r'^(?P<group_name>\w+)/individual-mapper/(?P<username>\w+)/$',
+    url(r'^(?P<group_slug>[\w-]+)/individual-mapper/(?P<username>\w+)/$',
         is_group_admin(route(PUT=give_user_mapping_priveleges,
                              DELETE=remove_user_mapping_priveleges)),
         name='edit_user_mapping_priveleges'),
