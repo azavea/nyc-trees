@@ -9,7 +9,7 @@
 - name: Install PostgreSQL client
   apt: pkg=postgresql-client-{{ postgresql_version }}={{ postgresql_package_version }}
 
-- name: Install application dependencies for development and test
+- name: Install application python dependencies for development and test
   pip: chdir={{ app_home }}/requirements requirements={{ item }}.txt
   with_items:
     - development

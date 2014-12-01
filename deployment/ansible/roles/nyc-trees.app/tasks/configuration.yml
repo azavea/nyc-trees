@@ -2,7 +2,7 @@
 - name: Create service account for application
   user: name=nyc-trees
         system=yes
-        createhome=no
+        home=/var/lib/nyc-trees
         shell=/bin/false
         state=present
 

@@ -64,7 +64,7 @@ deployment/ansible/roles/*
 deployment/troposphere/*.json
 
 # NodeJS / Browserify stuff
-node_modules/
+src/nyc_trees/node_modules
 npm-debug.log
 
 src/nyc_trees/.idea

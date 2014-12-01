@@ -17,29 +17,48 @@ var gulp = require('gulp'),
     postcss = require('gulp-postcss'),
     csswring = require('csswring'),
     gulpif = require('gulp-if'),
-    livereload = require('gulp-livereload');
+    livereload = require('gulp-livereload'),
+    tmp = require('temporary'),
+    del = require('del'),
+    shell = require('gulp-shell'),
+    runSequence = require('run-sequence');
 
 var args = minimist(process.argv.slice(2),
                     {default: {debug: false}}),
 
-    entries = ['home.js', 'user.js'],
-    entryFiles = entries.map(function(file) { return './js/' + file; }),
-    intermediaryDir = './assets/',
+    entries = ['forgot_username.js'],
+    entryFiles = entries.map(function(file) { return './js/src/' + file; }),
+    intermediaryDir = new tmp.Dir().path + '/',
     bundleDir = intermediaryDir + 'js/',
-    versionedDir = 'static/',
     cssDir = intermediaryDir + 'css/',
-    buildTasks = ['browserify', 'sass', 'vendor-css'];
+    versionedDir = '/var/cache/nyc-trees/static/',
+    buildTasks = ['browserify', 'sass', 'vendor-css', 'copy'],
+    collectstatic = 'envdir /etc/nyc-trees.d/env /opt/app/manage.py collectstatic --noinput';
 
-gulp.task('version', buildTasks, function() {
+gulp.task('collect-prod', ['version'], shell.task(collectstatic));
+gulp.task('collect-debug', ['copy-dev-assets'], shell.task(collectstatic));
+
+gulp.task('version', buildTasks, function(cb) {
     return gulp.src(intermediaryDir + '**')
          // Don't version source map files
         .pipe(revall({ ignore: [ /\.(js|css)\.map$/ ]}))
-        .pipe(gulp.dest(versionedDir))
+        .pipe(gulp.dest(versionedDir, {mode: '0775'}))
         .pipe(revall.manifest())
-        .pipe(gulp.dest(versionedDir));
+        .pipe(gulp.dest(versionedDir, {mode: '0775'}));
 });
 
-gulp.task('browserify', function() {
+// Images and fonts need to be copied in order to be versioned and collected
+gulp.task('copy', function() {
+    return gulp.src(['img/**', 'font/**'])
+        .pipe(gulp.dest(intermediaryDir));
+});
+
+gulp.task('copy-dev-assets', function(cb) {
+    return gulp.src(intermediaryDir + '**')
+        .pipe(gulp.dest(versionedDir, {mode: '0775'}));
+});
+
+gulp.task('browserify', ['clean'], function() {
     return browserifyTask(browserify({
         entries: entryFiles,
         debug: true
@@ -86,8 +105,7 @@ function browserifyTask(bundler) {
     bundles = bundles.map(function(bundle) {
         if (args.debug) {
             return bundle
-                .pipe(gulp.dest(bundleDir))
-                .pipe(livereload({ auto: false }));
+                .pipe(gulp.dest(bundleDir));
         }
         return bundle
             .pipe(buffer())
@@ -100,16 +118,15 @@ function browserifyTask(bundler) {
     return merge.apply(this, bundles);
 }
 
-gulp.task('sass', function() {
+gulp.task('sass', ['clean'], function() {
     return gulp.src('sass/main.scss')
         .pipe(sourcemaps.init())
         .pipe(sass({outputStyle: 'compressed'}))
         .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest(cssDir))
-        .pipe(livereload({ auto: false }));
+        .pipe(gulp.dest(cssDir));
 });
 
-gulp.task('vendor-css', function() {
+gulp.task('vendor-css', ['clean'], function() {
     return gulp.src('css/**/*.css')
         .pipe(sourcemaps.init())
         .pipe(concat('vendor.css'))
@@ -118,12 +135,20 @@ gulp.task('vendor-css', function() {
         .pipe(gulp.dest(cssDir));
 });
 
-gulp.task('default', ['version']);
-gulp.task('build', buildTasks);
+gulp.task('clean', function(cb) {
+    del([versionedDir + '*'], {force: true}, cb);
+});
+
+gulp.task('default', ['collect-prod']);
+gulp.task('build', function(cb) {
+    runSequence(buildTasks, 'collect-debug', cb);
+});
 
 gulp.task('watch', ['watchify'], function() {
     // Note: JS rebuilding is handled by watchify, in order to utilize it's
     // caching behaviour
-    livereload.listen();
-    return gulp.watch('sass/**/*.scss', ['sass']);
+    livereload.listen({auto: true });
+    gulp.watch('sass/**/*.scss', ['sass']);
+    // Rerun collectstatic whenever files are added to the static files dir
+    gulp.watch(intermediaryDir + '**', ['collect-debug']);
 });

@@ -39,7 +39,6 @@ vagrant@app:~$ envdir /etc/nyc-trees.d/env /opt/app/manage.py test
 envdir: fatal: unable to switch to directory /etc/nyc-trees.d/env: access denied
 ```
 
-
 ### Ports
 
 The Vagrant configuration maps the following host ports to services
@@ -55,6 +54,16 @@ Kibana Dashboard       | 5601  | [http://localhost:15601](http://localhost:15601
 pgweb                  | 15433 | [http://localhost:15433](http://localhost:15433) | NYC_TREES_PORT_5433
 Redis                  | 16379 | `redis-cli -h localhost 16379`                   | NYC_TREES_PORT_6379
 
+
+### Javascript and CSS
+
+The main tool used is [gulp](http://gulpjs.com/), which is exposed through `npm run` to avoid version conflicts.
+
+ - To create JS bundles, compile sass, and concatenate third-party css, minify CSS and JS, and version files using `gulp-rev-all`, use `gulp` or `npm run build`.
+ - To do the above but skip minification and versioning, use `gulp build --debug` or `npm run build-debug`.
+ - To watch files and automatically rebuild the JS or sass files when they change, use `gulp watch --debug` or `npm run watch`.  This will also start a [livereload server](http://livereload.com/).
+
+`gulp build` and `gulp watch` without the `--debug` flag are intentionally not exposed through `npm run`.
 
 ### Caching
 

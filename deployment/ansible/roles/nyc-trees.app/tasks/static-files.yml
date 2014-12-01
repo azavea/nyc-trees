@@ -1,0 +1,38 @@
+- name: Create folders for static files
+  file: path={{ item }}
+        state=directory
+        owner=root
+        group=nyc-trees
+        mode=0775
+  with_items:
+    - "{{ app_static_root }}"
+    - "{{ app_media_root }}"
+    - "{{ app_node_modules_cache }}"
+    - "{{ app_static_cache }}"
+
+- name: Delete any existing node_modules folder/file
+  file: path={{ app_home }}/node_modules
+        state=absent
+
+- name: Symlink the node_modules cache into the project root
+  file: src={{ app_node_modules_cache }}
+        dest={{ app_home }}/node_modules
+        state=link
+        owner=root
+        group=nyc-trees
+
+- name: Install application javascript dependencies
+  npm: path={{ app_home }}
+  sudo_user: nyc-trees
+
+- name: Create static files and run collectstatic (staging/production)
+  command: npm run build
+  args:
+    chdir: "{{ app_home }}"
+  when: not_developing
+
+- name: Create static files and run collectstatic (development)
+  command: npm run build-debug
+  args:
+    chdir: "{{ app_home }}"
+  when: developing

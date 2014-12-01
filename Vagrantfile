@@ -116,7 +116,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     app.vm.synced_folder "src/nyc_trees", "/opt/app/"
 
     # Django via Nginx/Gunicorn
-    app.vm.network "forwarded_port", guest: 80, host: 8000
+    app.vm.network "forwarded_port", guest: 80, host: ENV.fetch("NYC_TREES_PORT_8000", 8000)
+    # Livereload server (for gulp watch)
+    app.vm.network "forwarded_port", guest: 35729, host: 35729, auto_correct: true
     # Support accessing the test live server (for Sauce Labs)
     app.vm.network "forwarded_port", guest: 9001, host: ENV.fetch("NYC_TREES_PORT_9001", 9001)
 

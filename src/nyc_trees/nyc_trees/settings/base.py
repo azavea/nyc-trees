@@ -1,8 +1,9 @@
 """Common settings and globals."""
 
 from os import environ
-from os.path import abspath, basename, dirname, join, normpath
+from os.path import abspath, basename, dirname, join, normpath, exists
 from sys import path
+import json
 
 
 # PATH CONFIGURATION
@@ -76,7 +77,7 @@ SILENCED_SYSTEM_CHECKS = ['1_6.W001']
 
 # MEDIA CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#media-root
-MEDIA_ROOT = normpath(join(SITE_ROOT, 'media'))
+MEDIA_ROOT = environ['DJANGO_MEDIA_ROOT']
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#media-url
 MEDIA_URL = '/media/'
@@ -85,14 +86,15 @@ MEDIA_URL = '/media/'
 
 # STATIC FILE CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-root
-STATIC_ROOT = normpath(join(SITE_ROOT, 'collected_static'))
+STATIC_ROOT = environ['DJANGO_STATIC_ROOT']
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-url
 STATIC_URL = '/static/'
 
 # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS  # NOQA
+STATICFILES_DIR = '/var/cache/nyc-trees/static/'
 STATICFILES_DIRS = (
-    normpath(join(SITE_ROOT, 'static')),
+    STATICFILES_DIR,
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#staticfiles-finders  # NOQA
@@ -100,6 +102,14 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
+
+# parse manifest created by gulp-rev-all
+_STATIC_FILES_MAP = join(STATICFILES_DIR, 'rev-manifest.json')
+if exists(_STATIC_FILES_MAP):
+    with open(_STATIC_FILES_MAP) as json_file:
+        STATIC_FILES_MAPPING = json.load(json_file)
+else:
+    STATIC_FILES_MAPPING = {}
 # END STATIC FILE CONFIGURATION
 
 
