@@ -2,6 +2,10 @@
 
 {% block section_content %}
 
-    <div>TODO</div>
+{% for follow in follows %}
+    <div>
+      <a href="{% url 'group_detail' group_slug=follow.group.slug %}">{{ follow.group.name }}</a>
+    </div>
+{% endfor %}
 
 {% endblock section_content %}

@@ -31,6 +31,8 @@ def user_detail(request, username):
 
 @render_template('users/profile.html')
 def _render_user_profile(request, user, its_me):
+    follows = user.follow_set.select_related('group').order_by('created_at')
+
     context = {
         'user': user,
         'viewing_own_profile': its_me,
@@ -40,7 +42,8 @@ def _render_user_profile(request, user, its_me):
         'show_contributions': its_me or user.contributions_are_public,
         'show_groups': its_me or user.group_follows_are_public,
         'show_individual_mapper': (user.individual_mapper and
-                                   (its_me or user.profile_is_public))
+                                   (its_me or user.profile_is_public)),
+        'follows': follows
     }
     return context
 
