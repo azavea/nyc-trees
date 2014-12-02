@@ -7,8 +7,10 @@ from django.contrib.gis.db import models
 
 from apps.core.models import User, Group
 
+from libs.mixins import NycModel
 
-class Event(models.Model):
+
+class Event(NycModel, models.Model):
     # Once a group has events, we can't just delete the group, because
     # people could have registered to attend the group's events.
     group = models.ForeignKey(Group, on_delete=models.PROTECT)
@@ -23,11 +25,9 @@ class Event(models.Model):
     is_canceled = models.BooleanField(default=False)
     is_private = models.BooleanField(default=False)
     url_name = models.CharField(max_length=32, unique=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
 
-class EventRegistration(models.Model):
+class EventRegistration(NycModel, models.Model):
     user = models.ForeignKey(User)
     # If users have registered for an event, we do not want to allow
     # the event to be deleted. If we do, the registration will
@@ -35,5 +35,3 @@ class EventRegistration(models.Model):
     # an event on the day, not knowing it was canceled
     event = models.ForeignKey(Event, on_delete=models.PROTECT)
     did_attend = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)

@@ -6,9 +6,10 @@ from django.http import Http404
 
 from django.test import TestCase
 
-from apps.core.models import User
+from apps.core.models import User, Group
 from apps.core.test_utils import make_request
 
+from apps.users.models import Follow
 from apps.users.views.user import user_detail
 
 
@@ -23,6 +24,14 @@ class ProfileTemplateTests(TestCase):
             profile_is_public=True,
             )
         self.other_user = User.objects.create(username='other', password='a')
+        self.group = Group.objects.create(
+            name='The Best Group of All',
+            slug='the-best-group',
+            contact_email='best@group.com',
+            contact_url='https://thebest.nyc',
+            admin=self.other_user
+        )
+        Follow.objects.create(group=self.group, user=self.user)
 
     def _update_user(self, **kwargs):
         User.objects.filter(pk=self.user.pk).update(**kwargs)
@@ -82,3 +91,8 @@ class ProfileTemplateTests(TestCase):
         self._assert_visible_only_to_me('Achievements')
         self._update_user(achievements_are_public=True)
         self._assert_visible_to_all('Achievements')
+
+    def test_groups_section_contents(self):
+        self._assert_visible_only_to_me(self.group.name)
+        self._update_user(group_follows_are_public=True)
+        self._assert_visible_to_all(self.group.name)

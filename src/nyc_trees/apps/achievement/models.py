@@ -7,17 +7,15 @@ from django.db import models
 
 from apps.core.models import User
 
+from libs.mixins import NycModel
 
-class AchievementDefinition(models.Model):
+
+class AchievementDefinition(NycModel, models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(default='', blank=True)
     badge_image = models.ImageField(null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
 
-class Achievement(models.Model):
+class Achievement(NycModel, models.Model):
     user = models.ForeignKey(User)
     achievement_definition = models.ForeignKey(AchievementDefinition)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
