@@ -19,6 +19,6 @@ class UserModelTest(TestCase):
         gal.set_password('password')
 
         with self.assertRaises(ValidationError) as ec:
-            gal.save()
+            gal.clean_and_save()
 
         self.assertIn('email', ec.exception.error_dict)

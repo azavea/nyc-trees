@@ -7,24 +7,20 @@ from django.db import models
 
 from apps.core.models import User, Group
 
+from libs.mixins import NycModel
 
-class Follow(models.Model):
+
+class Follow(NycModel, models.Model):
     user = models.ForeignKey(User)
     group = models.ForeignKey(Group)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
 
-class TrustedMapper(models.Model):
+class TrustedMapper(NycModel, models.Model):
     user = models.ForeignKey(User)
     group = models.ForeignKey(Group)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
 
-class TrainingResult(models.Model):
+class TrainingResult(NycModel, models.Model):
     user = models.ForeignKey(User)
     module_name = models.CharField(max_length=255)
     score = models.IntegerField(null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)

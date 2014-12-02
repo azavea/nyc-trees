@@ -7,8 +7,10 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.core.exceptions import ValidationError
 
+from libs.mixins import NycModel
 
-class User(AbstractUser):
+
+class User(NycModel, AbstractUser):
     online_training_complete = models.BooleanField(default=False)
     individual_mapper = models.BooleanField(default=False)
     requested_individual_mapping_at = models.DateTimeField(null=True,
@@ -29,9 +31,6 @@ class User(AbstractUser):
     opt_in_events_info = models.BooleanField(default=False)
     opt_in_stewardship_info = models.BooleanField(default=False)
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
     objects = UserManager()
 
     def clean(self):
@@ -45,12 +44,8 @@ class User(AbstractUser):
         self.first_name = self.first_name.strip()
         self.last_name = self.last_name.strip()
 
-    def save(self, *args, **kwargs):
-        self.full_clean()
-        super(User, self).save(*args, **kwargs)
 
-
-class Group(models.Model):
+class Group(NycModel, models.Model):
     name = models.CharField(max_length=255, unique=True)
     slug = models.SlugField(unique=True)
     description = models.TextField(default='', blank=True)
@@ -63,5 +58,3 @@ class Group(models.Model):
     admin = models.ForeignKey(User, on_delete=models.PROTECT)
     image = models.ImageField(null=True)
     is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
