@@ -5,6 +5,12 @@ from __future__ import division
 
 from django.contrib import admin
 
-import apps.core.models as m
-admin.site.register(m.User)
-admin.site.register(m.Group)
+from apps.core.models import User, Group
+
+
+@admin.register(Group)
+class GroupAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"slug": ("name",)}
+
+
+admin.site.register(User)

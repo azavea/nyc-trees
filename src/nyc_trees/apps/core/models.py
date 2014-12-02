@@ -6,6 +6,7 @@ from __future__ import division
 from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.core.exceptions import ValidationError
+from django.utils.text import slugify
 
 from libs.mixins import NycModel
 
@@ -47,7 +48,8 @@ class User(NycModel, AbstractUser):
 
 class Group(NycModel, models.Model):
     name = models.CharField(max_length=255, unique=True)
-    slug = models.SlugField(unique=True)
+    # blank=True is valid for 'slug', because we'll automatically create slugs
+    slug = models.SlugField(unique=True, blank=True)
     description = models.TextField(default='', blank=True)
     contact_info = models.TextField(default='', blank=True)
     contact_email = models.EmailField(null=True)
@@ -58,3 +60,7 @@ class Group(NycModel, models.Model):
     admin = models.ForeignKey(User, on_delete=models.PROTECT)
     image = models.ImageField(null=True)
     is_active = models.BooleanField(default=True)
+
+    def clean(self):
+        if not self.slug:
+            self.slug = slugify(self.name)
