@@ -22,7 +22,7 @@ urlpatterns = patterns(
     url(r'^event/', include('apps.event.urls.event')),
     url(r'^group/', include('apps.event.urls.group')),
     url(r'^group/', include('apps.users.urls.group')),
-    url(r'^quiz/', include('apps.achievement.urls')),
+    url(r'^quiz/', include('apps.quiz.urls')),
     url(r'^species/', include('apps.survey.urls.species')),
     url(r'^survey/', include('apps.survey.urls.survey')),
     url(r'^user/', include('apps.users.urls.user')),
