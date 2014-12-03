@@ -1,7 +1,14 @@
 {% extends "users/partials/profile/section.html" %}
+{% load utils %}
 
 {% block section_content %}
-
-    <div>TODO</div>
-
+<div>
+    {% for name, achievement in achievements.items %}
+    <div>
+       <h2>{{ name }}</h2>
+       <p>{{ achievement.description }}</p>
+       <img src="{{ achievement.badge|static_url }}" />
+    </div>
+    {% endfor %}
+</div>
 {% endblock section_content %}
