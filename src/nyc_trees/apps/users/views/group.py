@@ -3,6 +3,12 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
+from django.shortcuts import get_object_or_404
+
+from django_tinsel.decorators import render_template
+
+from apps.core.models import Group
+
 
 def group_list_page(request):
     # TODO: implement
@@ -10,8 +16,16 @@ def group_list_page(request):
 
 
 def group_detail(request, group_slug):
-    # TODO: implement
-    pass
+    group = get_object_or_404(Group, slug=group_slug)
+    return _render_group_detail(request, group)
+
+
+@render_template('groups/detail.html')
+def _render_group_detail(request, group):
+    context = {
+        'group': group
+    }
+    return context
 
 
 def edit_group(request, group_slug):
