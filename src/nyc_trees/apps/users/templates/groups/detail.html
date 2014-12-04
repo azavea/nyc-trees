@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{# TODO: Show a default image if group.image is null #}
+{% if group.image %}
+<img src="{{group.image.url}}"/>
+{% endif %}
+
+<h2>{{group.name}}</h2>
+
+{% if user_can_edit_group %}
+<div><a href="{{edit_url}}" >Admin</a>
+{% endif %}
+
+<h3>Description</h3>
+<div>{{group.description}}</div>
+
+<h3>Contact</h3>
+<div>{{group.contact_info}} <a href="mailto:{{group.contact_email}}">Email</a></div>
+
+<h3>Website</h3>
+<div><a href="{{group.contact_url}}">{{group.contact_url}}</a></div>
+
+{% endblock %}

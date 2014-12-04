@@ -14,9 +14,10 @@ from apps.survey.models import Tree, Species, Blockface, Survey
 
 from apps.users.models import Follow
 from apps.users.views.user import user_detail, user_detail_view
+from apps.users.views.group import group_detail
 
 
-class ProfileTemplateTests(TestCase):
+class UsersTestCase(TestCase):
     def setUp(self):
         self.user = User.objects.create(
             username='pat',
@@ -29,13 +30,17 @@ class ProfileTemplateTests(TestCase):
         self.other_user = User.objects.create(username='other', password='a')
         self.group = Group.objects.create(
             name='The Best Group of All',
+            description='Seriously, the best group in town.',
             slug='the-best-group',
+            contact_info='Jane Best',
             contact_email='best@group.com',
             contact_url='https://thebest.nyc',
             admin=self.other_user
         )
         Follow.objects.create(group=self.group, user=self.user)
 
+
+class ProfileTemplateTests(UsersTestCase):
     def _update_user(self, **kwargs):
         User.objects.filter(pk=self.user.pk).update(**kwargs)
 
@@ -119,3 +124,27 @@ class ProfileTemplateTests(TestCase):
         self.assertEqual(context['counts']['block'], 1)
         self.assertEqual(context['counts']['tree'], 2)
         self.assertEqual(context['counts']['species'], 1)
+
+
+class GroupTemplateTests(UsersTestCase):
+    def _render_detail(self):
+        viewer = self.user
+        request = make_request(user=viewer)
+        return group_detail(request, self.group.slug)
+
+    def _assert_group_detail_contains(self, text, count=1):
+        response = self._render_detail()
+        self.assertContains(response, text, count=count)
+
+    def test_name_shown(self):
+        self._assert_group_detail_contains(self.group.name)
+
+    def test_description_shown(self):
+        self._assert_group_detail_contains(self.group.description)
+
+    def test_contact_shown(self):
+        self._assert_group_detail_contains(self.group.contact_info)
+
+    def test_url_shown(self):
+        # The url shows up both as the link text and the href
+        self._assert_group_detail_contains(self.group.contact_url, count=2)

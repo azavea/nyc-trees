@@ -14,7 +14,8 @@ from apps.users.views.group import (group_list_page, group_detail, edit_group,
                                     start_group_map_print_job,
                                     group_mapping_priveleges_page,
                                     give_user_mapping_priveleges,
-                                    remove_user_mapping_priveleges)
+                                    remove_user_mapping_priveleges,
+                                    update_group_settings)
 
 
 # These URLs have the prefix 'group/'
@@ -25,9 +26,14 @@ urlpatterns = patterns(
         name='group_list_page'),
 
     url(r'^(?P<group_slug>[\w-]+)/$',
-        route(GET=group_detail,
-              PUT=is_group_admin(edit_group)),
+        route(GET=group_detail),
         name='group_detail'),
+
+    url(r'^(?P<group_slug>[\w-]+)/edit/$',
+        is_group_admin(
+            route(GET=edit_group,
+                  POST=update_group_settings)),
+        name='group_edit'),
 
     url(r'^(?P<group_slug>[\w-]+)/follow/$',
         login_required(route(POST=follow_group)),
