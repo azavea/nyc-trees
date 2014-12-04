@@ -10,6 +10,9 @@ from django.shortcuts import get_object_or_404
 from django_tinsel.decorators import render_template
 
 from apps.core.models import User
+
+from apps.survey.models import Tree
+
 from apps.users.forms import ProfileSettingsForm
 
 
@@ -18,7 +21,7 @@ def user_detail_redirect(request):
         reverse('user_detail', kwargs={'username': request.user.username}))
 
 
-def user_detail(request, username):
+def user_detail_view(request, username):
     user = get_object_or_404(User, username=username)
     its_me = (user.id == request.user.id)
 
@@ -26,12 +29,21 @@ def user_detail(request, username):
         # Private profile acts like a missing page to others
         raise Http404()
 
-    return _render_user_profile(request, user, its_me)
+    return _user_profile_context(request, user, its_me)
 
 
-@render_template('users/profile.html')
-def _render_user_profile(request, user, its_me):
+def _user_profile_context(request, user, its_me):
     follows = user.follow_set.select_related('group').order_by('created_at')
+
+    block_count = user.survey_set.distinct('blockface').count()
+    # TODO: This will count extra trees and species if a user surveys the
+    #       same block twice.  We will likely have to write a raw query
+    trees = Tree.objects.filter(survey__user=user)
+    tree_count = trees.count()
+    species_count = (trees
+                     .filter(species__isnull=False)
+                     .distinct('species')
+                     .count())
 
     context = {
         'user': user,
@@ -43,7 +55,12 @@ def _render_user_profile(request, user, its_me):
         'show_groups': its_me or user.group_follows_are_public,
         'show_individual_mapper': (user.individual_mapper and
                                    (its_me or user.profile_is_public)),
-        'follows': follows
+        'follows': follows,
+        'counts': {
+            'block': block_count,
+            'tree': tree_count,
+            'species': species_count
+        }
     }
     return context
 
@@ -88,12 +105,12 @@ def _get_privacy_categories(form):
     ]
 
 
-def update_profile_settings(request):
+def update_profile_settings_view(request):
     form = ProfileSettingsForm(request.POST, instance=request.user)
     # It's not possible to create invalid data with this form,
     # so don't check form.is_valid()
     form.save()
-    return _render_user_profile(request, request.user, its_me=True)
+    return _user_profile_context(request, request.user, its_me=True)
 
 
 def update_user(request, username):
@@ -119,3 +136,10 @@ def start_map_for_reservation_job(request, username):
 def start_map_for_tool_depots_job(request, username):
     # TODO: implement
     pass
+
+
+render_user_template = render_template('users/profile.html')
+
+user_detail = render_user_template(user_detail_view)
+
+update_profile_settings = render_user_template(update_profile_settings_view)
