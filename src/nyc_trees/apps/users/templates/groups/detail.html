@@ -9,6 +9,10 @@
 
 <h2>{{group.name}}</h2>
 
+{% if user_can_edit_group %}
+<div><a href="{{edit_url}}" >Admin</a>
+{% endif %}
+
 <h3>Description</h3>
 <div>{{group.description}}</div>
 

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <ul class="nav nav-tabs">
+        <li class="active">
+            <a href="#details-pane" data-toggle="tab">Profile</a>
+        </li>
+        <li>
+            <a href="#events-pane" data-toggle="tab">Events</a>
+        </li>
+        <li>
+            <a href="#mappers-pane" data-toggle="tab">Mappers</a>
+        </li>
+    </ul>
+
+    <form method="POST">
+        <fieldset>
+            {% csrf_token %}
+
+            <div class="tab-pane active" id="details-pane">
+                {{ form.non_field_errors }}
+                <div class="fieldWrapper">
+                    {{ form.description.errors }}
+                    {{ form.description.label_tag }}
+                    {{ form.description }}
+                </div>
+                <div class="fieldWrapper">
+                    {{ form.contact_info.errors }}
+                    {{ form.contact_info.label_tag }}
+                    {{ form.contact_info }}
+                </div>
+                <div class="fieldWrapper">
+                    {{ form.contact_email.errors }}
+                    {{ form.contact_email.label_tag }}
+                    {{ form.contact_email }}
+                </div>
+                <div class="fieldWrapper">
+                    {{ form.contact_url.errors }}
+                    {{ form.contact_url.label_tag }}
+                    {{ form.contact_url }}
+                </div>
+                <div class="fieldWrapper">
+                    {{ form.image.errors }}
+                    {{ form.image.label_tag }}
+                    {{ form.image }}
+                </div>
+            </div>
+
+            <div class="tab-pane" id="events-pane">
+                <h3>Events</h3>
+                <div>TODO: show event management</div>
+            </div>
+
+            <div class="tab-pane" id="mappers-pane">
+                <h3>Mappers</h3>
+                <div>TODO: show mapper management</div>
+            </div>
+
+            <div style="float:right;">
+                <input type="submit" class="btn" value="Save" />
+            </div>
+            <a class="btn" href="{% url 'group_detail' group_slug=group_slug %}">Cancel</a>
+
+        </fieldset>
+    </form>
+
+{% endblock %}
