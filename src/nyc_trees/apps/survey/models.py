@@ -33,8 +33,15 @@ class Survey(NycModel, models.Model):
     is_flagged = models.BooleanField(default=False)
 
 
+class Species(NycModel, models.Model):
+    name = models.CharField(max_length=200, unique=True)
+
+
 class Tree(NycModel, models.Model):
     survey = models.ForeignKey(Survey)
+    # We do not anticipate deleting a Species, but we definitely
+    # should not allow it to be deleted if there is a related Tree
+    species = models.ForeignKey(Species, null=True, on_delete=models.PROTECT)
 
 
 class BlockfaceReservation(NycModel, models.Model):

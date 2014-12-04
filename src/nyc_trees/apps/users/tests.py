@@ -2,15 +2,18 @@
 from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
-from django.http import Http404
 
+from django.contrib.gis.geos import LineString
+from django.http import Http404
 from django.test import TestCase
 
 from apps.core.models import User, Group
 from apps.core.test_utils import make_request
 
+from apps.survey.models import Tree, Species, Blockface, Survey
+
 from apps.users.models import Follow
-from apps.users.views.user import user_detail
+from apps.users.views.user import user_detail, user_detail_view
 
 
 class ProfileTemplateTests(TestCase):
@@ -77,11 +80,6 @@ class ProfileTemplateTests(TestCase):
     def test_settings_link_visible_only_to_me(self):
         self._assert_visible_only_to_me('Settings')
 
-    def test_contributions_section_visibility(self):
-        self._assert_visible_only_to_me('Contributions')
-        self._update_user(contributions_are_public=True)
-        self._assert_visible_to_all('Contributions')
-
     def test_groups_section_visibility(self):
         self._assert_visible_only_to_me('Groups')
         self._update_user(group_follows_are_public=True)
@@ -96,3 +94,28 @@ class ProfileTemplateTests(TestCase):
         self._assert_visible_only_to_me(self.group.name)
         self._update_user(group_follows_are_public=True)
         self._assert_visible_to_all(self.group.name)
+
+    def test_contributions_section_visibility(self):
+        self._assert_visible_only_to_me('Contributions')
+        self._update_user(contributions_are_public=True)
+        self._assert_visible_to_all('Contributions')
+
+    def test_contributions_section_contents(self):
+        blockface = Blockface.objects.create(
+            geom=LineString(((0, 0), (1, 1)))
+        )
+        species = Species.objects.create(name='Elm')
+        survey = Survey.objects.create(
+            blockface=blockface,
+            user=self.user
+        )
+        Tree.objects.create(survey=survey, species=species)
+        Tree.objects.create(survey=survey, species=species)
+
+        request = make_request(user=self.user)
+        context = user_detail_view(request, self.user.username)
+
+        self.assertIn('counts', context)
+        self.assertEqual(context['counts']['block'], 1)
+        self.assertEqual(context['counts']['tree'], 2)
+        self.assertEqual(context['counts']['species'], 1)
