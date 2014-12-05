@@ -34,51 +34,51 @@ def events_list_feed(request):
     pass
 
 
-def delete_event(request, event_url_name):
+def delete_event(request, event_slug):
     # TODO: implement
     pass
 
 
-def edit_event(request, event_url_name):
+def edit_event(request, event_slug):
     # TODO: implement
     pass
 
 
-def event_popup_partial(request, event_url_name):
+def event_popup_partial(request, event_slug):
     # TODO: implement
     pass
 
 
-def register_for_event(request, event_url_name):
+def register_for_event(request, event_slug):
     # TODO: implement
     pass
 
 
-def cancel_event_registration(request, event_url_name):
+def cancel_event_registration(request, event_slug):
     # TODO: implement
     pass
 
 
-def start_event_map_print_job(request, event_url_name):
+def start_event_map_print_job(request, event_slug):
     # TODO: implement
     pass
 
 
-def event_check_in_page(request, event_url_name):
+def event_check_in_page(request, event_slug):
     # TODO: implement
     pass
 
 
-def check_in_user_to_event(request, event_url_name, username):
+def check_in_user_to_event(request, event_slug, username):
     # TODO: implement
     pass
 
 
-def un_check_in_user_to_event(request, event_url_name, username):
+def un_check_in_user_to_event(request, event_slug, username):
     # TODO: implement
     pass
 
 
-def email_event_registered_users(request, event_url_name):
+def email_event_registered_users(request, event_slug):
     # TODO: implement
     pass

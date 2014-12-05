@@ -33,35 +33,35 @@ urlpatterns = patterns(
         route(GET=events_list_feed),
         name='events_list_feed'),
 
-    url(r'^(?P<event_url_name>\w+)/$',
+    url(r'^(?P<event_slug>\w+)/$',
         route(GET=event_detail,
               DELETE=is_group_admin(delete_event),
               PUT=is_group_admin(edit_event)),
         name='event_detail'),
 
-    url(r'^(?P<event_url_name>\w+)/popup/$',
+    url(r'^(?P<event_slug>\w+)/popup/$',
         route(GET=event_popup_partial),
         name='event_popup_partial'),
 
-    url(r'^(?P<event_url_name>\w+)/register/$',
+    url(r'^(?P<event_slug>\w+)/register/$',
         has_training(route(POST=register_for_event,
                            DELETE=cancel_event_registration)),
         name='event_registration'),
 
-    url(r'^(?P<event_url_name>\w+)/printable-map/$',
+    url(r'^(?P<event_slug>\w+)/printable-map/$',
         has_training(route(POST=start_event_map_print_job)),
         name='start_event_map_print_job'),
 
-    url(r'^(?P<event_url_name>\w+)/checkin/$',
+    url(r'^(?P<event_slug>\w+)/checkin/$',
         is_group_admin(route(GET=event_check_in_page)),
         name='event_check_in_page'),
 
-    url(r'^(?P<event_url_name>\w+)/checkin/(?P<username>\w+)/$',
+    url(r'^(?P<event_slug>\w+)/checkin/(?P<username>\w+)/$',
         is_group_admin(route(POST=check_in_user_to_event,
                              DELETE=un_check_in_user_to_event)),
         name='event_check_in'),
 
-    url(r'^(?P<event_url_name>\w+)/email/$',
+    url(r'^(?P<event_slug>\w+)/email/$',
         is_group_admin(route(POST=email_event_registered_users)),
         name='email_event_registered_users'),
 )
