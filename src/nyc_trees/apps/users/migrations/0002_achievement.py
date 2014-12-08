@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                ('achievement_name', models.CharField(max_length=100, choices=[('Professor Tree', 'Finish Training'), ('Groupie', 'Join 10 Groups')])),
+                ('achievement_id', models.IntegerField(choices=[(0, 'Professor Tree'), (1, 'Groupie')])),
                 ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
             ],
             options={

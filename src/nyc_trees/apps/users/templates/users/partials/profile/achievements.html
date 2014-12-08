@@ -3,9 +3,9 @@
 
 {% block section_content %}
 <div>
-    {% for name, achievement in achievements.items %}
+    {% for achievement in achievements %}
     <div>
-       <h2>{{ name }}</h2>
+       <h2>{{ achievement.name }}</h2>
        <p>{{ achievement.description }}</p>
        <img src="{{ achievement.badge|static_url }}" />
     </div>
