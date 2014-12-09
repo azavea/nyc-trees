@@ -5,6 +5,8 @@ from __future__ import division
 
 from django.contrib import admin
 import apps.users.models as m
+
 admin.site.register(m.Follow)
 admin.site.register(m.TrustedMapper)
 admin.site.register(m.TrainingResult)
+admin.site.register(m.Achievement)

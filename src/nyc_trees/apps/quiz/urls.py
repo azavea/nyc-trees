@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 
 from django_tinsel.decorators import route
 
-from apps.achievement.views import quiz_list_page, quiz_page, complete_quiz
+from apps.quiz.views import quiz_list_page, quiz_page, complete_quiz
 
 
 # These URLs have the prefix 'quiz/'
@@ -24,4 +24,4 @@ urlpatterns = patterns(
         login_required(route(GET=quiz_page,
                              POST=complete_quiz)),
         name='quiz'),
-    )
+)

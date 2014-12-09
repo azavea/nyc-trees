@@ -216,7 +216,7 @@ REGISTRATION_AUTO_LOGIN = True
 # Apps specific for this project go here.
 LOCAL_APPS = (
     'apps.core',
-    'apps.achievement',
+    'apps.quiz',
     'apps.census_admin',
     'apps.event',
     'apps.home',

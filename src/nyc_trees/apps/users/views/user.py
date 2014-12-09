@@ -9,6 +9,7 @@ from django.shortcuts import get_object_or_404
 
 from django_tinsel.decorators import render_template
 
+from apps.users.models import achievements
 from apps.core.models import User
 
 from apps.survey.models import Tree
@@ -34,6 +35,9 @@ def user_detail_view(request, username):
 
 def _user_profile_context(request, user, its_me):
     follows = user.follow_set.select_related('group').order_by('created_at')
+    user_achievements = set(user.achievement_set
+                            .order_by('created_at')
+                            .values_list('achievement_id', flat=True))
 
     block_count = user.survey_set.distinct('blockface').count()
     # TODO: This will count extra trees and species if a user surveys the
@@ -60,7 +64,9 @@ def _user_profile_context(request, user, its_me):
             'block': block_count,
             'tree': tree_count,
             'species': species_count
-        }
+        },
+        'achievements': [achievements[key]
+                         for key in user_achievements if key in achievements]
     }
     return context
 

@@ -12,7 +12,8 @@ from apps.core.test_utils import make_request
 
 from apps.survey.models import Tree, Species, Blockface, Survey
 
-from apps.users.models import Follow
+from apps.users.models import (Follow, Achievement, achievements,
+                               AchievementDefinition)
 from apps.users.views.user import user_detail, user_detail_view
 from apps.users.views.group import group_detail
 
@@ -26,7 +27,7 @@ class UsersTestCase(TestCase):
             first_name='Pat',
             last_name='Smith',
             profile_is_public=True,
-            )
+        )
         self.other_user = User.objects.create(username='other', password='a')
         self.group = Group.objects.create(
             name='The Best Group of All',
@@ -38,6 +39,10 @@ class UsersTestCase(TestCase):
             admin=self.other_user
         )
         Follow.objects.create(group=self.group, user=self.user)
+        self.achievement = Achievement.objects.create(
+            user=self.user,
+            achievement_id=AchievementDefinition.FINISH_TRAINING
+        )
 
 
 class ProfileTemplateTests(UsersTestCase):
@@ -90,15 +95,22 @@ class ProfileTemplateTests(UsersTestCase):
         self._update_user(group_follows_are_public=True)
         self._assert_visible_to_all('Groups')
 
+    def test_groups_section_contents(self):
+        self._assert_visible_only_to_me(self.group.name)
+        self._update_user(group_follows_are_public=True)
+        self._assert_visible_to_all(self.group.name)
+
     def test_achievements_section_visibility(self):
         self._assert_visible_only_to_me('Achievements')
         self._update_user(achievements_are_public=True)
         self._assert_visible_to_all('Achievements')
 
-    def test_groups_section_contents(self):
-        self._assert_visible_only_to_me(self.group.name)
-        self._update_user(group_follows_are_public=True)
-        self._assert_visible_to_all(self.group.name)
+    def test_achievements_section_contents(self):
+        self._assert_visible_only_to_me(
+            achievements[AchievementDefinition.FINISH_TRAINING].name)
+        self._update_user(achievements_are_public=True)
+        self._assert_visible_to_all(
+            achievements[AchievementDefinition.FINISH_TRAINING].name)
 
     def test_contributions_section_visibility(self):
         self._assert_visible_only_to_me('Contributions')

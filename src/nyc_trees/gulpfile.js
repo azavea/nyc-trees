@@ -48,9 +48,16 @@ gulp.task('version', buildTasks, function(cb) {
 });
 
 // Images and fonts need to be copied in order to be versioned and collected
-gulp.task('copy', function() {
-    return gulp.src(['img/**', 'font/**'])
-        .pipe(gulp.dest(intermediaryDir));
+gulp.task('copy', ['copy-fonts', 'copy-images']);
+
+gulp.task('copy-fonts', function() {
+    return gulp.src(['font/**'])
+        .pipe(gulp.dest(intermediaryDir + 'font/'));
+});
+
+gulp.task('copy-images', function() {
+    return gulp.src(['img/**'])
+        .pipe(gulp.dest(intermediaryDir + 'img/'));
 });
 
 gulp.task('copy-dev-assets', function(cb) {
