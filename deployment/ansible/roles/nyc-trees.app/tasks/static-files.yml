@@ -10,9 +10,15 @@
     - "{{ app_node_modules_cache }}"
     - "{{ app_static_cache }}"
 
-- name: Delete any existing node_modules folder/file
+- name: Determine if node_modules is a symlink
+  stat: path={{ app_home }}/node_modules
+  register: node_modules_symlink
+
+- name: Delete any existing node_modules directory
   file: path={{ app_home }}/node_modules
         state=absent
+  register: node_modules_deleted
+  when: not node_modules_symlink.stat.islnk
 
 - name: Symlink the node_modules cache into the project root
   file: src={{ app_node_modules_cache }}
@@ -20,19 +26,22 @@
         state=link
         owner=root
         group=nyc-trees
+  when: node_modules_deleted | changed
 
-- name: Install application javascript dependencies
+- name: Install application JavaScript dependencies
   npm: path={{ app_home }}
   sudo_user: nyc-trees
 
 - name: Create static files and run collectstatic (staging/production)
-  command: npm run build
+  command: "./node_modules/.bin/gulp"
   args:
     chdir: "{{ app_home }}"
+  sudo_user: nyc-trees
   when: not_developing
 
 - name: Create static files and run collectstatic (development)
-  command: npm run build-debug
+  command: "./node_modules/.bin/gulp build --debug"
   args:
     chdir: "{{ app_home }}"
+  sudo_user: nyc-trees
   when: developing
