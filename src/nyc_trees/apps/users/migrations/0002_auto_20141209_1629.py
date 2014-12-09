@@ -23,8 +23,11 @@ class Migration(migrations.Migration):
                 ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
             ],
             options={
-                'abstract': False,
             },
             bases=(models.Model,),
+        ),
+        migrations.AlterUniqueTogether(
+            name='achievement',
+            unique_together=set([('user', 'achievement_id')]),
         ),
     ]

@@ -74,4 +74,5 @@ class Achievement(NycModel, models.Model):
     user = models.ForeignKey(User)
     achievement_id = models.IntegerField(choices=achievement_choices)
 
-    unique_together = ("user", "achievement_name")
+    class Meta:
+        unique_together = ("user", "achievement_id")

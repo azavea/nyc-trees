@@ -12,7 +12,8 @@ from apps.core.test_utils import make_request
 
 from apps.survey.models import Tree, Species, Blockface, Survey
 
-from apps.users.models import Follow, Achievement, achievements
+from apps.users.models import (Follow, Achievement, achievements,
+                               AchievementDefinition)
 from apps.users.views.user import user_detail, user_detail_view
 
 
@@ -37,7 +38,7 @@ class ProfileTemplateTests(TestCase):
         Follow.objects.create(group=self.group, user=self.user)
         self.achievement = Achievement.objects.create(
             user=self.user,
-            achievement_name=achievements.keys()[0]
+            achievement_id=AchievementDefinition.FINISH_TRAINING
         )
 
     def _update_user(self, **kwargs):
@@ -100,9 +101,11 @@ class ProfileTemplateTests(TestCase):
         self._assert_visible_to_all('Achievements')
 
     def test_achievements_section_contents(self):
-        self._assert_visible_only_to_me(self.achievement.achievement_name)
+        self._assert_visible_only_to_me(
+            achievements[AchievementDefinition.FINISH_TRAINING].name)
         self._update_user(achievements_are_public=True)
-        self._assert_visible_to_all(self.achievement.achievement_name)
+        self._assert_visible_to_all(
+            achievements[AchievementDefinition.FINISH_TRAINING].name)
 
     def test_contributions_section_visibility(self):
         self._assert_visible_only_to_me('Contributions')
