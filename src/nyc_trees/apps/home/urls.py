@@ -12,11 +12,10 @@ from apps.home.views import home_page, progress_page, retrieve_job_status
 
 urlpatterns = patterns(
     '',
-    url(r'^/$',
+    url(r'^$',
         route(GET=home_page),
         name='home_page'),
 
-    # May be part of home page
     url(r'^progress/$',
         route(GET=progress_page),
         name='progress_page'),
@@ -31,5 +30,5 @@ urlpatterns = patterns(
     # url(r'^about/$', route(GET=about_page)),
     # url(r'^training/$', route(GET=training_material_list_page)),
     # url(r'^training/(?P<training_material_url_name>\w+)/$',
-    #     route(GET=training_material__detail_page)),
+    #     route(GET=training_material_detail_page)),
 )

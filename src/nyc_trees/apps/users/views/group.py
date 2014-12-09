@@ -76,11 +76,6 @@ def start_group_map_print_job(request, group_slug):
     pass
 
 
-def group_mapping_priveleges_page(request, group_slug):
-    # TODO: implement
-    pass
-
-
 def give_user_mapping_priveleges(request, group_slug, username):
     # TODO: implement
     pass

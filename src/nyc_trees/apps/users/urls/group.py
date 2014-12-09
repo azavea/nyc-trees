@@ -12,7 +12,6 @@ from apps.core.decorators import is_group_admin
 from apps.users.views.group import (group_list_page, group_detail, edit_group,
                                     follow_group, unfollow_group,
                                     start_group_map_print_job,
-                                    group_mapping_priveleges_page,
                                     give_user_mapping_priveleges,
                                     remove_user_mapping_priveleges,
                                     update_group_settings)
@@ -47,10 +46,6 @@ urlpatterns = patterns(
         # TODO: should this have group_admin()
         route(POST=start_group_map_print_job),
         name='start_group_map_print_job'),
-
-    url(r'^(?P<group_slug>[\w-]+)/individual-mapper/$',
-        is_group_admin(route(GET=group_mapping_priveleges_page)),
-        name='group_mapping_priveleges_page'),
 
     url(r'^(?P<group_slug>[\w-]+)/individual-mapper/(?P<username>\w+)/$',
         is_group_admin(route(PUT=give_user_mapping_priveleges,

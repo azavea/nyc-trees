@@ -138,6 +138,18 @@ def start_map_for_tool_depots_job(request, username):
     pass
 
 
+@render_template('users/achievement.html')
+def achievements_page(request):
+    # TODO: implement
+    return {}
+
+
+@render_template('users/training.html')
+def training_page(request):
+    # TODO: implement
+    return {}
+
+
 render_user_template = render_template('users/profile.html')
 
 user_detail = render_user_template(user_detail_view)
