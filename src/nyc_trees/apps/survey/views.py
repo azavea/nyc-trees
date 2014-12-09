@@ -3,10 +3,13 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
+from django_tinsel.decorators import render_template
 
+
+@render_template('survey/reserve_blockface.html')
 def reserve_blockface_page(request):
     # TODO: implement
-    pass
+    return {}
 
 
 def cancel_reservation(request, blockface_id):
@@ -24,9 +27,10 @@ def remove_blockface_from_cart(request, blockface_id):
     pass
 
 
+@render_template('survey/blockface_cart.html')
 def blockface_cart_page(request):
     # TODO: implement
-    pass
+    return {}
 
 
 def reserve_blockfaces(request):
@@ -34,9 +38,10 @@ def reserve_blockfaces(request):
     pass
 
 
+@render_template('survey/reserve_blockface_confirmation.html')
 def blockface_reservations_confirmation_page(request):
     # TODO: implement
-    pass
+    return {}
 
 
 def start_survey(request, blockface_id):
