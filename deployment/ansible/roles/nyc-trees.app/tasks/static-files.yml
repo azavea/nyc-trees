@@ -28,7 +28,9 @@
        state=present
 
 - name: Install application javascript dependencies
-  npm: path={{ app_home }}
+  command: npm install
+  args:
+      chdir: "{{ app_home }}"
   sudo_user: nyc-trees
 
 - name: Create static files and run collectstatic (staging/production)
