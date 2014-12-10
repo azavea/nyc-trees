@@ -12,7 +12,7 @@ var gulp = require('gulp'),
     watchify = require('watchify'),
     gutil = require('gulp-util'),
     revall = require('gulp-rev-all'),
-    sass = require('gulp-sass'),
+    sass = require('gulp-ruby-sass'),
     concat = require('gulp-concat'),
     postcss = require('gulp-postcss'),
     csswring = require('csswring'),
@@ -128,7 +128,7 @@ function browserifyTask(bundler) {
 gulp.task('sass', ['clean'], function() {
     return gulp.src('sass/main.scss')
         .pipe(sourcemaps.init())
-        .pipe(sass({outputStyle: 'compressed'}))
+        .pipe(sass({style: 'compressed'}))
         .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest(cssDir));
 });
