@@ -56,6 +56,7 @@ pgweb                  | 15433 | [http://localhost:15433](http://localhost:15433
 Redis                  | 16379 | `redis-cli -h localhost 16379`                   | NYC_TREES_PORT_6379
 livereload             | 35729 | (for gulp watch)                                 | N/A
 LiveServer Tests       | 9001  | (for Sauce Labs)                                 | NYC_TREES_PORT_9001
+Testem                 | 7357  |                                                  | NYC_TREES_PORT_7357
 
 
 ### Javascript and CSS

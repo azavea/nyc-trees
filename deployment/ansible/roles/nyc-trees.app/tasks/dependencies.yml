@@ -17,7 +17,5 @@
   when: developing_or_testing
 
 - name: Install Firefox for UI tests
-  apt: pkg={{ item }} state=present
-  with_items:
-      - firefox=34.0+build2-0ubuntu0.14.04.1
-  when: developing
+  apt: pkg=firefox=34.0+build2-0ubuntu0.14.04.1 state=present
+  when: developing_or_testing

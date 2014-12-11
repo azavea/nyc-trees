@@ -126,6 +126,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     app.vm.network "forwarded_port", guest: 35729, host: 35729, auto_correct: true
     # Support accessing the test live server (for Sauce Labs)
     app.vm.network "forwarded_port", guest: 9001, host: ENV.fetch("NYC_TREES_PORT_9001", 9001)
+    # Testem server
+    app.vm.network "forwarded_port", guest: 7357, host: ENV.fetch("NYC_TREES_PORT_7357", 7357)
 
     app.ssh.forward_x11 = true
 
