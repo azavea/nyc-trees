@@ -1573,9 +1573,9 @@
           }
         },
         "v8flags": {
-          "version": "1.0.6",
+          "version": "1.0.1",
           "from": "v8flags@^1.0.1",
-          "resolved": "https://registry.npmjs.org/v8flags/-/v8flags-1.0.6.tgz"
+          "resolved": "https://registry.npmjs.org/v8flags/-/v8flags-1.0.1.tgz"
         },
         "vinyl-fs": {
           "version": "0.3.13",
