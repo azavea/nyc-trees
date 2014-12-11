@@ -56,10 +56,74 @@ cache_cluster_security_group = t.add_parameter(Parameter(
     Description='Physical resource ID of an AWS::EC2::SecurityGroup'
 ))
 
+#
+# Security Group Resources
+#
+bastion_security_group = t.add_resource(ec2.SecurityGroup(
+    'sgBastion', GroupDescription='Enables access to the BastionHost',
+    VpcId=Ref(vpc_param),
+    SecurityGroupIngress=[
+        ec2.SecurityGroupRule(IpProtocol='tcp', CidrIp=Ref(office_cidr_param),
+                              FromPort=p, ToPort=p)
+        for p in [22, 5601, 8080]
+    ] + [
+        ec2.SecurityGroupRule(IpProtocol='tcp', CidrIp=utils.VPC_CIDR,
+                              FromPort=p, ToPort=p)
+        for p in [2003, 8125, 20514]
+    ] + [
+        ec2.SecurityGroupRule(IpProtocol='udp', CidrIp=utils.VPC_CIDR,
+                              FromPort=p, ToPort=p)
+        for p in [8125]
+    ],
+    SecurityGroupEgress=[
+        ec2.SecurityGroupRule(
+            IpProtocol='tcp', CidrIp=utils.VPC_CIDR, FromPort=p, ToPort=p
+        )
+        for p in [22, 5432, 6379]
+    ] + [
+        ec2.SecurityGroupRule(IpProtocol='tcp', CidrIp=utils.ALLOW_ALL_CIDR,
+                              FromPort=p, ToPort=p)
+        for p in [80, 443]
+    ],
+    Tags=Tags(Name='sgBastion')
+))
 
-data_store_server_subnets_param = t.add_parameter(Parameter(
-    'DataStoreServerSubnets', Type='CommaDelimitedList',
-    Description='A list of subnets to associate with the data store servers'
+database_server_security_group = t.add_resource(ec2.SecurityGroup(
+    'sgDatabaseServer',
+    GroupDescription='Enables access to database servers',
+    VpcId=Ref(vpc_param),
+    SecurityGroupIngress=[
+        ec2.SecurityGroupRule(
+            IpProtocol='tcp', CidrIp=utils.VPC_CIDR, FromPort=p, ToPort=p
+        )
+        for p in [5432]
+    ],
+    SecurityGroupEgress=[
+        ec2.SecurityGroupRule(
+            IpProtocol='tcp', CidrIp=utils.VPC_CIDR, FromPort=p, ToPort=p
+        )
+        for p in [5432]
+    ],
+    Tags=Tags(Name='sgDatabaseServer')
+))
+
+cache_cluster_security_group = t.add_resource(ec2.SecurityGroup(
+    'sgCacheCluster',
+    GroupDescription='Enables access to the cache cluster',
+    VpcId=Ref(vpc_param),
+    SecurityGroupIngress=[
+        ec2.SecurityGroupRule(
+            IpProtocol='tcp', CidrIp=utils.VPC_CIDR, FromPort=p, ToPort=p
+        )
+        for p in [6379]
+    ],
+    SecurityGroupEgress=[
+        ec2.SecurityGroupRule(
+            IpProtocol='tcp', CidrIp=utils.VPC_CIDR, FromPort=p, ToPort=p
+        )
+        for p in [6379]
+    ],
+    Tags=Tags(Name='sgCacheCluster')
 ))
 
 #

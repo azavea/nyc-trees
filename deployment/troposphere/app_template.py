@@ -46,15 +46,60 @@ app_server_load_balancer = t.add_parameter(Parameter(
     Description='Name of an AWS::ElasticLoadBalancing::LoadBalancer'
 ))
 
-app_server_security_group = t.add_parameter(Parameter(
-    'sgAppServer', Type='String',
-    Description='Physical resource ID of an AWS::EC2::SecurityGroup'
+#
+# Security Group Resources
+#
+app_server_load_balancer_security_group = t.add_resource(ec2.SecurityGroup(
+    'sgAppServerLoadBalancer',
+    GroupDescription='Enables access to app servers via a load balancer',
+    VpcId=Ref(vpc_param),
+    SecurityGroupIngress=[
+        ec2.SecurityGroupRule(
+            IpProtocol='tcp', CidrIp=utils.ALLOW_ALL_CIDR, FromPort=p, ToPort=p
+        )
+        for p in [80]
+    ],
+    SecurityGroupEgress=[
+        ec2.SecurityGroupRule(
+            IpProtocol='tcp', CidrIp=utils.VPC_CIDR, FromPort=p, ToPort=p
+        )
+        for p in [80]
+    ],
+    Tags=Tags(Name='sgAppServerLoadBalancer')
 ))
 
-app_server_subnets_param = t.add_parameter(Parameter(
-    'AppServerSubnets', Type='CommaDelimitedList',
-    Description='A list of subnets to associate with the application server '
-                'load balancer'
+app_server_security_group = t.add_resource(ec2.SecurityGroup(
+    'sgAppServer', GroupDescription='Enables access to application servers',
+    VpcId=Ref(vpc_param),
+    SecurityGroupIngress=[
+        ec2.SecurityGroupRule(
+            IpProtocol='tcp', CidrIp=utils.VPC_CIDR, FromPort=p, ToPort=p
+        )
+        for p in [22, 80]
+    ] + [
+        ec2.SecurityGroupRule(
+            IpProtocol='tcp', SourceSecurityGroupId=Ref(sg),
+            FromPort=80, ToPort=80
+        )
+        for sg in [app_server_load_balancer_security_group]
+    ],
+    egress=[
+        ec2.SecurityGroupRule(
+            IpProtocol='tcp', CidrIp=utils.VPC_CIDR, FromPort=p, ToPort=p
+        )
+        for p in [80, 2003, 5432, 6379, 8125, 20514]
+    ] + [
+        ec2.SecurityGroupRule(
+            IpProtocol='udp', CidrIp=utils.VPC_CIDR, FromPort=p, ToPort=p
+        )
+        for p in [8125]
+    ] + [
+        ec2.SecurityGroupRule(
+            IpProtocol='tcp', CidrIp=utils.ALLOW_ALL_CIDR, FromPort=p, ToPort=p
+        )
+        for p in [80, 443]
+    ],
+    Tags=Tags(Name='sgAppServer')
 ))
 
 #

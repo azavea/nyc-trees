@@ -63,12 +63,15 @@ gateway_attachment = t.add_resource(ec2.VPCGatewayAttachment(
     'VPCGatewayAttachment', VpcId=Ref(vpc), InternetGatewayId=Ref(gateway)
 ))
 
-public_route_table = utils.create_route_table(t, 'PublicRouteTable', vpc)
+public_route_table = t.add_resource(ec2.RouteTable(
+    'PublicRouteTable', VpcId=Ref(vpc), Tags=Tags(Name='PublicRouteTable')
+))
 
-utils.create_route(
-    t, 'PublicRoute', public_route_table, DependsOn=gateway_attachment.title,
-    GatewayId=Ref(gateway)
-)
+t.add_resource(ec2.Route(
+    'PublicRoute', RouteTableId=Ref(public_route_table),
+    DestinationCidrBlock=utils.ALLOW_ALL_CIDR,
+    DependsOn=gateway_attachment.title, GatewayId=Ref(gateway)
+))
 
 nat_security_group = utils.create_security_group(
     t, 'sgNAT', 'Enables access to the NAT devices', vpc,
@@ -93,10 +96,12 @@ for index, availability_zone in enumerate(utils.EC2_AVAILABILITY_ZONES):
     if index == 1:
         index = 2
 
-    public_subnet = utils.create_subnet(
-        t, 'USEast1%sPublicSubnet' % availability_zone.upper(), vpc,
-        '10.0.%s.0/24' % index, 'us-east-1%s' % availability_zone
-    )
+    public_subnet = t.add_resource(ec2.Subnet(
+        'USEast1%sPublicSubnet' % availability_zone.upper(), VpcId=Ref(vpc),
+        CidrBlock='10.0.%s.0/24' % index,
+        AvailabilityZone='us-east-1%s' % availability_zone,
+        Tags=Tags(Name='USEast1%sPublicSubnet' % availability_zone.upper())
+    ))
 
     t.add_resource(ec2.SubnetRouteTableAssociation(
         '%sPublicRouteTableAssociation' % public_subnet.title,
@@ -123,17 +128,22 @@ for index, availability_zone in enumerate(utils.EC2_AVAILABILITY_ZONES):
         Tags=Tags(Name='USEast1%sNATInstance' % availability_zone.upper())
     ))
 
-    private_subnet = utils.create_subnet(
-        t, 'USEast1%sPrivateSubnet' % availability_zone.upper(), vpc,
-        '10.0.%s.0/24' % (index + 1), 'us-east-1%s' % availability_zone
-    )
+    private_subnet = t.add_resource(ec2.Subnet(
+        'USEast1%sPrivateSubnet' % availability_zone.upper(), VpcId=Ref(vpc),
+        CidrBlock='10.0.%s.0/24' % (index + 1),
+        AvailabilityZone='us-east-1%s' % availability_zone,
+        Tags=Tags(Name='USEast1%sPrivateSubnet' % availability_zone.upper())
+    ))
 
-    private_route_table = utils.create_route_table(
-        t, 'USEast1%sPrivateRouteTable' % availability_zone.upper(), vpc)
+    private_route_table = t.add_resource(ec2.RouteTable(
+        'USEast1%sPrivateRoute' % availability_zone.upper(), VpcId=Ref(vpc)
+    ))
 
-    private_route = utils.create_route(
-        t, 'USEast1%sPrivateRoute' % availability_zone.upper(),
-        private_route_table, InstanceId=Ref(nat_device))
+    private_route = t.add_resource(ec2.Route(
+        'USEast1%sPrivateRoute' % availability_zone.upper(),
+        RouteTableId=Ref(private_route_table),
+        DestinationCidrBlock=utils.ALLOW_ALL_CIDR, InstanceId=Ref(nat_device)
+    ))
 
     t.add_resource(ec2.SubnetRouteTableAssociation(
         '%sPrivateSubnetRouteTableAssociation' % private_subnet.title,
