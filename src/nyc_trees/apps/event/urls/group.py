@@ -19,49 +19,50 @@ from apps.event.views import (
 # These URLs have the prefix 'group/'
 urlpatterns = patterns(
     '',
-    url(r'^(?P<group_slug>\w+)/event/$',
+    url(r'^(?P<group_slug>[\w-]+)/event/$',
         is_group_admin(route(GET=event_dashboard)),
         name='events'),
 
-    url(r'^(?P<group_slug>\w+)/add-event/$',
+    url(r'^(?P<group_slug>[\w-]+)/add-event/$',
         is_group_admin(route(GET=add_event_page,
                              POST=add_event)),
-        name='events'),
+        name='add_event'),
 
-    url(r'^(?P<group_slug>\w+)/event/(?P<event_slug>\w+)/$',
+    url(r'^(?P<group_slug>[\w-]+)/event/(?P<event_slug>[\w-]+)/$',
         route(GET=event_detail,
               DELETE=is_group_admin(delete_event)),
         name='event_detail'),
 
-    url(r'^(?P<group_slug>\w+)/event/(?P<event_slug>\w+)/edit/$',
+    url(r'^(?P<group_slug>[\w-]+)/event/(?P<event_slug>[\w-]+)/edit/$',
         route(GET=is_group_admin(edit_event_page),
               PUT=is_group_admin(edit_event)),
         name='event_edit'),
 
-    url(r'^(?P<group_slug>\w+)/event/(?P<event_slug>\w+)/popup/$',
+    url(r'^(?P<group_slug>[\w-]+)/event/(?P<event_slug>[\w-]+)/popup/$',
         route(GET=event_popup_partial),
         name='event_popup_partial'),
 
-    url(r'^(?P<group_slug>\w+)/event/(?P<event_slug>\w+)/register/$',
+    url(r'^(?P<group_slug>[\w-]+)/event/(?P<event_slug>[\w-]+)/register/$',
         has_training(route(POST=register_for_event,
                            DELETE=cancel_event_registration)),
         name='event_registration'),
 
-    url(r'^(?P<group_slug>\w+)/event/(?P<event_slug>\w+)/printable-map/$',
+    url(r'^(?P<group_slug>[\w-]+)/event/'
+        r'(?P<event_slug>[\w-]+)/printable-map/$',
         has_training(route(POST=start_event_map_print_job)),
         name='start_event_map_print_job'),
 
-    url(r'^(?P<group_slug>\w+)/event/(?P<event_slug>\w+)/checkin/$',
+    url(r'^(?P<group_slug>[\w-]+)/event/(?P<event_slug>[\w-]+)/checkin/$',
         is_group_admin(route(GET=event_check_in_page)),
         name='event_check_in_page'),
 
-    url(r'^(?P<group_slug>\w+)/event/'
-        r'(?P<event_slug>\w+)/checkin/(?P<username>\w+)/$',
+    url(r'^(?P<group_slug>[\w-]+)/event/'
+        r'(?P<event_slug>[\w-]+)/checkin/(?P<username>[^/]+)/$',
         is_group_admin(route(POST=check_in_user_to_event,
                              DELETE=un_check_in_user_to_event)),
         name='event_check_in'),
 
-    url(r'^(?P<group_slug>\w+)/event/(?P<event_slug>\w+)/email/$',
+    url(r'^(?P<group_slug>[\w-]+)/event/(?P<event_slug>[\w-]+)/email/$',
         is_group_admin(route(POST=email_event_registered_users)),
         name='email_event_registered_users'),
 )
