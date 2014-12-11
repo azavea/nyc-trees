@@ -21,8 +21,16 @@
         owner=root
         group=nyc-trees
 
+- name: Install Sass
+  gem: name=sass
+       version=3.4.9
+       user_install=no
+       state=present
+
 - name: Install application javascript dependencies
-  npm: path={{ app_home }}
+  command: npm install
+  args:
+      chdir: "{{ app_home }}"
   sudo_user: nyc-trees
 
 - name: Create static files and run collectstatic (staging/production)

@@ -7,3 +7,4 @@ dependencies:
   - { role: "azavea.daemontools" }
   - { role: "azavea.nginx", nginx_delete_default_site: True }
   - { role: "azavea.nodejs" }
+  - { role: "azavea.ruby" }
