@@ -31,7 +31,7 @@
     "browserify-shim": "^3.8.1",
     "csswring": "~1.3.0",
     "del": "^0.1.3",
-    "factor-bundle": "~2.2.4",
+    "factor-bundle": "^2.3.3",
     "gulp": "~3.8.8",
     "gulp-concat": "~2.4.1",
     "gulp-if": "~1.2.5",
