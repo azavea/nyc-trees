@@ -5,7 +5,7 @@ from __future__ import division
 
 from datetime import datetime
 
-from django.forms import ModelForm, DateField, TimeField
+from floppyforms.__future__ import ModelForm, DateField, TimeField
 
 from apps.event.models import Event
 
