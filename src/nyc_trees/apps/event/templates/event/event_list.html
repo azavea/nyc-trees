@@ -1,5 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %}
-{# TODO #}
+
+{% if followed_events %}
+    <h1>Your events this week</h1>
+    {% for info in followed_events %}
+    {% include "event/partials/event_section.html" %}
+    {% endfor %}
+{% endif %}
+
+{% if non_followed_events %}
+    <h1>Browse events</h1>
+    {% for info in non_followed_events %}
+    {% include "event/partials/event_section.html" %}
+    {% endfor %}
+{% endif %}
+
 {% endblock content %}

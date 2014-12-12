@@ -5,6 +5,9 @@ from __future__ import division
 
 from django_tinsel.decorators import render_template
 
+from apps.users.models import Follow
+from apps.event.models import Event, EventRegistration
+
 
 def event_dashboard(request, group_slug):
     # TODO: implement
@@ -28,10 +31,27 @@ def event_detail(request, group_slug, event_slug):
     return {}
 
 
-@render_template('event/event_list.html')
 def events_list_page(request):
-    # TODO: implement
-    return {}
+    user = request.user
+    user_registered_event_ids = set(EventRegistration.objects
+                                    .filter(user_id=user.pk)
+                                    .values_list('event_id', flat=True))
+    make_event_info = lambda event: {'event': event,
+                                     'user_is_registered':
+                                     event.pk in user_registered_event_ids}
+    all_events = Event.objects.all()
+
+    if user.is_authenticated():
+        follows = Follow.objects.filter(user_id=user.id)
+        groups = follows.values_list('group', flat=True)
+        followed_events = all_events.filter(group_id__in=groups)
+        non_followed_events = all_events.exclude(pk__in=followed_events)
+    else:
+        followed_events = Event.objects.none()
+        non_followed_events = all_events
+
+    return {'followed_events': map(make_event_info, followed_events),
+            'non_followed_events': map(make_event_info, non_followed_events)}
 
 
 def events_list_page_partial(request):

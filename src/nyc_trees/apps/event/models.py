@@ -49,6 +49,9 @@ class Event(NycModel, models.Model):
         elif not self.slug:
             self.slug = shortuuid.uuid()
 
+    def training_summary(self):
+        return 'Training' if self.includes_training else 'Mapping'
+
     class Meta:
         unique_together = ("group", "slug")
 

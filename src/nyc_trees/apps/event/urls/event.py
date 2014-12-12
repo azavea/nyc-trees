@@ -5,7 +5,8 @@ from __future__ import division
 
 from django.conf.urls import patterns, url
 
-from django_tinsel.decorators import route
+from django_tinsel.decorators import route, render_template
+from django_tinsel.utils import decorate as do
 
 from apps.event.views import (events_list_page, events_list_page_partial,
                               events_list_feed)
@@ -15,7 +16,9 @@ from apps.event.views import (events_list_page, events_list_page_partial,
 urlpatterns = patterns(
     '',
     url(r'^$',
-        route(GET=events_list_page),
+        route(GET=do(
+            render_template('event/event_list.html'),
+            events_list_page)),
         name='events_list_page'),
 
     url(r'^table/$',
