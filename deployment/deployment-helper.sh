@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -e
+set -x
 
 function get_latest_ubuntu_ami() {
   # 1. Get list of daily Ubuntu AMIs
@@ -11,7 +12,7 @@ function get_latest_ubuntu_ami() {
   # 5. Take the top row
   # 6. Take the 8th column
   curl -s "http://cloud-images.ubuntu.com/query/trusty/server/daily.txt" \
-    | grep "ebs\tamd64\t${AWS_DEFAULT_REGION}" \
+    | egrep "ebs\s+amd64\s+${AWS_DEFAULT_REGION}" \
     | grep "hvm" \
     | sort -k4 -r \
     | head -n1 \
@@ -40,15 +41,9 @@ function get_latest_internal_ami() {
 }
 
 function create_ami() {
-  # Get CloudFormation VPC stack outputs
-  AWS_VPC_STACK_OUTPUTS=$(get_stack_outputs "NYCTreesVPC")
-
-  # Build an AMI for the application servers
   packer build \
     -only="${1}" \
     -var "aws_ubuntu_ami=$(get_latest_ubuntu_ami)" \
-    -var "aws_vpc_id=$(echo "${AWS_VPC_STACK_OUTPUTS}" | grep "VpcId" | cut -f2)" \
-    -var "aws_bastion_subnet=$(echo "${AWS_VPC_STACK_OUTPUTS}" | grep "BastionSubnet" | cut -f2)" \
     packer/template.js
 }
 

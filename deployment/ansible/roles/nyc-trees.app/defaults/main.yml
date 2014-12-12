@@ -1,6 +1,7 @@
 ---
 app_home: /opt/app
 app_config_home: /etc/nyc-trees.d/env
+app_deploy_branch: "master"
 app_config:
   - { file: "NYC_TREES_DB_NAME", content: "{{ postgresql_database }}" }
   - { file: "NYC_TREES_DB_USER", content: "{{ postgresql_username }}" }
@@ -11,6 +12,8 @@ app_config:
   - { file: "DJANGO_SETTINGS_MODULE", content: "{{ django_settings_module }}" }
   - { file: "DJANGO_STATIC_ROOT", content: "{{ app_static_root }}" }
   - { file: "DJANGO_MEDIA_ROOT", content: "{{ app_media_root }}" }
+  - { file: "DJANGO_POSTGIS_VERSION", content: "{{ app_postgis_version }}" }
+  - { file: "DJANGO_SECRET_KEY", content: "{{ app_secret_key }}" }
 
 app_sauce_labs_config:
   - { file: "SELENIUM_HOST", content: "{{ lookup('env', 'SELENIUM_HOST') }}" }
@@ -34,3 +37,6 @@ app_media_root: /var/www/nyc-trees/media/
 app_static_cache: /var/cache/nyc-trees/static/
 
 app_npm_version: 2.1.14
+app_sass_version: 3.4.9
+app_postgis_version: 2.1.6
+app_secret_key: "{{ postgresql_password | sha1 }}"

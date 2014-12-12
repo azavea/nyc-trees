@@ -117,74 +117,75 @@ In addition, other [scripts](scripts/) exist if you want to test just one of the
 
 ## Deployment
 
-Deployment is driven by the [Amazon Web Services CLI](http://aws.amazon.com/cli/), but expects the following resources to exist in the target AWS account:
+Deployment is driven by [Packer](https://www.packer.io), [Troposphere](https://github.com/cloudtools/troposphere), and the [Amazon Web Services CLI](http://aws.amazon.com/cli/).
 
-- An EC2 key pair
-- Access keys to sign API requests
-- An IAM role for the application and tile servers
-- An SNS topic for global notifications
+### Dependencies
 
-In order to get started, install the deployment dependencies:
+The deployment process expects the following resources to exist in the target AWS account:
+
+- An EC2 key pair exported as `AWS_KEY_NAME`
+- Access keys to sign API requests exported as `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
+- An SNS topic for global notifications exported as `AWS_SNS_TOPIC`
+
+In addition, export the following environmental variables for the AWS CLI:
 
 ```bash
-$ pip install -r deployment/requirements.txt
+$ export AWS_DEFAULT_OUTPUT=text
+$ export AWS_DEFAULT_REGION=us-east-1
 ```
 
-Then, generate all of the CloudFormation templates:
+Lastly, install the AWS CLI, Boto, and Troposphere:
 
 ```bash
 $ cd deployment
-$ make
+$ pip install -r deployment/requirements.txt
 ```
 
-### Launch the AWS Virtual Private Cloud (VPC)
+### Amazon Machine Images (AMIs)
 
-From within the `deployment` directory, create the VPC CloudFormation stack:
+In order to generate AMIs for the application, tile, and monitoring servers, use the following `make` targets:
+
+```bash
+$ make app-ami
+$ make tiler-ami
+$ make monitoring-ami
+```
+
+### CloudFormation (via Troposphere)
+
+After at least one AMI of each type exists, use the following command to generate all of the CloudFormation templates:
+
+```bash
+$ make build
+```
+
+#### Launch the AWS Virtual Private Cloud (VPC)
+
+Use the following command to create the VPC stack:
 
 ```
 $ make vpc-stack
 ```
 
-### Launch the Data Store Servers
+#### Create Route 53 Private Hosted Zones
 
-When the VPC stack is complete, create the data store CloudFormation stack:
+Next, create the internal to the VPC private hosted zones:
+
+```bash
+$ make private-hosted-zones
+```
+
+#### Launch the Data Stores
+
+After the private hosted zones exist, create the data store stack:
 
 ```
 $ make data-store-stack
 ```
 
-### Create Private DNS stack
+#### Launch the Tile and Application Servers
 
-After the data store stack is complete, create the private DNS stack:
-
-```
-$ make private-dns-stack
-```
-
-### Create Monitoring Server AMI
-
-Now that both the VPC, data store, and private DNS stacks are complete, we can generate the monitoring server AMI. This needs to occur *after* the data store stack is complete because Redis (part of the data store stack) is used as a buffer for inbound messages into Logstash:
-
-```
-$ make monitoring-ami
-```
-
-After the monitoring server AMI is created, we need to update the VPC and private DNS stacks so that the bastion host uses the new monitoring server AMI. The bastion host has dual roles (VPC bastion and monitoring server):
-
-```
-$ make update-vpc-stack
-$ make update-private-dns-stack
-```
-
-### Launch the Tile and Application Servers
-
-Now that the VPC, data store, and monitoring stacks are setup, we can begin working on the tile and applications servers. First, we need to create their AMIs:
-
-```
-$ make app-and-tiler-amis
-```
-
-Next, we can create each server stack, which will make use of the most recent AMIs available:
+Now that the VPC and data store stacks are setup, we can launch the tile and applications server stacks, which will make use of the most recent AMIs available:
 
 ```
 $ make tiler-stack

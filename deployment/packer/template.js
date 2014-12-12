@@ -6,9 +6,7 @@
     "aws_ssh_username": "ubuntu",
     "aws_access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
     "aws_secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}",
-    "aws_ubuntu_ami": "",
-    "aws_vpc_id": "",
-    "aws_bastion_subnet": ""
+    "aws_ubuntu_ami": ""
   },
   "builders": [
     {
@@ -24,10 +22,7 @@
       "tags": {
         "name": "nyc-trees-monitoring",
         "version": "{{user `version`}}"
-      },
-      "vpc_id": "{{user `aws_vpc_id`}}",
-      "subnet_id": "{{user `aws_bastion_subnet`}}",
-      "associate_public_ip_address": true
+      }
     },
     {
       "name": "nyc-trees-tiler",
@@ -42,10 +37,7 @@
       "tags": {
         "name": "nyc-trees-tiler",
         "version": "{{user `version`}}"
-      },
-      "vpc_id": "{{user `aws_vpc_id`}}",
-      "subnet_id": "{{user `aws_bastion_subnet`}}",
-      "associate_public_ip_address": true
+      }
     },
     {
       "name": "nyc-trees-app",
@@ -60,10 +52,7 @@
       "tags": {
         "name": "nyc-trees-app",
         "version": "{{user `version`}}"
-      },
-      "vpc_id": "{{user `aws_vpc_id`}}",
-      "subnet_id": "{{user `aws_bastion_subnet`}}",
-      "associate_public_ip_address": true
+      }
     }
   ],
   "provisioners": [
@@ -73,7 +62,7 @@
         "sleep 5",
         "sudo apt-get update -qq",
         "sudo apt-get install python-pip python-dev -y",
-        "sudo pip install ansible==1.7.2"
+        "sudo pip install ansible==1.8.2"
       ]
     },
     {
@@ -99,6 +88,9 @@
       "playbook_file": "ansible/app-servers.yml",
       "playbook_dir": "ansible",
       "inventory_file": "ansible/inventory/packer-app-server",
+      "extra_arguments": [
+        "--extra-vars 'app_deploy_branch={{user `version`}}'"
+      ],
       "only": [
         "nyc-trees-app"
       ]

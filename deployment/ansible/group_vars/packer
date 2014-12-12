@@ -1,4 +1,6 @@
 ---
+django_settings_module: "nyc_trees.settings.production"
+
 ntp_servers:
   - 0.amazon.pool.ntp.org
   - 1.amazon.pool.ntp.org
@@ -11,3 +13,8 @@ relp_host: "monitoring.service.nyc-trees.internal"
 graphite_host: "monitoring.service.nyc-trees.internal"
 statsite_host: "monitoring.service.nyc-trees.internal"
 tile_server_endpoint: "tile.service.nyc-trees.internal"
+
+postgresql_username: nyctrees
+postgresql_password: nyctrees
+postgresql_database: nyc_trees
+

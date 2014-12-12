@@ -1,6 +1,6 @@
 bind = "127.0.0.1:8000"
 
-{% if developing_or_testing -%}
+{% if developing_or_testing | bool -%}
 accesslog = "-"
 errorlog = "-"
 loglevel = 'debug'

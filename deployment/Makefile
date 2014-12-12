@@ -36,3 +36,6 @@ tiler-stack:
 
 app-stack:
 	./deployment-helper.sh create-app-stack
+
+app-ami:
+	./deployment-helper.sh create-app-ami
