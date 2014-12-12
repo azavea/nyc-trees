@@ -3,8 +3,6 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
-from django_tinsel.decorators import render_template
-
 from apps.users.models import Follow
 from apps.event.models import Event, EventRegistration
 
@@ -19,13 +17,11 @@ def add_event(request, group_slug):
     pass
 
 
-@render_template('event/add_event.html')
 def add_event_page(request, group_slug):
     # TODO: implement
     return {}
 
 
-@render_template('event/event_detail.html')
 def event_detail(request, group_slug, event_slug):
     # TODO: implement
     return {}
@@ -69,7 +65,6 @@ def delete_event(request, group_slug, event_slug):
     pass
 
 
-@render_template('event/edit_event.html')
 def edit_event_page(request, group_slug, event_slug):
     # TODO: implement
     return {}
@@ -100,7 +95,6 @@ def start_event_map_print_job(request, group_slug, event_slug):
     pass
 
 
-@render_template('event/admin_checkin.html')
 def event_check_in_page(request, group_slug, event_slug):
     # TODO: implement
     return {}
