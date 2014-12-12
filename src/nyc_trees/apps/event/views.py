@@ -5,6 +5,13 @@ from __future__ import division
 
 from apps.users.models import Follow
 from apps.event.models import Event, EventRegistration
+from django.contrib.gis.geos import Point
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
+
+from apps.core.models import Group
+from apps.event.forms import EventForm
 
 
 def event_dashboard(request, group_slug):
@@ -13,13 +20,28 @@ def event_dashboard(request, group_slug):
 
 
 def add_event(request, group_slug):
-    # TODO: implement
-    pass
+    group = get_object_or_404(Group, slug=group_slug)
+    form = EventForm(request.POST.copy())
+    form.data['group'] = group.pk
+
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect(
+            reverse('group_edit', kwargs={'group_slug': group.slug}))
+    return {
+        'form': form,
+        'group': group
+    }
 
 
 def add_event_page(request, group_slug):
-    # TODO: implement
-    return {}
+    group = get_object_or_404(Group, slug=group_slug)
+    # TODO: Remove initial location after adding client-side geocoding
+    form = EventForm(initial={'location': Point(0, 0)})
+    return {
+        'form': form,
+        'group': group
+    }
 
 
 def event_detail(request, group_slug, event_slug):
