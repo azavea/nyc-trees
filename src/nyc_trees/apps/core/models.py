@@ -61,6 +61,9 @@ class Group(NycModel, models.Model):
     image = models.ImageField(null=True)
     is_active = models.BooleanField(default=True)
 
+    def __unicode__(self):
+        return self.name
+
     def clean(self):
         if not self.slug:
             self.slug = slugify(self.name)
