@@ -7,6 +7,8 @@ from datetime import datetime
 
 from floppyforms.__future__ import ModelForm, DateField, TimeField
 
+from django.core.exceptions import ValidationError
+
 from apps.event.models import Event
 
 
@@ -34,12 +36,16 @@ class EventForm(ModelForm):
     def clean(self):
         cleaned_data = super(EventForm, self).clean()
 
-        if all(key in cleaned_data for key in
-               {'date', 'begins_at_time', 'ends_at_time'}):
-            self.instance.begins_at = datetime.combine(
-                cleaned_data['date'], cleaned_data['begins_at_time'])
+        if 'begins_at_time' in cleaned_data and 'ends_at_time' in cleaned_data:
+            if cleaned_data['begins_at_time'] > cleaned_data['ends_at_time']:
+                raise ValidationError({
+                    'begins_at_time': ['Start time must be before end time']
+                })
+            if 'date' in cleaned_data:
+                self.instance.begins_at = datetime.combine(
+                    cleaned_data['date'], cleaned_data['begins_at_time'])
 
-            self.instance.ends_at = datetime.combine(
-                cleaned_data['date'], cleaned_data['ends_at_time'])
+                self.instance.ends_at = datetime.combine(
+                    cleaned_data['date'], cleaned_data['ends_at_time'])
 
         return cleaned_data
