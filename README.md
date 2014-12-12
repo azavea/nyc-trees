@@ -126,6 +126,7 @@ The deployment process expects the following resources to exist in the target AW
 - An EC2 key pair exported as `AWS_KEY_NAME`
 - Access keys to sign API requests exported as `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
 - An SNS topic for global notifications exported as `AWS_SNS_TOPIC`
+- The name of a Route 53 hosted zone to connect to the application load balancers exported as `AWS_APP_HOSTED_ZONE`
 
 In addition, export the following environmental variables for the AWS CLI:
 
@@ -183,11 +184,18 @@ After the private hosted zones exist, create the data store stack:
 $ make data-store-stack
 ```
 
-#### Launch the Tile and Application Servers
+#### Launch the Application Servers
 
-Now that the VPC and data store stacks are setup, we can launch the tile and applications server stacks, which will make use of the most recent AMIs available:
+Now that the VPC and data store stacks are setup, we can launch the application server stack, which will make use of the most recent AMIs available:
 
 ```
-$ make tiler-stack
 $ make app-stack
+```
+
+#### Activate Application Servers
+
+Depending on which color stack you just deployed (Blue or Green), activate DNS for the hosted zone:
+
+```
+$ make app-stack-[green,blue]
 ```

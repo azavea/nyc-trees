@@ -5,6 +5,7 @@ import datetime
 
 VPC_CIDR = '10.0.0.0/16'
 ALLOW_ALL_CIDR = '0.0.0.0/0'
+OFFICE_CIDR = '216.158.51.82/32'
 
 EC2_REGIONS = [
     'us-east-1'
@@ -16,6 +17,7 @@ EC2_AVAILABILITY_ZONES = [
 EC2_INSTANCE_TYPES = [
     't1.micro',
     't2.micro',
+    't2.medium',
     'm3.medium'
 ]
 RDS_INSTANCE_TYPES = [

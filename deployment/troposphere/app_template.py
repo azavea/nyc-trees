@@ -1,7 +1,8 @@
-from troposphere import Template, Parameter, Ref
+from troposphere import Template, Parameter, Ref, Tags, Output, GetAtt, ec2
 
 import template_utils as utils
 import troposphere.autoscaling as asg
+import troposphere.elasticloadbalancing as elb
 
 t = Template()
 
@@ -11,8 +12,18 @@ t.add_description('An application server stack for the nyc-trees project.')
 #
 # Parameters
 #
+color_param = t.add_parameter(Parameter(
+    'StackColor', Type='String',
+    Description='Stack color', AllowedValues=['Blue', 'Green'],
+    ConstraintDescription='must be either Blue or Green'
+))
+
+vpc_param = t.add_parameter(Parameter(
+    'VpcId', Type='String', Description='Name of an existing VPC'
+))
+
 keyname_param = t.add_parameter(Parameter(
-    'KeyName', Type='String', Default='nyc-trees-test',
+    'KeyName', Type='String', Default='nyc-trees-stg',
     Description='Name of an existing EC2 key pair'
 ))
 
@@ -26,13 +37,13 @@ app_server_ami_param = t.add_parameter(Parameter(
     Description='Application server AMI'
 ))
 
-app_server_instance_profile_param = t.add_parameter(Parameter(
-    'AppServerInstanceProfile', Type='String',
-    Default=
-    'arn:aws:iam::900325299081:instance-profile/AppServerInstanceProfile',
-    Description='Physical resource ID of an AWS::IAM::Role for the '
-                'application servers'
-))
+# app_server_instance_profile_param = t.add_parameter(Parameter(
+#     'AppServerInstanceProfile', Type='String',
+#     Default=
+#     'arn:aws:iam::900325299081:instance-profile/AppServerInstanceProfile',
+#     Description='Physical resource ID of an AWS::IAM::Role for the '
+#                 'application servers'
+# ))
 
 app_server_instance_type_param = t.add_parameter(Parameter(
     'AppServerInstanceType', Type='String', Default='t2.micro',
@@ -41,9 +52,14 @@ app_server_instance_type_param = t.add_parameter(Parameter(
     ConstraintDescription='must be a valid EC2 instance type.'
 ))
 
-app_server_load_balancer = t.add_parameter(Parameter(
-    'elbAppServer', Type='String', Default='elbAppServer',
-    Description='Name of an AWS::ElasticLoadBalancing::LoadBalancer'
+public_subnets_param = t.add_parameter(Parameter(
+    'PublicSubnets', Type='CommaDelimitedList',
+    Description='A list of public subnets'
+))
+
+private_subnets_param = t.add_parameter(Parameter(
+    'PrivateSubnets', Type='CommaDelimitedList',
+    Description='A list of private subnets'
 ))
 
 #
@@ -65,7 +81,10 @@ app_server_load_balancer_security_group = t.add_resource(ec2.SecurityGroup(
         )
         for p in [80]
     ],
-    Tags=Tags(Name='sgAppServerLoadBalancer')
+    Tags=Tags(
+        Name='sgAppServerLoadBalancer',
+        Color=Ref(color_param)
+    )
 ))
 
 app_server_security_group = t.add_resource(ec2.SecurityGroup(
@@ -83,7 +102,7 @@ app_server_security_group = t.add_resource(ec2.SecurityGroup(
         )
         for sg in [app_server_load_balancer_security_group]
     ],
-    egress=[
+    SecurityGroupEgress=[
         ec2.SecurityGroupRule(
             IpProtocol='tcp', CidrIp=utils.VPC_CIDR, FromPort=p, ToPort=p
         )
@@ -99,16 +118,52 @@ app_server_security_group = t.add_resource(ec2.SecurityGroup(
         )
         for p in [80, 443]
     ],
-    Tags=Tags(Name='sgAppServer')
+    Tags=Tags(
+        Name='sgAppServer',
+        Color=Ref(color_param)
+    )
 ))
 
 #
-# Resources
+# ELB Resources
+#
+app_server_load_balancer = t.add_resource(elb.LoadBalancer(
+    'elbAppServer',
+    # TODO: Create an S3 bucket automatically and enable logging.
+    ConnectionDrainingPolicy=elb.ConnectionDrainingPolicy(
+        Enabled=True,
+        Timeout=300,
+    ),
+    CrossZone=True,
+    SecurityGroups=[Ref(app_server_load_balancer_security_group)],
+    Listeners=[
+        elb.Listener(
+            LoadBalancerPort='80',
+            InstancePort='80',
+            Protocol='HTTP',
+        ),
+    ],
+    HealthCheck=elb.HealthCheck(
+        Target="HTTP:80/",
+        HealthyThreshold="3",
+        UnhealthyThreshold="2",
+        Interval="30",
+        Timeout="5",
+    ),
+    Subnets=Ref(public_subnets_param),
+    Tags=Tags(
+        Name='elbAppServer',
+        Color=Ref(color_param)
+    )
+))
+
+#
+# Auto Scaling Group Resources
 #
 app_server_launch_config = t.add_resource(asg.LaunchConfiguration(
     'lcAppServer',
     ImageId=Ref(app_server_ami_param),
-    IamInstanceProfile=Ref(app_server_instance_profile_param),
+    # IamInstanceProfile=Ref(app_server_instance_profile_param),
     InstanceType=Ref(app_server_instance_type_param),
     KeyName=Ref(keyname_param),
     SecurityGroups=[Ref(app_server_security_group)]
@@ -135,9 +190,31 @@ app_server_auto_scaling_group = t.add_resource(asg.AutoScalingGroup(
             asg.EC2_INSTANCE_TERMINATE_ERROR
         ]
     ),
-    VPCZoneIdentifier=Ref(app_server_subnets_param),
-    Tags=[asg.Tag('Name', 'AppServer', True)]
+    VPCZoneIdentifier=Ref(private_subnets_param),
+    Tags=[
+        asg.Tag('Name', 'AppServer', True),
+        asg.Tag('Color', Ref(color_param), True)
+    ]
 ))
+
+#
+# Outputs
+#
+t.add_output([
+    Output(
+        'AppServerLoadBalancerEndpoint',
+        Description='Application server endpoint',
+        Value=GetAtt(app_server_load_balancer, 'DNSName')
+    ),
+    Output(
+        'AppServerLoadBalancerHostedZoneNameID',
+        Description='ID of canonical hosted zone name for ELB',
+        Value=GetAtt(
+            app_server_load_balancer,
+            'CanonicalHostedZoneNameID'
+        )
+    )
+])
 
 if __name__ == '__main__':
     utils.validate_cloudformation_template(t.to_json())

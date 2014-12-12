@@ -1,25 +1,41 @@
-from troposphere import Template, Parameter, Ref, Tags, Output, Join, GetAtt
+from troposphere import Template, Parameter, Ref, Tags, GetAtt, Select, ec2
 
 import template_utils as utils
 import troposphere.rds as rds
+import troposphere.route53 as r53
 import troposphere.elasticache as ec
 
 t = Template()
 
 t.add_version('2010-09-09')
-t.add_description('A data store server stack for the nyc-trees project.')
+t.add_description('A data store stack for the nyc-trees project.')
 
 #
 # Parameters
 #
+vpc_param = t.add_parameter(Parameter(
+    'VpcId', Type='String', Description='Name of an existing VPC'
+))
+
 keyname_param = t.add_parameter(Parameter(
-    'KeyName', Type='String', Default='nyc-trees-test',
+    'KeyName', Type='String', Default='nyc-trees-stg',
     Description='Name of an existing EC2 key pair'
 ))
 
 notification_arn_param = t.add_parameter(Parameter(
     'GlobalNotificationsARN', Type='String',
     Description='Physical resource ID of an AWS::SNS::Topic for notifications'
+))
+
+bastion_instance_type_param = t.add_parameter(Parameter(
+    'BastionInstanceType', Type='String', Default='t2.medium',
+    Description='Bastion EC2 instance type',
+    AllowedValues=utils.EC2_INSTANCE_TYPES,
+    ConstraintDescription='must be a valid EC2 instance type.'
+))
+
+bastion_host_ami_param = t.add_parameter(Parameter(
+    'BastionHostAMI', Type='String', Description='Bastion host AMI'
 ))
 
 database_server_instance_type_param = t.add_parameter(Parameter(
@@ -46,14 +62,19 @@ cache_cluster_instance_type_param = t.add_parameter(Parameter(
     ConstraintDescription='must be a valid ElastiCache instance type.'
 ))
 
-database_server_security_group = t.add_parameter(Parameter(
-    'sgDatabaseServer', Type='String',
-    Description='Physical resource ID of an AWS::EC2::SecurityGroup'
+cache_cluster_endpoint_param = t.add_parameter(Parameter(
+    'CacheClusterEndpoint', Type='String', Default='google.com',
+    Description='Cache cluster endpoint'
 ))
 
-cache_cluster_security_group = t.add_parameter(Parameter(
-    'sgCacheCluster', Type='String',
-    Description='Physical resource ID of an AWS::EC2::SecurityGroup'
+public_subnets_param = t.add_parameter(Parameter(
+    'PublicSubnets', Type='CommaDelimitedList',
+    Description='A list of public subnets'
+))
+
+private_subnets_param = t.add_parameter(Parameter(
+    'PrivateSubnets', Type='CommaDelimitedList',
+    Description='A list of private subnets'
 ))
 
 #
@@ -63,7 +84,7 @@ bastion_security_group = t.add_resource(ec2.SecurityGroup(
     'sgBastion', GroupDescription='Enables access to the BastionHost',
     VpcId=Ref(vpc_param),
     SecurityGroupIngress=[
-        ec2.SecurityGroupRule(IpProtocol='tcp', CidrIp=Ref(office_cidr_param),
+        ec2.SecurityGroupRule(IpProtocol='tcp', CidrIp=utils.OFFICE_CIDR,
                               FromPort=p, ToPort=p)
         for p in [22, 5601, 8080]
     ] + [
@@ -127,12 +148,39 @@ cache_cluster_security_group = t.add_resource(ec2.SecurityGroup(
 ))
 
 #
-# Resources
+# Bastion Resources
+#
+bastion_host = t.add_resource(ec2.Instance(
+    'BastionHost',
+    BlockDeviceMappings=[
+        {
+            "DeviceName": "/dev/sda1",
+            "Ebs": {"VolumeSize": "256"}
+        }
+    ],
+    InstanceType=Ref(bastion_instance_type_param),
+    KeyName=Ref(keyname_param),
+    ImageId=Ref(bastion_host_ami_param),
+    NetworkInterfaces=[
+        ec2.NetworkInterfaceProperty(
+            Description='ENI for BastionHost',
+            GroupSet=[Ref(bastion_security_group)],
+            SubnetId=Select("0", Ref(public_subnets_param)),
+            AssociatePublicIpAddress=True,
+            DeviceIndex=0,
+            DeleteOnTermination=True
+        )
+    ],
+    Tags=Tags(Name='BastionHost')
+))
+
+#
+# RDS Resources
 #
 database_server_subnet_group = t.add_resource(rds.DBSubnetGroup(
     "dbsngDatabaseServer",
     DBSubnetGroupDescription='Private subnets for the RDS instances',
-    SubnetIds=Ref(data_store_server_subnets_param),
+    SubnetIds=Ref(private_subnets_param),
     Tags=Tags(Name='dbsngDatabaseServer')
 ))
 
@@ -150,17 +198,21 @@ database_server_instance = t.add_resource(rds.DBInstance(
     EngineVersion='9.3.5',
     MasterUsername=Ref(database_server_master_username_param),
     MasterUserPassword=Ref(database_server_master_password_param),
-    MultiAZ=True,
+    # TODO Toggle this to True in production
+    MultiAZ=False,
     PreferredBackupWindow='01:00-01:30',  # 9:00-9:30PM ET
     PreferredMaintenanceWindow='mon:01:30-mon:02:30',  # 9:30PM-10:30PM ET
     VPCSecurityGroups=[Ref(database_server_security_group)],
     Tags=Tags(Name='DatabaseServer')
 ))
 
+#
+# ElastiCache Resources
+#
 cache_cluster_subnet_group = t.add_resource(ec.SubnetGroup(
     "ecsngCacheCluster",
     Description='Private subnets for the ElastiCache instances',
-    SubnetIds=Ref(data_store_server_subnets_param)
+    SubnetIds=Ref(private_subnets_param)
 ))
 
 cache_cluster_parameter_group = t.add_resource(ec.ParameterGroup(
@@ -188,19 +240,38 @@ cache_cluster = t.add_resource(ec.CacheCluster(
 ))
 
 #
-# Outputs
+# Route53 Resources
 #
-t.add_output([
-    Output(
-        'DatabaseServerEndpoint',
-        Description='Database server endpoint',
-        Value=Join(':', [
-            GetAtt('DatabaseServer', 'Endpoint.Address'),
-            GetAtt('DatabaseServer', 'Endpoint.Port')
-        ])
-    ),
-    # CacheCluster endpoint output is not supported for Redis. :(
-])
+private_dns_records_sets = t.add_resource(r53.RecordSetGroup(
+    'dnsPrivateRecords',
+    HostedZoneName='nyc-trees.internal.',
+    RecordSets=[
+        r53.RecordSet(
+            'dnsBastionHost',
+            Name='monitoring.service.nyc-trees.internal.',
+            Type='A',
+            TTL='10',
+            ResourceRecords=[GetAtt(bastion_host, 'PrivateIp')]
+        ),
+        r53.RecordSet(
+            'dnsDatabaseServer',
+            Name='database.service.nyc-trees.internal.',
+            Type='CNAME',
+            TTL='10',
+            ResourceRecords=[
+                GetAtt(database_server_instance, 'Endpoint.Address')
+            ]
+        ),
+        r53.RecordSet(
+            'dnsCacheCluster',
+            Name='cache.service.nyc-trees.internal.',
+            Type='CNAME',
+            TTL='10',
+            # Create dummy record
+            ResourceRecords=[Ref(cache_cluster_endpoint_param)]
+        )
+    ]
+))
 
 if __name__ == '__main__':
     utils.validate_cloudformation_template(t.to_json())

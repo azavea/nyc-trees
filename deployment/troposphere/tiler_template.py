@@ -1,7 +1,9 @@
-from troposphere import Template, Parameter, Ref
+from troposphere import Template, Parameter, Ref, Tags, Output, GetAtt, ec2
 
 import template_utils as utils
+import troposphere.route53 as r53
 import troposphere.autoscaling as asg
+import troposphere.elasticloadbalancing as elb
 
 t = Template()
 
@@ -11,8 +13,12 @@ t.add_description('A tiler stack for the nyc-trees project.')
 #
 # Parameters
 #
+vpc_param = t.add_parameter(Parameter(
+    'VpcId', Type='String', Description='Name of an existing VPC'
+))
+
 keyname_param = t.add_parameter(Parameter(
-    'KeyName', Type='String', Default='nyc-trees-test',
+    'KeyName', Type='String', Default='nyc-trees-stg',
     Description='Name of an existing EC2 key pair'
 ))
 
@@ -26,13 +32,13 @@ tile_server_ami_param = t.add_parameter(Parameter(
     Description='Tile server AMI'
 ))
 
-tile_server_instance_profile_param = t.add_parameter(Parameter(
-    'TileServerInstanceProfile', Type='String',
-    Default=
-    'arn:aws:iam::900325299081:instance-profile/TileServerInstanceProfile',
-    Description='Physical resource ID of an AWS::IAM::Role for the '
-                'tile servers'
-))
+# tile_server_instance_profile_param = t.add_parameter(Parameter(
+#     'TileServerInstanceProfile', Type='String',
+#     Default=
+#     'arn:aws:iam::900325299081:instance-profile/TileServerInstanceProfile',
+#     Description='Physical resource ID of an AWS::IAM::Role for the '
+#                 'tile servers'
+# ))
 
 tile_server_instance_type_param = t.add_parameter(Parameter(
     'TileServerInstanceType', Type='String', Default='t2.micro',
@@ -41,9 +47,14 @@ tile_server_instance_type_param = t.add_parameter(Parameter(
     ConstraintDescription='must be a valid EC2 instance type.'
 ))
 
-tile_server_load_balancer = t.add_parameter(Parameter(
-    'elbTileServer', Type='String', Default='elbTileServer',
-    Description='Name of an AWS::ElasticLoadBalancing::LoadBalancer'
+public_subnets_param = t.add_parameter(Parameter(
+    'PublicSubnets', Type='CommaDelimitedList',
+    Description='A list of public subnets'
+))
+
+private_subnets_param = t.add_parameter(Parameter(
+    'PrivateSubnets', Type='CommaDelimitedList',
+    Description='A list of private subnets'
 ))
 
 #
@@ -103,12 +114,43 @@ tile_server_security_group = t.add_resource(ec2.SecurityGroup(
 ))
 
 #
-# Resources
+# ELB Resources
+#
+tile_server_load_balancer = t.add_resource(elb.LoadBalancer(
+    'elbTileServer',
+    LoadBalancerName='elbTileServer',
+    # TODO: Create an S3 bucket automatically and enable logging.
+    ConnectionDrainingPolicy=elb.ConnectionDrainingPolicy(
+        Enabled=True,
+        Timeout=300,
+    ),
+    CrossZone=True,
+    SecurityGroups=[Ref(tile_server_security_group)],
+    Listeners=[
+        elb.Listener(
+            LoadBalancerPort='80',
+            InstancePort='80',
+            Protocol='HTTP',
+        ),
+    ],
+    HealthCheck=elb.HealthCheck(
+        Target="HTTP:80/",
+        HealthyThreshold="3",
+        UnhealthyThreshold="2",
+        Interval="30",
+        Timeout="5",
+    ),
+    Subnets=Ref(public_subnets_param),
+    Tags=Tags(Name='elbTileServer')
+))
+
+#
+# Auto Scaling Group Resources
 #
 tile_server_launch_config = t.add_resource(asg.LaunchConfiguration(
     'lcTileServer',
     ImageId=Ref(tile_server_ami_param),
-    IamInstanceProfile=Ref(tile_server_instance_profile_param),
+    # IamInstanceProfile=Ref(tile_server_instance_profile_param),
     InstanceType=Ref(tile_server_instance_type_param),
     KeyName=Ref(keyname_param),
     SecurityGroups=[Ref(tile_server_security_group)]
@@ -135,9 +177,37 @@ tile_server_auto_scaling_group = t.add_resource(asg.AutoScalingGroup(
             asg.EC2_INSTANCE_TERMINATE_ERROR
         ]
     ),
-    VPCZoneIdentifier=Ref(tile_server_subnets_param),
+    VPCZoneIdentifier=Ref(private_subnets_param),
     Tags=[asg.Tag('Name', 'TileServer', True)]
 ))
+
+#
+# Route53 Resources
+#
+private_dns_records_sets = t.add_resource(r53.RecordSetGroup(
+    'dnsPrivateRecords',
+    HostedZoneName='nyc-trees.internal.',
+    RecordSets=[
+        r53.RecordSet(
+            'dnsTileServers',
+            Name='tile.service.nyc-trees.internal.',
+            Type='CNAME',
+            TTL='10',
+            ResourceRecords=[GetAtt(tile_server_load_balancer, 'DNSName')]
+        )
+    ]
+))
+
+#
+# Outputs
+#
+t.add_output([
+    Output(
+        'TileServerLoadBalancerEndpoint',
+        Description='Tile server endpoint',
+        Value=GetAtt(tile_server_load_balancer, 'DNSName')
+    )
+])
 
 if __name__ == '__main__':
     utils.validate_cloudformation_template(t.to_json())

@@ -2,7 +2,7 @@
   "variables": {
     "version": "{{env `GIT_COMMIT`}}",
     "aws_region": "us-east-1",
-    "aws_instance_type": "m3.medium",
+    "aws_instance_type": "m3.large",
     "aws_ssh_username": "ubuntu",
     "aws_access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
     "aws_secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}",
