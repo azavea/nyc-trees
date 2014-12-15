@@ -77,7 +77,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     services.vm.network "forwarded_port", guest: 8080, host: ENV.fetch("NYC_TREES_PORT_8080", 8080)
     # Kibana
     services.vm.network "forwarded_port", guest: 5601, host: ENV.fetch("NYC_TREES_PORT_5601", 15601)
-    # PortgreSQL
+    # PostgreSQL
     services.vm.network "forwarded_port", guest: 5432, host: ENV.fetch("NYC_TREES_PORT_5432", 15432)
     # Pgweb
     services.vm.network "forwarded_port", guest: 5433, host: ENV.fetch("NYC_TREES_PORT_5433", 15433)
