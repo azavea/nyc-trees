@@ -40,11 +40,17 @@ class Event(NycModel, models.Model):
     is_canceled = models.BooleanField(default=False)
     is_private = models.BooleanField(default=False)
 
+    def __unicode__(self):
+        return self.title
+
     def clean(self):
         if not self.slug and not self.is_private:
             self.slug = slugify(self.title)
         elif not self.slug:
             self.slug = shortuuid.uuid()
+
+    def training_summary(self):
+        return 'Training' if self.includes_training else 'Mapping'
 
     class Meta:
         unique_together = ("group", "slug")
@@ -58,3 +64,7 @@ class EventRegistration(NycModel, models.Model):
     # an event on the day, not knowing it was canceled
     event = models.ForeignKey(Event, on_delete=models.PROTECT)
     did_attend = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return "'%s' registration for '%s'" % (self.user.username,
+                                               self.event.title)
