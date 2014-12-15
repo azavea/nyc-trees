@@ -65,6 +65,10 @@ The main tool used is [gulp](http://gulpjs.com/), which is exposed through `npm 
 
 `gulp build` and `gulp watch` without the `--debug` flag are intentionally not exposed through `npm run`.
 
+#### Linting
+
+`./scripts/npm.sh run lint`
+
 ### Caching
 
 In order to speed up things up, you may want to consider using a local caching proxy. The `VAGRANT_PROXYCONF_ENDPOINT` environmental variable provides a way to supply a caching proxy endpoint for the virtual machines to use:

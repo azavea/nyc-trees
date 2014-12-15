@@ -21,7 +21,8 @@ var gulp = require('gulp'),
     tmp = require('temporary'),
     del = require('del'),
     shell = require('gulp-shell'),
-    runSequence = require('run-sequence');
+    runSequence = require('run-sequence'),
+    jshint = require('gulp-jshint');
 
 var args = minimist(process.argv.slice(2),
                     {default: {debug: false}}),
@@ -158,4 +159,11 @@ gulp.task('watch', ['watchify'], function() {
     gulp.watch('sass/**/*.scss', ['sass']);
     // Rerun collectstatic whenever files are added to the static files dir
     gulp.watch(intermediaryDir + '**', ['collect-debug']);
+});
+
+gulp.task('lint', function() {
+    return gulp.src('./js/**/*.js')
+        .pipe(jshint())
+        .pipe(jshint.reporter('default'))
+        .pipe(jshint.reporter('fail'));
 });
