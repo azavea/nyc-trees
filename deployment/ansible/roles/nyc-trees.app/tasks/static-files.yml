@@ -1,3 +1,4 @@
+---
 - name: Create folders for static files
   file: path={{ item }}
         state=directory

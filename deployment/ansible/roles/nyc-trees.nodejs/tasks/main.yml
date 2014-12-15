@@ -1,0 +1,8 @@
+---
+- name: Determine what version of NPM is installed
+  command: npm --version
+  register: npm_version
+
+- name: Upgrade NPM
+  command: "/usr/local/node-v{{ nodejs_version }}-{{ nodejs_os }}-{{ nodejs_arch }}/bin/npm install --global --force npm@{{ app_npm_version }}"
+  when: npm_version.stdout != app_npm_version
