@@ -3,6 +3,9 @@
 set -e
 set -x
 
+# Check for JS lint.
+vagrant ssh app -c "cd /opt/app && npm run lint"
+
 # Run flake8 against the Django codebase and output a known string so that
 # the Jenkins text finder plugin can detect a failed check and mark the build
 # unstable. This command should only fail the build if the `vagrant ssh`
