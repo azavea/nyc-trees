@@ -7,8 +7,6 @@ from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 
-from django_tinsel.decorators import render_template
-
 from apps.users.models import achievements
 from apps.core.models import User
 
@@ -17,12 +15,13 @@ from apps.survey.models import Tree
 from apps.users.forms import ProfileSettingsForm
 
 
+# TODO: make a route?
 def user_detail_redirect(request):
     return HttpResponseRedirect(
         reverse('user_detail', kwargs={'username': request.user.username}))
 
 
-def user_detail_view(request, username):
+def user_detail(request, username):
     user = get_object_or_404(User, username=username)
     its_me = (user.id == request.user.id)
 
@@ -71,7 +70,6 @@ def _user_profile_context(request, user, its_me):
     return context
 
 
-@render_template('users/settings.html')
 def profile_settings(request):
     form = ProfileSettingsForm(instance=request.user, label_suffix='')
     form.fields['opt_in_events_info'].label = 'Yes'
@@ -111,7 +109,7 @@ def _get_privacy_categories(form):
     ]
 
 
-def update_profile_settings_view(request):
+def update_profile_settings(request):
     form = ProfileSettingsForm(request.POST, instance=request.user)
     # It's not possible to create invalid data with this form,
     # so don't check form.is_valid()
@@ -144,20 +142,11 @@ def start_map_for_tool_depots_job(request, username):
     pass
 
 
-@render_template('users/achievement.html')
 def achievements_page(request):
     # TODO: implement
     return {}
 
 
-@render_template('users/training.html')
 def training_page(request):
     # TODO: implement
     return {}
-
-
-render_user_template = render_template('users/profile.html')
-
-user_detail = render_user_template(user_detail_view)
-
-update_profile_settings = render_user_template(update_profile_settings_view)

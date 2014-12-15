@@ -26,8 +26,7 @@ var gulp = require('gulp'),
 
 var args = minimist(process.argv.slice(2),
                     {default: {debug: false}}),
-
-    entries = ['forgot_username.js'],
+    entries = ['forgot_username.js', 'group_detail.js'],
     entryFiles = entries.map(function(file) { return './js/src/' + file; }),
     intermediaryDir = new tmp.Dir().path + '/',
     bundleDir = intermediaryDir + 'js/',

@@ -7,10 +7,10 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 
-from django_tinsel.decorators import render_template
-
 from apps.core.models import Group
 from apps.users.forms import GroupSettingsForm
+from apps.event.models import Event
+from apps.event.views import event_info_builder
 
 
 def group_list_page(request):
@@ -20,21 +20,16 @@ def group_list_page(request):
 
 def group_detail(request, group_slug):
     group = get_object_or_404(Group, slug=group_slug)
-    return _render_group_detail(request, group)
-
-
-@render_template('groups/detail.html')
-def _render_group_detail(request, group):
-    context = {
+    events = Event.objects.filter(group_id=group.pk)
+    return {
         'group': group,
+        'event_infos': event_info_builder(request.user)(events),
         # TODO: check if user is group admin or census admin
         'user_can_edit_group': True,
         'edit_url': reverse('group_edit', kwargs={'group_slug': group.slug})
     }
-    return context
 
 
-@render_template('groups/settings.html')
 def edit_group(request, group_slug):
     group = get_object_or_404(Group, slug=group_slug)
     form = GroupSettingsForm(instance=group, label_suffix='')
@@ -45,7 +40,6 @@ def edit_group(request, group_slug):
     return context
 
 
-@render_template('groups/settings.html')
 def update_group_settings(request, group_slug):
     group = get_object_or_404(Group, slug=group_slug)
     form = GroupSettingsForm(request.POST, instance=group)
