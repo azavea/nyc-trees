@@ -26,15 +26,19 @@ def event_detail(request, group_slug, event_slug):
     # TODO: implement
     return {}
 
-
-def events_list_page(request):
-    user = request.user
+def event_info_builder(user):
     user_registered_event_ids = set(EventRegistration.objects
                                     .filter(user_id=user.pk)
                                     .values_list('event_id', flat=True))
-    make_event_info = lambda event: {'event': event,
-                                     'user_is_registered':
-                                     event.pk in user_registered_event_ids}
+    return lambda events: [{'event': event,
+                            'user_is_registered':
+                            event.pk in user_registered_event_ids}
+                           for event in events]
+
+
+def events_list_page(request):
+    user = request.user
+    make_event_info = event_info_builder(user)
     all_events = Event.objects.all()
 
     if user.is_authenticated():
@@ -46,8 +50,8 @@ def events_list_page(request):
         followed_events = Event.objects.none()
         non_followed_events = all_events
 
-    return {'followed_events': map(make_event_info, followed_events),
-            'non_followed_events': map(make_event_info, non_followed_events)}
+    return {'followed_events': make_event_info(followed_events),
+            'non_followed_events': make_event_info(non_followed_events)}
 
 
 def events_list_page_partial(request):

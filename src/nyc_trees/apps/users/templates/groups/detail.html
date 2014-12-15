@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load utils %}
 
 {% block content %}
 
@@ -22,4 +23,26 @@
 <h3>Website</h3>
 <div><a href="{{group.contact_url}}">{{group.contact_url}}</a></div>
 
+<h3>Events</h3>
+<div>
+    {% for info in event_infos %}
+    <div data-class="group-detail-event-info">
+      {% include "event/partials/event_section.html" %}
+      <a href="#" data-class="group-detail-event-info-submenu-toggle">Actions</a>
+      <div data-class="group-detail-event-info-submenu" style="display: none;">
+        <p>RSVP to event</p>
+        <p>Edit details</p>
+        <p>Email attendees</p>
+        <p>Event check-in</p>
+        <p>Get shareable link</p>
+      </div>
+    </div>
+    {% if not forloop.last %}<hr/>{% endif %}
+    {% endfor %}
+</div>
+
 {% endblock %}
+
+{% block page_js %}
+<script type="text/javascript" src="{{ "js/group_detail.js"|static_url }}"></script>
+{% endblock page_js %}
