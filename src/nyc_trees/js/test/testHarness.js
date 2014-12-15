@@ -1,4 +1,6 @@
 "use strict";
+/* global suite */
+/* global test */
 
 var assert = require('chai').assert;
 
