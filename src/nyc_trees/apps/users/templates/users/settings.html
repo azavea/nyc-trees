@@ -17,34 +17,55 @@
         <fieldset>
             {% csrf_token %}
 
-            <div class="tab-pane active" id="account-pane">
-                <div class="fieldWrapper">
-                    {{ form.first_name.label_tag }}
-                    {{ form.first_name }}
+            <div class="tab-content">
+                <div class="tab-pane active" id="account-pane">
+                    <div class="fieldWrapper">
+                        {{ form.first_name.label_tag }}
+                        {{ form.first_name }}
+                    </div>
+                    <div class="fieldWrapper">
+                        {{ form.last_name.label_tag }}
+                        {{ form.last_name }}
+                    </div>
                 </div>
-                <div class="fieldWrapper">
-                    {{ form.last_name.label_tag }}
-                    {{ form.last_name }}
-                </div>
-            </div>
 
-            <div class="tab-pane" id="emails-pane">
-                <h3>Events</h3>
-                <div>I am okay with receiving emails or notifications for events that I have registered for.</div>
-                <div class="fieldWrapper">
-                    {{ form.opt_in_events_info }}
-                    {{ form.opt_in_events_info.label_tag }}
+                <div class="tab-pane" id="emails-pane">
+                    <h3>NYC Parks</h3>
+                    <div>I am interested in receiving additional information on stewardship opportunities available through NYC Parks.</div>
+                    <div class="fieldWrapper">
+                        {{ form.opt_in_stewardship_info }}
+                        {{ form.opt_in_stewardship_info.label_tag }}
+                    </div>
+                    <div>I want to receive emails for these events:</div>
+                    <table>
+                        {% for event_form in event_formset %}
+                            {% with event=event_form.instance.event %}
+                                <tr>
+                                    <td style="text-align:right; vertical-align:top; padding: 0 15px;">
+                                        <div>{{ event.begins_at|date:"b"|upper }}</div>
+                                        <div>{{ event.begins_at|date:"j" }}</div>
+                                    </td>
+                                    <td>
+                                        <div>{{ event.name }}</div>
+                                        <div>{{ event.begins_at|date:"f A" }} at {{ event.address }}</div>
+                                        <div>{{ event.group.name }}</div>
+                                        <div>{% if event.includes_training %}Training{% else %}Mapping{% endif %}</div>
+                                    </td>
+                                    <td>{{ event_form.opt_in_emails }}</td>
+                                </tr>
+                            {% endwith %}
+                            {% for hidden in event_form.hidden_fields %}
+                                {{ hidden }}
+                            {% endfor %}
+                        {% endfor %}
+                    </table>
+                    {{ event_formset.management_form }}
                 </div>
-                <h3>NYC Parks</h3>
-                <div>I am interested in receiving additional information on stewardship opportunities available through NYC Parks.</div>
-                <div class="fieldWrapper">
-                    {{ form.opt_in_stewardship_info }}
-                    {{ form.opt_in_stewardship_info.label_tag }}
-                </div>
-            </div>
 
-            <div class="tab-pane" id="privacy-pane">
-                {% include 'users/partials/privacy_controls.html' %}
+                <div class="tab-pane" id="privacy-pane">
+                    {% include 'users/partials/privacy_controls.html' %}
+                </div>
+
             </div>
 
             <div style="float:right;">
