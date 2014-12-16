@@ -1,9 +1,10 @@
-var $ = require('jquery');
+"use strict";
+
+var $ = require('jquery'),
+    Modernizr = require('modernizr');
 
 require('bootstrap');
 require('bootstrap-datetimepicker');
-
-Modernizr = require('modernizr');
 
 if (! Modernizr.inputtypes.date) {
     $('input[type="date"]').datetimepicker({pickTime: false});

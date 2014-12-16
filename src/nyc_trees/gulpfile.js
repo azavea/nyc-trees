@@ -166,7 +166,7 @@ gulp.task('watch', ['watchify'], function() {
 });
 
 gulp.task('lint', function() {
-    return gulp.src('./js/**/*.js')
+    return gulp.src(['./js/src/**/*.js', './js/test/**/*.js'])
         .pipe(jshint())
         .pipe(jshint.reporter('default'))
         .pipe(jshint.reporter('fail'));
