@@ -13,6 +13,7 @@ urlpatterns = patterns(
     '',
     url(r'^admin/', include(admin.site.urls)),
 
+    url(r'^', include('apps.core.urls')),
     url(r'^', include('apps.home.urls')),
     url(r'^login/', include('apps.login.urls.login')),
     url(r'^accounts/', include('apps.login.urls.accounts')),

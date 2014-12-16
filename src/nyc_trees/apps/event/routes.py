@@ -29,8 +29,8 @@ events_list_feed = route(GET=v.events_list_feed)
 events = is_group_admin(route(GET=v.event_dashboard))
 
 add_event = do(is_group_admin,
-               route(GET=do(render_template('event/add_event.html'),
-                            v.add_event_page),
+               render_template('event/add_event.html'),
+               route(GET=v.add_event_page,
                      POST=v.add_event))
 
 event_detail = route(GET=do(render_template('event/event_detail.html'),

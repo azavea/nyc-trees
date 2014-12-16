@@ -1,5 +1,100 @@
 {% extends "base.html" %}
+{% load utils %}
 
 {% block content %}
-{# TODO #}
+<h2>New Event</h2>
+
+<form method="POST">
+    <fieldset>
+        {% csrf_token %}
+
+        {{ form.non_field_errors }}
+
+        <div class="fieldWrapper">
+            {{ form.title.errors }}
+            {{ form.title.label_tag }}
+            {{ form.title }}
+        </div>
+
+        <div class="fieldWrapper">
+            {{ form.date.errors }}
+            {{ form.date.label_tag }}
+            {{ form.date }}
+        </div>
+
+        <div class="fieldWrapper">
+            <label>Time</label>
+            <div style="display: inline-block;">
+                {{ form.begins_at_time.errors }}
+                {{ form.begins_at_time }}
+            </div><span>  to  </span>
+            <div style="display: inline-block;">
+                {{ form.ends_at_time.errors }}
+                {{ form.ends_at_time }}
+            </div>
+        </div>
+
+        <div class="fieldWrapper">
+            {{ form.address.errors }}
+            {{ form.location.errors }}
+
+            {{ form.address.label_tag }}
+            {{ form.address }}
+
+            {{ form.location.as_hidden }}
+        </div>
+
+        <div class="fieldWrapper">
+            {{ form.location_description.errors }}
+            {{ form.location_description.label_tag }}
+            {{ form.location_description }}
+        </div>
+
+        <div class="fieldWrapper">
+            {{ form.description.errors }}
+            {{ form.description.label_tag }}
+            {{ form.description }}
+        </div>
+
+        <div class="fieldWrapper">
+            {{ form.is_private.errors }}
+            {{ form.is_private.label_tag }}
+            {{ form.is_private }}
+        </div>
+
+        <div class="fieldWrapper">
+            {{ form.includes_training.errors }}
+            {{ form.includes_training.label_tag }}
+            {{ form.includes_training }}
+        </div>
+
+        <div class="fieldWrapper">
+            {{ form.max_attendees.errors }}
+            {{ form.max_attendees.label_tag }}
+            {{ form.max_attendees }}
+        </div>
+
+        <div class="fieldWrapper">
+            {{ form.contact_email.errors }}
+            {{ form.contact_email.label_tag }}
+            {{ form.contact_email }}
+        </div>
+
+        <div class="fieldWrapper">
+            {{ form.contact_info.errors }}
+            {{ form.contact_info.label_tag }}
+            {{ form.contact_info }}
+        </div>
+
+        <div style="float:right;">
+            <input type="submit" class="btn" value="Save" />
+        </div>
+        <a class="btn" href="{% url 'group_edit' group_slug=group.slug %}">Cancel</a>
+
+    </fieldset>
+</form>
 {% endblock content %}
+
+{% block page_js %}
+<script type="text/javascript" src="{{ "js/add_event.js"|static_url }}"></script>
+{% endblock page_js %}

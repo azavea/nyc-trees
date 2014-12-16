@@ -204,6 +204,7 @@ DJANGO_APPS = (
 THIRD_PARTY_APPS = (
     'registration',
     'django_statsd',
+    'floppyforms',
 )
 
 # THIRD-PARTY CONFIGURATION

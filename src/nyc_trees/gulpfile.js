@@ -27,7 +27,11 @@ var gulp = require('gulp'),
 var args = minimist(process.argv.slice(2),
                     {default: {debug: false}}),
 
-    entries = ['forgot_username.js'],
+    entries = [
+        'forgot_username.js',
+        'add_event.js',
+        'datetimepicker_polyfill.js',
+    ],
     entryFiles = entries.map(function(file) { return './js/src/' + file; }),
     intermediaryDir = new tmp.Dir().path + '/',
     bundleDir = intermediaryDir + 'js/',
@@ -162,7 +166,7 @@ gulp.task('watch', ['watchify'], function() {
 });
 
 gulp.task('lint', function() {
-    return gulp.src('./js/**/*.js')
+    return gulp.src(['./js/src/**/*.js', './js/test/**/*.js'])
         .pipe(jshint())
         .pipe(jshint.reporter('default'))
         .pipe(jshint.reporter('fail'));

@@ -4,11 +4,14 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    {# TODO: Verify if this is still needed when we switch to SASS Bootstrap #}
+    <link rel="stylesheet" href="{{ "css/vendor.css"|static_url }}"></script>
   </head>
   <body>
     {% block content %}
     {% endblock content %}
   </body>
+  <script type="text/javascript" src="{% url "js_settings" %}"></script>
   <script type="text/javascript" src="{{ "js/common.js"|static_url }}"></script>
   {% block page_js %}
   {% endblock page_js %}

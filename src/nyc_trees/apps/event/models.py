@@ -53,7 +53,7 @@ class Event(NycModel, models.Model):
         return 'Training' if self.includes_training else 'Mapping'
 
     class Meta:
-        unique_together = ("group", "slug")
+        unique_together = (("group", "slug"), ("group", "title"))
 
 
 class EventRegistration(NycModel, models.Model):
