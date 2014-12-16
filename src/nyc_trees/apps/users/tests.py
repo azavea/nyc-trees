@@ -14,8 +14,9 @@ from apps.survey.models import Tree, Species, Blockface, Survey
 
 from apps.users.models import (Follow, Achievement, achievements,
                                AchievementDefinition)
-from apps.users.views.user import user_detail, user_detail_view
-from apps.users.views.group import group_detail
+from apps.users.views.user import user_detail as user_detail_view
+from apps.users.routes.user import user_detail as user_detail_route
+from apps.users.routes.group import group_detail
 
 
 class UsersTestCase(TestCase):
@@ -52,7 +53,7 @@ class ProfileTemplateTests(UsersTestCase):
     def _render_profile(self, its_me):
         viewer = self.user if its_me else self.other_user
         request = make_request(user=viewer)
-        return user_detail(request, self.user.username)
+        return user_detail_route(request, self.user.username)
 
     def _assert_profile_contains(self, text, its_me=True):
         response = self._render_profile(its_me)
