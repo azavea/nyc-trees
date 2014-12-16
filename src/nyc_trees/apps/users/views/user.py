@@ -2,17 +2,18 @@
 from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
+from datetime import timedelta
 
 from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 
-from apps.users.models import achievements
 from apps.core.models import User
-
+from apps.event.models import EventRegistration
+from apps.users.models import achievements
+from apps.users.forms import ProfileSettingsForm, EventRegistrationFormSet
 from apps.survey.models import Tree
-
-from apps.users.forms import ProfileSettingsForm
 
 
 # TODO: make a route?
@@ -71,11 +72,20 @@ def _user_profile_context(request, user, its_me):
 
 
 def profile_settings(request):
-    form = ProfileSettingsForm(instance=request.user, label_suffix='')
-    form.fields['opt_in_events_info'].label = 'Yes'
-    form.fields['opt_in_stewardship_info'].label = 'Yes'
+    user = request.user
+    form = ProfileSettingsForm(instance=user, label_suffix='')
+    form.fields['opt_in_stewardship_info'].label = ''
+
+    a_week_ago = timezone.now().date() - timedelta(days=7)
+    events = EventRegistration.objects \
+        .filter(event__begins_at__gt=a_week_ago) \
+        .order_by('event__begins_at')
+    event_formset = EventRegistrationFormSet(
+        instance=user, queryset=events)
+
     context = {
         'form': form,
+        'event_formset': event_formset,
         'privacy_categories': _get_privacy_categories(form),
         'username': request.user.username,
     }
@@ -110,10 +120,15 @@ def _get_privacy_categories(form):
 
 
 def update_profile_settings(request):
-    form = ProfileSettingsForm(request.POST, instance=request.user)
+    user = request.user
+    profile_form = ProfileSettingsForm(request.POST, instance=user)
+    event_formset = EventRegistrationFormSet(request.POST, instance=user)
+
     # It's not possible to create invalid data with this form,
     # so don't check form.is_valid()
-    form.save()
+    profile_form.save()
+    event_formset.save()
+
     return _user_profile_context(request, request.user, its_me=True)
 
 

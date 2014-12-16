@@ -29,7 +29,6 @@ class User(NycModel, AbstractUser):
     is_ambassador = models.BooleanField(default=False)
     is_minor = models.BooleanField(default=False)
 
-    opt_in_events_info = models.BooleanField(default=False)
     opt_in_stewardship_info = models.BooleanField(default=False)
 
     objects = UserManager()

@@ -68,6 +68,7 @@ class EventRegistration(NycModel, models.Model):
     # an event on the day, not knowing it was canceled
     event = models.ForeignKey(Event, on_delete=models.PROTECT)
     did_attend = models.BooleanField(default=False)
+    opt_in_emails = models.BooleanField(default=True)
 
     class Meta:
         unique_together = ('user', 'event')
