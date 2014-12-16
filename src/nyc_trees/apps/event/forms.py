@@ -14,8 +14,8 @@ from apps.event.models import Event
 
 class EventForm(ModelForm):
     date = DateField()
-    begins_at_time = TimeField()
-    ends_at_time = TimeField()
+    begins_at_time = TimeField(input_formats=['%H:%M', '%I:%M %p'])
+    ends_at_time = TimeField(input_formats=['%H:%M', '%I:%M %p'])
 
     class Meta:
         model = Event

@@ -10,6 +10,7 @@
   },
   "browser": {
     "bootstrap": "./node_modules/bootstrap/dist/js/bootstrap.js",
+    "bootstrap-datetimepicker": "./js/shim/bootstrap-datetimepicker.js",
     "modernizr": "./js/shim/modernizr.js"
   },
   "browserify-shim": {
@@ -22,7 +23,8 @@
   },
   "dependencies": {
     "bootstrap": "^3.3.1",
-    "jquery": "^2.1.1"
+    "jquery": "^2.1.1",
+    "moment": "^2.8.4"
   },
   "devDependencies": {
     "browserify": "~6.1.0",

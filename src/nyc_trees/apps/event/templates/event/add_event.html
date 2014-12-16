@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load utils %}
 
 {% block content %}
 <h2>New Event</h2>
@@ -93,3 +94,7 @@
     </fieldset>
 </form>
 {% endblock content %}
+
+{% block page_js %}
+<script type="text/javascript" src="{{ "js/add_event.js"|static_url }}"></script>
+{% endblock page_js %}

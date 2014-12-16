@@ -5,6 +5,7 @@
     "globals": {
         "require": false,
         "module": true,
-        "exports": true
+        "exports": true,
+        "config": false
     }
 }
