@@ -5,7 +5,7 @@ from __future__ import division
 
 from datetime import datetime
 
-from floppyforms.__future__ import ModelForm, DateField, TimeField
+from floppyforms.__future__ import ModelForm, DateField, TimeField, RadioSelect
 
 from django.core.exceptions import ValidationError
 
@@ -32,6 +32,12 @@ class EventForm(ModelForm):
             'contact_email',
             'contact_info'
         ]
+        widgets = {
+            'is_private': RadioSelect(choices=((True, 'Private'),
+                                               (False, 'Public'))),
+            'includes_training': RadioSelect(choices=((False, 'Mapping'),
+                                                      (True, 'Training')))
+        }
 
     def clean(self):
         cleaned_data = super(EventForm, self).clean()
