@@ -61,6 +61,7 @@
     "build": "sudo -u nyc-trees ./node_modules/.bin/gulp",
     "build-debug": "sudo -u nyc-trees ./node_modules/.bin/gulp build --debug",
     "watch": "sudo -u nyc-trees ./node_modules/.bin/gulp watch --debug",
+    "watch-tests": "sudo -u nyc-trees ./node_modules/.bin/gulp watch-tests",
     "lint": "sudo -u nyc-trees ./node_modules/.bin/gulp lint"
   },
   "repository": {

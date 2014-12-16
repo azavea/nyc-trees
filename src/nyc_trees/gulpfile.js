@@ -189,8 +189,15 @@ gulp.task('watch', ['watchify'], function() {
     // caching behaviour
     livereload.listen({auto: true });
     gulp.watch('sass/**/*.scss', ['sass']);
-    gulp.watch('js/**/*.js', ['browserify-tests']);
     // Rerun collectstatic whenever files are added to the static files dir
+    gulp.watch(intermediaryDir + '**', ['collect-debug']);
+});
+
+gulp.task('watch-tests', function() {
+    function bundleTests() {
+        runSequence('lint', 'browserify-tests');
+    }
+    gulp.watch('js/**/*.js', bundleTests);
     gulp.watch(intermediaryDir + '**', ['collect-debug']);
 });
 
