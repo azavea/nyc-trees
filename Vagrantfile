@@ -113,7 +113,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     app.vm.network "private_network", ip: "33.33.33.10"
 
     app.vm.synced_folder ".", "/vagrant", disabled: true
-    app.vm.synced_folder "src/nyc_trees", "/opt/app/"
+
+    if Vagrant::Util::Platform.windows? || Vagrant::Util::Platform.cygwin?
+      app.vm.synced_folder "src/nyc_trees", "/opt/app/", type: "rsync", rsync__exclude: "node_modules/"
+    else
+      app.vm.synced_folder "src/nyc_trees", "/opt/app/"
+    end
 
     # Django via Nginx/Gunicorn
     app.vm.network "forwarded_port", guest: 80, host: ENV.fetch("NYC_TREES_PORT_8000", 8000)
