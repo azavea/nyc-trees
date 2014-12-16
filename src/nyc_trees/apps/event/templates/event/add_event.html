@@ -4,7 +4,7 @@
 {% block content %}
 <h2>New Event</h2>
 
-<form method="POST">
+<form method="POST" id="event-form">
     <fieldset>
         {% csrf_token %}
 
@@ -84,6 +84,13 @@
             {{ form.contact_info.errors }}
             {{ form.contact_info.label_tag }}
             {{ form.contact_info }}
+        </div>
+
+        <div>
+            <input type="hidden" id="user-contact-info"
+                   value="{{ request.user.first_name }} {{request.user.last_name }}" />
+            <input type="hidden" id="user-contact-email" value="{{ request.user.email }}" />
+            <a href="javascript:;" id="use-my-contact-info">Use my contact information</a>
         </div>
 
         <div style="float:right;">
