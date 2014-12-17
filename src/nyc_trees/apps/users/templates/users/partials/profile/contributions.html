@@ -1,13 +1,24 @@
 {% extends "users/partials/profile/section.html" %}
 
 {% block section_content %}
-<div>
-    Trees <span>{{ counts.tree }}</span>
+
+<div class="contribution block item">
+    <div class="row">
+        <div class="contribution-label col-xs-6"><i class="icon-globe"></i>Trees</div>
+        <div class="contribution-number col-xs-6">{{ counts.tree }}</div>
+    </div>
 </div>
-<div>
-    Blocks <span>{{ counts.block }}</span>
+<div class="contribution block item">
+    <div class="row">
+        <div class="contribution-label col-xs-6"><i class="icon-flow-tree"></i>Blocks</div>
+        <div class="contribution-number col-xs-6">{{ counts.block }}</div>
+    </div>
 </div>
-<div>
-    Species <span>{{ counts.species }}</span>
+<div class="contribution block item">
+    <div class="row">
+        <div class="contribution-label col-xs-6"><i class="icon-tag"></i>Species</div>
+        <div class="contribution-number col-xs-6">{{ counts.species }}</div>
+    </div>
 </div>
+
 {% endblock section_content %}

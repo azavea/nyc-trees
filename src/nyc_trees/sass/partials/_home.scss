@@ -1,0 +1,22 @@
+.hero {
+  position: relative;
+}
+
+.hero-content {
+  width: 50rem;
+  max-width: 90%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 4rem 3rem;
+  margin-top: 4rem;
+  color: white;
+  background-color: $brand-primary;
+}
+
+.hero-box {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+}

@@ -2,13 +2,21 @@
 {% load utils %}
 
 {% block section_content %}
-<div>
-    {% for achievement in achievements %}
-    <div>
-       <h2>{{ achievement.name }}</h2>
-       <p>{{ achievement.description }}</p>
-       <img src="{{ achievement.badge|static_url }}" />
+
+{% for achievement in achievements %}
+
+<a href="#" class="achievement block item">
+    <div class="row">
+        <div class="col-xs-8">
+            <h5>{{ achievement.name }}</h5>
+            <p class="h6 nobold">{{ achievement.description }}</p>
+        </div>
+        <div class="col-xs-4 text-right">
+            <img src="{{ achievement.badge|static_url }}" />
+        </div>
     </div>
-    {% endfor %}
-</div>
+</a>
+
+{% endfor %}
+
 {% endblock section_content %}

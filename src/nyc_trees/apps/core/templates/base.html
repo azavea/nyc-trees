@@ -5,13 +5,34 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     {# TODO: Verify if this is still needed when we switch to SASS Bootstrap #}
+    <link rel="stylesheet" href="{{ "css/main.css"|static_url }}">
     <link rel="stylesheet" href="{{ "css/vendor.css"|static_url }}"></script>
   </head>
   <body>
+    <header>
+      <nav class="clearfix">
+        <div class="nav-left">
+          <button class="nav-menubutton" type="button" data-target="" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <div class="brand">
+            TreesCount!
+          </div>
+        </div>
+        <div class="nav-right">
+          Register
+        </div>
+      </nav>
+    </header>
     {% block content %}
     {% endblock content %}
   </body>
   <script type="text/javascript" src="{% url "js_settings" %}"></script>
+  <script type="text/javascript" src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="{{ "js/common.js"|static_url }}"></script>
   {% block page_js %}
   {% endblock page_js %}
