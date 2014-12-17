@@ -41,7 +41,7 @@ class Event(NycModel, models.Model):
     is_private = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return self.title
+        return "%s - group '%s'" % (self.title, self.group)
 
     def clean(self):
         if not self.slug and not self.is_private:
