@@ -31,5 +31,6 @@ app_log_rotate_interval: daily
 app_static_root: /var/www/nyc-trees/static/
 app_media_root: /var/www/nyc-trees/media/
 
-app_node_modules_cache: /var/cache/nyc-trees/node_modules/
 app_static_cache: /var/cache/nyc-trees/static/
+
+app_npm_version: 2.1.14

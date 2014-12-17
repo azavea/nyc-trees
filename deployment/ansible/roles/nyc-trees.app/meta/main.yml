@@ -6,5 +6,5 @@ dependencies:
   - { role: "azavea.postgresql-support" }
   - { role: "azavea.daemontools" }
   - { role: "azavea.nginx", nginx_delete_default_site: True }
-  - { role: "azavea.nodejs" }
+  - { role: "nyc-trees.nodejs" }
   - { role: "azavea.ruby" }
