@@ -1,9 +1,8 @@
 {% with event=info.event %}
     <p>{{ event.begins_at.date|date:"M d" }}</p>
-    <p>{{ event.name }}</p>
+    <p><u>{{ event.title }}</u></p>
     <p>{{ event.begins_at|date:"f A" }} at {{ event.address }}</p>
     <p>{{ event.group.name }}</p>
     <p><b>{{ event.training_summary }}</b></p>
     {% if info.user_is_registered %}<p><b>+ RSVP</b></p>{% endif %}
-    {% if not forloop.last %}<hr/>{% endif %}
 {% endwith %}
