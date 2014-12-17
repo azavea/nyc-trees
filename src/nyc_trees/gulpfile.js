@@ -1,3 +1,5 @@
+"use strict";
+
 var gulp = require('gulp'),
     source = require('vinyl-source-stream'),
     browserify = require('browserify'),
@@ -31,6 +33,7 @@ var args = minimist(process.argv.slice(2),
         'forgot_username.js',
         'add_event.js',
         'datetimepicker_polyfill.js',
+        'base.js',
     ],
     entryFiles = entries.map(function(file) { return './js/src/' + file; }),
     intermediaryDir = new tmp.Dir().path + '/',
