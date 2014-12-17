@@ -9,6 +9,7 @@ from django.contrib.gis.geos import Point
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
+from django.utils.timezone import get_current_timezone
 
 from apps.core.models import Group
 from apps.event.forms import EventForm
@@ -88,13 +89,46 @@ def delete_event(request, group_slug, event_slug):
 
 
 def edit_event_page(request, group_slug, event_slug):
-    # TODO: implement
-    return {}
+    # Django automatically converts datetime objects to the correct
+    # timezone when rendering templates. However, model forms do *not*
+    # handle this for us when rendering date or time form fields,
+    # only datetime form fields.
+    tz = get_current_timezone()
+    group = get_object_or_404(Group, slug=group_slug)
+    event = get_object_or_404(Event, group=group.pk, slug=event_slug)
+    form_context = {
+        # TODO: Remove initial location after adding client-side geocoding
+        'location': Point(0, 0),
+        'date': event.begins_at.astimezone(tz),
+        'begins_at_time': event.begins_at.astimezone(tz),
+        'ends_at_time': event.ends_at.astimezone(tz)
+    }
+    form = EventForm(instance=event, initial=form_context)
+    return {
+        'form': form,
+        'group': group,
+        'event': event
+    }
 
 
 def edit_event(request, group_slug, event_slug):
-    # TODO: implement
-    pass
+    group = get_object_or_404(Group, slug=group_slug)
+    event = get_object_or_404(Event, group=group.pk, slug=event_slug)
+    form = EventForm(request.POST.copy(), instance=event)
+    form.data['group'] = group.pk
+
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect(
+            reverse('event_detail', kwargs={
+                'group_slug': group.slug,
+                'event_slug': event_slug
+            }))
+    return {
+        'form': form,
+        'group': group,
+        'event': event
+    }
 
 
 def event_popup_partial(request, group_slug, event_slug):
