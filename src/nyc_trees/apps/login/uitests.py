@@ -87,7 +87,7 @@ class FullRegistrationUITest(NycTreesSeleniumTestCase):
 
         self.click('form input[type="submit"]')
 
-        self.wait_for_text('This is your user profile')
+        self.wait_for_text('Contributions')
         expected_url = (self.live_server_url +
                         reverse('user_detail',
                                 kwargs={'username': self.username}))

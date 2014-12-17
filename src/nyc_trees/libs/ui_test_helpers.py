@@ -20,4 +20,4 @@ class NycTreesSeleniumTestCase(SeleniumTestCase):
 
         self.click('form input[type="submit"]')
 
-        self.wait_for_text('This is your user profile')
+        self.wait_for_text('Contributions')
