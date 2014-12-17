@@ -45,8 +45,29 @@ def add_event_page(request, group_slug):
 
 
 def event_detail(request, group_slug, event_slug):
-    # TODO: implement
-    return {}
+    user = request.user
+    group = get_object_or_404(Group, slug=group_slug)
+    event = get_object_or_404(Event, group=group.pk, slug=event_slug)
+    rsvp_count = event.eventregistration_set.count()
+    return {
+        'group': group,
+        'event': event,
+        'is_admin': user == group.admin,
+        'can_rsvp': rsvp_count < event.max_attendees,
+        'rsvp_count': rsvp_count,
+        'group_detail_url': reverse('group_detail', kwargs={
+            'group_slug': group.slug
+        }),
+        'group_events_url': reverse('events', kwargs={
+            'group_slug': group.slug
+        }),
+        'event_edit_url': reverse('event_edit', kwargs={
+            'group_slug': group.slug,
+            'event_slug': event.slug
+        }),
+        'rsvp_url': '',
+        'share_url': ''
+    }
 
 
 def events_list_page(request):
