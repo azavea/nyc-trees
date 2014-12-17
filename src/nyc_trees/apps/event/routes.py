@@ -37,9 +37,10 @@ event_detail = route(GET=do(render_template('event/event_detail.html'),
                             v.event_detail),
                      DELETE=is_group_admin(v.delete_event))
 
-event_edit = route(GET=do(render_template('event/edit_event.html'),
-                          is_group_admin(v.edit_event_page)),
-                   PUT=is_group_admin(v.edit_event))
+event_edit = do(is_group_admin,
+                render_template('event/edit_event.html'),
+                route(GET=v.edit_event_page,
+                      POST=v.edit_event))
 
 event_popup_partial = route(GET=v.event_popup_partial)
 

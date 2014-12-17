@@ -12,10 +12,17 @@ from django.core.exceptions import ValidationError
 from apps.event.models import Event
 
 
+TIMEFIELD_FORMATS = (
+    '%H:%M',
+    '%H:%M:%S',
+    '%I:%M %p'
+)
+
+
 class EventForm(ModelForm):
     date = DateField()
-    begins_at_time = TimeField(input_formats=['%H:%M', '%I:%M %p'])
-    ends_at_time = TimeField(input_formats=['%H:%M', '%I:%M %p'])
+    begins_at_time = TimeField(input_formats=TIMEFIELD_FORMATS)
+    ends_at_time = TimeField(input_formats=TIMEFIELD_FORMATS)
 
     class Meta:
         model = Event
