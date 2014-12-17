@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% load utils %}
+
+{% block content %}
+
+{# TODO: make event_list return a totally empty context to avoid introspection #}
+{% if immediate_events.event_infos %}
+    <h1>Your Events this week</h1>
+    {% include "event/partials/event_list.html" with event_list=immediate_events %}
+{% endif %}
+
+{# TODO: make event_list return a totally empty context to avoid introspection #}
+{% if all_events.event_infos %}
+    <h1>Browse events</h1>
+    {% include "event/partials/event_list.html" with event_list=all_events %}
+{% endif %}
+
+{% endblock content %}
+
+{% block page_js %}
+<script type="text/javascript" src="{{ "js/event_list_page.js"|static_url }}"></script>
+{% endblock page_js %}

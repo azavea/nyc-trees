@@ -29,19 +29,25 @@ class EventListTest(UsersTestCase):
     def test_following_user(self):
         request = make_request(user=self.user)
         ctx = events_list_page(request)
-        self.assertEqual(len(ctx['non_followed_events']), 0)
-        self.assertFalse(ctx['followed_events'][0]['user_is_registered'])
+        self.assertEqual(len(ctx['all_events']['event_infos']), 1)
+        self.assertEqual(len(ctx['immediate_events']['event_infos']), 1)
+        self.assertFalse(
+            ctx['immediate_events']['event_infos'][0]['user_is_registered'])
 
     def test_following_user_registered(self):
         EventRegistration.objects.create(user=self.user,
                                          event=self.event)
         request = make_request(user=self.user)
         ctx = events_list_page(request)
-        self.assertEqual(len(ctx['non_followed_events']), 0)
-        self.assertTrue(ctx['followed_events'][0]['user_is_registered'])
+        self.assertEqual(len(ctx['all_events']['event_infos']), 1)
+        self.assertEqual(len(ctx['immediate_events']['event_infos']), 1)
+        self.assertTrue(
+            ctx['immediate_events']['event_infos'][0]['user_is_registered'])
 
     def test_other_user(self):
         request = make_request(user=self.other_user)
         ctx = events_list_page(request)
-        self.assertEqual(len(ctx['followed_events']), 0)
-        self.assertFalse(ctx['non_followed_events'][0]['user_is_registered'])
+        self.assertEqual(len(ctx['all_events']['event_infos']), 1)
+        self.assertEqual(len(ctx['immediate_events']['event_infos']), 0)
+        self.assertFalse(
+            ctx['all_events']['event_infos'][0]['user_is_registered'])
