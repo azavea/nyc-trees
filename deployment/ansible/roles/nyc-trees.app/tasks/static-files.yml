@@ -32,3 +32,9 @@
   args:
     chdir: "{{ app_home }}"
   when: developing
+
+- name: Create JS test harness
+  template: src=testem-harness.html.j2
+            dest={{ app_static_root }}/test.html
+  sudo_user: nyc-trees
+  when: developing_or_testing

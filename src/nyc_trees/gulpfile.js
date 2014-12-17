@@ -36,12 +36,21 @@ var args = minimist(process.argv.slice(2),
         'base.js',
     ],
     entryFiles = entries.map(function(file) { return './js/src/' + file; }),
+
     intermediaryDir = new tmp.Dir().path + '/',
     bundleDir = intermediaryDir + 'js/',
     cssDir = intermediaryDir + 'css/',
     versionedDir = '/var/cache/nyc-trees/static/',
-    buildTasks = ['browserify', 'sass', 'vendor-css', 'copy'],
+
+    buildTasks = [
+        'browserify',
+        'browserify-tests',
+        'sass',
+        'vendor-css',
+        'copy'
+    ],
     collectstatic = 'envdir /etc/nyc-trees.d/env /opt/app/manage.py collectstatic --noinput';
+
 
 gulp.task('collect-prod', ['version'], shell.task(collectstatic));
 gulp.task('collect-debug', ['copy-dev-assets'], shell.task(collectstatic));
@@ -49,7 +58,14 @@ gulp.task('collect-debug', ['copy-dev-assets'], shell.task(collectstatic));
 gulp.task('version', buildTasks, function(cb) {
     return gulp.src(intermediaryDir + '**')
          // Don't version source map files
-        .pipe(revall({ ignore: [ /\.(js|css)\.map$/ ]}))
+        .pipe(revall({
+            ignore: [
+                // Ignore source maps.
+                /\.(js|css)\.map$/,
+                // Ignore test bundle.
+                /test\.bundle\.js$/
+            ]
+        }))
         .pipe(gulp.dest(versionedDir, {mode: '0775'}))
         .pipe(revall.manifest())
         .pipe(gulp.dest(versionedDir, {mode: '0775'}));
@@ -80,6 +96,17 @@ gulp.task('browserify', ['clean'], function() {
     }));
 });
 
+gulp.task('browserify-tests', ['clean'], function() {
+    gutil.log("Rebundling test bundle JS");
+    return browserify({
+            entries: ['./js/test/tests.js'],
+            debug: true
+        })
+        .bundle()
+        .pipe(source('test.bundle.js'))
+        .pipe(gulp.dest(bundleDir));
+});
+
 gulp.task('watchify', function() {
     var bundler = watchify(browserify({
         entries: entryFiles,
@@ -100,20 +127,18 @@ gulp.task('watchify', function() {
 
 function browserifyTask(bundler) {
     // We need to use a through-stream for entry bundles so we can minify them
-    var bundleStreams = entries.map(function() { return through(); });
+    var entryBundles = entries.map(function(_, i) {
+        return through().pipe(source(entries[i]));
+    });
 
     var commonBundle = bundler
         .plugin(factor, {
             entries: entryFiles,
-            o: bundleStreams
+            outputs: entryBundles
         })
         .bundle()
         .on('error', gutil.log.bind(gutil, 'Browserify Error'))
         .pipe(source('common.js'));
-
-    var entryBundles = bundleStreams.map(function(stream, i) {
-        return bundleStreams[i].pipe(source(entries[i]));
-    });
 
     var bundles = entryBundles.concat(commonBundle);
 
@@ -165,6 +190,14 @@ gulp.task('watch', ['watchify'], function() {
     livereload.listen({auto: true });
     gulp.watch('sass/**/*.scss', ['sass']);
     // Rerun collectstatic whenever files are added to the static files dir
+    gulp.watch(intermediaryDir + '**', ['collect-debug']);
+});
+
+gulp.task('watch-tests', function() {
+    function bundleTests() {
+        runSequence('lint', 'browserify-tests');
+    }
+    gulp.watch('js/**/*.js', bundleTests);
     gulp.watch(intermediaryDir + '**', ['collect-debug']);
 });
 
