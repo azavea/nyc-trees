@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load utils %}
 
 {% block content %}
 
@@ -119,4 +120,16 @@
 
 </div>
 
+<h3>Events</h3>
+<div>
+    {% for info in event_list.event_infos %}
+        {% include "groups/partials/event_section.html" %}
+        {% if not forloop.last %}<hr/>{% endif %}
+    {% endfor %}
+</div>
+
 {% endblock %}
+
+{% block page_js %}
+<script type="text/javascript" src="{{ "js/group_detail.js"|static_url }}"></script>
+{% endblock page_js %}

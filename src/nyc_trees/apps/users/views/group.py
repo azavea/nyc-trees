@@ -9,6 +9,8 @@ from django.shortcuts import get_object_or_404
 
 from apps.core.models import Group
 from apps.users.forms import GroupSettingsForm
+from apps.event.models import Event
+from apps.event.event_list import EventList
 
 
 def group_list_page(request):
@@ -18,17 +20,15 @@ def group_list_page(request):
 
 def group_detail(request, group_slug):
     group = get_object_or_404(Group, slug=group_slug)
-    return _make_group_detail_context(request, group)
+    events = Event.objects.filter(group_id=group.pk, is_private=False)
 
-
-def _make_group_detail_context(request, group):
-    context = {
+    return {
         'group': group,
+        'event_list': EventList.simple_context(request, events),
         # TODO: check if user is group admin or census admin
         'user_can_edit_group': True,
         'edit_url': reverse('group_edit', kwargs={'group_slug': group.slug})
     }
-    return context
 
 
 def edit_group(request, group_slug):

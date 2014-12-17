@@ -1,8 +1,12 @@
 {% with event=info.event %}
+<div>
     <p>{{ event.begins_at.date|date:"M d" }}</p>
     <p><u>{{ event.title }}</u></p>
     <p>{{ event.begins_at|date:"f A" }} at {{ event.address }}</p>
     <p>{{ event.group.name }}</p>
     <p><b>{{ event.training_summary }}</b></p>
     {% if info.user_is_registered %}<p><b>+ RSVP</b></p>{% endif %}
+    {% block extra_markup %}
+    {% endblock extra_markup %}
+</div>
 {% endwith %}
