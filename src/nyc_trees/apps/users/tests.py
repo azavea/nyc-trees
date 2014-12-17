@@ -88,8 +88,8 @@ class ProfileTemplateTests(UsersTestCase):
         self._update_user(individual_mapper=True)
         self._assert_visible_to_all('Tree Mapper')
 
-    def test_settings_link_visible_only_to_me(self):
-        self._assert_visible_only_to_me('Settings')
+    def test_privacy_link_visible_only_to_me(self):
+        self._assert_visible_only_to_me('Privacy')
 
     def test_groups_section_visibility(self):
         self._assert_visible_only_to_me('Groups')
