@@ -4,8 +4,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="stylesheet" href="{{ "css/vendor.css"|static_url }}"></script>
+    <!-- vendor.css contains styles which override bootstrap styling.  It must come after main.css -->
     <link rel="stylesheet" href="{{ "css/main.css"|static_url }}">
+    <link rel="stylesheet" href="{{ "css/vendor.css"|static_url }}"></script>
   </head>
   <body>
     <header>
