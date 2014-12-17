@@ -3,14 +3,17 @@
 
 {% block title %}{% trans "Register for an account" %}{% endblock %}
 
-{% block content %}
+{% block registration_content %}
 <form method="post" action="">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="{% trans 'Submit' %}" />
+    <input type="submit" class="btn btn-primary btn-mobile--max" value="{% trans 'Submit' %}" />
 </form>
 {% endblock %}
 
+{% block registration_title %}
+Register
+{% endblock %}
 
 {% comment %}
 **registration/registration_form.html**

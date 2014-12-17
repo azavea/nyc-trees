@@ -1,0 +1,43 @@
+nav {
+  background-color: $brand-secondary;
+  padding-right: 1.0rem;
+  @include clearfix;
+  color: #fff;
+}
+
+.nav-right {
+  float: right;
+  padding-top: .7rem;
+}
+
+.nav-left {
+  float: left;
+}
+
+.brand {
+  display: inline-block;
+  vertical-align: text-bottom;
+}
+
+.nav-menubutton {
+  nav > & {
+    float: left;
+  }
+  background-color: transparent;
+  border: 0;
+  padding: 1.0rem 1.0rem;
+  // margin-right: 1.0rem;
+  width: auto;
+}
+
+.icon-bar {
+  display: block;
+  width: 2.2rem;
+  height: .2rem;
+  border-radius: .1rem;
+  background-color: #fff;
+
+  &+.icon-bar {
+    margin-top: .5rem;
+  }
+}

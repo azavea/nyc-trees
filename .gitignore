@@ -1,4 +1,4 @@
-# Byte-compiled / optimized / DLL files
+# Mac# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 
@@ -71,3 +71,6 @@ src/nyc_trees/.idea
 
 # Emacs
 *~
+
+# MacOS
+.DS_Store

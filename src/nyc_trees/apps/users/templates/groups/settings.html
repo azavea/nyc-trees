@@ -1,68 +1,295 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <ul class="nav nav-tabs">
-        <li class="active">
-            <a href="#details-pane" data-toggle="tab">Profile</a>
-        </li>
-        <li>
-            <a href="#events-pane" data-toggle="tab">Events</a>
-        </li>
-        <li>
-            <a href="#mappers-pane" data-toggle="tab">Mappers</a>
-        </li>
-    </ul>
-
-    <form method="POST">
-        <fieldset>
-            {% csrf_token %}
-
-            <div class="tab-pane active" id="details-pane">
-                {{ form.non_field_errors }}
-                <div class="fieldWrapper">
-                    {{ form.description.errors }}
-                    {{ form.description.label_tag }}
-                    {{ form.description }}
+<div class="page-settings">
+    <div class="container">
+        <div class="row">
+            <aside class="pageheading col-sm-4">
+                <div class="pageheading-description block">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <a href="#" class="breadcrumb">
+                                <i class="icon-left-open-mini"></i>
+                                Brooklyn Mapping Team
+                            </a>
+                        </div>
+                        <div class="col-xs-12">
+                            <h2>Manage</h2>
+                        </div>
+                    </div>
                 </div>
-                <div class="fieldWrapper">
-                    {{ form.contact_info.errors }}
-                    {{ form.contact_info.label_tag }}
-                    {{ form.contact_info }}
-                </div>
-                <div class="fieldWrapper">
-                    {{ form.contact_email.errors }}
-                    {{ form.contact_email.label_tag }}
-                    {{ form.contact_email }}
-                </div>
-                <div class="fieldWrapper">
-                    {{ form.contact_url.errors }}
-                    {{ form.contact_url.label_tag }}
-                    {{ form.contact_url }}
-                </div>
-                <div class="fieldWrapper">
-                    {{ form.image.errors }}
-                    {{ form.image.label_tag }}
-                    {{ form.image }}
-                </div>
-            </div>
+            </aside>
+            <main class="main-manage col-sm-8">
 
-            <div class="tab-pane" id="events-pane">
-                <h3>Events</h3>
-                <a href="{% url 'add_event' group_slug=group_slug %}">+New</a>
-                <div>TODO: show event management</div>
-            </div>
+                <div class="row">
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a data-toggle="tab" href="#details">Details</a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#events">Events</a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#mappers">Mappers</a>
+                        </li>
+                    </ul>
+                </div>
 
-            <div class="tab-pane" id="mappers-pane">
-                <h3>Mappers</h3>
-                <div>TODO: show mapper management</div>
-            </div>
+                <section>
 
-            <div style="float:right;">
-                <input type="submit" class="btn" value="Save" />
-            </div>
-            <a class="btn" href="{% url 'group_detail' group_slug=group_slug %}">Cancel</a>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="details">
 
-        </fieldset>
-    </form>
+                            <form method="POST">
+                              {% csrf_token %}
+
+                                <fieldset>
+
+                                    {{ form.non_field_errors }}
+                                    <div class="block item">
+                                        {{ form.description.errors }}
+                                        {{ form.description.label_tag }}
+                                        {{ form.description }}
+                                    </div>
+                                    <div class="block item">
+                                        {{ form.contact_info.errors }}
+                                        {{ form.contact_info.label_tag }}
+                                        {{ form.contact_info }}
+                                    </div>
+                                    <div class="block item">
+                                        {{ form.contact_email.errors }}
+                                        {{ form.contact_email.label_tag }}
+                                        {{ form.contact_email }}
+                                    </div>
+                                    <div class="block item">
+                                        {{ form.contact_url.errors }}
+                                        {{ form.contact_url.label_tag }}
+                                        {{ form.contact_url }}
+                                    </div>
+                                    <div class="block item">
+                                        {{ form.image.errors }}
+                                        {{ form.image.label_tag }}
+                                        {{ form.image }}
+                                    </div>
+
+                                    <div class="main-footer">
+                                        <div class="pull-right">
+                                            <input type="submit" class="btn" value="Save group details" />
+                                        </div>
+                                        <a class="btn btn-link" href="{% url 'group_detail' group_slug=group_slug %}">Cancel</a>
+                                    </div>
+
+                                </fieldset>
+                            </form>
+
+                        </div>
+
+                        <div class="tab-pane" id="events">
+                            <ul class="nav nav-tabs nav-tabs--filter">
+                                <li class="active">
+                                    <a data-toggle="tab" href="#current">Current</a>
+                                </li>
+                                <li>
+                                    <a data-toggle="tab" href="#past">Past</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'add_event' group_slug=group_slug %}">+ New</a>
+                                </li>
+                            </ul>
+                            <div class="events">
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="current">
+                                        <a href="#" class="event block item">
+                                            <div class="row">
+                                                <div class="event-date col-xs-3">
+                                                    <div class="event-month">apr</div>
+                                                    <div class="event-day h4">25</div>
+                                                </div>
+                                                <div class="event-details col-xs-6">
+                                                    <h5 class="event-detail event-detail--title">tree like to party</h5>
+                                                    <div class="event-detail">4:30 pm</div>
+                                                    <div class="event-detail">450 may street</div>
+                                                </div>
+                                                <div class="event-action col-xs-3">
+
+                                                    <!-- This is all the dropdown menu. -->
+                                                    <div class="dropdown text-right">
+                                                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                                                            <span class="caret"></span>
+                                                        </button>
+                                                        <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu1">
+                                                            <li>
+                                                                <button role="menuitem" tabindex="-1" href="#">
+                                                                RSVP to event
+                                                                </button>
+                                                            </li>
+                                                            <li>
+                                                                <button role="menuitem" tabindex="-1" href="#">
+                                                                Edit details
+                                                                </button>
+                                                            </li>
+                                                            <li>
+                                                                <button role="menuitem" tabindex="-1" href="#">
+                                                                Email attendees
+                                                                </button>
+                                                            </li>
+                                                            <li>
+                                                                <button role="menuitem" tabindex="-1" href="#">
+                                                                Event check-in
+                                                                </button>
+                                                            </li>
+                                                            <li>
+                                                                <button role="menuitem" tabindex="-1" href="#">
+                                                                Get shareable link
+                                                                </button>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="tab-pane" id="past">
+                                        <a href="#" class="event block item">
+                                            <div class="row">
+                                                <div class="event-date col-xs-3">
+                                                    <div class="event-month">apr</div>
+                                                    <div class="event-day h4">25</div>
+                                                </div>
+                                                <div class="event-details col-xs-6">
+                                                    <h5 class="event-detail event-detail--title">tree like to party</h5>
+                                                    <div class="event-detail">4:30 pm</div>
+                                                    <div class="event-detail">450 may street</div>
+                                                </div>
+                                                <div class="event-action col-xs-3">
+                                                    <div class="dropdown text-right">
+                                                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                                                            <span class="caret"></span>
+                                                        </button>
+                                                        <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu1">
+                                                            <li>
+                                                                <button role="menuitem" tabindex="-1" href="#">
+                                                                RSVP to event
+                                                                </button>
+                                                            </li>
+                                                            <li>
+                                                                <button role="menuitem" tabindex="-1" href="#">
+                                                                Edit details
+                                                                </button>
+                                                            </li>
+                                                            <li>
+                                                                <button role="menuitem" tabindex="-1" href="#">
+                                                                Email attendees
+                                                                </button>
+                                                            </li>
+                                                            <li>
+                                                                <button role="menuitem" tabindex="-1" href="#">
+                                                                Event check-in
+                                                                </button>
+                                                            </li>
+                                                            <li>
+                                                                <button role="menuitem" tabindex="-1" href="#">
+                                                                Get shareable link
+                                                                </button>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="mappers">
+                            <div class="block">
+                                <div class="mappers-option">
+                                    <div class="mappers-option-overview">
+                                        Enabled (<a href="#">Edit</a>)
+                                        <!-- .mappers-option-edit should be displayed and .mappers-option-overview should be hidden when someone clicks on the above "Edit" link. Clicking save should update and display .mappers-options-overview and hide .mappers-option-edit. -->
+                                    </div>
+                                    <div class="mappers-option-edit ">
+                                        <div class="row block">
+                                            <div class="col-xs-9">I want to allow individual mappers for my group.</div>
+                                            <div class="col-xs-3 text-right"><input type="checkbox"></div>
+                                        </div>
+                                        <button class="btn btn-primary">Save</button>
+                                    </div>
+                                </div>
+                                <hr>
+                            </div>
+                            <div class="mappers-view content--disabled">
+                                <ul class="nav nav-tabs nav-tabs--filter">
+                                    <li class="active">
+                                        <a data-toggle="tab" href="#pending">Pending</a>
+                                    </li>
+                                    <li>
+                                        <a data-toggle="tab" href="#all">All</a>
+                                    </li>
+                                </ul>
+                                <div class="mappers">
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="pending">
+                                            <div class="mapper block item">
+                                                <div class="row">
+                                                    <div class="col-xs-6">
+                                                        <h4>
+                                                            rreading
+                                                        </h4>
+                                                        <h5 class="nobold">
+                                                            Rachel Reading
+                                                        </h5>
+                                                    </div>
+                                                    <div class="col-xs-6 text-right">
+                                                        <a href="{{edit_url}}" class="btn btn-switch">Access Granted</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="all">
+                                            <div class="mapper block item">
+                                                <div class="row">
+                                                    <div class="col-xs-6">
+                                                        <h4>
+                                                            rreading
+                                                        </h4>
+                                                        <h5 class="nobold">
+                                                            Rachel Reading
+                                                        </h5>
+                                                    </div>
+                                                    <div class="col-xs-6 text-right">
+                                                        <a href="{{edit_url}}" class="btn btn-switch">Access Granted</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mapper block item">
+                                                <div class="row">
+                                                    <div class="col-xs-6">
+                                                        <h4>
+                                                            rreading
+                                                        </h4>
+                                                        <h5 class="nobold">
+                                                            Rachel Reading
+                                                        </h5>
+                                                    </div>
+                                                    <div class="col-xs-6 text-right">
+                                                        <a href="{{edit_url}}" class="btn btn-switch">Access Granted</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+            </main>
+        </div>
+    </div>
+</div>
 
 {% endblock %}

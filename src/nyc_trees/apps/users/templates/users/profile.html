@@ -1,47 +1,92 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% include "users/partials/profile/privacy_indicator.html" with public=user.profile_is_public %}
-    <h2>{{user.username}}</h2>
 
-    {% if show_username %}
-        <div>{{user.first_name}} {{user.last_name}}</div>
-    {% endif %}
+<div class="page-profile">
 
-    {% if show_individual_mapper %}
-        <div>Tree Mapper</div>
-    {% endif %}
+    <div class="container">
+        <div class="row">
+            <aside class="pageheading col-sm-4">
+                <div class="pageheading-description block">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h2>{{user.username}}</h2>
+                            {% if show_username %}
+                                <div><i class="icon-record"></i> {{user.first_name}} {{user.last_name}}</div>
+                            {% endif %}
 
-    {% if viewing_own_profile %}
-        <div style="float:right;">
-            <a class="btn" href="{% url 'user_profile_settings' %}">Settings</a>
+                            {% if show_individual_mapper %}
+                                <div><i class="icon-user"></i> Tree Mapper</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% if viewing_own_profile %}
+                <div class="pageheading-controls block">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <!-- This should state whether your profile is public or private. -->
+                            Private profile
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            <a class="btn btn-primary">Privacy</a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </aside>
+            <main class="col-sm-8">
+
+                {% if show_contributions %}
+                <section class="contributions">
+                    {% with title="Contributions" section_id="contributions" public=user.contributions_are_public %}
+                        {% include "users/partials/profile/contributions.html"%}
+                    {% endwith %}
+                </section>
+                {% endif %}
+
+                {% if show_groups %}
+                <section class="groups">
+                    {% with title="Groups" section_id="groups" public=user.group_follows_are_public %}
+                        {% include "users/partials/profile/groups.html" %}
+                    {% endwith %}
+                    <!-- I couldn't get groups to display on this page using the above code. Please refer to the following test code. -->
+                    <a href="#" class="group block item rightarrow">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                Tree Group
+                            </div>
+                        </div>
+                    </a>
+                    <a href="#" class="group block item rightarrow">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                Tree Group
+                            </div>
+                        </div>
+                    </a>
+                </section>
+                {% endif %}
+
+                <section class="achievements">
+                    {% if show_achievements %}
+                        {% with title="Achievements" section_id="achievements" public=user.achievements_are_public %}
+                            {% include "users/partials/profile/achievements.html" with section_id="achievements" %}
+                        {% endwith %}
+                    {% endif %}
+                </section>
+
+                {% if viewing_own_profile and not user.profile_is_public%}
+                    <div class="block highlight">
+                        <h5>Tip:</h5>
+                        Want to share your progress and information with the tree mapping community? <a>Make your profile public!</a>
+                    </div>
+                {% endif %}
+
+            </main>
         </div>
-        <div>This is your user profile</div>
-    {% endif %}
+    </div>
 
-    {% if show_contributions %}
-        {% with title="Contributions" section_id="contributions" public=user.contributions_are_public %}
-            {% include "users/partials/profile/contributions.html"%}
-        {% endwith %}
-    {% endif %}
-
-    {% if show_groups %}
-        {% with title="Groups" section_id="groups" public=user.group_follows_are_public %}
-            {% include "users/partials/profile/groups.html" %}
-        {% endwith %}
-    {% endif %}
-
-    {% if show_achievements %}
-        {% with title="Achievements" section_id="achievements" public=user.achievements_are_public %}
-            {% include "users/partials/profile/achievements.html" with section_id="achievements" %}
-        {% endwith %}
-    {% endif %}
-
-    {% if viewing_own_profile and not user.profile_is_public%}
-        <div>
-            Want to share your progress and information with the tree mapping community?
-            <a>Make your profile public!</a>
-        </div>
-    {% endif %}
+</div>
 
 {% endblock %}
