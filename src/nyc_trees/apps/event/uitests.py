@@ -5,6 +5,7 @@ from __future__ import division
 
 from datetime import datetime
 
+from django.contrib.gis.geos import Point
 from django.core.urlresolvers import reverse
 from django.utils.timezone import make_aware, localtime, get_current_timezone
 
@@ -15,9 +16,26 @@ from apps.core.models import User, Group
 from apps.event.models import Event
 
 
-class AddEventUITest(NycTreesSeleniumTestCase):
+def add_event(group, begins_at, ends_at):
+    kwargs = {
+        'group': group,
+        'title': 'Test event',
+        'slug': 'test-event-slug',
+        'begins_at': begins_at,
+        'ends_at': ends_at,
+        'location': Point(0, 0),
+        'max_attendees': 0,
+        'contact_email': 'test@aol.com',
+        'address': '340 N 12th St.'
+    }
+    event = Event(**kwargs)
+    event.clean_and_save()
+    return event
+
+
+class EventTestCase(NycTreesSeleniumTestCase):
     def setUp(self):
-        super(AddEventUITest, self).setUp()
+        super(EventTestCase, self).setUp()
 
         self.user = User(username='leela',
                          email='leela@planetexpress.nyc',
@@ -36,6 +54,8 @@ class AddEventUITest(NycTreesSeleniumTestCase):
             admin=self.user
         )
 
+
+class AddEventUITest(EventTestCase):
     def test_add_event(self):
         self.login(self.user.username)
 
@@ -63,3 +83,29 @@ class AddEventUITest(NycTreesSeleniumTestCase):
         self.assertEqual('%s %s' % (self.user.first_name, self.user.last_name),
                          events[0].contact_info)
         self.assertEqual(self.user.email, events[0].contact_email)
+
+
+class EditEventUITest(EventTestCase):
+    def test_edit_event_datetime_fields(self):
+        """
+        Test that saving the edit form without modifications doesn't alter
+        datetime fields.
+        """
+        self.login(self.user.username)
+
+        begins_at = make_aware(datetime(2014, 1, 1, 13),
+                               get_current_timezone())
+        ends_at = make_aware(datetime(2014, 1, 1, 14),
+                             get_current_timezone())
+
+        event = add_event(self.group, begins_at, ends_at)
+
+        self.get(reverse('event_edit', kwargs={
+            'group_slug': self.group.slug,
+            'event_slug': event.slug
+        }))
+        self.click('form input[type="submit"]')
+
+        updated_event = Event.objects.get(id=event.id)
+        self.assertEqual(updated_event.begins_at, event.begins_at)
+        self.assertEqual(updated_event.ends_at, event.ends_at)
