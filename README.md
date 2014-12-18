@@ -59,7 +59,7 @@ LiveServer Tests       | 9001  | (for Sauce Labs)                               
 Testem                 | 7357  |                                                  | NYC_TREES_PORT_7357
 
 
-### Javascript and CSS
+### JavaScript and CSS
 
 The main tool used is [gulp](http://gulpjs.com/), which is exposed through `npm run` to avoid version conflicts.
 
@@ -68,10 +68,6 @@ The main tool used is [gulp](http://gulpjs.com/), which is exposed through `npm 
  - To watch files and automatically rebuild the JS or sass files when they change, use `gulp watch --debug` or `npm run watch`.  This will also start a [livereload server](http://livereload.com/).
 
 `gulp build` and `gulp watch` without the `--debug` flag are intentionally not exposed through `npm run`.
-
-#### Linting
-
-`./scripts/npm.sh run lint`
 
 ### Caching
 
@@ -96,6 +92,28 @@ In order to view the Graphite Web UI, navigate to the following URL from a brows
 ```
 http://localhost:8080/
 ```
+
+## Testing
+
+In order to simulate the testing environment used in CI, bring up the testing environment with:
+
+```
+$ VAGRANT_ENV="TEST" vagrant up
+```
+
+Once that is complete, execute the top-level test suite responsible for linting and unit testing the client and server-side components:
+
+```bash
+$ ./scripts/test.sh
+```
+
+If you want to run the integration tests, use the following command:
+
+```bash
+$ ./scripts/manage.sh selenium
+```
+
+In addition, other [scripts](scripts/) exist if you want to test just one of the client or server-side components.
 
 ## Deployment
 
