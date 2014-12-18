@@ -2,8 +2,8 @@ azavea.apache2,0.2.1
 azavea.ntp,0.1.0
 azavea.pip,0.1.0
 azavea.nodejs,0.2.0
-azavea.postgresql,0.2.0
-azavea.postgresql-support,0.1.1
+azavea.postgresql,0.2.1
+azavea.postgresql-support,0.2.0
 azavea.postgis,0.1.1
 azavea.redis,0.1.0
 azavea.nginx,0.2.0
