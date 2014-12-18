@@ -15,6 +15,11 @@ app_config:
   - { file: "DJANGO_POSTGIS_VERSION", content: "{{ app_postgis_version }}" }
   - { file: "DJANGO_SECRET_KEY", content: "{{ app_secret_key }}" }
 
+sauce_connect_url: https://saucelabs.com/downloads/sc-4.3.5-linux.tar.gz
+sauce_connect_archive: /var/lib/nyc-trees/sc-4.3.5-linux.tar.gz
+sauce_connect_archive_dir: /var/lib/nyc-trees
+sauce_connect_dir: /var/lib/nyc-trees/sc-4.3.5-linux
+
 app_sauce_labs_config:
   - { file: "SELENIUM_HOST", content: "{{ lookup('env', 'SELENIUM_HOST') }}" }
   - { file: "SELENIUM_PORT", content: "{{ lookup('env', 'SELENIUM_PORT') }}" }
@@ -23,10 +28,9 @@ app_sauce_labs_config:
   - { file: "SELENIUM_VERSION", content: "{{ lookup('env', 'SELENIUM_VERSION') }}" }
   - { file: "SAUCE_USER_NAME", content: "{{ lookup('env', 'SAUCE_USER_NAME') }}" }
   - { file: "SAUCE_API_KEY", content: "{{ lookup('env', 'SAUCE_API_KEY') }}" }
-  - { file: "SAUCE_TUNNEL_ID", content: "{{ lookup('env', 'SAUCE_TUNNEL_ID') }}" }
   - { file: "BUILD_NUMBER", content: "{{ lookup('env', 'BUILD_NUMBER') }}" }
   - { file: "JOB_NAME", content: "{{ lookup('env', 'JOB_NAME') }}" }
-  - { file: "DJANGO_LIVE_TEST_SERVER_ADDRESS", content: "{{ lookup('env', 'DJANGO_LIVE_TEST_SERVER_ADDRESS') }}" }
+  - { file: "SELENIUM_SAUCE_CONNECT_PATH", content: "{{ sauce_connect_dir }}/bin/sc" }
 
 app_log: /var/log/nyc-trees-app.log
 app_log_rotate_count: 5
