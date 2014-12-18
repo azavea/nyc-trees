@@ -1,0 +1,22 @@
+<form method="POST">
+    <fieldset>
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div class="block item">
+            {{ form.subject.errors }}
+            {{ form.subject.label_tag }}
+            {{ form.subject }}
+        </div>
+        <div class="block item">
+            {{ form.body.errors }}
+            {{ form.body.label_tag }}
+            {{ form.body }}
+        </div>
+        <div class="main-footer">
+            <div class="pull-right">
+                <a class="btn btn-link" href="{% url 'group_detail' group_slug=group.slug %}">Cancel</a>
+            </div>
+            <input type="submit" class="btn" value="Submit" />
+        </div>
+    </fieldset>
+</form>

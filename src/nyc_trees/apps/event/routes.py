@@ -42,6 +42,12 @@ event_edit = do(is_group_admin,
                 route(GET=v.edit_event_page,
                       POST=v.edit_event))
 
+event_email = do(
+    is_group_admin,
+    render_template('event/email_rsvps.html'),
+    route(GET=v.event_email_page,
+          POST=v.event_email))
+
 event_popup_partial = route(GET=v.event_popup_partial)
 
 event_registration = has_training(route(POST=v.register_for_event,

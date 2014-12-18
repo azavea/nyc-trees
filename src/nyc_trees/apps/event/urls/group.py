@@ -9,7 +9,7 @@ from apps.event.routes import (events, add_event, event_detail,
                                event_edit, event_popup_partial,
                                event_registration, start_event_map_print_job,
                                event_check_in_page, event_check_in,
-                               email_event_registered_users)
+                               email_event_registered_users, event_email)
 
 # These URLs have the prefix 'group/'
 urlpatterns = patterns(
@@ -25,6 +25,9 @@ urlpatterns = patterns(
 
     url(r'^(?P<group_slug>[\w-]+)/event/(?P<event_slug>[\w-]+)/edit/$',
         event_edit, name='event_edit'),
+
+    url(r'^(?P<group_slug>[\w-]+)/event/(?P<event_slug>[\w-]+)/email/$',
+        event_email, name='event_email'),
 
     url(r'^(?P<group_slug>[\w-]+)/event/(?P<event_slug>[\w-]+)/popup/$',
         event_popup_partial, name='event_popup_partial'),
