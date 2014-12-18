@@ -65,6 +65,9 @@ class EventRegistration(NycModel, models.Model):
     event = models.ForeignKey(Event, on_delete=models.PROTECT)
     did_attend = models.BooleanField(default=False)
 
+    class Meta:
+        unique_together = ('user', 'event')
+
     def __unicode__(self):
         return "'%s' registration for '%s'" % (self.user.username,
                                                self.event.title)

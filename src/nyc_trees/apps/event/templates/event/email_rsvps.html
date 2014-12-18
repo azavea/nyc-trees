@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{# TODO: This should be a "tab" on the Event Management page, once that has been merged/styled #}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <main class="col-sm-12">
+            <section>
+            {% if message_sent %}
+                Your message has been sent to {{ rsvp_count }} recipient(s).
+            {% else %}
+                <h4 class="section-heading">Recipients</h4>
+                <span>{{ rsvp_count }}</span> RSVPS
+                {% if rsvp_count > 0 %}
+                    <a href="{% url 'event_check_in_page' group_slug=group.slug event_slug=event.slug%}">See all</a>
+                    {% include "core/partials/email_form.html" %}
+                {% else %}
+                    {# There is no one to email! #}
+                    <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+                {% endif %}
+            {% endif %}
+            </section>
+        </main>
+    </div>
+</div>
+{% endblock %}

@@ -8,6 +8,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 
 from apps.core.models import Group
+
 from apps.users.forms import GroupSettingsForm
 from apps.event.models import Event
 from apps.event.event_list import EventList

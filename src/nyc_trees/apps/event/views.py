@@ -9,8 +9,13 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.timezone import get_current_timezone
 
+from apps.core.forms import EmailForm
 from apps.core.models import Group
+
+from apps.users.models import Follow
+
 from apps.event.forms import EventForm
+from apps.event.models import Event, EventRegistration
 
 from apps.event.models import Event
 
@@ -70,6 +75,41 @@ def event_detail(request, group_slug, event_slug):
         }),
         'rsvp_url': '',
         'share_url': ''
+    }
+
+
+def event_email_page(request, group_slug, event_slug):
+    event = get_object_or_404(Event, slug=event_slug, group__slug=group_slug)
+    return {
+        'event': event,
+        'group': event.group,
+        'rsvp_count': event.eventregistration_set.count(),
+        'form': EmailForm(),
+        'message_sent': False
+    }
+
+
+def event_email(request, group_slug, event_slug):
+    event = get_object_or_404(Event, slug=event_slug, group__slug=group_slug)
+    form = EmailForm(request.POST)
+    rsvps = event.eventregistration_set.all()
+
+    message_sent = False
+    if form.is_valid():
+        # We need to send emails one-by-one, or everyone will be in the same
+        # "to" line in the email
+        for rsvp in rsvps.select_related('user'):
+            rsvp.user.email_user(form.cleaned_data['subject'],
+                                 form.cleaned_data['body'],
+                                 [event.contact_email])
+        message_sent = True
+
+    return {
+        'event': event,
+        'group': event.group,
+        'rsvp_count': rsvps.count(),
+        'form': form,
+        'message_sent': message_sent
     }
 
 
