@@ -18,15 +18,3 @@
   when: packing
   notify:
     - Restart nyc-trees-app
-
-- name: Download Sauce Connect for UI tests
-  get_url: url={{ sauce_connect_url }} dest={{ sauce_connect_archive }}
-  when: sauce_labs_api_key_is_defined
-
-- name: Extract Sauce Connect for UI tests
-  unarchive:
-    src={{ sauce_connect_archive }}
-    copy=no
-    dest={{ sauce_connect_archive_dir }}
-    creates={{ sauce_connect_dir }}
-  when: sauce_labs_api_key_is_defined
