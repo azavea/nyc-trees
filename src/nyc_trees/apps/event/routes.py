@@ -15,7 +15,7 @@ from apps.event import views as v
 
 events_list_page = route(
     GET=do(
-        render_template('event/event_list.html'),
+        render_template('event/event_list_page.html'),
         v.events_list_page))
 
 events_list_page_partial = route(GET=v.events_list_page_partial)

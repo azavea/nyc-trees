@@ -30,10 +30,12 @@ var args = minimist(process.argv.slice(2),
                     {default: {debug: false}}),
 
     entries = [
-        'forgot_username.js',
-        'event_form.js',
-        'datetimepicker_polyfill.js',
         'base.js',
+        'datetimepicker_polyfill.js',
+        'event_form.js',
+        'event_list_page.js',
+        'forgot_username.js',
+        'group_detail.js',
     ],
     entryFiles = entries.map(function(file) { return './js/src/' + file; }),
 

@@ -3,8 +3,6 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
-from apps.users.models import Follow
-from apps.event.models import Event, EventRegistration
 from django.contrib.gis.geos import Point
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
@@ -13,6 +11,10 @@ from django.utils.timezone import get_current_timezone
 
 from apps.core.models import Group
 from apps.event.forms import EventForm
+
+from apps.event.models import Event
+
+from apps.event.event_list import (immediate_events, all_events)
 
 
 def event_dashboard(request, group_slug):
@@ -72,26 +74,15 @@ def event_detail(request, group_slug, event_slug):
 
 
 def events_list_page(request):
-    user = request.user
-    user_registered_event_ids = set(EventRegistration.objects
-                                    .filter(user_id=user.pk)
-                                    .values_list('event_id', flat=True))
-    make_event_info = lambda event: {'event': event,
-                                     'user_is_registered':
-                                     event.pk in user_registered_event_ids}
-    all_events = Event.objects.all()
+    immediate_events_list = (immediate_events
+                             .configure(chunk_size=3)
+                             .as_context(request))
+    all_events_list = (all_events
+                       .configure(show_filters=True)
+                       .as_context(request))
 
-    if user.is_authenticated():
-        follows = Follow.objects.filter(user_id=user.id)
-        groups = follows.values_list('group', flat=True)
-        followed_events = all_events.filter(group_id__in=groups)
-        non_followed_events = all_events.exclude(pk__in=followed_events)
-    else:
-        followed_events = Event.objects.none()
-        non_followed_events = all_events
-
-    return {'followed_events': map(make_event_info, followed_events),
-            'non_followed_events': map(make_event_info, non_followed_events)}
+    return {'immediate_events': immediate_events_list,
+            'all_events': all_events_list}
 
 
 def events_list_page_partial(request):
