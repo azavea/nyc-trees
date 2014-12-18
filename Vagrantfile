@@ -43,7 +43,9 @@ if [ "up", "provision", "status" ].include?(ARGV.first)
   install_dependent_roles
 end
 
-ANSIBLE_INVENTORY_PATH = if !ENV["VAGRANT_ENV"].nil? && ENV["VAGRANT_ENV"] == "TEST"
+is_test = !ENV["VAGRANT_ENV"].nil? && ENV["VAGRANT_ENV"] == "TEST"
+
+ANSIBLE_INVENTORY_PATH = if is_test
   "deployment/ansible/inventory/test"
 else
   "deployment/ansible/inventory/development"
@@ -74,15 +76,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     services.vm.synced_folder ".", "/vagrant", disabled: true
 
     # Graphite Web
-    services.vm.network "forwarded_port", guest: 8080, host: ENV.fetch("NYC_TREES_PORT_8080", 8080)
+    services.vm.network "forwarded_port", guest: 8080, host: ENV.fetch("NYC_TREES_PORT_8080", 8080), auto_correct: is_test
     # Kibana
-    services.vm.network "forwarded_port", guest: 5601, host: ENV.fetch("NYC_TREES_PORT_5601", 15601)
+    services.vm.network "forwarded_port", guest: 5601, host: ENV.fetch("NYC_TREES_PORT_5601", 15601), auto_correct: is_test
     # PostgreSQL
-    services.vm.network "forwarded_port", guest: 5432, host: ENV.fetch("NYC_TREES_PORT_5432", 15432)
+    services.vm.network "forwarded_port", guest: 5432, host: ENV.fetch("NYC_TREES_PORT_5432", 15432), auto_correct: is_test
     # Pgweb
-    services.vm.network "forwarded_port", guest: 5433, host: ENV.fetch("NYC_TREES_PORT_5433", 15433)
+    services.vm.network "forwarded_port", guest: 5433, host: ENV.fetch("NYC_TREES_PORT_5433", 15433), auto_correct: is_test
     # Redis
-    services.vm.network "forwarded_port", guest: 6379, host: ENV.fetch("NYC_TREES_PORT_6379", 16379)
+    services.vm.network "forwarded_port", guest: 6379, host: ENV.fetch("NYC_TREES_PORT_6379", 16379), auto_correct: is_test
 
     services.vm.provider "virtualbox" do |v|
       v.memory = 1024
@@ -122,13 +124,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
 
     # Django via Nginx/Gunicorn
-    app.vm.network "forwarded_port", guest: 80, host: ENV.fetch("NYC_TREES_PORT_8000", 8000)
+    app.vm.network "forwarded_port", guest: 80, host: ENV.fetch("NYC_TREES_PORT_8000", 8000), auto_correct: is_test
     # Livereload server (for gulp watch)
     app.vm.network "forwarded_port", guest: 35729, host: 35729, auto_correct: true
     # Support accessing the test live server (for Sauce Labs)
-    app.vm.network "forwarded_port", guest: 9001, host: ENV.fetch("NYC_TREES_PORT_9001", 9001)
+    app.vm.network "forwarded_port", guest: 9001, host: ENV.fetch("NYC_TREES_PORT_9001", 9001), auto_correct: is_test
     # Testem server
-    app.vm.network "forwarded_port", guest: 7357, host: ENV.fetch("NYC_TREES_PORT_7357", 7357)
+    app.vm.network "forwarded_port", guest: 7357, host: ENV.fetch("NYC_TREES_PORT_7357", 7357), auto_correct: is_test
 
     app.ssh.forward_x11 = true
 
