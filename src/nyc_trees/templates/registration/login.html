@@ -25,6 +25,7 @@
                 </form>
                 <div class="block">
                     <p>{% trans "Forgot your password?" %} <a href="{% url 'auth_password_reset' %}">{% trans "Reset it" %}</a>.</p>
+                    <p>{% trans "Forgot your username?" %} <a href="{% url 'forgot_username' %}">{% trans "Retrieve it" %}</a>.</p>
                     <p>{% trans "Not a member?" %} <a href="{% url 'registration_register' %}">{% trans "Register" %}</a>.</p>
                 </div>
 
