@@ -32,6 +32,7 @@ var args = minimist(process.argv.slice(2),
     entries = [
         'base.js',
         'datetimepicker_polyfill.js',
+        'event.js',
         'event_form.js',
         'event_list_page.js',
         'forgot_username.js',

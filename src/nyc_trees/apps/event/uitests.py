@@ -7,13 +7,14 @@ from datetime import datetime
 
 from django.contrib.gis.geos import Point
 from django.core.urlresolvers import reverse
-from django.utils.timezone import make_aware, localtime, get_current_timezone
+from django.utils.timezone import (make_aware, localtime, get_current_timezone,
+                                   now)
 
 from libs.ui_test_helpers import NycTreesSeleniumTestCase
 
 from apps.core.models import User, Group
 
-from apps.event.models import Event
+from apps.event.models import Event, EventRegistration
 
 
 def add_event(group, begins_at, ends_at):
@@ -109,3 +110,108 @@ class EditEventUITest(EventTestCase):
         updated_event = Event.objects.get(id=event.id)
         self.assertEqual(updated_event.begins_at, event.begins_at)
         self.assertEqual(updated_event.ends_at, event.ends_at)
+
+
+class RsvpForEventUITest(EventTestCase):
+    def setUp(self):
+        super(RsvpForEventUITest, self).setUp()
+
+        self.user2 = User(username='bender',
+                          email='bender@planetexpress.nyc',
+                          first_name='Bender',
+                          last_name='Rodríguez')
+        self.user2.set_password('password')
+        self.user2.clean_and_save()
+
+        self.event = Event.objects.create(group=self.group,
+                                          title="The event",
+                                          slug="the-event",
+                                          contact_email="a@b.com",
+                                          address="123 Main St",
+                                          location=Point(0, 0),
+                                          max_attendees=100,
+                                          begins_at=now(),
+                                          ends_at=now())
+
+    @property
+    def event_detail_url(self):
+        return reverse('event_detail', kwargs={
+            'group_slug': self.group.slug,
+            'event_slug': self.event.slug
+        })
+
+    @property
+    def event_registration_url(self):
+        return reverse('event_registration', kwargs={
+            'group_slug': self.group.slug,
+            'event_slug': self.event.slug
+        })
+
+    def get_event_page(self):
+        self.get(self.event_detail_url)
+
+    def test_rsvp(self):
+        self.assertEqual(EventRegistration.objects.all().count(), 0)
+        self.login(self.user2.username)
+        self.get_event_page()
+
+        self.wait_for_text("RSVP")
+        self.click('#rsvp')
+        self.wait_for_text("RSVPed")
+        self.assertEqual(EventRegistration.objects.all().count(), 1)
+        self.assertEqual(EventRegistration.objects.all()[0].user,
+                         self.user2)
+        self.assertEqual(EventRegistration.objects.all()[0].event,
+                         self.event)
+
+    def test_cancel_rsvp(self):
+        EventRegistration.objects.create(user=self.user2, event=self.event)
+
+        self.login(self.user2.username)
+        self.get_event_page()
+
+        self.wait_for_text("1 / 100")
+        self.click('#rsvp')
+        self.wait_for_text("0 / 100")
+        self.assertEqual(EventRegistration.objects.all().count(), 0)
+
+    def test_group_admin_sees_admin_button(self):
+        self.login(self.user.username)
+        self.get_event_page()
+        self.wait_for_text("Admin")
+
+    def test_user_not_logged_in_can_rsvp(self):
+        self.get_event_page()
+        self.wait_for_text("0 / 100")
+        self.click('#rsvp')
+        expected_url = (self.live_server_url + reverse('login') + '?next=' +
+                        self.event_registration_url)
+        self.assertEqual(expected_url, self.sel.current_url)
+
+        self.wait_for_textbox_then_type('[name="username"]',
+                                        self.user2.username)
+        self.wait_for_textbox_then_type('[name="password"]', 'password')
+        self.click('form input[type="submit"]')
+
+        expected_url = self.live_server_url + self.event_detail_url
+        self.assertEqual(expected_url, self.sel.current_url)
+        self.wait_for_text("1 / 100")
+
+    def test_at_capacity(self):
+        self.event.max_attendees = 1
+        self.event.save()
+        EventRegistration.objects.create(user=self.user, event=self.event)
+        self.login(self.user2.username)
+        self.get_event_page()
+        self.wait_for_text("At Capacity")
+        self.click('#rsvp')  # clicking should do nothing
+        self.wait_for_text("At Capacity")
+
+    def test_user_not_logged_in_at_capacity(self):
+        self.event.max_attendees = 1
+        self.event.save()
+        EventRegistration.objects.create(user=self.user, event=self.event)
+        self.get_event_page()
+        self.wait_for_text("At Capacity")
+        self.click('#rsvp')  # clicking should do nothing
+        self.wait_for_text("At Capacity")

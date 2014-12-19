@@ -1,0 +1,29 @@
+<div class="col-sm-6">
+    <p>
+        {{ rsvp_count }} / {{ event.max_attendees }}
+        RSVP{{ rsvp_count|pluralize:"S" }}
+    </p>
+</div>
+<div class="col-sm-6">
+    {% if not user.is_authenticated and can_rsvp %}
+    <a id="rsvp"
+       href="{% url "login" %}?next={{ rsvp_url }}"
+       class="btn btn-switch">RSVP</a>
+    {% elif is_admin %}
+    <a href="{{ event_edit_url }}" class="btn btn-switch"><i class="icon-cog"></i>Admin</a>
+    {% elif is_rsvped %}
+    <a id="rsvp"
+       href="#"
+       data-verb="DELETE"
+       data-url="{{ rsvp_url }}"
+       class="btn btn-switch">RSVPed</a>
+    {% elif can_rsvp %}
+    <a id="rsvp"
+       href="#"
+       data-verb="POST"
+       data-url="{{ rsvp_url }}"
+       class="btn btn-switch">RSVP</a>
+    {% else %}
+    <a id="rsvp" href="#" class="btn btn-switch disabled">At Capacity</a>
+    {% endif %}
+</div>
