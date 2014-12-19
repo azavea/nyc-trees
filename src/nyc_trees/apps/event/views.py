@@ -5,6 +5,7 @@ from __future__ import division
 
 from django.contrib.gis.geos import Point
 from django.core.urlresolvers import reverse
+from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.timezone import get_current_timezone
@@ -13,9 +14,11 @@ from apps.core.forms import EmailForm
 from apps.core.models import Group
 
 from apps.event.forms import EventForm
-from apps.event.models import Event
+from apps.event.models import Event, EventRegistration
 
 from apps.event.event_list import (immediate_events, all_events)
+
+from apps.event.helpers import user_is_rsvped_for_event
 
 
 def event_dashboard(request, group_slug):
@@ -58,6 +61,7 @@ def event_detail(request, group_slug, event_slug):
         'event': event,
         'is_admin': user == group.admin,
         'can_rsvp': rsvp_count < event.max_attendees,
+        'is_rsvped': user_is_rsvped_for_event(user, event),
         'rsvp_count': rsvp_count,
         'group_detail_url': reverse('group_detail', kwargs={
             'group_slug': group.slug
@@ -69,7 +73,10 @@ def event_detail(request, group_slug, event_slug):
             'group_slug': group.slug,
             'event_slug': event.slug
         }),
-        'rsvp_url': '',
+        'rsvp_url': reverse('event_registration', kwargs={
+            'group_slug': group.slug,
+            'event_slug': event.slug
+        }),
         'share_url': ''
     }
 
@@ -184,14 +191,44 @@ def event_popup_partial(request, group_slug, event_slug):
     pass
 
 
+@transaction.atomic
 def register_for_event(request, group_slug, event_slug):
-    # TODO: implement
-    pass
+    event = get_object_or_404(Event, group__slug=group_slug, slug=event_slug)
+    if event.has_space_available and not user_is_rsvped_for_event(request.user,
+                                                                  event):
+        EventRegistration.objects.create(user=request.user, event=event)
+    return event_detail(request, group_slug, event_slug)
 
 
+@transaction.atomic
 def cancel_event_registration(request, group_slug, event_slug):
-    # TODO: implement
-    pass
+    event = get_object_or_404(Event, group__slug=group_slug, slug=event_slug)
+    if user_is_rsvped_for_event(request.user, event):
+        EventRegistration.objects\
+                         .filter(user=request.user, event=event)\
+                         .delete()
+    return event_detail(request, group_slug, event_slug)
+
+
+@transaction.atomic
+def register_for_event_after_login(request, group_slug, event_slug):
+    """
+    This view handles the special case of a non-logged in user
+    clicking the 'RSVP' button on an event when they are not logged in.
+    We redirect them to a login page with a ?next= query string
+    argument. After a successful login, Django will make a GET request to
+    the 'next' url. We need to respond to that GET by making the
+    registration and then redirecting back to the event.
+    """
+    event = get_object_or_404(Event, group__slug=group_slug, slug=event_slug)
+    if event.has_space_available and not user_is_rsvped_for_event(request.user,
+                                                                  event):
+        EventRegistration.objects.create(user=request.user, event=event)
+    return HttpResponseRedirect(
+        reverse('event_detail', kwargs={
+            'group_slug': group_slug,
+            'event_slug': event_slug
+        }))
 
 
 def start_event_map_print_job(request, group_slug, event_slug):

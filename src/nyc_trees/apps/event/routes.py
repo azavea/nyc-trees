@@ -3,7 +3,10 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
+from django.contrib.auth.decorators import login_required
+
 from django_tinsel.decorators import route, render_template
+
 from django_tinsel.utils import decorate as do
 
 from apps.core.decorators import is_group_admin, has_training
@@ -50,8 +53,12 @@ event_email = do(
 
 event_popup_partial = route(GET=v.event_popup_partial)
 
-event_registration = has_training(route(POST=v.register_for_event,
-                                        DELETE=v.cancel_event_registration))
+event_registration = do(login_required,
+                        has_training,
+                        render_template('event/partials/rsvp.html'),
+                        route(POST=v.register_for_event,
+                              DELETE=v.cancel_event_registration,
+                              GET=v.register_for_event_after_login))
 
 start_event_map_print_job = do(has_training,
                                route(POST=v.start_event_map_print_job))

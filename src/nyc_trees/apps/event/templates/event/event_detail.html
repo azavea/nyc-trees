@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load utils %}
 
 {% block content %}
 
@@ -40,23 +41,8 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-sm-6">
-            <p>
-                {{ rsvp_count }} / {{ event.max_attendees }}
-                RSVP{{ rsvp_count|pluralize:"S" }}
-            </p>
-        </div>
-        <div class="col-sm-6">
-            {% if is_admin %}
-            <a href="{{ event_edit_url }}" class="btn btn-switch"
-                ><i class="icon-cog"></i> Admin</a>
-            {% elif can_rsvp %}
-            <a href="{{ rsvp_url }}" class="btn btn-switch">RSVP</a>
-            {% else %}
-            <a href="#" class="btn btn-switch disabled">At Capacity</a>
-            {% endif %}
-        </div>
+    <div id="rsvp-section" class="row">
+    {% include "event/partials/rsvp.html" %}
     </div>
 
     <div class="row">
@@ -120,3 +106,8 @@
 
 
 {% endblock content %}
+
+
+{% block page_js %}
+<script type="text/javascript" src="{{ "js/event.js"|static_url }}"></script>
+{% endblock page_js %}

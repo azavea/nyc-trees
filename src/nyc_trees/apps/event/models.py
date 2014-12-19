@@ -52,6 +52,10 @@ class Event(NycModel, models.Model):
     def training_summary(self):
         return 'Training' if self.includes_training else 'Mapping'
 
+    @property
+    def has_space_available(self):
+        return self.eventregistration_set.count() < self.max_attendees
+
     class Meta:
         unique_together = (("group", "slug"), ("group", "title"))
 
