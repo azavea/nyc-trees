@@ -12,11 +12,7 @@ from django.utils.timezone import get_current_timezone
 from apps.core.forms import EmailForm
 from apps.core.models import Group
 
-from apps.users.models import Follow
-
 from apps.event.forms import EventForm
-from apps.event.models import Event, EventRegistration
-
 from apps.event.models import Event
 
 from apps.event.event_list import (immediate_events, all_events)
