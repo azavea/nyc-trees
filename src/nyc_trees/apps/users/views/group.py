@@ -15,8 +15,9 @@ from apps.event.event_list import EventList
 
 
 def group_list_page(request):
-    # TODO: implement
-    pass
+    return {
+        'groups': Group.objects.all()
+    }
 
 
 def group_detail(request, group_slug):
