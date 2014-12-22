@@ -26,6 +26,7 @@ class ProfileSettingsForm(ModelForm):
 EventRegistrationFormSet = inlineformset_factory(
     User, EventRegistration, fields=['opt_in_emails'], extra=0)
 
+
 class GroupSettingsForm(ModelForm):
     class Meta:
         model = Group
