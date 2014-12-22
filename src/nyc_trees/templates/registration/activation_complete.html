@@ -1,17 +1,69 @@
-{% extends "base.html" %}
+{% extends "registration/registration_base.html" %}
 {% load i18n %}
+{% load utils %}
 
-{% block title %}{% trans "Account Activated" %}{% endblock %}
+{% block title %}Account Activated{% endblock %}
 
-{% block content %}
-<p>
-    {% trans "Your account is now activated." %}
-    {% if not user.is_authenticated %}
-    {% trans "You can log in." %}
-    {% endif %}
-</p>
+{% block registration_title %}
+Optional Information
 {% endblock %}
 
+{% block registration_content %}
+<form method="get" action="{% url 'home_page' %}">
+    {% csrf_token %}
+    <h3>
+        <label for="first_name">First Name</label>
+    </h3>
+    <p>
+        <input type="text" name="first_name" id="first_name" />
+    </p>
+    <h3>
+        <label for="last_name">Last Name</label>
+    </h3>
+    <p>
+        <input type="text" name="last_name" id="last_name" />
+    </p>
+    <h3>
+        How did you hear about this?
+    </h3>
+    <ul>
+        <li><label><input type="checkbox" name="referer_subway" />
+            Subway ads</label></li>
+        <li><label><input type="checkbox" name="referer_friend" />
+            My friend told me</label></li>
+        <li><label><input type="checkbox" name="referer_311" />
+            3-1-1</label></li>
+        <li><label><input type="checkbox" name="referer_other" />
+            Other</label></li>
+        <li><label><input type="checkbox" id="chk_referer_group" />
+            Group</label>
+            <select name="referer_group" id="referer_group" class="hidden">
+                <option>NYC Parks</option>
+            </select>
+        </li>
+    </ul>
+    <h3>
+        <label for="email_opt_in">
+            Are you interested in receiving additional information on
+            stewardship opportunities available through NYC Parks?
+        </label>
+    </h3>
+    <p>
+        <label><input type="checkbox" name="email_opt_in" id="email_opt_in" />
+            Yes</label>
+    </p>
+    <hr />
+    <p>
+        <input type="submit" class="btn btn-primary pull-right"
+            value="Submit" />
+        <a href="{% url 'home_page' %}">Skip</a>
+    </p>
+</form>
+{% endblock %}
+
+{% block page_js %}
+<script type="text/javascript" src="{{ "js/activation_form.js"|static_url }}"></script>
+{% endblock page_js %}
 
 {% comment %}
 **registration/activation_complete.html**

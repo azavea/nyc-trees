@@ -30,6 +30,7 @@ var args = minimist(process.argv.slice(2),
                     {default: {debug: false}}),
 
     entries = [
+        'activation_form.js',
         'base.js',
         'datetimepicker_polyfill.js',
         'event.js',
