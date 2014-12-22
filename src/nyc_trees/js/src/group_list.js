@@ -1,5 +1,4 @@
 "use strict";
 
-var $ = require('jquery');
-
-// TODO: implement
+// Needed for Follow button event handlers.
+require('./followGroupButton');

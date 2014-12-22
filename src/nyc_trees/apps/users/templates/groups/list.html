@@ -9,11 +9,12 @@
             <h1>Groups</h1>
         </div>
     </div>
-    {% for group in groups %}
+    {% for group, user_is_following in groups %}
     <div class="row">
         <div class="col-sm-12">
-            <a href="#" class="btn btn-primary pull-right"
-                >Follow</a>
+            <div class="pull-right">
+                {% include 'groups/partials/follow_button.html' %}
+            </div>
             <a href="{% url 'group_detail' group_slug=group.slug %}"
                 >{{ group.name }}</a>
             <p>
