@@ -12,7 +12,8 @@ from apps.core.decorators import is_group_admin
 
 from apps.users.views import group as v
 
-group_list_page = route(GET=v.group_list_page)
+group_list_page = route(GET=do(render_template('groups/list.html'),
+                                v.group_list_page))
 
 group_detail = route(GET=do(render_template('groups/detail.html'),
                             v.group_detail))
