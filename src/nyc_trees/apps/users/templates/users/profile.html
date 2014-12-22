@@ -25,8 +25,7 @@
                 <div class="pageheading-controls block">
                     <div class="row">
                         <div class="col-xs-6">
-                            <!-- This should state whether your profile is public or private. -->
-                            Private profile
+                            {% if user.profile_is_public %}Public{% else %}Private{% endif %} Profile
                         </div>
                         <div class="col-xs-6 text-right">
                             <a class="btn btn-primary">Privacy</a>

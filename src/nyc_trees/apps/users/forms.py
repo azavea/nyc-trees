@@ -3,9 +3,10 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
-from django.forms import ModelForm
+from django.forms import ModelForm, inlineformset_factory
 
 from apps.core.models import User, Group
+from apps.event.models import EventRegistration
 
 
 class ProfileSettingsForm(ModelForm):
@@ -14,7 +15,6 @@ class ProfileSettingsForm(ModelForm):
         fields = [
             'first_name',
             'last_name',
-            'opt_in_events_info',
             'opt_in_stewardship_info',
             'profile_is_public',
             'real_name_is_public',
@@ -23,6 +23,8 @@ class ProfileSettingsForm(ModelForm):
             'achievements_are_public',
         ]
 
+EventRegistrationFormSet = inlineformset_factory(
+    User, EventRegistration, fields=['opt_in_emails'], extra=0)
 
 class GroupSettingsForm(ModelForm):
     class Meta:
