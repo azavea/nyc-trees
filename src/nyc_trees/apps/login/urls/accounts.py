@@ -5,16 +5,14 @@ from __future__ import division
 
 from django.conf.urls import patterns, url, include
 
-from registration.backends.default.views import RegistrationView
-from registration.forms import RegistrationFormUniqueEmail
-
+from apps.login.backends import NycRegistrationView
 
 urlpatterns = patterns(
     '',
     # accounts/register/ is purposefully shadowing an endpoint in the default
     # registration backend.  It must come before it
     url(r'^register/$',
-        RegistrationView.as_view(form_class=RegistrationFormUniqueEmail),
+        NycRegistrationView.as_view(),
         name='registration_register'),
     url(r'^', include('registration.backends.default.urls')),
     url(r'^', include('django.contrib.auth.urls')),
