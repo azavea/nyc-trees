@@ -39,7 +39,8 @@ var args = minimist(process.argv.slice(2),
         'forgot_username.js',
         'group_detail.js',
         'group_list.js',
-        'user_profile_page.js'
+        'userProfile.js',
+        'userSettings.js',
     ],
     entryFiles = entries.map(function(file) { return './js/src/' + file; }),
 
