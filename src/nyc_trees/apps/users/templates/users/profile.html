@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load utils %}
+
 {% block content %}
 
 <div class="page-profile">
@@ -44,26 +46,11 @@
                 </section>
                 {% endif %}
 
-                {% if show_groups %}
+                {% if show_groups and follows.follows %}
                 <section class="groups">
                     {% with title="Groups" section_id="groups" public=user.group_follows_are_public %}
                         {% include "users/partials/profile/groups.html" %}
                     {% endwith %}
-                    <!-- I couldn't get groups to display on this page using the above code. Please refer to the following test code. -->
-                    <a href="#" class="group block item rightarrow">
-                        <div class="row">
-                            <div class="col-xs-12">
-                                Tree Group
-                            </div>
-                        </div>
-                    </a>
-                    <a href="#" class="group block item rightarrow">
-                        <div class="row">
-                            <div class="col-xs-12">
-                                Tree Group
-                            </div>
-                        </div>
-                    </a>
                 </section>
                 {% endif %}
 
@@ -89,3 +76,7 @@
 </div>
 
 {% endblock %}
+
+{% block page_js %}
+<script type="text/javascript" src="{{ "js/user_profile_page.js"|static_url }}"></script>
+{% endblock page_js %}

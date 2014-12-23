@@ -16,6 +16,9 @@ from apps.users.forms import ProfileSettingsForm, EventRegistrationFormSet
 from apps.survey.models import Tree
 
 
+_FOLLOWED_GROUP_CHUNK_SIZE = 2
+
+
 # TODO: make a route?
 def user_detail_redirect(request):
     return HttpResponseRedirect(
@@ -33,8 +36,20 @@ def user_detail(request, username):
     return _user_profile_context(request, user, its_me)
 
 
-def _user_profile_context(request, user, its_me):
+def _get_follows_context(user):
     follows = user.follow_set.select_related('group').order_by('created_at')
+    follows_count = follows.count()
+    hidden_count = follows_count - _FOLLOWED_GROUP_CHUNK_SIZE
+
+    return {
+        'count': follows_count,
+        'chunk_size': _FOLLOWED_GROUP_CHUNK_SIZE,
+        'hidden_count': hidden_count,
+        'follows': follows
+    }
+
+
+def _user_profile_context(request, user, its_me):
     user_achievements = set(user.achievement_set
                             .order_by('created_at')
                             .values_list('achievement_id', flat=True))
@@ -59,7 +74,7 @@ def _user_profile_context(request, user, its_me):
         'show_groups': its_me or user.group_follows_are_public,
         'show_individual_mapper': (user.individual_mapper and
                                    (its_me or user.profile_is_public)),
-        'follows': follows,
+        'follows': _get_follows_context(user),
         'counts': {
             'block': block_count,
             'tree': tree_count,
