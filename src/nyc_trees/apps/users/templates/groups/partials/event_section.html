@@ -1,12 +1,36 @@
 {% extends 'event/partials/event_section.html' %}
 
 {% block extra_markup %}
-<a href="#" data-class="group-detail-event-info-submenu-toggle">Actions</a>
-<div data-class="group-detail-event-info-submenu" style="display: none;">
-    <p>RSVP to event</p>
-    <p>Edit details</p>
-    <p>Email attendees</p>
-    <p>Event check-in</p>
-    <p>Get shareable link</p>
+<div class="dropdown text-right">
+    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu1">
+        <li>
+            <button role="menuitem" tabindex="-1" href="#">
+            RSVP to event
+            </button>
+        </li>
+        <li>
+            <button role="menuitem" tabindex="-1" href="#">
+            Edit details
+            </button>
+        </li>
+        <li>
+            <button role="menuitem" tabindex="-1" href="#">
+            Email attendees
+            </button>
+        </li>
+        <li>
+            <button role="menuitem" tabindex="-1" href="#">
+            Event check-in
+            </button>
+        </li>
+        <li>
+            <button role="menuitem" tabindex="-1" href="#">
+            Get shareable link
+            </button>
+        </li>
+    </ul>
 </div>
 {% endblock extra_markup %}

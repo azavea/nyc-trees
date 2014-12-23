@@ -80,34 +80,14 @@
                         </div>
                     </div>
                 </section>
-                <section>
+                <section class="events">
                     <h4 class="section-heading">Events</h4>
-                    <a href="#" class="event block item rightarrow">
-                        <div class="row">
-                            <div class="event-date col-xs-3">
-                                <div class="event-month">apr</div>
-                                <div class="event-day h4">25</div>
-                            </div>
-                            <div class="event-details col-xs-9">
-                                <h5 class="event-detail event-detail--title">tree like to party</h5>
-                                <div class="event-detail">4:30 pm</div>
-                                <div class="event-detail">450 may street</div>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="#" class="event block item rightarrow">
-                        <div class="row">
-                            <div class="event-date col-xs-3">
-                                <div class="event-month">apr</div>
-                                <div class="event-day h4">25</div>
-                            </div>
-                            <div class="event-details col-xs-9">
-                                <h5 class="event-detail event-detail--title">tree like to party</h5>
-                                <div class="event-detail">4:30 pm</div>
-                                <div class="event-detail">450 may street</div>
-                            </div>
-                        </div>
-                    </a>
+                    <div>
+                        {% for info in event_list.event_infos %}
+                            {% include "groups/partials/event_section.html" %}
+                            {% if not forloop.last %}<hr/>{% endif %}
+                        {% endfor %}
+                    </div>
                 </section>
                 <section>
                     <h4 class="section-heading">Individual Mapping</h4>
@@ -120,13 +100,7 @@
 
 </div>
 
-<h3>Events</h3>
-<div>
-    {% for info in event_list.event_infos %}
-        {% include "groups/partials/event_section.html" %}
-        {% if not forloop.last %}<hr/>{% endif %}
-    {% endfor %}
-</div>
+
 
 {% endblock %}
 
