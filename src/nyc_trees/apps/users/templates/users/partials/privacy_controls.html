@@ -3,26 +3,22 @@
     consectetur. Sed aliquam odio risus, rhoncus suscipit est vulputate eget.
 </div>
 
-<table>
-    <tbody>
+<div class="privacy-items">
     {% for category in privacy_categories %}
-        <tr>
-            <td>
-                {# TODO: use locked icon instead of text#}
-                <span class="lock-icon">Private&nbsp;&nbsp;&nbsp;</span>
-                {{ category.title }}
-            </td>
-            <td>
-                <a class="privacy-toggler" href="javascript:;"
-                   data-privacy-field-name="{{ category.field_name }}"
-                   data-is-public="{{ category.is_public }}">
-                    (Text set client-side)
-                </a>
-                {{ category.form_field.as_hidden }}
-            </td>
-        </tr>
+        <div class="privacy-item block item">
+            <div class="row">
+                <div class="col-xs-8{% if category.is_public %} icon-lock{% endif %}">
+                    {{ category.title }}
+                </div>
+                <div class="col-xs-4 text-right">
+                    <a class="privacy-toggler" href="javascript:;"
+                       data-privacy-field-name="{{ category.field_name }}"
+                       data-is-public="{{ category.is_public }}">
+                        (Text set client-side)
+                    </a>
+                    {{ category.form_field.as_hidden }}
+                </div>
+            </div>
+        </div>
     {% endfor %}
-    </tbody>
-</table>
-
-
+</div>

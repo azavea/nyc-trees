@@ -2,80 +2,106 @@
 {% load utils %}
 
 {% block content %}
-    <ul class="nav nav-tabs">
-        <li class="active">
-            <a href="#account-pane" data-toggle="tab">Account</a>
-        </li>
-        <li>
-            <a href="#emails-pane" data-toggle="tab">Emails</a>
-        </li>
-        <li>
-            <a href="#privacy-pane" data-toggle="tab">Privacy</a>
-        </li>
-    </ul>
 
-    <form id="form" method="POST">
-        <fieldset>
-            {% csrf_token %}
-
-            <div class="tab-content">
-                <div class="tab-pane active" id="account-pane">
-                    <div class="fieldWrapper">
-                        {{ profile_form.first_name.label_tag }}
-                        {{ profile_form.first_name }}
-                    </div>
-                    <div class="fieldWrapper">
-                        {{ profile_form.last_name.label_tag }}
-                        {{ profile_form.last_name }}
+<div class="page-settings">
+    <div class="container">
+        <div class="row">
+            <aside class="pageheading col-sm-4">
+                <div class="pageheading-description block">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h2>Settings</h2>
+                        </div>
                     </div>
                 </div>
+            </aside>
+            <main class="main-manage col-sm-8">
 
-                <div class="tab-pane" id="emails-pane">
-                    <h3>NYC Parks</h3>
-                    <div>I am interested in receiving additional information on stewardship opportunities available through NYC Parks.</div>
-                    <div class="fieldWrapper">
-                        {{ profile_form.opt_in_stewardship_info }}
-                        {{ profile_form.opt_in_stewardship_info.label_tag }}
-                    </div>
-                    <div>I want to receive emails for these events:</div>
-                    <table>
-                        {% for event_form in event_formset %}
-                            {% with event=event_form.instance.event %}
-                                <tr>
-                                    <td style="text-align:right; vertical-align:top; padding: 0 15px;">
-                                        <div>{{ event.begins_at|date:"b"|upper }}</div>
-                                        <div>{{ event.begins_at|date:"j" }}</div>
-                                    </td>
-                                    <td>
-                                        <div>{{ event.name }}</div>
-                                        <div>{{ event.begins_at|date:"f A" }} at {{ event.address }}</div>
-                                        <div>{{ event.group.name }}</div>
-                                        <div>{% if event.includes_training %}Training{% else %}Mapping{% endif %}</div>
-                                    </td>
-                                    <td>{{ event_form.opt_in_emails }}</td>
-                                </tr>
-                            {% endwith %}
-                            {% for hidden in event_form.hidden_fields %}
-                                {{ hidden }}
-                            {% endfor %}
-                        {% endfor %}
-                    </table>
-                    {{ event_formset.management_form }}
+                <div class="row">
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a href="#account-pane" data-toggle="tab">Account</a>
+                        </li>
+                        <li>
+                            <a href="#emails-pane" data-toggle="tab">Emails</a>
+                        </li>
+                        <li>
+                            <a href="#privacy-pane" data-toggle="tab">Privacy</a>
+                        </li>
+                    </ul>
                 </div>
 
-                <div class="tab-pane" id="privacy-pane">
-                    {% include 'users/partials/privacy_controls.html' %}
-                </div>
+                <section>
+                    <form id="form" method="POST">
+                        {% csrf_token %}
+                        <div class="tab-content">
 
-            </div>
+                            <div class="tab-pane active" id="account-pane">
+                                <div class="block">
+                                    {{ profile_form.first_name.label_tag }}
+                                    {{ profile_form.first_name }}
+                                </div>
+                                <div class="block">
+                                    {{ profile_form.last_name.label_tag }}
+                                    {{ profile_form.last_name }}
+                                </div>
+                            </div>
 
-            <div class="pull-right">
-                <input type="submit" class="btn" value="Save" />
-            </div>
-            <a class="btn" href="{% url 'user_profile_settings' %}">Cancel</a>
+                            <div class="tab-pane" id="emails-pane">
+                                <h4>NYC Parks</h4>
+                                <div class="row">
+                                    <div class="col-xs-10">I am interested in receiving additional information on stewardship opportunities available through NYC Parks.</div>
+                                    <div class="col-xs-2">
+                                        {{ profile_form.opt_in_stewardship_info }}
+                                        {{ profile_form.opt_in_stewardship_info.label_tag }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <h4>Events</h4>
+                                <div>I want to receive emails for these events:</div>
+                                <table>
+                                    {% for event_form in event_formset %}
+                                        {% with event=event_form.instance.event %}
+                                            <tr>
+                                                <td style="text-align:right; vertical-align:top; padding: 0 15px;">
+                                                    <div>{{ event.begins_at|date:"b"|upper }}</div>
+                                                    <div>{{ event.begins_at|date:"j" }}</div>
+                                                </td>
+                                                <td>
+                                                    <div>{{ event.name }}</div>
+                                                    <div>{{ event.begins_at|date:"f A" }} at {{ event.address }}</div>
+                                                    <div>{{ event.group.name }}</div>
+                                                    <div>{% if event.includes_training %}Training{% else %}Mapping{% endif %}</div>
+                                                </td>
+                                                <td>{{ event_form.opt_in_emails }}</td>
+                                            </tr>
+                                        {% endwith %}
+                                        {% for hidden in event_form.hidden_fields %}
+                                            {{ hidden }}
+                                        {% endfor %}
+                                    {% endfor %}
+                                </table>
+                                {{ event_formset.management_form }}
+                            </div>
 
-        </fieldset>
-    </form>
+                            <div class="tab-pane" id="privacy-pane">
+                                {% include 'users/partials/privacy_controls.html' %}
+                            </div>
+
+                            <hr>
+
+                            <div style="float:right;">
+                                <input type="submit" class="btn btn-primary" value="Save" />
+                            </div>
+                            <a class="btn" href="{% url 'user_detail' username=username %}">Cancel</a>
+
+                        </div>
+                    </form>
+                </section>
+            </main>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
 
