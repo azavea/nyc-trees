@@ -8,15 +8,17 @@
     {% for category in privacy_categories %}
         <tr>
             <td>
-                {# TODO: use locked/unlocked icons instead of text#}
-                {% if category.is_public %}(public){% endif %}
-                {{ category.form_field.as_hidden }}
+                {# TODO: use locked icon instead of text#}
+                <span class="lock-icon">Private&nbsp;&nbsp;&nbsp;</span>
+                {{ category.title }}
             </td>
-            <td>{{ category.title }}</td>
             <td>
-                <a href="javascript:;">
-                    {% if category.is_public %}Public{% else %}Private{% endif %}
+                <a class="privacy-toggler" href="javascript:;"
+                   data-privacy-field-name="{{ category.field_name }}"
+                   data-is-public="{{ category.is_public }}">
+                    (Text set client-side)
                 </a>
+                {{ category.form_field.as_hidden }}
             </td>
         </tr>
     {% endfor %}
