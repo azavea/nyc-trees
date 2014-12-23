@@ -11,7 +11,6 @@ from django.shortcuts import get_object_or_404
 from django.utils.timezone import get_current_timezone
 
 from apps.core.forms import EmailForm
-from apps.core.models import Group
 
 from apps.event.forms import EventForm
 from apps.event.models import Event, EventRegistration
@@ -21,68 +20,66 @@ from apps.event.event_list import (immediate_events, all_events)
 from apps.event.helpers import user_is_rsvped_for_event
 
 
-def event_dashboard(request, group_slug):
+def event_dashboard(request):
     # TODO: implement
     pass
 
 
-def add_event(request, group_slug):
-    group = get_object_or_404(Group, slug=group_slug)
+def add_event(request):
     form = EventForm(request.POST.copy())
-    form.data['group'] = group.pk
+    form.data['group'] = request.group.pk
 
     if form.is_valid():
         form.save()
         return HttpResponseRedirect(
-            reverse('group_edit', kwargs={'group_slug': group.slug}))
+            reverse('group_edit', kwargs={'group_slug': request.group.slug}))
     return {
         'form': form,
-        'group': group
+        'group': request.group
     }
 
 
-def add_event_page(request, group_slug):
-    group = get_object_or_404(Group, slug=group_slug)
+def add_event_page(request):
     # TODO: Remove initial location after adding client-side geocoding
     form = EventForm(initial={'location': Point(0, 0)})
     return {
         'form': form,
-        'group': group
+        'group': request.group
     }
 
 
-def event_detail(request, group_slug, event_slug):
+def event_detail(request, event_slug):
     user = request.user
-    group = get_object_or_404(Group, slug=group_slug)
-    event = get_object_or_404(Event, group=group.pk, slug=event_slug)
+    event = get_object_or_404(Event, group=request.group, slug=event_slug)
     rsvp_count = event.eventregistration_set.count()
     return {
-        'group': group,
+        'group': request.group,
         'event': event,
-        'is_admin': user == group.admin,
+        'is_admin': user == request.group.admin,
         'can_rsvp': rsvp_count < event.max_attendees,
         'is_rsvped': user_is_rsvped_for_event(user, event),
         'rsvp_count': rsvp_count,
         'group_detail_url': reverse('group_detail', kwargs={
-            'group_slug': group.slug
+            'group_slug': request.group.slug
         }),
         'group_events_url': reverse('events', kwargs={
-            'group_slug': group.slug
+            'group_slug': request.group.slug
         }),
         'event_edit_url': reverse('event_edit', kwargs={
-            'group_slug': group.slug,
+            'group_slug': request.group.slug,
             'event_slug': event.slug
         }),
         'rsvp_url': reverse('event_registration', kwargs={
-            'group_slug': group.slug,
+            'group_slug': request.group.slug,
             'event_slug': event.slug
         }),
         'share_url': ''
     }
 
 
-def event_email_page(request, group_slug, event_slug):
-    event = get_object_or_404(Event, slug=event_slug, group__slug=group_slug)
+def event_email_page(request, event_slug):
+    event = get_object_or_404(Event, slug=event_slug,
+                              group=request.group)
     return {
         'event': event,
         'group': event.group,
@@ -92,8 +89,8 @@ def event_email_page(request, group_slug, event_slug):
     }
 
 
-def event_email(request, group_slug, event_slug):
-    event = get_object_or_404(Event, slug=event_slug, group__slug=group_slug)
+def event_email(request, event_slug):
+    event = get_object_or_404(Event, slug=event_slug, group=request.group)
     form = EmailForm(request.POST)
     rsvps = event.eventregistration_set.all()
 
@@ -138,19 +135,18 @@ def events_list_feed(request):
     pass
 
 
-def delete_event(request, group_slug, event_slug):
+def delete_event(request, event_slug):
     # TODO: implement
     pass
 
 
-def edit_event_page(request, group_slug, event_slug):
+def edit_event_page(request, event_slug):
     # Django automatically converts datetime objects to the correct
     # timezone when rendering templates. However, model forms do *not*
     # handle this for us when rendering date or time form fields,
     # only datetime form fields.
     tz = get_current_timezone()
-    group = get_object_or_404(Group, slug=group_slug)
-    event = get_object_or_404(Event, group=group.pk, slug=event_slug)
+    event = get_object_or_404(Event, group=request.group, slug=event_slug)
     form_context = {
         # TODO: Remove initial location after adding client-side geocoding
         'location': Point(0, 0),
@@ -161,57 +157,56 @@ def edit_event_page(request, group_slug, event_slug):
     form = EventForm(instance=event, initial=form_context)
     return {
         'form': form,
-        'group': group,
+        'group': request.group,
         'event': event
     }
 
 
-def edit_event(request, group_slug, event_slug):
-    group = get_object_or_404(Group, slug=group_slug)
-    event = get_object_or_404(Event, group=group.pk, slug=event_slug)
+def edit_event(request, event_slug):
+    event = get_object_or_404(Event, group=request.group, slug=event_slug)
     form = EventForm(request.POST.copy(), instance=event)
-    form.data['group'] = group.pk
+    form.data['group'] = request.group.pk
 
     if form.is_valid():
         form.save()
         return HttpResponseRedirect(
             reverse('event_detail', kwargs={
-                'group_slug': group.slug,
+                'group_slug': request.group.slug,
                 'event_slug': event_slug
             }))
     return {
         'form': form,
-        'group': group,
+        'group': request.group,
         'event': event
     }
 
 
-def event_popup_partial(request, group_slug, event_slug):
+def event_popup_partial(request, event_slug):
     # TODO: implement
     pass
 
 
 @transaction.atomic
-def register_for_event(request, group_slug, event_slug):
-    event = get_object_or_404(Event, group__slug=group_slug, slug=event_slug)
+def register_for_event(request, event_slug):
+    event = get_object_or_404(Event, group=request.group, slug=event_slug)
     if event.has_space_available and not user_is_rsvped_for_event(request.user,
                                                                   event):
         EventRegistration.objects.create(user=request.user, event=event)
-    return event_detail(request, group_slug, event_slug)
+    return event_detail(request, event_slug)
 
 
 @transaction.atomic
-def cancel_event_registration(request, group_slug, event_slug):
-    event = get_object_or_404(Event, group__slug=group_slug, slug=event_slug)
+def cancel_event_registration(request, event_slug):
+    event = get_object_or_404(Event, group=request.group, slug=event_slug)
     if user_is_rsvped_for_event(request.user, event):
         EventRegistration.objects\
                          .filter(user=request.user, event=event)\
                          .delete()
-    return event_detail(request, group_slug, event_slug)
+    return event_detail(request, event_slug)
 
 
 @transaction.atomic
-def register_for_event_after_login(request, group_slug, event_slug):
+def register_for_event_after_login(request, event_slug):
     """
     This view handles the special case of a non-logged in user
     clicking the 'RSVP' button on an event when they are not logged in.
@@ -220,37 +215,37 @@ def register_for_event_after_login(request, group_slug, event_slug):
     the 'next' url. We need to respond to that GET by making the
     registration and then redirecting back to the event.
     """
-    event = get_object_or_404(Event, group__slug=group_slug, slug=event_slug)
+    event = get_object_or_404(Event, group=request.group, slug=event_slug)
     if event.has_space_available and not user_is_rsvped_for_event(request.user,
                                                                   event):
         EventRegistration.objects.create(user=request.user, event=event)
     return HttpResponseRedirect(
         reverse('event_detail', kwargs={
-            'group_slug': group_slug,
+            'group_slug': request.group.slug,
             'event_slug': event_slug
         }))
 
 
-def start_event_map_print_job(request, group_slug, event_slug):
+def start_event_map_print_job(request, event_slug):
     # TODO: implement
     pass
 
 
-def event_check_in_page(request, group_slug, event_slug):
+def event_check_in_page(request, event_slug):
     # TODO: implement
     return {}
 
 
-def check_in_user_to_event(request, group_slug, event_slug, username):
+def check_in_user_to_event(request, event_slug, username):
     # TODO: implement
     pass
 
 
-def un_check_in_user_to_event(request, group_slug, event_slug, username):
+def un_check_in_user_to_event(request, event_slug, username):
     # TODO: implement
     pass
 
 
-def email_event_registered_users(request, group_slug, event_slug):
+def email_event_registered_users(request, event_slug):
     # TODO: implement
     pass

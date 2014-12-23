@@ -7,7 +7,7 @@ from django.conf.urls import patterns, url
 
 from django_tinsel.decorators import route
 
-from apps.core.decorators import is_census_admin
+from apps.core.decorators import census_admin_do
 from apps.census_admin.views import (start_admin_users_job,
                                      start_admin_surveys_job, admin_edits_page,
                                      admin_edits_partial,
@@ -19,31 +19,31 @@ from apps.census_admin.views import (start_admin_users_job,
 urlpatterns = patterns(
     '',
     url(r'^users-export/$',
-        is_census_admin(route(POST=start_admin_users_job)),
+        census_admin_do(route(POST=start_admin_users_job)),
         name='start_admin_users_job'),
 
     url(r'^surveys-export/$',
-        is_census_admin(route(POST=start_admin_surveys_job)),
+        census_admin_do(route(POST=start_admin_surveys_job)),
         name='start_admin_surveys_job'),
 
     url(r'^edits/$',
-        is_census_admin(route(GET=admin_edits_page)),
+        census_admin_do(route(GET=admin_edits_page)),
         name='admin_edits_page'),
 
     url(r'^edits-partial/$',
-        is_census_admin(route(GET=admin_edits_partial)),
+        census_admin_do(route(GET=admin_edits_partial)),
         name='admin_edits_partial'),
 
     # TODO: Use Django flatpages for training POST/PUT endpoints
 
     url(r'^training/$',
-        is_census_admin(route(GET=admin_training_material_list,
+        census_admin_do(route(GET=admin_training_material_list,
                               # POST=add_training_material
         )),
         name='admin_training_material_list'),
 
     url(r'^training/(?P<training_material_url_name>\w+)/$',
-        is_census_admin(route(GET=admin_training_material,
+        census_admin_do(route(GET=admin_training_material,
                               # PUT=edit_training_material
         )),
         name='admin_training_material'),
