@@ -3,24 +3,19 @@
     consectetur. Sed aliquam odio risus, rhoncus suscipit est vulputate eget.
 </div>
 
-<table>
-    <tbody>
+<div class="privacy-items">
     {% for category in privacy_categories %}
-        <tr>
-            <td>
-                {# TODO: use locked/unlocked icons instead of text#}
-                {% if category.is_public %}(public){% endif %}
-                {{ category.form_field.as_hidden }}
-            </td>
-            <td>{{ category.title }}</td>
-            <td>
-                <a href="javascript:;">
-                    {% if category.is_public %}Public{% else %}Private{% endif %}
-                </a>
-            </td>
-        </tr>
+        <div class="privacy-item block item">
+            <div class="row">
+                <div class="col-xs-8{% if category.is_public %} icon-lock{% endif %}">
+                    {{ category.title }}
+                </div>
+                <div class="col-xs-4 text-right">
+                    <a href="javascript:;">
+                        {% if category.is_public %}Public{% else %}Private{% endif %}
+                    </a>
+                </div>
+            </div>
+        </div>
     {% endfor %}
-    </tbody>
-</table>
-
-
+</div>
