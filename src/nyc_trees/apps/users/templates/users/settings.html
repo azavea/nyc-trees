@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load utils %}
 
 {% block content %}
     <ul class="nav nav-tabs">
@@ -13,19 +14,19 @@
         </li>
     </ul>
 
-    <form method="POST">
+    <form id="form" method="POST">
         <fieldset>
             {% csrf_token %}
 
             <div class="tab-content">
                 <div class="tab-pane active" id="account-pane">
                     <div class="fieldWrapper">
-                        {{ form.first_name.label_tag }}
-                        {{ form.first_name }}
+                        {{ profile_form.first_name.label_tag }}
+                        {{ profile_form.first_name }}
                     </div>
                     <div class="fieldWrapper">
-                        {{ form.last_name.label_tag }}
-                        {{ form.last_name }}
+                        {{ profile_form.last_name.label_tag }}
+                        {{ profile_form.last_name }}
                     </div>
                 </div>
 
@@ -33,8 +34,8 @@
                     <h3>NYC Parks</h3>
                     <div>I am interested in receiving additional information on stewardship opportunities available through NYC Parks.</div>
                     <div class="fieldWrapper">
-                        {{ form.opt_in_stewardship_info }}
-                        {{ form.opt_in_stewardship_info.label_tag }}
+                        {{ profile_form.opt_in_stewardship_info }}
+                        {{ profile_form.opt_in_stewardship_info.label_tag }}
                     </div>
                     <div>I want to receive emails for these events:</div>
                     <table>
@@ -68,12 +69,16 @@
 
             </div>
 
-            <div style="float:right;">
+            <div class="pull-right">
                 <input type="submit" class="btn" value="Save" />
             </div>
-            <a class="btn" href="{% url 'user_detail' username=username %}">Cancel</a>
+            <a class="btn" href="{% url 'user_profile_settings' %}">Cancel</a>
 
         </fieldset>
     </form>
 
 {% endblock %}
+
+{% block page_js %}
+    <script type="text/javascript" src="{{ "js/userSettings.js"|static_url }}"></script>
+{% endblock page_js %}

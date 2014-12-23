@@ -55,20 +55,20 @@ class ProfileTemplateTests(UsersTestCase):
         request = make_request(user=viewer)
         return user_detail_route(request, self.user.username)
 
-    def _assert_profile_contains(self, text, its_me=True):
+    def _assert_profile_contains(self, text, its_me=True, count=1):
         response = self._render_profile(its_me)
-        self.assertContains(response, text, count=1)
+        self.assertContains(response, text, count=count)
 
     def _assert_profile_does_not_contain(self, text, its_me=True):
         response = self._render_profile(its_me)
         self.assertContains(response, text, count=0)
 
-    def _assert_visible_to_all(self, text):
-        self._assert_profile_contains(text)
-        self._assert_profile_contains(text, its_me=False)
+    def _assert_visible_to_all(self, text, me_count=1, them_count=1):
+        self._assert_profile_contains(text, count=me_count)
+        self._assert_profile_contains(text, its_me=False, count=them_count)
 
-    def _assert_visible_only_to_me(self, text):
-        self._assert_profile_contains(text)
+    def _assert_visible_only_to_me(self, text, count=1):
+        self._assert_profile_contains(text, count=count)
         self._assert_profile_does_not_contain(text, its_me=False)
 
     def test_private_profile_404_if_not_me(self):
@@ -89,12 +89,12 @@ class ProfileTemplateTests(UsersTestCase):
         self._assert_visible_to_all('Tree Mapper')
 
     def test_privacy_link_visible_only_to_me(self):
-        self._assert_visible_only_to_me('Privacy')
+        self._assert_visible_only_to_me('Privacy', count=2)
 
     def test_groups_section_visibility(self):
-        self._assert_visible_only_to_me('Groups')
+        self._assert_visible_only_to_me('Groups', count=2)
         self._update_user(group_follows_are_public=True)
-        self._assert_visible_to_all('Groups')
+        self._assert_visible_to_all('Groups', me_count=2, them_count=1)
 
     def test_groups_section_contents(self):
         self._assert_visible_only_to_me(self.group.name)
@@ -102,9 +102,9 @@ class ProfileTemplateTests(UsersTestCase):
         self._assert_visible_to_all(self.group.name)
 
     def test_achievements_section_visibility(self):
-        self._assert_visible_only_to_me('Achievements')
+        self._assert_visible_only_to_me('Achievements', count=2)
         self._update_user(achievements_are_public=True)
-        self._assert_visible_to_all('Achievements')
+        self._assert_visible_to_all('Achievements', me_count=2, them_count=1)
 
     def test_achievements_section_contents(self):
         self._assert_visible_only_to_me(
@@ -114,9 +114,9 @@ class ProfileTemplateTests(UsersTestCase):
             achievements[AchievementDefinition.FINISH_TRAINING].name)
 
     def test_contributions_section_visibility(self):
-        self._assert_visible_only_to_me('Contributions')
+        self._assert_visible_only_to_me('Contributions', count=2)
         self._update_user(contributions_are_public=True)
-        self._assert_visible_to_all('Contributions')
+        self._assert_visible_to_all('Contributions', me_count=2, them_count=1)
 
     def test_contributions_section_contents(self):
         blockface = Blockface.objects.create(
