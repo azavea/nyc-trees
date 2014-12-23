@@ -64,9 +64,9 @@ class EventEmailTest(EventTestCase):
         request = make_request({
             'subject': 'Come to the event',
             'body': "It's happening now!"
-        }, self.other_user, 'POST')
+        }, self.other_user, 'POST', group=self.group)
 
-        context = event_email(request, self.group.slug, self.event.slug)
+        context = event_email(request, self.event.slug)
 
         self.assertEqual(mail.outbox[0].subject, "Come to the event")
         self.assertTrue(context['message_sent'])
