@@ -1,12 +1,23 @@
 {% with event=info.event %}
-<div>
-    <p>{{ event.begins_at.date|date:"M d" }}</p>
-    <p><u>{{ event.title }}</u></p>
-    <p>{{ event.begins_at|date:"f A" }} at {{ event.address }}</p>
-    <p>{{ event.group.name }}</p>
-    <p><b>{{ event.training_summary }}</b></p>
-    {% if info.user_is_registered %}<p><b>+ RSVP</b></p>{% endif %}
-    {% block extra_markup %}
-    {% endblock extra_markup %}
-</div>
+
+<a href="#" class="event block item">
+    <div class="row">
+        <div class="event-date col-xs-3">
+            <div class="event-month">{{ event.begins_at.date|date:"M" }}</div>
+            <div class="event-day h4">{{ event.begins_at.date|date:"d" }}</div>
+        </div>
+        <div class="event-details col-xs-6">
+            <h5 class="event-detail event-detail--title">{{ event.title }}</h5>
+            <div class="event-detail">{{ event.begins_at|date:"f A" }} at {{ event.address }}</div>
+            <div class="event-detail">{{ event.group.name }}</div>
+            <div class="event-detail">{{ event.training_summary }}</div>
+            {% if info.user_is_registered %}<div class="event-detail"><b>+ RSVP</b></div>{% endif %}
+        </div>
+        <div class="event-action col-xs-3">
+            {% block extra_markup %}
+            {% endblock extra_markup %}
+        </div>
+    </div>
+</a>
+
 {% endwith %}
