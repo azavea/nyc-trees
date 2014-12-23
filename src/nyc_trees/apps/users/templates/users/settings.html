@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load utils %}
 
 {% block content %}
 
@@ -31,19 +32,18 @@
                 </div>
 
                 <section>
-
-                    <form method="POST">
+                    <form id="form" method="POST">
                         {% csrf_token %}
                         <div class="tab-content">
 
                             <div class="tab-pane active" id="account-pane">
                                 <div class="block">
-                                    {{ form.first_name.label_tag }}
-                                    {{ form.first_name }}
+                                    {{ profile_form.first_name.label_tag }}
+                                    {{ profile_form.first_name }}
                                 </div>
                                 <div class="block">
-                                    {{ form.last_name.label_tag }}
-                                    {{ form.last_name }}
+                                    {{ profile_form.last_name.label_tag }}
+                                    {{ profile_form.last_name }}
                                 </div>
                             </div>
 
@@ -52,8 +52,8 @@
                                 <div class="row">
                                     <div class="col-xs-10">I am interested in receiving additional information on stewardship opportunities available through NYC Parks.</div>
                                     <div class="col-xs-2">
-                                        {{ form.opt_in_stewardship_info }}
-                                        {{ form.opt_in_stewardship_info.label_tag }}
+                                        {{ profile_form.opt_in_stewardship_info }}
+                                        {{ profile_form.opt_in_stewardship_info.label_tag }}
                                     </div>
                                 </div>
                                 <hr>
@@ -97,30 +97,14 @@
 
                         </div>
                     </form>
-
                 </section>
             </main>
         </div>
     </div>
 </div>
 
-
-
-
-
-
-
-
-    <form method="POST">
-        <fieldset>
-
-            <div class="tab-content">
-
-            </div>
-
-
-
-        </fieldset>
-    </form>
-
 {% endblock %}
+
+{% block page_js %}
+    <script type="text/javascript" src="{{ "js/userSettings.js"|static_url }}"></script>
+{% endblock page_js %}

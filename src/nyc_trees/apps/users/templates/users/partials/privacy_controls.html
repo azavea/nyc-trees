@@ -11,9 +11,12 @@
                     {{ category.title }}
                 </div>
                 <div class="col-xs-4 text-right">
-                    <a href="javascript:;">
-                        {% if category.is_public %}Public{% else %}Private{% endif %}
+                    <a class="privacy-toggler" href="javascript:;"
+                       data-privacy-field-name="{{ category.field_name }}"
+                       data-is-public="{{ category.is_public }}">
+                        (Text set client-side)
                     </a>
+                    {{ category.form_field.as_hidden }}
                 </div>
             </div>
         </div>

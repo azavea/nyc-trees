@@ -2,10 +2,18 @@
 
 {% block section_content %}
 
-{% for follow in follows %}
-    <div>
-      <a href="{% url 'group_detail' group_slug=follow.group.slug %}">{{ follow.group.name }}</a>
-    </div>
+{% for follow in follows.follows %}
+<a href="{% url 'group_detail' group_slug=follow.group.slug %}"
+   class="group block item rightarrow"
+   {% if forloop.counter > follows.chunk_size %}style="display: none;"{% endif %}
+   data-class="user-profile-group-row">
+   <div class="row"><div class="col-xs-12">{{ follow.group.name }}</div></div>
+</a>
 {% endfor %}
+
+{% if follows.hidden_count > 0 %}
+<a data-class="user-profile-groups-show-all"
+   href="#">+{{ follows.hidden_count }} more group{{ hidden_count|pluralize }}</a>
+{% endif %}
 
 {% endblock section_content %}

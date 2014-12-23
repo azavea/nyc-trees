@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% load utils %}
+
+{% load utils %}
 
 {% block content %}
 
@@ -28,7 +31,7 @@
                             {% if user.profile_is_public %}Public{% else %}Private{% endif %} Profile
                         </div>
                         <div class="col-xs-6 text-right">
-                            <a class="btn btn-primary">Privacy</a>
+                            <a class="btn btn-primary" href="#privacy-popup" data-toggle="modal">Privacy</a>
                         </div>
                     </div>
                 </div>
@@ -44,26 +47,11 @@
                 </section>
                 {% endif %}
 
-                {% if show_groups %}
+                {% if show_groups and follows.follows %}
                 <section class="groups">
                     {% with title="Groups" section_id="groups" public=user.group_follows_are_public %}
                         {% include "users/partials/profile/groups.html" %}
                     {% endwith %}
-                    <!-- I couldn't get groups to display on this page using the above code. Please refer to the following test code. -->
-                    <a href="#" class="group block item rightarrow">
-                        <div class="row">
-                            <div class="col-xs-12">
-                                Tree Group
-                            </div>
-                        </div>
-                    </a>
-                    <a href="#" class="group block item rightarrow">
-                        <div class="row">
-                            <div class="col-xs-12">
-                                Tree Group
-                            </div>
-                        </div>
-                    </a>
                 </section>
                 {% endif %}
 
@@ -78,7 +66,8 @@
                 {% if viewing_own_profile and not user.profile_is_public%}
                     <div class="block highlight">
                         <h5>Tip:</h5>
-                        Want to share your progress and information with the tree mapping community? <a>Make your profile public!</a>
+                        Want to share your progress and information with the tree mapping community?
+                        <a data-toggle="modal" href="#privacy-popup">Make your profile public!</a>
                     </div>
                 {% endif %}
 
@@ -86,6 +75,36 @@
         </div>
     </div>
 
+    {% if viewing_own_profile %}
+        <div class="modal fade" id="privacy-popup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">Privacy</h4>
+                    </div>
+                    <form id="privacy-form" method="POST">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            {% include 'users/partials/privacy_controls.html' %}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default js-cancel" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
 </div>
 
 {% endblock %}
+
+{% block page_js %}
+    <script type="text/javascript" src="{{ "js/userProfile.js"|static_url }}"></script>
+{% endblock page_js %}

@@ -12,8 +12,12 @@ from django.utils import timezone
 from apps.core.models import User
 from apps.event.models import EventRegistration
 from apps.users.models import achievements
-from apps.users.forms import ProfileSettingsForm, EventRegistrationFormSet
+from apps.users.forms import ProfileSettingsForm, EventRegistrationFormSet, \
+    PrivacySettingsForm
 from apps.survey.models import Tree
+
+
+_FOLLOWED_GROUP_CHUNK_SIZE = 2
 
 
 # TODO: make a route?
@@ -33,8 +37,20 @@ def user_detail(request, username):
     return _user_profile_context(request, user, its_me)
 
 
-def _user_profile_context(request, user, its_me):
+def _get_follows_context(user):
     follows = user.follow_set.select_related('group').order_by('created_at')
+    follows_count = follows.count()
+    hidden_count = follows_count - _FOLLOWED_GROUP_CHUNK_SIZE
+
+    return {
+        'count': follows_count,
+        'chunk_size': _FOLLOWED_GROUP_CHUNK_SIZE,
+        'hidden_count': hidden_count,
+        'follows': follows
+    }
+
+
+def _user_profile_context(request, user, its_me):
     user_achievements = set(user.achievement_set
                             .order_by('created_at')
                             .values_list('achievement_id', flat=True))
@@ -48,6 +64,7 @@ def _user_profile_context(request, user, its_me):
                      .filter(species__isnull=False)
                      .distinct('species')
                      .count())
+    privacy_form = PrivacySettingsForm(instance=user)
 
     context = {
         'user': user,
@@ -59,7 +76,8 @@ def _user_profile_context(request, user, its_me):
         'show_groups': its_me or user.group_follows_are_public,
         'show_individual_mapper': (user.individual_mapper and
                                    (its_me or user.profile_is_public)),
-        'follows': follows,
+        'follows': _get_follows_context(user),
+        'privacy_categories': _get_privacy_categories(privacy_form),
         'counts': {
             'block': block_count,
             'tree': tree_count,
@@ -73,8 +91,9 @@ def _user_profile_context(request, user, its_me):
 
 def profile_settings(request):
     user = request.user
-    form = ProfileSettingsForm(instance=user, label_suffix='')
-    form.fields['opt_in_stewardship_info'].label = ''
+    privacy_form = PrivacySettingsForm(instance=user)
+    profile_form = ProfileSettingsForm(instance=user, label_suffix='')
+    profile_form.fields['opt_in_stewardship_info'].label = ''
 
     a_week_ago = timezone.now().date() - timedelta(days=7)
     events = EventRegistration.objects \
@@ -84,9 +103,10 @@ def profile_settings(request):
         instance=user, queryset=events)
 
     context = {
-        'form': form,
+        'profile_form': profile_form,
+        'privacy_form': privacy_form,
         'event_formset': event_formset,
-        'privacy_categories': _get_privacy_categories(form),
+        'privacy_categories': _get_privacy_categories(privacy_form),
         'username': request.user.username,
     }
     return context
@@ -94,42 +114,44 @@ def profile_settings(request):
 
 def _get_privacy_categories(form):
     user = form.instance
-    return [
-        {
-            'title': 'Profile',
-            'is_public': user.profile_is_public,
-            'form_field': form['profile_is_public']
-        }, {
-            'title': 'Name',
-            'is_public': user.real_name_is_public,
-            'form_field': form['real_name_is_public']
-        }, {
-            'title': 'Groups',
-            'is_public': user.group_follows_are_public,
-            'form_field': form['group_follows_are_public']
-        }, {
-            'title': 'Contributions',
-            'is_public': user.contributions_are_public,
-            'form_field': form['contributions_are_public']
-        }, {
-            'title': 'Achievements',
-            'is_public': user.achievements_are_public,
-            'form_field': form['achievements_are_public']
+
+    def make_category(title, field_name):
+        return {
+            'title': title,
+            'field_name': field_name,
+            'is_public': getattr(user, field_name),
+            'form_field': form[field_name]
         }
+
+    return [
+        make_category('Profile', 'profile_is_public'),
+        make_category('Name', 'real_name_is_public'),
+        make_category('Groups', 'group_follows_are_public'),
+        make_category('Contributions', 'contributions_are_public'),
+        make_category('Achievements', 'achievements_are_public'),
     ]
 
 
 def update_profile_settings(request):
     user = request.user
     profile_form = ProfileSettingsForm(request.POST, instance=user)
+    privacy_form = PrivacySettingsForm(request.POST, instance=user)
     event_formset = EventRegistrationFormSet(request.POST, instance=user)
 
     # It's not possible to create invalid data with this form,
     # so don't check form.is_valid()
     profile_form.save()
+    privacy_form.save()
     event_formset.save()
 
-    return _user_profile_context(request, request.user, its_me=True)
+    return profile_settings(request)
+
+
+def set_privacy(request, username):
+    user = request.user
+    privacy_form = PrivacySettingsForm(request.POST, instance=user)
+    privacy_form.save()
+    return user_detail(request, username)
 
 
 def update_user(request, username):

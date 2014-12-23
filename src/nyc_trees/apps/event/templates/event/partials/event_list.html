@@ -1,17 +1,21 @@
 {% if event_list.event_infos or event_list.show_when_empty %}
 
 <div data-class="event-list-container">
+
+    <ul class="nav nav-tabs nav-tabs--filter">
     {% for filter in event_list.filters %}
     {% if filter.active %}
-    <a><b>{{ filter.name }}</b></a>
+    <li class="active"><a>{{ filter.name }}</a></li>
     {% else %}
-    <a href="#" data-class="event-list-action" data-url="{{ filter.url }}">{{ filter.name }}</a>
+    <li>
+        <a href="#" data-class="event-list-action" data-url="{{ filter.url }}">{{ filter.name }}</a>
+    </li>
     {% endif %}
     {% endfor %}
+    </ul>
 
     {% for info in event_list.event_infos %}
         {% include "event/partials/event_section.html" %}
-        {% if not forloop.last %}<hr/>{% endif %}
     {% endfor %}
 
     {% if event_list.load_more_url %}
