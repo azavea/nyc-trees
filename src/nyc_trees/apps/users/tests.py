@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from __future__ import division
 
 from django.contrib.gis.geos import LineString
+from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.test import TestCase
 
@@ -16,7 +17,8 @@ from apps.users.models import (Follow, Achievement, achievements,
                                AchievementDefinition)
 from apps.users.views.user import user_detail as user_detail_view
 from apps.users.routes.user import user_detail as user_detail_route
-from apps.users.routes.group import group_detail
+
+from apps.users.routes.group import group_detail, group_edit
 
 
 class UsersTestCase(TestCase):
@@ -161,3 +163,46 @@ class GroupTemplateTests(UsersTestCase):
     def test_url_shown(self):
         # The url shows up both as the link text and the href
         self._assert_group_detail_contains(self.group.contact_url, count=2)
+
+
+class GroupAccessTests(UsersTestCase):
+    def setUp(self):
+        super(GroupAccessTests, self).setUp()
+        self.census_admin = User.objects.create(
+            username='censusadmin',
+            password='password',
+            email='ca@rat.com',
+            first_name='Census',
+            last_name='Admin',
+            is_census_admin=True
+        )
+
+    def test_group_admin_can_get_group_edit_form(self):
+        request = make_request(user=self.group.admin)
+        response = group_edit(request, self.group.slug)
+        self.assertTrue(response is not None)
+
+    def test_group_admin_can_post_group_edit_form(self):
+        request = make_request(user=self.group.admin, method="POST")
+        response = group_edit(request, self.group.slug)
+        self.assertTrue(response is not None)
+
+    def test_census_admin_can_get_group_edit_form(self):
+        request = make_request(user=self.census_admin)
+        response = group_edit(request, self.group.slug)
+        self.assertTrue(response is not None)
+
+    def test_census_admin_can_post_group_edit_form(self):
+        request = make_request(user=self.census_admin, method="POST")
+        response = group_edit(request, self.group.slug)
+        self.assertTrue(response is not None)
+
+    def test_public_user_cannot_get_group_edit_form(self):
+        request = make_request(user=self.user)
+        self.assertRaises(PermissionDenied, group_edit, request,
+                          self.group.slug)
+
+    def test_public_user_cannot_post_group_edit_form(self):
+        request = make_request(user=self.user, method="POST")
+        self.assertRaises(PermissionDenied, group_edit, request,
+                          self.group.slug)

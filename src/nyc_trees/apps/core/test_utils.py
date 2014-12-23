@@ -9,7 +9,8 @@ from django.contrib.auth.models import AnonymousUser
 from django.test import RequestFactory
 
 
-def make_request(params={}, user=None, method='GET', body=None, file=None):
+def make_request(params={}, user=None, method='GET', body=None, file=None,
+                 group=None, **extra):
     if user is None:
         user = AnonymousUser()
 
@@ -29,5 +30,6 @@ def make_request(params={}, user=None, method='GET', body=None, file=None):
         req.method = method
 
     setattr(req, 'user', user)
+    setattr(req, 'group', group)
 
     return req

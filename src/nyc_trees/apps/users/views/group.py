@@ -5,10 +5,8 @@ from __future__ import division
 
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
 
 from apps.core.models import Group
-
 from apps.users.forms import GroupSettingsForm
 from apps.event.models import Event
 from apps.event.event_list import EventList
@@ -20,64 +18,62 @@ def group_list_page(request):
     }
 
 
-def group_detail(request, group_slug):
-    group = get_object_or_404(Group, slug=group_slug)
-    events = Event.objects.filter(group_id=group.pk, is_private=False)
+def group_detail(request):
+    events = Event.objects.filter(group_id=request.group.pk, is_private=False)
 
     return {
-        'group': group,
+        'group': request.group,
         'event_list': EventList.simple_context(request, events),
         # TODO: check if user is group admin or census admin
         'user_can_edit_group': True,
-        'edit_url': reverse('group_edit', kwargs={'group_slug': group.slug})
+        'edit_url': reverse('group_edit', kwargs={
+            'group_slug': request.group.slug})
     }
 
 
-def edit_group(request, group_slug):
-    group = get_object_or_404(Group, slug=group_slug)
-    form = GroupSettingsForm(instance=group, label_suffix='')
+def edit_group(request):
+    form = GroupSettingsForm(instance=request.group, label_suffix='')
     context = {
         'form': form,
-        'group_slug': group_slug
+        'group_slug': request.group.slug
     }
     return context
 
 
-def update_group_settings(request, group_slug):
-    group = get_object_or_404(Group, slug=group_slug)
-    form = GroupSettingsForm(request.POST, instance=group)
+def update_group_settings(request):
+    form = GroupSettingsForm(request.POST, instance=request.group)
     if form.is_valid():
         form.save()
         return HttpResponseRedirect(
-            reverse('group_detail', kwargs={'group_slug': group_slug}))
+            reverse('group_detail', kwargs={'group_slug': request.group.slug}))
     else:
         context = {
             'form': form,
-            'group_slug': group_slug
+            'group_slug': request.group.slug
         }
         return context
 
 
-def follow_group(request, group_slug):
+def follow_group(request):
     # TODO: implement
     pass
 
 
-def unfollow_group(request, group_slug):
+def unfollow_group(request):
     # TODO: implement
     pass
 
 
-def start_group_map_print_job(request, group_slug):
+def start_group_map_print_job(request):
     # TODO: implement
     pass
 
 
-def give_user_mapping_priveleges(request, group_slug, username):
+def give_user_mapping_priveleges(request, username):
     # TODO: implement
     pass
 
 
-def remove_user_mapping_priveleges(request, group_slug, username):
+def remove_user_mapping_priveleges(request, username):
     # TODO: implement
     pass
