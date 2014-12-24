@@ -51,8 +51,11 @@ def redirect_to_group_detail(request):
 def edit_group(request):
     form = GroupSettingsForm(instance=request.group, label_suffix='')
     context = {
+        'group': request.group,
         'form': form,
-        'group_slug': request.group.slug
+        'group_slug': request.group.slug,
+        'group_detail_url': reverse('group_detail',
+                                    kwargs={'group_slug': request.group.slug})
     }
     return context
 
