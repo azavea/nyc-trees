@@ -34,8 +34,8 @@ def group_detail(request):
     return {
         'group': request.group,
         'event_list': EventList.simple_context(request, events),
-        # TODO: check if user is group admin or census admin
-        'user_can_edit_group': True,
+        'user_can_edit_group': user_is_group_admin(request.user,
+                                                   request.group),
         'user_is_following': user_is_following,
         'edit_url': reverse('group_edit', kwargs={
             'group_slug': request.group.slug})
