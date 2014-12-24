@@ -6,6 +6,7 @@ from __future__ import division
 from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
 from django.utils.text import slugify
 
 from libs.mixins import NycModel
@@ -66,3 +67,6 @@ class Group(NycModel, models.Model):
     def clean(self):
         if not self.slug:
             self.slug = slugify(self.name)
+
+    def get_absolute_url(self):
+        return reverse('group_detail', kwargs={'group_slug': self.slug})

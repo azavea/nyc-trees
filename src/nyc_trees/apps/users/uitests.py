@@ -50,12 +50,6 @@ class BaseGroupUITest(NycTreesSeleniumTestCase):
         return reverse('group_list_page')
 
     @property
-    def group_detail_url(self):
-        return reverse('group_detail', kwargs={
-            'group_slug': self.group.slug
-        })
-
-    @property
     def group_edit_url(self):
         return reverse('group_edit', kwargs={
             'group_slug': self.group.slug
@@ -64,7 +58,7 @@ class BaseGroupUITest(NycTreesSeleniumTestCase):
 
 class GroupUITest(BaseGroupUITest):
     def test_anonymous_user_can_see_group_page(self):
-        self.get(self.group_detail_url)
+        self.get(self.group.get_absolute_url())
         self.wait_for_text(self.group.name)
 
     def test_anonymous_user_redirected_when_getting_group_edit_page(self):
@@ -102,7 +96,7 @@ class FollowGroupUITest(BaseGroupUITest):
         self.wait_for_text('Password:')
 
     def test_anonymous_user_follow_redirect_on_group_detail_page(self):
-        self.get(self.group_detail_url)
+        self.get(self.group.get_absolute_url())
         self._click_follow()
         self.wait_for_text('Password:')
 
@@ -115,7 +109,7 @@ class FollowGroupUITest(BaseGroupUITest):
 
     def test_follow_on_group_detail_page(self):
         self.login(self.public_user.username)
-        self.get(self.group_detail_url)
+        self.get(self.group.get_absolute_url())
         self._click_follow()
         self._click_unfollow()
         self._click_follow()

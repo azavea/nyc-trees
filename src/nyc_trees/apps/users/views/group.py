@@ -6,6 +6,7 @@ from __future__ import division
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 
+from apps.core.helpers import user_is_group_admin
 from apps.core.models import Group
 from apps.users.models import Follow
 
@@ -54,8 +55,6 @@ def edit_group(request):
         'group': request.group,
         'form': form,
         'group_slug': request.group.slug,
-        'group_detail_url': reverse('group_detail',
-                                    kwargs={'group_slug': request.group.slug})
     }
     return context
 
@@ -64,8 +63,7 @@ def update_group_settings(request):
     form = GroupSettingsForm(request.POST, instance=request.group)
     if form.is_valid():
         form.save()
-        return HttpResponseRedirect(
-            reverse('group_detail', kwargs={'group_slug': request.group.slug}))
+        return HttpResponseRedirect(request.group.get_absolute_url())
     else:
         context = {
             'form': form,
