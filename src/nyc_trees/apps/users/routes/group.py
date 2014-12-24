@@ -12,6 +12,10 @@ from apps.core.decorators import group_request, group_admin_do
 
 from apps.users.views import group as v
 
+
+render_follow_button = render_template('groups/partials/follow_button.html')
+
+
 group_list_page = route(GET=do(render_template('groups/list.html'),
                                v.group_list_page))
 
@@ -23,9 +27,17 @@ group_edit = group_admin_do(render_template('groups/settings.html'),
                             route(GET=v.edit_group,
                                   POST=v.update_group_settings))
 
-follow_group = login_required(route(POST=v.follow_group))
+follow_group = do(
+    login_required,
+    group_request,
+    route(GET=v.redirect_to_group_detail,
+          POST=do(render_follow_button, v.follow_group)))
 
-unfollow_group = login_required(route(POST=v.unfollow_group))
+unfollow_group = do(
+    login_required,
+    group_request,
+    route(GET=v.redirect_to_group_detail,
+          POST=do(render_follow_button, v.unfollow_group)))
 
 # TODO: should this have group_admin
 start_group_map_print_job = route(POST=v.start_group_map_print_job)

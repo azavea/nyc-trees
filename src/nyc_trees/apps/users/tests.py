@@ -17,8 +17,8 @@ from apps.users.models import (Follow, Achievement, achievements,
                                AchievementDefinition)
 from apps.users.views.user import user_detail as user_detail_view
 from apps.users.routes.user import user_detail as user_detail_route
-
-from apps.users.routes.group import group_detail, group_edit
+from apps.users.routes.group import (group_detail, group_edit,
+                                     follow_group, unfollow_group)
 
 
 class UsersTestCase(TestCase):
@@ -211,3 +211,24 @@ class GroupAccessTests(UsersTestCase):
         request = make_request(user=self.user, method="POST")
         self.assertRaises(PermissionDenied, group_edit, request,
                           self.group.slug)
+
+
+class FollowGroupTests(UsersTestCase):
+    def setUp(self):
+        super(FollowGroupTests, self).setUp()
+        Follow.objects.all().delete()
+
+    def _is_following(self):
+        return Follow.objects.filter(user=self.user, group=self.group) \
+            .exists()
+
+    def test_can_follow(self):
+        self.assertFalse(self._is_following())
+
+        request = make_request(user=self.user, method='POST')
+
+        follow_group(request, self.group.slug)
+        self.assertTrue(self._is_following())
+
+        unfollow_group(request, self.group.slug)
+        self.assertFalse(self._is_following())

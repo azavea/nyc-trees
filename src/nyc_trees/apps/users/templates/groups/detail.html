@@ -31,7 +31,7 @@
                         </div>
                         <div class="col-xs-6 text-right">
                             {% if user_can_edit_group %}
-                            <a href="{{edit_url}}" class="btn btn-switch">Following</a>
+                            {% include 'groups/partials/follow_button.html' %}
                             {% endif %}
                         </div>
                     </div>
