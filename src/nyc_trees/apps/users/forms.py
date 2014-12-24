@@ -43,5 +43,11 @@ class GroupSettingsForm(ModelForm):
             'contact_info',
             'contact_email',
             'contact_url',
-            'image'
+            'image',
+            'allows_individual_mappers'
         ]
+
+    def __init__(self, *args, **kwargs):
+        super(GroupSettingsForm, self).__init__(*args, **kwargs)
+        self.fields['allows_individual_mappers'].label =\
+            "I want to allow individual mappers in my group's area"

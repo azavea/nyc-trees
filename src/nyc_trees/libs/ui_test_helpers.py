@@ -21,3 +21,13 @@ class NycTreesSeleniumTestCase(SeleniumTestCase):
         self.click('form input[type="submit"]')
 
         self.wait_for_text('Contributions')
+
+    def assert_text_in_body(self, text):
+        body = self.sel.find_element_by_css_selector('body').text
+        self.assertTrue(text in body,
+                        'Expected to find %s in %s' % (text, body))
+
+    def assert_text_not_in_body(self, text):
+        body = self.sel.find_element_by_css_selector('body').text
+        self.assertTrue(text not in body,
+                        'Did not expect to find %s in %s' % (text, body))
