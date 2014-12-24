@@ -26,7 +26,6 @@ nav {
   background-color: transparent;
   border: 0;
   padding: 1.0rem 1.0rem;
-  // margin-right: 1.0rem;
   width: auto;
 }
 
@@ -39,5 +38,30 @@ nav {
 
   &+.icon-bar {
     margin-top: .5rem;
+  }
+}
+
+.left-content {
+  position: fixed;
+  overflow-y: auto;
+  height: 100%;
+  top: 0;
+  bottom: 0;
+  background-color: #000;
+  width: 30rem;
+  left: -30rem;
+  z-index: 1000;
+  transition: all 400ms ease-in-out;
+  .menu-active & {
+    left: 0;
+  }
+}
+
+.right-content {
+  left: 0;
+  position: relative;
+  transition: all 400ms ease-in-out;
+  .menu-active & {
+    left: 30rem;
   }
 }

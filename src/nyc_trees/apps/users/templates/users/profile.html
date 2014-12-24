@@ -55,13 +55,13 @@
                 </section>
                 {% endif %}
 
+                {% if show_achievements %}
                 <section class="achievements">
-                    {% if show_achievements %}
-                        {% with title="Achievements" section_id="achievements" public=user.achievements_are_public %}
-                            {% include "users/partials/profile/achievements.html" with section_id="achievements" %}
-                        {% endwith %}
-                    {% endif %}
+                    {% with title="Achievements" section_id="achievements" public=user.achievements_are_public %}
+                        {% include "users/partials/profile/achievements.html" with section_id="achievements" %}
+                    {% endwith %}
                 </section>
+                {% endif %}
 
                 {% if viewing_own_profile and not user.profile_is_public%}
                     <div class="block highlight">

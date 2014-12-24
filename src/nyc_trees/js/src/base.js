@@ -7,3 +7,8 @@ var $ = require('jquery'),
 require('bootstrap');
 
 $.ajaxSetup(csrf.jqueryAjaxSetupOptions);
+
+// Enable the sliding menu
+$('.nav-menubutton').on('click', function (a) {
+    $('body').toggleClass('menu-active');
+});

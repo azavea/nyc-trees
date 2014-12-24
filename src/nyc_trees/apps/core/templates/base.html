@@ -1,39 +1,54 @@
 {% load utils %}
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <!-- vendor.css contains styles which override bootstrap styling.  It must come after main.css -->
-    <link rel="stylesheet" href="{{ "css/main.css"|static_url }}">
-    <link rel="stylesheet" href="{{ "css/vendor.css"|static_url }}"></script>
-  </head>
-  <body>
-    <header>
-      <nav class="clearfix">
-        <div class="nav-left">
-          <button class="nav-menubutton" type="button" data-target="" aria-expanded="false">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <div class="brand">
-            TreesCount!
-          </div>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <!-- vendor.css contains styles which override bootstrap styling.  It must come after main.css -->
+        <link rel="stylesheet" href="{{ "css/main.css"|static_url }}">
+        <link rel="stylesheet" href="{{ "css/vendor.css"|static_url }}"></script>
+    </head>
+    <body>
+        <header class="left-content">
+            <nav>
+                <ul>
+                    <li>Dashboard</li>
+                    <li>Training</li>
+                    <li>Groups</li>
+                    <li>Events</li>
+                    <li>Reservations</li>
+                    <li>Achievements</li>
+                    <li>About &amp; FAQ</li>
+                </ul>
+            </nav>
+        </header>
+        <div class="right-content">
+            <header>
+                <nav class="clearfix">
+                    <div class="nav-left">
+                        <button class="nav-menubutton" type="button" data-target="" aria-expanded="false">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <div class="brand">
+                            TreesCount!
+                        </div>
+                    </div>
+                    <div class="nav-right">
+                        Register
+                    </div>
+                </nav>
+            </header>
+            {% block content %}
+            {% endblock content %}
         </div>
-        <div class="nav-right">
-          Register
-        </div>
-      </nav>
-    </header>
-    {% block content %}
-    {% endblock content %}
-  </body>
-  <script type="text/javascript" src="{% url "js_settings" %}"></script>
-  {# TODO: Concatenate common.js and base.js #}
-  <script type="text/javascript" src="{{ "js/common.js"|static_url }}"></script>
-  <script type="text/javascript" src="{{ "js/base.js"|static_url }}"></script>
-  {% block page_js %}
-  {% endblock page_js %}
+    </body>
+    <script type="text/javascript" src="{% url "js_settings" %}"></script>
+    {# TODO: Concatenate common.js and base.js #}
+    <script type="text/javascript" src="{{ "js/common.js"|static_url }}"></script>
+    <script type="text/javascript" src="{{ "js/base.js"|static_url }}"></script>
+    {% block page_js %}
+    {% endblock page_js %}
 </html>

@@ -94,9 +94,11 @@ class ProfileTemplateTests(UsersTestCase):
         self._assert_visible_only_to_me('Privacy', count=2)
 
     def test_groups_section_visibility(self):
-        self._assert_visible_only_to_me('Groups', count=2)
+        self._assert_visible_only_to_me('<section class="groups">', count=1)
         self._update_user(group_follows_are_public=True)
-        self._assert_visible_to_all('Groups', me_count=2, them_count=1)
+        self._assert_visible_to_all('<section class="groups">',
+                                    me_count=1,
+                                    them_count=1)
 
     def test_groups_section_contents(self):
         self._assert_visible_only_to_me(self.group.name)
@@ -104,9 +106,12 @@ class ProfileTemplateTests(UsersTestCase):
         self._assert_visible_to_all(self.group.name)
 
     def test_achievements_section_visibility(self):
-        self._assert_visible_only_to_me('Achievements', count=2)
+        self._assert_visible_only_to_me('<section class="achievements">',
+                                        count=1)
         self._update_user(achievements_are_public=True)
-        self._assert_visible_to_all('Achievements', me_count=2, them_count=1)
+        self._assert_visible_to_all('<section class="achievements">',
+                                    me_count=1,
+                                    them_count=1)
 
     def test_achievements_section_contents(self):
         self._assert_visible_only_to_me(
