@@ -58,18 +58,6 @@ class EventList(object):
                 'load_more_url': None}
 
     @staticmethod
-    def render_singleton(context):
-        """
-        Render a single event_list context as html.
-
-        When event_lists are added to pages, they require post-back to
-        toggle their filters or load more chunks. This markup is
-        delivered using this function.
-        """
-        return render_to_response('event/partials/event_list.html',
-                                  {'event_list': context})
-
-    @staticmethod
     def make_event_infos(request, qs):
         """
         Wrap an event object with user-aware data necessary for
@@ -88,9 +76,12 @@ class EventList(object):
     #########################################
 
     def __init__(self, qs_builder,
+                 template_path='event/partials/event_list.html',
                  chunk_size=None, active_filter=None, filterset_name=None):
+
         object.__setattr__(self, 'name', qs_builder.__code__.co_name)
         object.__setattr__(self, 'qs_builder', qs_builder)
+        object.__setattr__(self, 'template_path', template_path)
 
         object.__setattr__(self, 'chunk_size', chunk_size)
         object.__setattr__(self, 'active_filter', active_filter)
@@ -155,7 +146,9 @@ class EventList(object):
         """
         The endpoint used to render a partial.
         """
-        return self.render_singleton(self.as_context(*args, **kwargs))
+        return render_to_response(
+            self.template_path,
+            {'event_list': self.as_context(*args, **kwargs)})
 
     #########################################
     # event list control management
