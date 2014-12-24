@@ -60,6 +60,7 @@ class Group(NycModel, models.Model):
     admin = models.ForeignKey(User, on_delete=models.PROTECT)
     image = models.ImageField(null=True)
     is_active = models.BooleanField(default=True)
+    allows_individual_mappers = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.name

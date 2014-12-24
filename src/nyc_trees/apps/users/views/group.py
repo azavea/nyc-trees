@@ -31,6 +31,9 @@ def group_detail(request):
     events = Event.objects.filter(group_id=request.group.pk, is_private=False)
     user_is_following = Follow.objects.filter(user_id=request.user.id,
                                               group=request.group).exists()
+    show_mapper_request = request.group.allows_individual_mappers and \
+        not user_is_group_admin(request.user, request.group)
+
     return {
         'group': request.group,
         'event_list': EventList.simple_context(request, events),
@@ -38,7 +41,8 @@ def group_detail(request):
                                                    request.group),
         'user_is_following': user_is_following,
         'edit_url': reverse('group_edit', kwargs={
-            'group_slug': request.group.slug})
+            'group_slug': request.group.slug}),
+        'show_mapper_request': show_mapper_request
     }
 
 

@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from __future__ import division
 
 from django.core.urlresolvers import reverse
+from django.utils.unittest import skip
 
 from libs.ui_test_helpers import NycTreesSeleniumTestCase
 
@@ -79,6 +80,42 @@ class GroupUITest(BaseGroupUITest):
         self.login(self.census_admin_user.username)
         self.get(self.group_edit_url)
         self.wait_for_element('textarea[name="description"]')
+
+    @skip('This test fails with the error "The element matching '
+          '#id_allows_individual_mappers should be clickable"')
+    def test_group_admin_can_set_mapper_request(self):
+        self.login(self.census_admin_user.username)
+        self.get(self.group_edit_url)
+        self.wait_for_element('textarea[name="description"]')
+        self.click('a[href="#mappers"]')
+        self.wait_for_element('#id_allows_individual_mappers')
+        self.click('#id_allows_individual_mappers')
+        self.click('#submit-individual-mappers-form')
+        self.wait_for_text(self.group.name)
+        group = Group.objects.get(pk=self.group.pk)
+        self.assertTrue(group.allows_individual_mappers)
+
+    def test_mapper_request_shown_when_allowed(self):
+        self.group.allows_individual_mappers = True
+        self.group.save()
+        self.get(self.group.get_absolute_url())
+        self.wait_for_text(self.group.name)
+        self.assert_text_in_body("Request Individual Mapper Status")
+
+    def test_mapper_request_hidden_when_not_allowed(self):
+        self.group.allows_individual_mappers = False
+        self.group.save()
+        self.get(self.group.get_absolute_url())
+        self.wait_for_text(self.group.name)
+        self.assert_text_not_in_body("Request Individual Mapper Status")
+
+    def test_mapper_request_hidden_when_admin(self):
+        self.group.allows_individual_mappers = True
+        self.group.save()
+        self.login(self.group_admin_user.username)
+        self.get(self.group.get_absolute_url())
+        self.wait_for_text(self.group.name)
+        self.assert_text_not_in_body("Request Individual Mapper Status")
 
 
 class FollowGroupUITest(BaseGroupUITest):

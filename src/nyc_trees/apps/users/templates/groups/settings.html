@@ -73,6 +73,14 @@
                                         {{ form.image }}
                                     </div>
 
+                                    {% comment %}
+                                    The form is repeated on two different tabs, with a different set
+                                    of fields on each tab. The Django forms system expects to see
+                                    every field on every postback, so fields that aren't on the tab
+                                    need to be included as hidden input elements.
+                                    {% endcomment %}
+                                    {{ form.allows_individual_mappers.as_hidden }}
+
                                     <div class="main-footer">
                                         <div class="pull-right">
                                             <input type="submit" class="btn" value="Save group details" />
@@ -207,17 +215,32 @@
                         <div class="tab-pane" id="mappers">
                             <div class="block">
                                 <div class="mappers-option">
-                                    <div class="mappers-option-overview">
-                                        Enabled (<a href="#">Edit</a>)
-                                        <!-- .mappers-option-edit should be displayed and .mappers-option-overview should be hidden when someone clicks on the above "Edit" link. Clicking save should update and display .mappers-options-overview and hide .mappers-option-edit. -->
-                                    </div>
-                                    <div class="mappers-option-edit ">
-                                        <div class="row block">
-                                            <div class="col-xs-9">I want to allow individual mappers for my group.</div>
-                                            <div class="col-xs-3 text-right"><input type="checkbox"></div>
+                                    <form method="POST">
+                                        {% csrf_token %}
+
+                                        <div class="block-item">
+                                            {{ form.allows_individual_mappers.errors }}
+                                            {{ form.allows_individual_mappers.label_tag }}
+                                            {{ form.allows_individual_mappers }}
                                         </div>
-                                        <button class="btn btn-primary">Save</button>
-                                    </div>
+
+                                        {% comment %}
+                                        The form is repeated on two different tabs, with a different set
+                                        of fields on each tab. The Django forms system expects to see
+                                        every field on every postback, so fields that aren't on the tab
+                                        need to be included as hidden input elements.
+                                        {% endcomment %}
+                                        {{ form.description.as_hidden }}
+                                        {{ form.contact_info.as_hidden }}
+                                        {{ form.contact_email.as_hidden }}
+                                        {{ form.contact_url.as_hidden }}
+                                        {{ form.image.as_hidden }}
+
+                                        <div class="pull-right">
+                                          <input id="submit-individual-mappers-form" type="submit" class="btn" value="Save" />
+                                        </div>
+                                        <a class="btn btn-link" href="{% url 'group_detail' group_slug=group_slug %}">Cancel</a>
+                                    </form>
                                 </div>
                                 <hr>
                             </div>
