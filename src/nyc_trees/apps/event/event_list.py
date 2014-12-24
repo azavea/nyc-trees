@@ -3,6 +3,8 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
+from collections import OrderedDict
+
 from urllib import urlencode
 from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
@@ -14,12 +16,34 @@ from apps.users.models import Follow
 from apps.event.models import Event, EventRegistration
 
 
+_ALL, _MAPPING, _TRAINING = 'all', 'mapping', 'training'
+
+
+class _Filters(object):
+    ALL = _ALL
+    MAPPING = _MAPPING
+    TRAINING = _TRAINING
+
+
 class EventList(object):
     """
     Wrap a queryset building function into a workflow that supports
     rendering into pages and reloading asychronously using endpoints
     that return markup.
     """
+    trainingFilters = 'training_filter'
+    Filters = _Filters
+
+    @staticmethod
+    def get_filterset(name):
+        filtersets = {
+            EventList.trainingFilters: OrderedDict([
+                (_ALL, None),
+                (_MAPPING, lambda qs: qs.filter(includes_training=False)),
+                (_TRAINING, lambda qs: qs.filter(includes_training=True)),
+            ]),
+        }
+        return filtersets.get(name, {})
 
     @staticmethod
     def simple_context(request, qs):
@@ -64,11 +88,13 @@ class EventList(object):
     #########################################
 
     def __init__(self, qs_builder,
-                 chunk_size=None, show_filters=False):
+                 chunk_size=None, active_filter=None, filterset_name=None):
         object.__setattr__(self, 'name', qs_builder.__code__.co_name)
         object.__setattr__(self, 'qs_builder', qs_builder)
+
         object.__setattr__(self, 'chunk_size', chunk_size)
-        object.__setattr__(self, 'show_filters', show_filters)
+        object.__setattr__(self, 'active_filter', active_filter)
+        object.__setattr__(self, 'filterset_name', filterset_name)
 
     def __setattr__(self, *args, **kwargs):
         raise TypeError("Mutating this object is too risky because it "
@@ -91,13 +117,32 @@ class EventList(object):
         allow you to render it with your preferred initial
         presentation.
         """
-        return EventList(self.qs_builder, **kwargs)
+        # preprocess chunk_size because this is sometimes
+        # configured directly from an HTTP request dict.
+        if 'chunk_size' in kwargs:
+            chunk_size = kwargs['chunk_size']
+            if chunk_size is None or chunk_size == 'None':
+                chunk_size = None
+            else:
+                chunk_size = int(chunk_size)
+            kwargs['chunk_size'] = chunk_size
+
+        newkwargs = {key: (kwargs[key] if key in kwargs
+                           else getattr(self, key))
+                     for key in
+                     ('chunk_size', 'active_filter', 'filterset_name')}
+        return EventList(self.qs_builder, **newkwargs)
 
     def __call__(self, *args, **kwargs):
         """
         Call the wrapped function directly, returning a queryset.
         """
         return self.qs_builder(*args, **kwargs)
+
+    def _get_active_filter_fn(self):
+        return (self
+                .get_filterset(self.filterset_name)
+                .get(self.active_filter))
 
     #########################################
     # methods for exposing url endpoints
@@ -116,41 +161,47 @@ class EventList(object):
     # event list control management
     #########################################
 
-    def as_context(self, request):
-        qs = self.qs_builder(request)
-        filter_type = request.GET.get('filter_type')
+    def _control_url(self, show_all, *args, **kwargs):
+        params = {
+            'chunk_size': self.chunk_size,
+            'active_filter': self.active_filter,
+            'filterset_name': self.filterset_name
+        }
 
-        # filters will be shown if the event_list is configured to show
-        # filters, or if a request is sent with a filter activated.
-        if filter_type == 'training':
-            qs = qs.filter(includes_training=True)
-            show_filters = True
-        elif filter_type == 'mapping':
-            qs = qs.filter(includes_training=False)
-            show_filters = True
-        elif filter_type == 'all' or self.show_filters:
-            filter_type = 'all'
-            show_filters = True
-        else:
-            show_filters = False
+        if show_all:
+            params['show_all'] = True
+        url = reverse(self.url_name(), args=args, kwargs=kwargs)
+        return '%s?%s' % (url, urlencode(params))
 
-        if self.chunk_size and qs.count() > self.chunk_size:
-            qs = qs[:self.chunk_size]
-            load_more_url = reverse(self.url_name())
-        else:
+    def as_context(self, request, *args, **kwargs):
+        qs = self.qs_builder(request, *args, **kwargs)
+        event_list = self.configure(**request.GET.dict())
+
+        filter_fn = event_list._get_active_filter_fn()
+        if filter_fn:
+            qs = filter_fn(qs)
+
+        if ((request.GET.get('show_all') or
+             event_list.chunk_size is None or
+             qs.count() <= event_list.chunk_size)):
             load_more_url = None
+        else:
+            qs = qs[:event_list.chunk_size]
+            load_more_url = event_list._control_url(
+                show_all=True, *args, **kwargs)
 
+        filterset = event_list.get_filterset(event_list.filterset_name)
         filters = ([{'name': k,
-                     'active': k == filter_type,
-                     'url': '%s?%s' % (reverse(self.url_name()),
-                                       urlencode({'filter_type': k}))}
-                    for k in ('all', 'training', 'mapping')]
-                   if show_filters else [])
+                     'active': k == event_list.active_filter,
+                     'url': (event_list
+                             .configure(active_filter=k)
+                             ._control_url(show_all=False, *args, **kwargs))}
+                    for k in filterset])
 
         return {
             'filters': filters,
             'load_more_url': load_more_url,
-            'event_infos': self.make_event_infos(request, qs),
+            'event_infos': event_list.make_event_infos(request, qs),
         }
 
 

@@ -15,7 +15,7 @@ from apps.core.forms import EmailForm
 from apps.event.forms import EventForm
 from apps.event.models import Event, EventRegistration
 
-from apps.event.event_list import (immediate_events, all_events)
+from apps.event.event_list import (EventList, immediate_events, all_events)
 
 from apps.event.helpers import user_is_rsvped_for_event
 
@@ -115,7 +115,8 @@ def events_list_page(request):
                              .configure(chunk_size=3)
                              .as_context(request))
     all_events_list = (all_events
-                       .configure(show_filters=True)
+                       .configure(filterset_name=EventList.trainingFilters,
+                                  active_filter=EventList.Filters.ALL)
                        .as_context(request))
 
     return {'immediate_events': immediate_events_list,
