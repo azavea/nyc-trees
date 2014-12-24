@@ -9,7 +9,7 @@ var $ = require('jquery'),
     dom = {
         row: 'tr',
         privacyTogglers: '.privacy-toggler',
-        lockIcon: '.lock-icon'
+        lockIconClass: 'icon-lock'
     };
 
 module.exports = {
@@ -42,11 +42,13 @@ function updateUI() {
         disable = ! isPublic($togglers.first());
     $togglers.each(function (i, toggler) {
         var $toggler = $(toggler),
+            fieldName = $toggler.data('privacy-field-name'),
+            $target = $('[data-privacy-toggle-target="' + fieldName + '"]'),
             iAmPublic = isPublic($toggler),
             $row = $toggler.closest(dom.row),
             $lockIcon = $row.find(dom.lockIcon);
         $toggler.html(iAmPublic ? 'Public' : 'Private');
-        $lockIcon.toggle(!iAmPublic);  // hide lock icon when public
+        $target.toggleClass(dom.lockIconClass, !iAmPublic);  // hide lock icon when public
         if (i > 0) {
             $row.toggleClass('disabled', disable);
         }
