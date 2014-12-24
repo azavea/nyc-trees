@@ -2,35 +2,19 @@
 
 {% block extra_markup %}
 <div class="dropdown text-right">
-    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+    <button class="btn btn-default dropdown-toggle"
+            type="button"
+            id="group-detail-event-info-submenu"
+            data-toggle="dropdown"
+            aria-expanded="true">
         <span class="caret"></span>
     </button>
-    <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu1">
-        <li>
-            <button role="menuitem" tabindex="-1" href="#">
-            RSVP to event
-            </button>
-        </li>
-        <li>
-            <button role="menuitem" tabindex="-1" href="#">
-            Edit details
-            </button>
-        </li>
-        <li>
-            <button role="menuitem" tabindex="-1" href="#">
-            Email attendees
-            </button>
-        </li>
-        <li>
-            <button role="menuitem" tabindex="-1" href="#">
-            Event check-in
-            </button>
-        </li>
-        <li>
-            <button role="menuitem" tabindex="-1" href="#">
-            Get shareable link
-            </button>
-        </li>
+    <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="group-detail-event-info-submenu">
+        <li><button role="menuitem" tabindex="-1" href="#">RSVP to event</button></li>
+        <li><button role="menuitem" tabindex="-1" href="#">Edit details</button></li>
+        <li><button role="menuitem" tabindex="-1" href="#">Email attendees</button></li>
+        <li><button role="menuitem" tabindex="-1" href="#">Event check-in</button></li>
+        <li><button role="menuitem" tabindex="-1" href="#">Get shareable link</button></li>
     </ul>
 </div>
 {% endblock extra_markup %}

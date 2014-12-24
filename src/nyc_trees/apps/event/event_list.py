@@ -17,12 +17,15 @@ from apps.event.models import Event, EventRegistration
 
 
 _ALL, _MAPPING, _TRAINING = 'all', 'mapping', 'training'
+_CURRENT, _PAST = 'current', 'past'
 
 
 class _Filters(object):
     ALL = _ALL
     MAPPING = _MAPPING
     TRAINING = _TRAINING
+    CURRENT = _CURRENT
+    PAST = _PAST
 
 
 class EventList(object):
@@ -32,15 +35,25 @@ class EventList(object):
     that return markup.
     """
     trainingFilters = 'training_filter'
+    chronoFilters = 'chrono_filters'
     Filters = _Filters
 
     @staticmethod
     def get_filterset(name):
+        right_now = now()
         filtersets = {
             EventList.trainingFilters: OrderedDict([
                 (_ALL, None),
                 (_MAPPING, lambda qs: qs.filter(includes_training=False)),
                 (_TRAINING, lambda qs: qs.filter(includes_training=True)),
+            ]),
+            EventList.chronoFilters: OrderedDict([
+                (_CURRENT, lambda qs: (qs
+                                       .filter(begins_at__gte=right_now)
+                                       .order_by('begins_at'))),
+                (_PAST, lambda qs: (qs
+                                    .filter(begins_at__lt=right_now)
+                                    .order_by('-begins_at'))),
             ]),
         }
         return filtersets.get(name, {})

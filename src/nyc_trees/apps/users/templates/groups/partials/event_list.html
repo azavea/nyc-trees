@@ -1,0 +1,7 @@
+{% extends "event/partials/event_list.html" %}
+
+{% block event_list_loop %}
+    {% for info in event_list.event_infos %}
+        {% include "groups/partials/event_section.html" %}
+    {% endfor %}
+{% endblock event_list_loop %}
