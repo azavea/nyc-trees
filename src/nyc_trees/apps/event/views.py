@@ -59,9 +59,6 @@ def event_detail(request, event_slug):
         'can_rsvp': rsvp_count < event.max_attendees,
         'is_rsvped': user_is_rsvped_for_event(user, event),
         'rsvp_count': rsvp_count,
-        'group_detail_url': reverse('group_detail', kwargs={
-            'group_slug': request.group.slug
-        }),
         'group_events_url': reverse('events', kwargs={
             'group_slug': request.group.slug
         }),

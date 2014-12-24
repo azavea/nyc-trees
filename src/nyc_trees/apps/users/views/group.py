@@ -6,6 +6,7 @@ from __future__ import division
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 
+from apps.core.helpers import user_is_group_admin
 from apps.core.models import Group
 from apps.users.models import Follow
 
@@ -33,8 +34,8 @@ def group_detail(request):
     return {
         'group': request.group,
         'event_list': EventList.simple_context(request, events),
-        # TODO: check if user is group admin or census admin
-        'user_can_edit_group': True,
+        'user_can_edit_group': user_is_group_admin(request.user,
+                                                   request.group),
         'user_is_following': user_is_following,
         'edit_url': reverse('group_edit', kwargs={
             'group_slug': request.group.slug})
@@ -51,8 +52,9 @@ def redirect_to_group_detail(request):
 def edit_group(request):
     form = GroupSettingsForm(instance=request.group, label_suffix='')
     context = {
+        'group': request.group,
         'form': form,
-        'group_slug': request.group.slug
+        'group_slug': request.group.slug,
     }
     return context
 
@@ -61,8 +63,7 @@ def update_group_settings(request):
     form = GroupSettingsForm(request.POST, instance=request.group)
     if form.is_valid():
         form.save()
-        return HttpResponseRedirect(
-            reverse('group_detail', kwargs={'group_slug': request.group.slug}))
+        return HttpResponseRedirect(request.group.get_absolute_url())
     else:
         context = {
             'form': form,
