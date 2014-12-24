@@ -11,11 +11,17 @@
     <body>
         <header class="left-content">
             <nav>
+                <div>
+                    <h4><a href="{% url 'user_detail_redirect' %}">{{ user.username }}</a></h4>
+                    <div>
+                      <a href="{% url 'user_profile_settings' %}">Settings</a> / Privacy
+                    </div>
+                <div>
                 <ul>
-                    <li>Dashboard</li>
+                    <li><a href="{% url 'home_page' %}">Dashboard</a></li>
                     <li>Training</li>
-                    <li>Groups</li>
-                    <li>Events</li>
+                    <li><a href="{% url 'group_list_page' %}">Groups</a></li>
+                    <li><a href="{% url 'events_list_page' %}">Events</a></li>
                     <li>Reservations</li>
                     <li>Achievements</li>
                     <li>About &amp; FAQ</li>
