@@ -36,7 +36,7 @@ class UsersTestCase(TestCase):
             name='The Best Group of All',
             description='Seriously, the best group in town.',
             slug='the-best-group',
-            contact_info='Jane Best',
+            contact_name='Jane Best',
             contact_email='best@group.com',
             contact_url='https://thebest.nyc',
             admin=self.other_user
@@ -163,7 +163,7 @@ class GroupTemplateTests(UsersTestCase):
         self._assert_group_detail_contains(self.group.description)
 
     def test_contact_shown(self):
-        self._assert_group_detail_contains(self.group.contact_info)
+        self._assert_group_detail_contains(self.group.contact_name)
 
     def test_url_shown(self):
         # The url shows up both as the link text and the href

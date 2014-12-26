@@ -51,7 +51,7 @@ class Group(NycModel, models.Model):
     # blank=True is valid for 'slug', because we'll automatically create slugs
     slug = models.SlugField(unique=True, blank=True)
     description = models.TextField(default='', blank=True)
-    contact_info = models.TextField(default='', blank=True)
+    contact_name = models.CharField(max_length=255, default='', blank=True)
     contact_email = models.EmailField(null=True)
     contact_url = models.URLField(null=True)
     # Deleting a user should not cascade delete the group of which

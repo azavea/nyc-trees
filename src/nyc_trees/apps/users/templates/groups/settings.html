@@ -53,9 +53,9 @@
                                         {{ form.description }}
                                     </div>
                                     <div class="block item">
-                                        {{ form.contact_info.errors }}
-                                        {{ form.contact_info.label_tag }}
-                                        {{ form.contact_info }}
+                                        {{ form.contact_name.errors }}
+                                        {{ form.contact_name.label_tag }}
+                                        {{ form.contact_name }}
                                     </div>
                                     <div class="block item">
                                         {{ form.contact_email.errors }}
@@ -231,7 +231,7 @@
                                         need to be included as hidden input elements.
                                         {% endcomment %}
                                         {{ form.description.as_hidden }}
-                                        {{ form.contact_info.as_hidden }}
+                                        {{ form.contact_name.as_hidden }}
                                         {{ form.contact_email.as_hidden }}
                                         {{ form.contact_url.as_hidden }}
                                         {{ form.image.as_hidden }}

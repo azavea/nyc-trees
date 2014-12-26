@@ -76,13 +76,13 @@
         </div>
 
         <div class="fieldWrapper">
-            {{ form.contact_info.errors }}
-            {{ form.contact_info.label_tag }}
-            {{ form.contact_info }}
+            {{ form.contact_name.errors }}
+            {{ form.contact_name.label_tag }}
+            {{ form.contact_name }}
         </div>
 
         <div>
-            <input type="hidden" id="user-contact-info"
+            <input type="hidden" id="user-contact-name"
                    value="{{ request.user.first_name }} {{request.user.last_name }}" />
             <input type="hidden" id="user-contact-email" value="{{ request.user.email }}" />
             <a href="javascript:;" id="use-my-contact-info">Use my contact information</a>

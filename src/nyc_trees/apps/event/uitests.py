@@ -49,7 +49,7 @@ class EventTestCase(NycTreesSeleniumTestCase):
             name='Planet Express',
             slug='planet-express',
             description='A simple delivery company',
-            contact_info='Professor Farnseworth',
+            contact_name='Professor Farnseworth',
             contact_email='prof@planetexpress.nyc',
             contact_url='https://planetexpress.nyc',
             admin=self.user
@@ -82,7 +82,7 @@ class AddEventUITest(EventTestCase):
                           get_current_timezone())
         self.assertEqual(xmas, localtime(events[0].ends_at))
         self.assertEqual('%s %s' % (self.user.first_name, self.user.last_name),
-                         events[0].contact_info)
+                         events[0].contact_name)
         self.assertEqual(self.user.email, events[0].contact_email)
 
 
