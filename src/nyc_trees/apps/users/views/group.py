@@ -64,7 +64,8 @@ def edit_group(request):
 
 
 def update_group_settings(request):
-    form = GroupSettingsForm(request.POST, instance=request.group)
+    form = GroupSettingsForm(request.POST, request.FILES,
+                             instance=request.group)
     if form.is_valid():
         form.save()
         return HttpResponseRedirect(request.group.get_absolute_url())
