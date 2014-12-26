@@ -5,6 +5,8 @@ from __future__ import division
 
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.contrib.auth.views import password_reset \
+    as contrib_auth_password_reset
 from django.template.loader import render_to_string
 
 from django_tinsel.decorators import render_template
@@ -12,7 +14,14 @@ from django_tinsel.utils import decorate as do
 
 from apps.core.models import User
 
-from apps.login.forms import ForgotUsernameForm
+from apps.login.forms import (ForgotUsernameForm,
+                              UsernameOrEmailPasswordResetForm)
+
+
+def password_reset(request):
+    return contrib_auth_password_reset(
+        request,
+        password_reset_form=UsernameOrEmailPasswordResetForm)
 
 
 def forgot_username_page(request):
