@@ -13,18 +13,20 @@ from libs.ui_test_helpers import NycTreesSeleniumTestCase
 from apps.core.models import User
 
 
-class FullRegistrationUITest(NycTreesSeleniumTestCase):
+class NycUITest(NycTreesSeleniumTestCase):
+    def _get_link_from_email(self, email):
+        matches = re.findall(r"http://.*$", email.body, re.MULTILINE)
+        self.assertEqual(1, len(matches))
+        return matches[0]
+
+
+class FullRegistrationUITest(NycUITest):
     def setUp(self):
         super(FullRegistrationUITest, self).setUp()
 
         self.username = 'Fry'
         self.email = 'fry@planetexpress.com'
         self.password = 'password'
-
-    def _get_link_from_email(self, email):
-        matches = re.findall(r"http://.*$", email.body, re.MULTILINE)
-        self.assertEqual(1, len(matches))
-        return matches[0]
 
     def _get_or_create_user(self):
         if User.objects.filter(username=self.username).exists():
@@ -161,3 +163,33 @@ class FullRegistrationUITest(NycTreesSeleniumTestCase):
         self.test_registration()
         self.test_forgot_username()
         self.test_login()
+
+
+class PasswordResetUITest(NycUITest):
+    def setUp(self):
+        super(PasswordResetUITest, self).setUp()
+        self.user = User.objects.create(username='Fry',
+                                        email='fry@planetexpress.com')
+        self.user.set_password('password')
+        self.user.save()
+
+    def _assert_reset_email_sent(self, value):
+        self.get(reverse('password_reset'))
+        self.wait_for_textbox_then_type('input[name="email_or_username"]',
+                                        value)
+        self.click('form input[type="submit"]')
+        self.wait_for_text('We have sent you an email')
+        self._get_link_from_email(mail.outbox[0])
+        # TODO: Calling self.get with the link in the password reset
+        # Email results in an exception being thrown inside the
+        # WebDriver stack with the message "f.QueryInterface is not a
+        # function." The URLs look correct, the registration tests,
+        # which also follow URLs from emails pass, and the feature
+        # works when exercised manually. It would be nice to fully
+        # cover the reset workflow.
+
+    def test_reset_with_email(self):
+        self._assert_reset_email_sent(self.user.email)
+
+    def test_reset_with_username(self):
+        self._assert_reset_email_sent(self.user.username)
