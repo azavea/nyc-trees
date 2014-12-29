@@ -115,7 +115,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     app.vm.synced_folder ".", "/vagrant", disabled: true
 
     if Vagrant::Util::Platform.windows? || Vagrant::Util::Platform.cygwin?
-      app.vm.synced_folder "src/nyc_trees", "/opt/app/", type: "rsync", rsync__exclude: "node_modules/"
+      app.vm.synced_folder "src/nyc_trees", "/opt/app/", type: "rsync", rsync__exclude: ["node_modules/", "apps/"]
+      app.vm.synced_folder "src/nyc_trees/apps", "/opt/app/apps"
     else
       app.vm.synced_folder "src/nyc_trees", "/opt/app/"
     end
