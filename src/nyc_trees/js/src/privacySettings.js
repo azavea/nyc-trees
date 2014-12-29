@@ -7,17 +7,17 @@
 
 var $ = require('jquery'),
     dom = {
-        row: 'tr',
+        row: '.row',
         privacyTogglers: '.privacy-toggler',
         lockIconClass: 'icon-lock'
     };
 
 module.exports = {
-    prepareForSave: loadDomStateFromHiddenFields,
-    revert: loadHiddenFieldsFromDomState
+    prepareForSave: loadHiddenFieldsFromDomState,
+    revert: loadDomStateFromHiddenFields
 };
 
-loadHiddenFieldsFromDomState();
+loadDomStateFromHiddenFields();
 updateUI();
 $(dom.privacyTogglers).on('click', togglePrivacy);
 
@@ -45,8 +45,7 @@ function updateUI() {
             fieldName = $toggler.data('privacy-field-name'),
             $target = $('[data-privacy-toggle-target="' + fieldName + '"]'),
             iAmPublic = isPublic($toggler),
-            $row = $toggler.closest(dom.row),
-            $lockIcon = $row.find(dom.lockIcon);
+            $row = $toggler.closest(dom.row);
         $toggler.html(iAmPublic ? 'Public' : 'Private');
         $target.toggleClass(dom.lockIconClass, !iAmPublic);  // hide lock icon when public
         if (i > 0) {
@@ -55,8 +54,8 @@ function updateUI() {
     });
 }
 
-function loadDomStateFromHiddenFields() {
-        $(dom.privacyTogglers).each(function () {
+function loadHiddenFieldsFromDomState() {
+    $(dom.privacyTogglers).each(function () {
         var $toggler = $(this),
             iAmPublic = isPublic($toggler),
             $hidden = getHiddenForToggler($toggler);
@@ -64,7 +63,7 @@ function loadDomStateFromHiddenFields() {
     });
 }
 
-function loadHiddenFieldsFromDomState() {
+function loadDomStateFromHiddenFields() {
     $(dom.privacyTogglers).each(function () {
         var $toggler = $(this),
             $hidden = getHiddenForToggler($toggler),
