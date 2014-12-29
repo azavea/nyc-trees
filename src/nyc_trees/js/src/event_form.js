@@ -7,9 +7,9 @@ var Modernizr = require('modernizr'),
 
 var dom = {
     useMyInfo: '#use-my-contact-info',
-    userContactInfo: '#user-contact-info',
+    userContactName: '#user-contact-name',
     userContactEmail: '#user-contact-email',
-    eventContactInfo: '#event-form [name="contact_info"]',
+    eventContactName: '#event-form [name="contact_name"]',
     eventContactEmail: '#event-form [name="contact_email"]'
 };
 
@@ -22,8 +22,8 @@ $(dom.useMyInfo).on('click', function(e) {
     e.preventDefault();
 
     var userEmail = $(dom.userContactEmail).val(),
-        userInfo = $(dom.userContactInfo).val();
+        userContactName = $(dom.userContactName).val();
 
     $(dom.eventContactEmail).val(userEmail);
-    $(dom.eventContactInfo).val(userInfo);
+    $(dom.eventContactName).val(userContactName);
 });

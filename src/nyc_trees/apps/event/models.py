@@ -26,7 +26,7 @@ class Event(NycModel, models.Model):
     location_description = models.TextField(default='', blank=True)
 
     contact_email = models.EmailField(null=True)
-    contact_info = models.CharField(max_length=255, default='', blank=True)
+    contact_name = models.CharField(max_length=255, default='', blank=True)
 
     begins_at = models.DateTimeField()
     ends_at = models.DateTimeField()

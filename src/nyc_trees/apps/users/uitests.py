@@ -40,7 +40,7 @@ class BaseGroupUITest(NycTreesSeleniumTestCase):
             name='The Best Group of All',
             description='Seriously, the best group in town.',
             slug='the-best-group',
-            contact_info='Jane Best',
+            contact_name='Jane Best',
             contact_email='best@group.com',
             contact_url='https://thebest.nyc',
             admin=self.group_admin_user

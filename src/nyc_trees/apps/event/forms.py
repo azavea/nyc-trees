@@ -37,7 +37,7 @@ class EventForm(ModelForm):
             'includes_training',
             'max_attendees',
             'contact_email',
-            'contact_info'
+            'contact_name'
         ]
         widgets = {
             'is_private': RadioSelect(choices=((True, 'Private'),

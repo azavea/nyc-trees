@@ -40,7 +40,7 @@ class GroupSettingsForm(ModelForm):
         model = Group
         fields = [
             'description',
-            'contact_info',
+            'contact_name',
             'contact_email',
             'contact_url',
             'image',
