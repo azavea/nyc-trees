@@ -13,11 +13,11 @@ var $ = require('jquery'),
     };
 
 module.exports = {
-    prepareForSave: loadDomStateFromHiddenFields,
-    revert: loadHiddenFieldsFromDomState
+    prepareForSave: loadHiddenFieldsFromDomState,
+    revert: loadDomStateFromHiddenFields
 };
 
-loadHiddenFieldsFromDomState();
+loadDomStateFromHiddenFields();
 updateUI();
 $(dom.privacyTogglers).on('click', togglePrivacy);
 
@@ -54,8 +54,8 @@ function updateUI() {
     });
 }
 
-function loadDomStateFromHiddenFields() {
-        $(dom.privacyTogglers).each(function () {
+function loadHiddenFieldsFromDomState() {
+    $(dom.privacyTogglers).each(function () {
         var $toggler = $(this),
             iAmPublic = isPublic($toggler),
             $hidden = getHiddenForToggler($toggler);
@@ -63,7 +63,7 @@ function loadDomStateFromHiddenFields() {
     });
 }
 
-function loadHiddenFieldsFromDomState() {
+function loadDomStateFromHiddenFields() {
     $(dom.privacyTogglers).each(function () {
         var $toggler = $(this),
             $hidden = getHiddenForToggler($toggler),
