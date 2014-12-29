@@ -45,8 +45,7 @@ function updateUI() {
             fieldName = $toggler.data('privacy-field-name'),
             $target = $('[data-privacy-toggle-target="' + fieldName + '"]'),
             iAmPublic = isPublic($toggler),
-            $row = $toggler.closest(dom.row),
-            $lockIcon = $row.find(dom.lockIcon);
+            $row = $toggler.closest(dom.row);
         $toggler.html(iAmPublic ? 'Public' : 'Private');
         $target.toggleClass(dom.lockIconClass, !iAmPublic);  // hide lock icon when public
         if (i > 0) {
