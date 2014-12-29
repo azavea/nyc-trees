@@ -135,17 +135,7 @@ class RsvpForEventUITest(EventTestCase):
 
     @property
     def event_detail_url(self):
-        return reverse('event_detail', kwargs={
-            'group_slug': self.group.slug,
-            'event_slug': self.event.slug
-        })
-
-    @property
-    def event_registration_url(self):
-        return reverse('event_registration', kwargs={
-            'group_slug': self.group.slug,
-            'event_slug': self.event.slug
-        })
+        return self.event.get_absolute_url()
 
     def get_event_page(self):
         self.get(self.event_detail_url)
@@ -185,7 +175,7 @@ class RsvpForEventUITest(EventTestCase):
         self.wait_for_text("0 / 100")
         self.click('#rsvp')
         expected_url = (self.live_server_url + reverse('login') + '?next=' +
-                        self.event_registration_url)
+                        self.event_detail_url)
         self.assertEqual(expected_url, self.sel.current_url)
 
         self.wait_for_textbox_then_type('[name="username"]',
@@ -195,6 +185,8 @@ class RsvpForEventUITest(EventTestCase):
 
         expected_url = self.live_server_url + self.event_detail_url
         self.assertEqual(expected_url, self.sel.current_url)
+        self.wait_for_text("0 / 100")
+        self.click('#rsvp')
         self.wait_for_text("1 / 100")
 
     def test_at_capacity(self):

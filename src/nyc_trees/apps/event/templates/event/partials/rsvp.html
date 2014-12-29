@@ -7,7 +7,7 @@
 <div class="col-sm-6">
     {% if not user.is_authenticated and can_rsvp %}
     <a id="rsvp"
-       href="{% url "login" %}?next={{ rsvp_url }}"
+       href="{% url "login" %}?next={{ event.get_absolute_url }}"
        class="btn btn-switch">RSVP</a>
     {% elif is_admin %}
     <a href="{{ event_edit_url }}" class="btn btn-switch"><i class="icon-cog"></i>Admin</a>

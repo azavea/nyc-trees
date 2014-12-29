@@ -57,8 +57,7 @@ event_registration = do(login_required,
                         user_must_have_online_training,
                         render_template('event/partials/rsvp.html'),
                         route(POST=v.register_for_event,
-                              DELETE=v.cancel_event_registration,
-                              GET=v.register_for_event_after_login))
+                              DELETE=v.cancel_event_registration))
 
 start_event_map_print_job = do(group_request,
                                user_must_have_online_training,
