@@ -1,0 +1,8 @@
+{% extends 'event/partials/event_section.html' %}
+
+{% block extra_markup %}
+    {{ event_form.opt_in_emails }}
+    {% for hidden in event_form.hidden_fields %}
+        {{ hidden }}
+    {% endfor %}
+{% endblock extra_markup %}
