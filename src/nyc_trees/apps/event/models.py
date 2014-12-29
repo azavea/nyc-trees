@@ -6,6 +6,7 @@ from __future__ import division
 import shortuuid
 
 from django.contrib.gis.db import models
+from django.core.urlresolvers import reverse
 from django.utils.text import slugify
 
 from apps.core.models import User, Group
@@ -55,6 +56,10 @@ class Event(NycModel, models.Model):
     @property
     def has_space_available(self):
         return self.eventregistration_set.count() < self.max_attendees
+
+    def get_absolute_url(self):
+        return reverse('event_detail', kwargs={'group_slug': self.group.slug,
+                                               'event_slug': self.slug})
 
     class Meta:
         unique_together = (("group", "slug"), ("group", "title"))
