@@ -7,7 +7,7 @@
 
 var $ = require('jquery'),
     dom = {
-        row: 'tr',
+        row: '.row',
         privacyTogglers: '.privacy-toggler',
         lockIconClass: 'icon-lock'
     };
