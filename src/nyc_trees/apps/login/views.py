@@ -3,10 +3,10 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
+import django.contrib.auth.views as contrib_auth
+
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.contrib.auth.views import password_reset \
-    as contrib_auth_password_reset
 from django.template.loader import render_to_string
 
 from django_tinsel.decorators import render_template
@@ -18,8 +18,12 @@ from apps.login.forms import (ForgotUsernameForm,
                               UsernameOrEmailPasswordResetForm)
 
 
+def logout(request):
+    return contrib_auth.logout(request, next_page=reverse('home_page'))
+
+
 def password_reset(request):
-    return contrib_auth_password_reset(
+    return contrib_auth.password_reset(
         request,
         password_reset_form=UsernameOrEmailPasswordResetForm)
 

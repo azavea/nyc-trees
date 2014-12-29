@@ -6,10 +6,11 @@ from __future__ import division
 from django.conf.urls import patterns, url, include
 
 from apps.login.backends import NycRegistrationView
-from apps.login.views import password_reset
+from apps.login.views import password_reset, logout
 
 urlpatterns = patterns(
     '',
+    url(r'^logout/$', logout, name='logout'),
     # /accounts/password/reset/ is purposefully shadowing an endpoint and must
     # come before the registration and auth urls are imported
     url(r'^password/reset/$', password_reset, name='password_reset'),
