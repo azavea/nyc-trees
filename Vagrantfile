@@ -44,13 +44,35 @@ if [ "up", "provision", "status" ].include?(ARGV.first)
 end
 
 if !ENV["VAGRANT_ENV"].nil? && ENV["VAGRANT_ENV"] == "TEST"
-  ANSIBLE_INVENTORY_PATH = "deployment/ansible/inventory/test"
+  ANSIBLE_ENV_GROUPS = {
+    "test:children" => [
+      "app-servers", "tile-servers", "services"
+    ]
+  }
   VAGRANT_NETWORK_OPTIONS = { auto_correct: true }
 else
-  ANSIBLE_INVENTORY_PATH = "deployment/ansible/inventory/development"
+  ANSIBLE_ENV_GROUPS = {
+    "monitoring-servers" => [ "services" ],
+    "development:children" => [
+      "app-servers", "tile-servers", "services", "monitoring-servers"
+    ]
+  }
   VAGRANT_NETWORK_OPTIONS = { auto_correct: false }
 end
 
+SERVICES_IP = ENV.fetch("NYC_TREES_SERVICES_IP", "33.33.33.30")
+ANSIBLE_GROUPS = {
+  "app-servers" => [ "app" ],
+  "tile-servers" => [ "tiler" ],
+  "services" => [ "services" ],
+}
+ANSIBLE_EXTRA_VARS = {
+  redis_host: SERVICES_IP,
+  postgresql_host: SERVICES_IP,
+  relp_host: SERVICES_IP,
+  graphite_host: SERVICES_IP,
+  statsite_host: SERVICES_IP
+}
 VAGRANT_PROXYCONF_ENDPOINT = ENV["VAGRANT_PROXYCONF_ENDPOINT"]
 VAGRANTFILE_API_VERSION = "2"
 
@@ -71,7 +93,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "services" do |services|
     services.vm.hostname = "services"
-    services.vm.network "private_network", ip: "33.33.33.30"
+    services.vm.network "private_network", ip: SERVICES_IP
+
 
     services.vm.synced_folder ".", "/vagrant", disabled: true
 
@@ -107,27 +130,29 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     services.vm.provision "ansible" do |ansible|
       ansible.playbook = "deployment/ansible/services.yml"
-      ansible.inventory_path = ANSIBLE_INVENTORY_PATH
+      ansible.groups = ANSIBLE_GROUPS.merge(ANSIBLE_ENV_GROUPS)
+      ansible.extra_vars = ANSIBLE_EXTRA_VARS
       ansible.raw_arguments = ["--timeout=60"]
     end
   end
 
   config.vm.define "tiler" do |tiler|
     tiler.vm.hostname = "tiler"
-    tiler.vm.network "private_network", ip: "33.33.33.20"
+    tiler.vm.network "private_network", ip: ENV.fetch("NYC_TREES_TILER_IP", "33.33.33.20")
 
     tiler.vm.synced_folder ".", "/vagrant", disabled: true
 
     tiler.vm.provision "ansible" do |ansible|
       ansible.playbook = "deployment/ansible/tile-servers.yml"
-      ansible.inventory_path = ANSIBLE_INVENTORY_PATH
+      ansible.groups = ANSIBLE_GROUPS.merge(ANSIBLE_ENV_GROUPS)
+      ansible.extra_vars = ANSIBLE_EXTRA_VARS
       ansible.raw_arguments = ["--timeout=60"]
     end
   end
 
   config.vm.define "app" do |app|
     app.vm.hostname = "app"
-    app.vm.network "private_network", ip: "33.33.33.10"
+    app.vm.network "private_network", ip: ENV.fetch("NYC_TREES_APP_IP", "33.33.33.10")
 
     app.vm.synced_folder ".", "/vagrant", disabled: true
 
@@ -158,7 +183,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     app.vm.provision "ansible" do |ansible|
       ansible.playbook = "deployment/ansible/app-servers.yml"
-      ansible.inventory_path = ANSIBLE_INVENTORY_PATH
+      ansible.groups = ANSIBLE_GROUPS.merge(ANSIBLE_ENV_GROUPS)
+      ansible.extra_vars = ANSIBLE_EXTRA_VARS
       ansible.raw_arguments = ["--timeout=60"]
     end
   end
