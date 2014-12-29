@@ -203,27 +203,6 @@ def cancel_event_registration(request, event_slug):
     return event_detail(request, event_slug)
 
 
-@transaction.atomic
-def register_for_event_after_login(request, event_slug):
-    """
-    This view handles the special case of a non-logged in user
-    clicking the 'RSVP' button on an event when they are not logged in.
-    We redirect them to a login page with a ?next= query string
-    argument. After a successful login, Django will make a GET request to
-    the 'next' url. We need to respond to that GET by making the
-    registration and then redirecting back to the event.
-    """
-    event = get_object_or_404(Event, group=request.group, slug=event_slug)
-    if event.has_space_available and not user_is_rsvped_for_event(request.user,
-                                                                  event):
-        EventRegistration.objects.create(user=request.user, event=event)
-    return HttpResponseRedirect(
-        reverse('event_detail', kwargs={
-            'group_slug': request.group.slug,
-            'event_slug': event_slug
-        }))
-
-
 def start_event_map_print_job(request, event_slug):
     # TODO: implement
     pass
