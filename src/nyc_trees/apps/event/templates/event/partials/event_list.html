@@ -1,5 +1,3 @@
-{% if event_list.event_infos or event_list.show_when_empty %}
-
 <div data-class="event-list-container">
 
     <ul class="nav nav-tabs nav-tabs--filter">
@@ -14,15 +12,16 @@
     {% endfor %}
     </ul>
 
+    {% block event_list_loop %}
     {% for info in event_list.event_infos %}
         {% include "event/partials/event_section.html" %}
     {% endfor %}
+    {% endblock event_list_loop %}
 
-    {% if event_list.load_more_url %}
+    {% if event_list.event_infos and event_list.load_more_url %}
         <a href="#"
            data-class="event-list-action"
            data-url="{{ event_list.load_more_url }}">Load more events...</a>
     {% endif %}
 </div>
 
-{% endif %}

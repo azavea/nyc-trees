@@ -27,21 +27,30 @@ def group_list_page(request):
     }
 
 
+def _group_events(request, group_slug):
+    return Event.objects.filter(group__slug=group_slug, is_private=False)
+
+group_events = EventList(_group_events, 'groups/partials/event_list.html')
+
+
 def group_detail(request):
-    events = Event.objects.filter(group_id=request.group.pk, is_private=False)
+    group = request.group
+    events = (group_events
+              .configure(chunk_size=2,
+                         active_filter=EventList.Filters.CURRENT,
+                         filterset_name=EventList.chronoFilters)
+              .as_context(request, group_slug=group.slug))
     user_is_following = Follow.objects.filter(user_id=request.user.id,
-                                              group=request.group).exists()
-    show_mapper_request = request.group.allows_individual_mappers and \
-        not user_is_group_admin(request.user, request.group)
+                                              group=group).exists()
+    show_mapper_request = group.allows_individual_mappers and \
+        not user_is_group_admin(request.user, group)
 
     return {
-        'group': request.group,
-        'event_list': EventList.simple_context(request, events),
-        'user_can_edit_group': user_is_group_admin(request.user,
-                                                   request.group),
+        'group': group,
+        'event_list': events,
+        'user_can_edit_group': user_is_group_admin(request.user, group),
         'user_is_following': user_is_following,
-        'edit_url': reverse('group_edit', kwargs={
-            'group_slug': request.group.slug}),
+        'edit_url': reverse('group_edit', kwargs={'group_slug': group.slug}),
         'show_mapper_request': show_mapper_request
     }
 

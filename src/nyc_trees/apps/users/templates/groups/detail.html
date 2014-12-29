@@ -85,10 +85,7 @@
                 <section class="events">
                     <h4 class="section-heading">Events</h4>
                     <div>
-                        {% for info in event_list.event_infos %}
-                            {% include "groups/partials/event_section.html" %}
-                            {% if not forloop.last %}<hr/>{% endif %}
-                        {% endfor %}
+                      {% include "groups/partials/event_list.html" %}
                     </div>
                 </section>
                 {% if show_mapper_request %}
