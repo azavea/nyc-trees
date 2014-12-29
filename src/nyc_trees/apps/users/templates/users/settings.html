@@ -59,28 +59,11 @@
                                 <hr>
                                 <h4>Events</h4>
                                 <div>I want to receive emails for these events:</div>
-                                <table>
-                                    {% for event_form in event_formset %}
-                                        {% with event=event_form.instance.event %}
-                                            <tr>
-                                                <td style="text-align:right; vertical-align:top; padding: 0 15px;">
-                                                    <div>{{ event.begins_at|date:"b"|upper }}</div>
-                                                    <div>{{ event.begins_at|date:"j" }}</div>
-                                                </td>
-                                                <td>
-                                                    <div>{{ event.name }}</div>
-                                                    <div>{{ event.begins_at|date:"f A" }} at {{ event.address }}</div>
-                                                    <div>{{ event.group.name }}</div>
-                                                    <div>{% if event.includes_training %}Training{% else %}Mapping{% endif %}</div>
-                                                </td>
-                                                <td>{{ event_form.opt_in_emails }}</td>
-                                            </tr>
-                                        {% endwith %}
-                                        {% for hidden in event_form.hidden_fields %}
-                                            {{ hidden }}
-                                        {% endfor %}
-                                    {% endfor %}
-                                </table>
+                                {% for event_form in event_formset %}
+                                    {% with info=event_form.instance %}
+                                        {% include "users/partials/event_email_opt_in.html" %}
+                                    {% endwith %}
+                                {% endfor %}
                                 {{ event_formset.management_form }}
                             </div>
 
