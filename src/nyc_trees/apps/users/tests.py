@@ -129,20 +129,31 @@ class ProfileTemplateTests(UsersTestCase):
         blockface = Blockface.objects.create(
             geom=LineString(((0, 0), (1, 1)))
         )
-        species = Species.objects.create(name='Elm')
+        elm = Species.objects.create(name='Elm')
+        maple = Species.objects.create(name='Maple')
         survey = Survey.objects.create(
             blockface=blockface,
             user=self.user
         )
-        Tree.objects.create(survey=survey, species=species)
-        Tree.objects.create(survey=survey, species=species)
+        Tree.objects.create(survey=survey, species=maple)
+        Tree.objects.create(survey=survey, species=elm)
+
+        # Only the most recent survey for each block should be counted,
+        # so all of the above data should *not* be reflected in the results
+        other_survey = Survey.objects.create(
+            blockface=blockface,
+            user=self.user
+        )
+        Tree.objects.create(survey=other_survey, species=elm)
+        Tree.objects.create(survey=other_survey)
+        Tree.objects.create(survey=other_survey)
 
         request = make_request(user=self.user)
         context = user_detail_view(request, self.user.username)
 
         self.assertIn('counts', context)
         self.assertEqual(context['counts']['block'], 1)
-        self.assertEqual(context['counts']['tree'], 2)
+        self.assertEqual(context['counts']['tree'], 3)
         self.assertEqual(context['counts']['species'], 1)
 
 
