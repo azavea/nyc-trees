@@ -39,4 +39,4 @@ app_static_cache: /var/cache/nyc-trees/static/
 app_npm_version: 2.1.14
 app_sass_version: 3.4.9
 app_postgis_version: 2.1.6
-app_secret_key: "{{ postgresql_password | sha1 }}"
+app_secret_key: "{{ postgresql_password | md5 }}"
