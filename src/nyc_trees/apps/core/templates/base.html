@@ -43,7 +43,12 @@
                         </div>
                     </div>
                     <div class="nav-right">
-                        Register
+                        {% if request.user.is_authenticated %}
+                        <a href="{% url 'auth_logout' %}">Logout</a>
+                        {% else %}
+                        <a href="{% url 'auth_login' %}">Login</a>
+                        | <a href="{% url 'registration_register' %}">Register</a>
+                        {% endif %}
                     </div>
                 </nav>
             </header>
