@@ -50,6 +50,10 @@ DATABASES = {
         'PORT': environ.get('NYC_TREES_DB_PORT', 5432)
     }
 }
+
+POSTGIS_VERSION = tuple(
+    map(int, environ.get('DJANGO_POSTGIS_VERSION', '2.1.6').split("."))
+)
 # END DATABASE CONFIGURATION
 
 

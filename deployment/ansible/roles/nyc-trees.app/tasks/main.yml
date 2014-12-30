@@ -1,6 +1,8 @@
 ---
-- include: configuration.yml
-- include: dependencies.yml
-- include: reverse-proxy.yml
-- include: static-files.yml
-- include: log-rotation.yml
+- { include: configuration.yml }
+- { include: app.yml }
+- { include: dependencies.yml }
+- { include: dev-and-test-dependencies.yml, when: developing_or_testing }
+- { include: static-files.yml }
+- { include: reverse-proxy.yml }
+- { include: log-rotation.yml }

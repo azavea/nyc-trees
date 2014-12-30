@@ -39,7 +39,7 @@ def install_dependent_roles
 end
 
 # Install missing role dependencies based on the contents of roles.txt
-if [ "up", "provision" ].include?(ARGV.first)
+if [ "up", "provision", "status" ].include?(ARGV.first)
   install_dependent_roles
 end
 

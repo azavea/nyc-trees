@@ -20,7 +20,7 @@ def get_env_setting(setting):
 
 # HOST CONFIGURATION
 # See: https://docs.djangoproject.com/en/1.5/releases/1.5/#allowed-hosts-required-in-production  # NOQA
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['treescount.nycgovparks.org', '.amazonaws.com']
 # END HOST CONFIGURATION
 
 # EMAIL CONFIGURATION
@@ -53,11 +53,15 @@ SERVER_EMAIL = EMAIL_HOST_USER
 
 # CACHE CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#caches
-CACHES = {}
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    }
+}
 # END CACHE CONFIGURATION
 
 
 # SECRET CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
-SECRET_KEY = get_env_setting('SECRET_KEY')
+SECRET_KEY = get_env_setting('DJANGO_SECRET_KEY')
 # END SECRET CONFIGURATION

@@ -1,0 +1,14 @@
+---
+- name: Install application Python dependencies for development and test
+  pip: chdir={{ app_home }}/requirements requirements={{ item }}.txt
+  with_items:
+    - development
+    - test
+  notify:
+    - Restart nyc-trees-app
+
+- name: Install Firefox for UI tests
+  apt: pkg=firefox=34.0+build2-0ubuntu0.14.04.1 state=present
+
+- name: Install Xvfb for JavaScript tests
+  apt: pkg=xvfb=2:1.15.1-0ubuntu2.5 state=present

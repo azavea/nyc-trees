@@ -13,6 +13,13 @@
         state=present
   when: developing_or_testing
 
+- name: Add Ubuntu user to the nyc-trees group
+  user: name=ubuntu
+        append=yes
+        group=nyc-trees
+        state=present
+  when: packing
+
 - name: Create configuration file directory
   file: path={{ app_config_home }}
         owner=root
@@ -27,6 +34,13 @@
         group=nyc-trees
         mode=0750
   with_items: app_config
+  notify:
+    - Restart nyc-trees-app
+
+- name: Configure Gunicorn settings
+  template: src=gunicorn-nyc-trees.py.j2 dest=/etc/nyc-trees.d/gunicorn.py
+  notify:
+    - Restart nyc-trees-app
 
 - name: Configure Sauce Labs settings
   copy: content={{ item.content }}
@@ -36,3 +50,8 @@
         mode=0750
   with_items: app_sauce_labs_config
   when: sauce_labs_api_key_is_defined
+
+- name: Configure service definition
+  template: src=upstart-nyc-trees-app.conf.j2 dest=/etc/init/nyc-trees-app.conf
+  notify:
+    - Restart nyc-trees-app

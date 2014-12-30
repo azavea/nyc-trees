@@ -1,14 +1,4 @@
 ---
-- name: Configure gunicorn settings
-  template: src=gunicorn-nyc-trees.py.j2 dest=/etc/nyc-trees.d/gunicorn.py
-  notify:
-    - Restart nyc-trees-app
-
-- name: Configure service definition
-  template: src=upstart-nyc-trees-app.conf.j2 dest=/etc/init/nyc-trees-app.conf
-  notify:
-    - Restart nyc-trees-app
-
 - name: Configure Nginx site
   template: src=nginx-nyc-trees-app.conf.j2
             dest=/etc/nginx/sites-available/nyc-trees-app.conf

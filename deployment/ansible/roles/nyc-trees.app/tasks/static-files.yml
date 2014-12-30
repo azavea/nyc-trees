@@ -12,7 +12,7 @@
 
 - name: Install Sass
   gem: name=sass
-       version=3.4.9
+       version="{{ app_sass_version }}"
        user_install=no
        state=present
 

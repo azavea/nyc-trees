@@ -1,0 +1,21 @@
+---
+- name: Clone application source
+  git: repo=https://github.com/azavea/nyc-trees.git
+       dest=/opt/nyc-trees
+       version="{{ app_deploy_branch }}"
+  when: packing
+
+- name: Ensure that app_home exists
+  file: path="{{ app_home }}"
+        state=directory
+  when: packing
+
+- name: Synchronize Django application into app_home
+  synchronize: archive=no
+               checksum=yes
+               compress=no
+               recursive=yes
+               set_remote_user=no
+               src=/opt/nyc-trees/src/nyc_trees/
+               dest="{{ app_home }}/"
+  when: packing
