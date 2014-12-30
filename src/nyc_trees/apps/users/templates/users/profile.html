@@ -30,9 +30,12 @@
                         <div class="col-xs-6">
                             {% if user.profile_is_public %}Public{% else %}Private{% endif %} Profile
                         </div>
+                        {# A minor's profile is always private #}
+                        {% if not user.is_minor %}
                         <div class="col-xs-6 text-right">
                             <a class="btn btn-primary" href="#privacy-popup" data-toggle="modal">Privacy</a>
                         </div>
+                        {% endif %}
                     </div>
                 </div>
                 {% endif %}
@@ -63,7 +66,7 @@
                 </section>
                 {% endif %}
 
-                {% if viewing_own_profile and not user.profile_is_public%}
+                {% if viewing_own_profile and not user.profile_is_public and not user.is_minor %}
                     <div class="block highlight">
                         <h5>Tip:</h5>
                         Want to share your progress and information with the tree mapping community?

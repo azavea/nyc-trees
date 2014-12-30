@@ -5,7 +5,7 @@ from __future__ import division
 from datetime import timedelta
 
 from django.core.urlresolvers import reverse
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 
@@ -138,10 +138,17 @@ def update_profile_settings(request):
     privacy_form = PrivacySettingsForm(request.POST, instance=user)
     event_formset = EventRegistrationFormSet(request.POST, instance=user)
 
+    if privacy_form.is_valid():
+        privacy_form.save()
+    else:
+        # Client-side code should prevent making invalid privacy settings,
+        # so the view does not use the standard form validation workflow.
+        return HttpResponseBadRequest('The requested privacy settings '
+                                      'are invalid')
+
     # It's not possible to create invalid data with this form,
     # so don't check form.is_valid()
     profile_form.save()
-    privacy_form.save()
     event_formset.save()
 
     return profile_settings(request)
@@ -150,8 +157,14 @@ def update_profile_settings(request):
 def set_privacy(request, username):
     user = request.user
     privacy_form = PrivacySettingsForm(request.POST, instance=user)
-    privacy_form.save()
-    return user_detail(request, username)
+    if privacy_form.is_valid():
+        privacy_form.save()
+        return user_detail(request, username)
+    else:
+        # Client-side code should prevent making invalid privacy settings,
+        # so the view does not use the standard form validation workflow.
+        return HttpResponseBadRequest('The requested privacy settings '
+                                      'are invalid')
 
 
 def update_user(request, username):

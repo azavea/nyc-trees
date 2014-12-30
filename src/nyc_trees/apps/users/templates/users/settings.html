@@ -25,9 +25,12 @@
                         <li>
                             <a href="#emails-pane" data-toggle="tab">Emails</a>
                         </li>
+                        {# A minor's profile is always private #}
+                        {% if not request.user.is_minor %}
                         <li>
                             <a href="#privacy-pane" data-toggle="tab">Privacy</a>
                         </li>
+                        {% endif %}
                     </ul>
                 </div>
 
@@ -67,9 +70,12 @@
                                 {{ event_formset.management_form }}
                             </div>
 
+                            {# A minor's profile is always private #}
+                            {% if not request.user.is_minor %}
                             <div class="tab-pane" id="privacy-pane">
                                 {% include 'users/partials/privacy_controls.html' %}
                             </div>
+                            {% endif %}
 
                             <hr>
 

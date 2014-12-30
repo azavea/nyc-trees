@@ -34,6 +34,12 @@ class User(NycModel, AbstractUser):
 
     objects = UserManager()
 
+    privacy_fields = {'profile_is_public': 'profile',
+                      'real_name_is_public': 'real name',
+                      'group_follows_are_public': 'group follows',
+                      'contributions_are_public': 'contributions',
+                      'achievements_are_public': 'achievements'}
+
     def clean(self):
         if ((User.objects.exclude(pk=self.pk)
              .filter(email__iexact=self.email).exists())):
@@ -42,8 +48,18 @@ class User(NycModel, AbstractUser):
                 'Please supply a different email address.']
             })
 
+        if self.is_minor:
+            for field, name in User.privacy_fields.iteritems():
+                if getattr(self, field, False):
+                    raise ValidationError({field: [
+                        'A tree mapper under 13 years of age cannot make '
+                        'their %s public.' % name]})
+
         self.first_name = self.first_name.strip()
         self.last_name = self.last_name.strip()
+
+    def get_absolute_url(self):
+        return reverse('user_detail', args=[self.username])
 
 
 class Group(NycModel, models.Model):
