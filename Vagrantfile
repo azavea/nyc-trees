@@ -43,12 +43,36 @@ if [ "up", "provision", "status" ].include?(ARGV.first)
   install_dependent_roles
 end
 
-ANSIBLE_INVENTORY_PATH = if !ENV["VAGRANT_ENV"].nil? && ENV["VAGRANT_ENV"] == "TEST"
-  "deployment/ansible/inventory/test"
+if !ENV["VAGRANT_ENV"].nil? && ENV["VAGRANT_ENV"] == "TEST"
+  ANSIBLE_ENV_GROUPS = {
+    "test:children" => [
+      "app-servers", "tile-servers", "services"
+    ]
+  }
+  VAGRANT_NETWORK_OPTIONS = { auto_correct: true }
 else
-  "deployment/ansible/inventory/development"
+  ANSIBLE_ENV_GROUPS = {
+    "monitoring-servers" => [ "services" ],
+    "development:children" => [
+      "app-servers", "tile-servers", "services", "monitoring-servers"
+    ]
+  }
+  VAGRANT_NETWORK_OPTIONS = { auto_correct: false }
 end
 
+SERVICES_IP = ENV.fetch("NYC_TREES_SERVICES_IP", "33.33.33.30")
+ANSIBLE_GROUPS = {
+  "app-servers" => [ "app" ],
+  "tile-servers" => [ "tiler" ],
+  "services" => [ "services" ],
+}
+ANSIBLE_EXTRA_VARS = {
+  redis_host: SERVICES_IP,
+  postgresql_host: SERVICES_IP,
+  relp_host: SERVICES_IP,
+  graphite_host: SERVICES_IP,
+  statsite_host: SERVICES_IP
+}
 VAGRANT_PROXYCONF_ENDPOINT = ENV["VAGRANT_PROXYCONF_ENDPOINT"]
 VAGRANTFILE_API_VERSION = "2"
 
@@ -69,20 +93,36 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "services" do |services|
     services.vm.hostname = "services"
-    services.vm.network "private_network", ip: "33.33.33.30"
+    services.vm.network "private_network", ip: SERVICES_IP
+
 
     services.vm.synced_folder ".", "/vagrant", disabled: true
 
     # Graphite Web
-    services.vm.network "forwarded_port", guest: 8080, host: ENV.fetch("NYC_TREES_PORT_8080", 8080)
+    services.vm.network "forwarded_port", {
+      guest: 8080,
+      host: ENV.fetch("NYC_TREES_PORT_8080", 8080)
+    }.merge(VAGRANT_NETWORK_OPTIONS)
     # Kibana
-    services.vm.network "forwarded_port", guest: 5601, host: ENV.fetch("NYC_TREES_PORT_5601", 15601)
+    services.vm.network "forwarded_port", {
+      guest: 5601,
+      host: ENV.fetch("NYC_TREES_PORT_5601", 15601),
+    }.merge(VAGRANT_NETWORK_OPTIONS)
     # PostgreSQL
-    services.vm.network "forwarded_port", guest: 5432, host: ENV.fetch("NYC_TREES_PORT_5432", 15432)
+    services.vm.network "forwarded_port", {
+      guest: 5432,
+      host: ENV.fetch("NYC_TREES_PORT_5432", 15432)
+    }.merge(VAGRANT_NETWORK_OPTIONS)
     # Pgweb
-    services.vm.network "forwarded_port", guest: 5433, host: ENV.fetch("NYC_TREES_PORT_5433", 15433)
+    services.vm.network "forwarded_port", {
+      guest: 5433,
+      host: ENV.fetch("NYC_TREES_PORT_5433", 15433)
+    }.merge(VAGRANT_NETWORK_OPTIONS)
     # Redis
-    services.vm.network "forwarded_port", guest: 6379, host: ENV.fetch("NYC_TREES_PORT_6379", 16379)
+    services.vm.network "forwarded_port", {
+      guest: 6379,
+      host: ENV.fetch("NYC_TREES_PORT_6379", 16379)
+    }.merge(VAGRANT_NETWORK_OPTIONS)
 
     services.vm.provider "virtualbox" do |v|
       v.memory = 1024
@@ -90,27 +130,29 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     services.vm.provision "ansible" do |ansible|
       ansible.playbook = "deployment/ansible/services.yml"
-      ansible.inventory_path = ANSIBLE_INVENTORY_PATH
+      ansible.groups = ANSIBLE_GROUPS.merge(ANSIBLE_ENV_GROUPS)
+      ansible.extra_vars = ANSIBLE_EXTRA_VARS
       ansible.raw_arguments = ["--timeout=60"]
     end
   end
 
   config.vm.define "tiler" do |tiler|
     tiler.vm.hostname = "tiler"
-    tiler.vm.network "private_network", ip: "33.33.33.20"
+    tiler.vm.network "private_network", ip: ENV.fetch("NYC_TREES_TILER_IP", "33.33.33.20")
 
     tiler.vm.synced_folder ".", "/vagrant", disabled: true
 
     tiler.vm.provision "ansible" do |ansible|
       ansible.playbook = "deployment/ansible/tile-servers.yml"
-      ansible.inventory_path = ANSIBLE_INVENTORY_PATH
+      ansible.groups = ANSIBLE_GROUPS.merge(ANSIBLE_ENV_GROUPS)
+      ansible.extra_vars = ANSIBLE_EXTRA_VARS
       ansible.raw_arguments = ["--timeout=60"]
     end
   end
 
   config.vm.define "app" do |app|
     app.vm.hostname = "app"
-    app.vm.network "private_network", ip: "33.33.33.10"
+    app.vm.network "private_network", ip: ENV.fetch("NYC_TREES_APP_IP", "33.33.33.10")
 
     app.vm.synced_folder ".", "/vagrant", disabled: true
 
@@ -122,19 +164,27 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
 
     # Django via Nginx/Gunicorn
-    app.vm.network "forwarded_port", guest: 80, host: ENV.fetch("NYC_TREES_PORT_8000", 8000)
+    app.vm.network "forwarded_port", {
+      guest: 80,
+      host: ENV.fetch("NYC_TREES_PORT_8000", 8000)
+    }.merge(VAGRANT_NETWORK_OPTIONS)
     # Livereload server (for gulp watch)
-    app.vm.network "forwarded_port", guest: 35729, host: 35729, auto_correct: true
-    # Support accessing the test live server (for Sauce Labs)
-    app.vm.network "forwarded_port", guest: 9001, host: ENV.fetch("NYC_TREES_PORT_9001", 9001)
+    app.vm.network "forwarded_port", {
+      guest: 35729,
+      host: 35729,
+    }.merge(VAGRANT_NETWORK_OPTIONS)
     # Testem server
-    app.vm.network "forwarded_port", guest: 7357, host: ENV.fetch("NYC_TREES_PORT_7357", 7357)
+    app.vm.network "forwarded_port", {
+      guest: 7357,
+      host: ENV.fetch("NYC_TREES_PORT_7357", 7357)
+    }.merge(VAGRANT_NETWORK_OPTIONS)
 
     app.ssh.forward_x11 = true
 
     app.vm.provision "ansible" do |ansible|
       ansible.playbook = "deployment/ansible/app-servers.yml"
-      ansible.inventory_path = ANSIBLE_INVENTORY_PATH
+      ansible.groups = ANSIBLE_GROUPS.merge(ANSIBLE_ENV_GROUPS)
+      ansible.extra_vars = ANSIBLE_EXTRA_VARS
       ansible.raw_arguments = ["--timeout=60"]
     end
   end
