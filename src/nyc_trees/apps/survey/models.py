@@ -18,7 +18,7 @@ class Blockface(NycModel, models.Model):
 
 class Territory(NycModel, models.Model):
     group = models.ForeignKey(Group)
-    blockface = models.ForeignKey(Blockface)
+    blockface = models.ForeignKey(Blockface, unique=True)
 
 
 class Survey(NycModel, models.Model):
