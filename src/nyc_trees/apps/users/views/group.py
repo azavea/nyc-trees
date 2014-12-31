@@ -5,13 +5,19 @@ from __future__ import division
 
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
+from django.utils.timezone import now
+
+from libs.sql import get_group_tree_count
 
 from apps.core.helpers import user_is_group_admin
 from apps.core.models import Group
-from apps.users.models import Follow
 
+from apps.users.models import Follow
 from apps.users.forms import GroupSettingsForm
-from apps.event.models import Event
+
+from apps.survey.models import Territory, Survey
+
+from apps.event.models import Event, EventRegistration
 from apps.event.event_list import EventList
 
 
@@ -45,13 +51,42 @@ def group_detail(request):
     show_mapper_request = group.allows_individual_mappers and \
         not user_is_group_admin(request.user, group)
 
+    tree_count = get_group_tree_count(group)
+
+    group_blocks = Territory.objects.filter(group=group)
+    group_blocks_count = group_blocks.count()
+
+    if group_blocks_count > 0:
+        completed_blocks = Survey.objects \
+            .filter(blockface__in=group_blocks) \
+            .distinct('blockface')
+        block_percent = "{:.1%}".format(
+            float(completed_blocks.count()) / float(group_blocks.count()))
+    else:
+        block_percent = "0.0%"
+
+    events_held = Event.objects.filter(group=group, ends_at__gt=now())
+    num_events_held = events_held.count()
+
+    num_event_attendees = EventRegistration.objects \
+        .filter(event__in=events_held) \
+        .filter(did_attend=True) \
+        .distinct('user') \
+        .count()
+
     return {
         'group': group,
         'event_list': events,
         'user_can_edit_group': user_is_group_admin(request.user, group),
         'user_is_following': user_is_following,
         'edit_url': reverse('group_edit', kwargs={'group_slug': group.slug}),
-        'show_mapper_request': show_mapper_request
+        'show_mapper_request': show_mapper_request,
+        'counts': {
+            'tree': tree_count,
+            'block': block_percent,
+            'event': num_events_held,
+            'attendees': num_event_attendees
+        }
     }
 
 

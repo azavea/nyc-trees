@@ -33,6 +33,19 @@ def get_user_tree_count(user):
     return _get_count(sql, [user.pk])
 
 
+def get_group_tree_count(group):
+    sql = _survey_sql + """
+        SELECT COUNT(*)
+        FROM survey_tree AS tree
+        JOIN most_recent_survey
+          ON tree.survey_id = most_recent_survey.id
+        JOIN survey_territory AS turf
+          ON most_recent_survey.blockface_id = turf.blockface_id
+        WHERE turf.group_id = %s"""
+
+    return _get_count(sql, [group.pk])
+
+
 def get_user_species_count(user):
     sql = _survey_sql + """
         SELECT COUNT(*) FROM (
