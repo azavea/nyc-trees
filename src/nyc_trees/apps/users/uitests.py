@@ -150,3 +150,50 @@ class FollowGroupUITest(BaseGroupUITest):
         self._click_follow()
         self._click_unfollow()
         self._click_follow()
+
+
+class UserPrivacyUITest(NycTreesSeleniumTestCase):
+    def setUp(self):
+        super(UserPrivacyUITest, self).setUp()
+        self.minor_user = User(username='kid', email='kid@cool.com',
+                               is_minor=True)
+        self.minor_user.set_password('password')
+        self.minor_user.save()
+
+        self.adult_user = User(username='adult', email='adult@business.biz')
+        self.adult_user.set_password('password')
+        self.adult_user.save()
+
+    def test_adult_can_see_privacy_button_on_profile(self):
+        self.login(self.adult_user.username)
+        self.get(self.adult_user.get_absolute_url())
+        self.wait_for_text(self.adult_user.username)
+        self.wait_for_element('a[href="#privacy-popup"]')
+
+    def test_minor_cannot_see_privacy_button_on_profile(self):
+        self.login(self.minor_user.username)
+        self.get(self.minor_user.get_absolute_url())
+        self.wait_for_text(self.minor_user.username)
+        self.assert_text_not_in_body("Privacy")
+
+    def test_adult_can_see_privacy_tab_on_settings(self):
+        self.login(self.adult_user.username)
+        self.get(reverse('user_profile_settings'))
+        self.wait_for_text(self.adult_user.username)
+        self.wait_for_element('#privacy-pane')
+
+    def test_minor_cannot_see_privacy_tab_on_settings(self):
+        self.login(self.minor_user.username)
+        self.get(reverse('user_profile_settings'))
+        self.wait_for_text(self.minor_user.username)
+        self.assert_text_not_in_body("Privacy")
+
+    def test_adult_sees_privacy_invitation_on_profile(self):
+        self.login(self.adult_user.username)
+        self.get(self.adult_user.get_absolute_url())
+        self.wait_for_text('Make your profile public')
+
+    def test_minor_does_not_see_privacy_invitation_on_profile(self):
+        self.login(self.minor_user.username)
+        self.get(self.minor_user.get_absolute_url())
+        self.assert_text_not_in_body('Make your profile public')
