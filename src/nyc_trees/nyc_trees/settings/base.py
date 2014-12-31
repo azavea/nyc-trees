@@ -53,7 +53,7 @@ DATABASES = {
 }
 
 POSTGIS_VERSION = tuple(
-    map(int, environ.get('DJANGO_POSTGIS_VERSION', '2.1.6').split("."))
+    map(int, environ.get('DJANGO_POSTGIS_VERSION', '2.1.3').split("."))
 )
 # END DATABASE CONFIGURATION
 
@@ -250,9 +250,15 @@ LOGGING = {
             '()': 'django.utils.log.RequireDebugFalse'
         }
     },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler'
+        },
+    },
     'loggers': {
         'django.request': {
-            'handlers': [],
+            'handlers': ['console'],
             'level': 'ERROR',
             'propagate': True,
         },
