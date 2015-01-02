@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <!-- vendor.css contains styles which override bootstrap styling.  It must come after main.css -->
         <link rel="stylesheet" href="{{ "css/main.css"|static_url }}">
-        <link rel="stylesheet" href="{{ "css/vendor.css"|static_url }}"></script>
+        <link rel="stylesheet" href="{{ "css/vendor.css"|static_url }}">
     </head>
     <body>
         <header class="left-content">
@@ -14,9 +14,9 @@
                 <div>
                     <h4><a href="{% url 'user_detail_redirect' %}">{{ user.username }}</a></h4>
                     <div>
-                      <a href="{% url 'user_profile_settings' %}">Settings</a> / Privacy
+                        <a href="{% url 'user_profile_settings' %}">Settings</a> / Privacy
                     </div>
-                <div>
+                </div>
                 <ul>
                     <li><a href="{% url 'home_page' %}">Dashboard</a></li>
                     <li>Training</li>
