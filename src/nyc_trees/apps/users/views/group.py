@@ -65,7 +65,7 @@ def group_detail(request):
     else:
         block_percent = "0.0%"
 
-    events_held = Event.objects.filter(group=group, ends_at__gt=now())
+    events_held = Event.objects.filter(group=group, ends_at__lt=now())
     num_events_held = events_held.count()
 
     num_event_attendees = EventRegistration.objects \

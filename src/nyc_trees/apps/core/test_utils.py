@@ -6,7 +6,11 @@ from __future__ import division
 from cStringIO import StringIO
 
 from django.contrib.auth.models import AnonymousUser
+from django.contrib.gis.geos import Point
 from django.test import RequestFactory
+from django.utils.timezone import now
+
+from apps.event.models import Event
 
 
 def make_request(params={}, user=None, method='GET', body=None, file=None,
@@ -33,3 +37,23 @@ def make_request(params={}, user=None, method='GET', body=None, file=None,
     setattr(req, 'group', group)
 
     return req
+
+
+def make_event(group, **kwargs):
+    defaults = {
+        'group': group,
+        'title': 'The title',
+        'title': "The event",
+        'contact_email': "a@b.com",
+        'address': "123 Main St",
+        'location': Point(0, 0),
+        'max_attendees': 100,
+        'begins_at': now(),
+        'ends_at': now()
+    }
+    defaults.update(kwargs)
+
+    e = Event(**defaults)
+    e.clean_and_save()
+
+    return e
