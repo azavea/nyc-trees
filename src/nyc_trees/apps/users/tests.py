@@ -5,7 +5,7 @@ from __future__ import division
 
 from datetime import timedelta
 
-from django.contrib.gis.geos import LineString
+from django.contrib.gis.geos import LineString, MultiLineString
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.test import TestCase
@@ -134,7 +134,7 @@ class ProfileTemplateTests(UsersTestCase):
 
     def test_contributions_section_contents(self):
         blockface = Blockface.objects.create(
-            geom=LineString(((0, 0), (1, 1)))
+            geom=MultiLineString(LineString(((0, 0), (1, 1))))
         )
         elm = Species.objects.create(name='Elm')
         maple = Species.objects.create(name='Maple')
@@ -201,10 +201,10 @@ class GroupDetailViewTests(UsersTestCase):
         self._assert_count_equals('block', '0.0%')
 
         block1 = Blockface.objects.create(
-            geom=LineString(((0, 0), (1, 1)))
+            geom=MultiLineString(LineString(((0, 0), (1, 1))))
         )
         block2 = Blockface.objects.create(
-            geom=LineString(((2, 2), (3, 3)))
+            geom=MultiLineString(LineString(((2, 2), (3, 3))))
         )
         Territory.objects.create(blockface=block1, group=self.group)
         Territory.objects.create(blockface=block2, group=self.group)
@@ -218,7 +218,7 @@ class GroupDetailViewTests(UsersTestCase):
         self._assert_count_equals('tree', 0)
 
         block1 = Blockface.objects.create(
-            geom=LineString(((0, 0), (1, 1)))
+            geom=MultiLineString(LineString(((0, 0), (1, 1))))
         )
         Territory.objects.create(blockface=block1, group=self.group)
 
