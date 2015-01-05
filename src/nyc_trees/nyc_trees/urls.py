@@ -15,7 +15,6 @@ urlpatterns = patterns(
 
     url(r'^', include('apps.core.urls')),
     url(r'^', include('apps.home.urls')),
-    url(r'^login/', include('apps.login.urls.login')),
     url(r'^accounts/', include('apps.login.urls.accounts')),
     url(r'^blockface/', include('apps.survey.urls.blockface')),
     url(r'^census_admin/', include('apps.census_admin.urls')),
@@ -24,6 +23,7 @@ urlpatterns = patterns(
     url(r'^geocode/', include('apps.geocode.urls')),
     url(r'^group/', include('apps.event.urls.group')),
     url(r'^group/', include('apps.users.urls.group')),
+    url(r'^login/', include('apps.login.urls.login')),
     url(r'^quiz/', include('apps.quiz.urls')),
     url(r'^species/', include('apps.survey.urls.species')),
     url(r'^survey/', include('apps.survey.urls.survey')),
