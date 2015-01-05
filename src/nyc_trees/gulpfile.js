@@ -38,11 +38,17 @@ var args = minimist(process.argv.slice(2),
         'event_list_page.js',
         'group_detail.js',
         'group_list.js',
+        'progressPage.js',
         'registrationBase.js',
         'userProfile.js',
         'userSettings.js',
     ],
     entryFiles = entries.map(function(file) { return './js/src/' + file; }),
+
+    vendorCssFiles = [
+        'css/**/*.css',
+        'node_modules/leaflet/dist/leaflet.css'
+    ],
 
     intermediaryDir = new tmp.Dir().path + '/',
     bundleDir = intermediaryDir + 'js/',
@@ -174,7 +180,7 @@ gulp.task('sass', ['clean'], function() {
 });
 
 gulp.task('vendor-css', ['clean'], function() {
-    return gulp.src('css/**/*.css')
+    return gulp.src(vendorCssFiles)
         .pipe(sourcemaps.init())
         .pipe(concat('vendor.css'))
         .pipe(gulpif(! args.debug, postcss([csswring])))
