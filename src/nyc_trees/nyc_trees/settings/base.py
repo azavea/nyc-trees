@@ -229,6 +229,7 @@ LOCAL_APPS = (
     'apps.login',
     'apps.survey',
     'apps.users',
+    'apps.geocode',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -266,3 +267,15 @@ WSGI_APPLICATION = '%s.wsgi.application' % SITE_NAME
 # END WSGI CONFIGURATION
 
 LOGIN_REDIRECT_URL = 'user_detail_redirect'
+
+OMGEO_SETTINGS = [[
+    'omgeo.services.EsriWGS', {}
+]]
+
+# A conservative bounding box around New York City, drawn freehand
+# on boundingbox.info
+GEOCODE_BBOX_WEBM = (-8279353, 4934956, -8200470, 5005583)
+
+# If geocoding a string produces no results, this string will be
+# appended for a second attempt.
+GEOCODE_FALLBACK_SUFFIX = ', New York, NY'

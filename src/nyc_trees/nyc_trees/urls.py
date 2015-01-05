@@ -21,6 +21,7 @@ urlpatterns = patterns(
     url(r'^census_admin/', include('apps.census_admin.urls')),
     url(r'^census_admin/', include('apps.survey.urls.census_admin')),
     url(r'^event/', include('apps.event.urls.event')),
+    url(r'^geocode/', include('apps.geocode.urls')),
     url(r'^group/', include('apps.event.urls.group')),
     url(r'^group/', include('apps.users.urls.group')),
     url(r'^quiz/', include('apps.quiz.urls')),
