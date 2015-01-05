@@ -6,9 +6,11 @@
   "dependencies": {
     "windshaft": "^0.19.4"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "jshint": "^2.5.11"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "jshint *.js"
   },
   "repository": {
     "type": "git",

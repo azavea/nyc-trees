@@ -1,0 +1,9 @@
+{
+    "indent": 4,
+    "globalstrict": true,
+    "globals": {
+        "require": false,
+        "module": true,
+        "exports": true
+    }
+}
