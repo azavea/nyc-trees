@@ -2,6 +2,7 @@
 from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
+
 from datetime import timedelta
 
 from django.core.urlresolvers import reverse
@@ -9,12 +10,13 @@ from django.http import Http404, HttpResponseRedirect, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 
+from libs.sql import get_user_tree_count, get_user_species_count
+
 from apps.core.models import User
 from apps.event.models import EventRegistration
 from apps.users.models import achievements
 from apps.users.forms import ProfileSettingsForm, EventRegistrationFormSet, \
     PrivacySettingsForm
-from apps.survey.models import Tree
 
 
 _FOLLOWED_GROUP_CHUNK_SIZE = 2
@@ -56,14 +58,9 @@ def _user_profile_context(request, user, its_me):
                             .values_list('achievement_id', flat=True))
 
     block_count = user.survey_set.distinct('blockface').count()
-    # TODO: This will count extra trees and species if a user surveys the
-    #       same block twice.  We will likely have to write a raw query
-    trees = Tree.objects.filter(survey__user=user)
-    tree_count = trees.count()
-    species_count = (trees
-                     .filter(species__isnull=False)
-                     .distinct('species')
-                     .count())
+    tree_count = get_user_tree_count(user)
+    species_count = get_user_species_count(user)
+
     privacy_form = PrivacySettingsForm(instance=user)
 
     context = {

@@ -3,29 +3,20 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
-from django.contrib.gis.geos import Point
 from django.core import mail
 
-from django.utils.timezone import now
-from apps.core.test_utils import make_request
+from apps.core.test_utils import make_request, make_event
 
 from apps.users.tests import UsersTestCase
 
-from apps.event.models import Event, EventRegistration
+from apps.event.models import EventRegistration
 from apps.event.views import events_list_page, event_email
 
 
 class EventTestCase(UsersTestCase):
     def setUp(self):
         super(EventTestCase, self).setUp()
-        self.event = Event.objects.create(group=self.group,
-                                          title="The event",
-                                          contact_email="a@b.com",
-                                          address="123 Main St",
-                                          location=Point(0, 0),
-                                          max_attendees=100,
-                                          begins_at=now(),
-                                          ends_at=now())
+        self.event = make_event(self.group)
 
 
 class EventListTest(EventTestCase):

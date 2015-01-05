@@ -3,19 +3,26 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
+from datetime import timedelta
+
 from django.contrib.gis.geos import LineString
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.test import TestCase
+from django.utils.timezone import now
 
 from apps.core.models import User, Group
-from apps.core.test_utils import make_request
+from apps.core.test_utils import make_request, make_event
 
-from apps.survey.models import Tree, Species, Blockface, Survey
+from apps.event.models import EventRegistration
+
+from apps.survey.models import Tree, Species, Blockface, Survey, Territory
 
 from apps.users.models import (Follow, Achievement, achievements,
                                AchievementDefinition)
 from apps.users.views.user import user_detail as user_detail_view
+from apps.users.views.group import group_detail as group_detail_view
+
 from apps.users.routes.user import user_detail as user_detail_route
 from apps.users.routes.group import (group_detail, group_edit,
                                      follow_group, unfollow_group)
@@ -129,20 +136,31 @@ class ProfileTemplateTests(UsersTestCase):
         blockface = Blockface.objects.create(
             geom=LineString(((0, 0), (1, 1)))
         )
-        species = Species.objects.create(name='Elm')
+        elm = Species.objects.create(name='Elm')
+        maple = Species.objects.create(name='Maple')
         survey = Survey.objects.create(
             blockface=blockface,
             user=self.user
         )
-        Tree.objects.create(survey=survey, species=species)
-        Tree.objects.create(survey=survey, species=species)
+        Tree.objects.create(survey=survey, species=maple)
+        Tree.objects.create(survey=survey, species=elm)
+
+        # Only the most recent survey for each block should be counted,
+        # so all of the above data should *not* be reflected in the results
+        other_survey = Survey.objects.create(
+            blockface=blockface,
+            user=self.user
+        )
+        Tree.objects.create(survey=other_survey, species=elm)
+        Tree.objects.create(survey=other_survey)
+        Tree.objects.create(survey=other_survey)
 
         request = make_request(user=self.user)
         context = user_detail_view(request, self.user.username)
 
         self.assertIn('counts', context)
         self.assertEqual(context['counts']['block'], 1)
-        self.assertEqual(context['counts']['tree'], 2)
+        self.assertEqual(context['counts']['tree'], 3)
         self.assertEqual(context['counts']['species'], 1)
 
 
@@ -168,6 +186,114 @@ class GroupTemplateTests(UsersTestCase):
     def test_url_shown(self):
         # The url shows up both as the link text and the href
         self._assert_group_detail_contains(self.group.contact_url, count=2)
+
+
+class GroupDetailViewTests(UsersTestCase):
+    def _assert_count_equals(self, name, num):
+        req = make_request(user=self.user)
+        req.group = self.group
+        context = group_detail_view(req)
+
+        self.assertEqual(num, context['counts'][name])
+
+    def test_group_blocks_count(self):
+        # We should default to 0%, even when the group has no territory
+        self._assert_count_equals('block', '0.0%')
+
+        block1 = Blockface.objects.create(
+            geom=LineString(((0, 0), (1, 1)))
+        )
+        block2 = Blockface.objects.create(
+            geom=LineString(((2, 2), (3, 3)))
+        )
+        Territory.objects.create(blockface=block1, group=self.group)
+        Territory.objects.create(blockface=block2, group=self.group)
+
+        Survey.objects.create(blockface=block1, user=self.user)
+
+        self._assert_count_equals('block', '50.0%')
+
+    def test_tree_count(self):
+        # We start with 0 trees
+        self._assert_count_equals('tree', 0)
+
+        block1 = Blockface.objects.create(
+            geom=LineString(((0, 0), (1, 1)))
+        )
+        Territory.objects.create(blockface=block1, group=self.group)
+
+        survey = Survey.objects.create(
+            blockface=block1,
+            user=self.user
+        )
+
+        Tree.objects.create(survey=survey)
+        Tree.objects.create(survey=survey)
+
+        # Once we add a survey, we should see some tree counts
+        self._assert_count_equals('tree', 2)
+
+        other_survey = Survey.objects.create(
+            blockface=block1,
+            user=self.user
+        )
+        Tree.objects.create(survey=other_survey)
+        Tree.objects.create(survey=other_survey)
+        Tree.objects.create(survey=other_survey)
+
+        # Only the most recent survey for each block should be counted,
+        # so the count should go to 3, not 5
+        self._assert_count_equals('tree', 3)
+
+    def test_events_count(self):
+        week_ago = now() - timedelta(days=7)
+        almost_week_ago = week_ago + timedelta(hours=1)
+
+        next_week = now() + timedelta(days=7)
+        almost_next_week = next_week - timedelta(hours=1)
+
+        make_event(self.group, begins_at=week_ago, ends_at=almost_week_ago,
+                   title='event 1')
+        make_event(self.group, begins_at=almost_next_week, ends_at=next_week,
+                   title='event 2')
+
+        self._assert_count_equals('event', 1)
+
+    def test_attendees_count(self):
+        week_ago = now() - timedelta(days=7)
+        almost_week_ago = week_ago + timedelta(hours=1)
+
+        next_week = now() + timedelta(days=7)
+        almost_next_week = next_week - timedelta(hours=1)
+
+        past_event = make_event(self.group, begins_at=week_ago,
+                                ends_at=almost_week_ago, title='event 1')
+        other_past_event = make_event(self.group, begins_at=week_ago,
+                                      ends_at=almost_week_ago, title='event 2')
+        future_event = make_event(self.group, begins_at=almost_next_week,
+                                  ends_at=next_week, title='event 3')
+
+        EventRegistration.objects.create(event=past_event, user=self.user,
+                                         did_attend=True)
+        EventRegistration.objects.create(event=other_past_event,
+                                         user=self.user, did_attend=True)
+
+        # Users aren't double counted for event attendence
+        self._assert_count_equals('attendees', 1)
+
+        EventRegistration.objects.create(event=other_past_event,
+                                         user=self.other_user)
+        # We don't count users who were not checked in to the event
+        self._assert_count_equals('attendees', 1)
+
+        # We don't count future events
+        EventRegistration.objects.create(event=future_event,
+                                         user=self.other_user, did_attend=True)
+        self._assert_count_equals('attendees', 1)
+
+        EventRegistration.objects.create(event=past_event,
+                                         user=self.other_user, did_attend=True)
+        self._assert_count_equals('attendees', 2)
 
 
 class GroupAccessTests(UsersTestCase):
