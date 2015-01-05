@@ -1,5 +1,10 @@
 {% extends "base.html" %}
+{% load utils %}
 
 {% block content %}
-{# TODO #}
+    <div id="map" style="width: 100%; height: 800px"></div>
 {% endblock content %}
+
+{% block page_js %}
+    <script type="text/javascript" src="{{ "js/progressPage.js"|static_url }}"></script>
+{% endblock page_js %}
