@@ -1,3 +1,5 @@
 "use strict";
 
-require('./map').create();
+require('./map').create({
+    geolocation: true
+});
