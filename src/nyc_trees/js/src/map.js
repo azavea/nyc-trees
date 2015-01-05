@@ -46,7 +46,7 @@ function initBaseMap(map) {
 }
 
 function initGeolocation($controlsContainer, map) {
-    var $button = $('<a class="geolocate-button" href="javascript:;" title="Show my location">X</a>')
+    var $button = $('<a class="geolocate-button" href="javascript:;" title="Show my location">X</a>');
     $controlsContainer.prepend($button);
 
     $button.on('click', function () {
@@ -59,7 +59,7 @@ function initGeolocation($controlsContainer, map) {
     }
 
     function showError() {
-        alert('Unable to show your location.');
+        window.alert('Unable to show your location.');
     }
 
 }
