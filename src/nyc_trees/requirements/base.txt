@@ -1,4 +1,4 @@
-Django==1.7
+Django>=1.7.2
 ipython==2.3.0
 psycopg2==2.5.4
 Pillow==2.6.1
