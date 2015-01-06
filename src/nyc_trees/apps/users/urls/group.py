@@ -5,7 +5,7 @@ from __future__ import division
 
 from django.conf.urls import patterns, url
 from apps.users.routes import group as r
-from apps.users.views.group import group_events
+from apps.users.views.group import group_detail_events
 
 # These URLs have the prefix 'group/'
 urlpatterns = patterns(
@@ -32,6 +32,6 @@ urlpatterns = patterns(
         name='edit_user_mapping_priveleges'),
 
     url(r'^(?P<group_slug>[\w-]+)/events/$',
-        group_events.endpoint, name=group_events.url_name()),
+        group_detail_events.endpoint, name=group_detail_events.url_name()),
 
 )

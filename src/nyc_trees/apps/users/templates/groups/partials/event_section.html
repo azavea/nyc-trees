@@ -1,22 +1,51 @@
-{% extends 'event/partials/event_section.html' %}
-
-{% block extra_markup %}
-{% if user_can_edit_group %}
-<div class="dropdown text-right">
-    <button class="btn btn-default dropdown-toggle"
-            type="button"
-            id="group-detail-event-info-submenu"
-            data-toggle="dropdown"
-            aria-expanded="true">
-        <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="group-detail-event-info-submenu">
-        <li><button role="menuitem" tabindex="-1" href="#">RSVP to event</button></li>
-        <li><button role="menuitem" tabindex="-1" href="#">Edit details</button></li>
-        <li><button role="menuitem" tabindex="-1" href="#">Email attendees</button></li>
-        <li><button role="menuitem" tabindex="-1" href="#">Event check-in</button></li>
-        <li><button role="menuitem" tabindex="-1" href="#">Get shareable link</button></li>
-    </ul>
-</div>
+{% with event=info.event %}
+{# If the user can edit the group, this section should be a div with hrefs, otherwise the whole thing should be an href #}
+{% if event_list.user_can_edit_group %}
+<div class="event block item">
+{% else %}
+<a href="{{ event.get_absolute_url }}" class="event block item rightarrow">
 {% endif %}
-{% endblock extra_markup %}
+    <div class="row">
+        <div class="event-date col-xs-3">
+            <div class="event-month">{{ event.begins_at.date|date:"M" }}</div>
+            <div class="event-day h4">{{ event.begins_at.date|date:"d" }}</div>
+        </div>
+        <div class="event-details col-xs-6">
+                {% if event_list.user_can_edit_group %}
+                <a href="{{ event.get_absolute_url }}">{{ event.title }}</a>
+                {% else %}
+                <h5 class="event-detail event-detail--title">{{ event.title }}</h5>
+                {% endif %}
+            <div class="event-detail">{{ event.begins_at|date:"f A" }} at {{ event.address }}</div>
+            <div class="event-detail">{{ event.group.name }}</div>
+            <div class="event-detail">{{ event.training_summary }}</div>
+            {% if info.user_is_registered %}<div class="event-detail"><b>+ RSVP</b></div>{% endif %}
+        </div>
+        <div class="event-action col-xs-3">
+            {% if event_list.user_can_edit_group %}
+            <div class="dropdown text-right">
+                <button class="btn btn-default dropdown-toggle"
+                        type="button"
+                        id="group-detail-event-info-submenu"
+                        data-toggle="dropdown"
+                        aria-expanded="true">
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="group-detail-event-info-submenu">
+                    <li><button role="menuitem" tabindex="-1" href="{{ event.get_absolute_url }}">View event</a></li>
+                    <li><button role="menuitem" tabindex="-1" href="#">RSVP to event</button></li>
+                    <li><button role="menuitem" tabindex="-1" href="#">Edit details</button></li>
+                    <li><button role="menuitem" tabindex="-1" href="#">Email attendees</button></li>
+                    <li><button role="menuitem" tabindex="-1" href="#">Event check-in</button></li>
+                    <li><button role="menuitem" tabindex="-1" href="#">Get shareable link</button></li>
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+{% if event_list.user_can_edit_group %}
+</div>
+{% else %}
+</a>
+{% endif %}
+{% endwith %}
