@@ -4,7 +4,7 @@
            creates={{ app_log }}
 
 - name: Set log file permissions
-  file: path={{ app_log }} owner=nyc-trees group=nyc-trees mode=0644
+  file: path={{ app_log }} owner=nyc-trees group=nyc-trees mode=0664
 
 - name: Configure Gunicorn log rotation
   template: src=logrotate-nyc-trees-app.j2 dest=/etc/logrotate.d/nyc-trees-app
