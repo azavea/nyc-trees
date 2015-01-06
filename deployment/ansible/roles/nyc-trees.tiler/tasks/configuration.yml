@@ -1,0 +1,43 @@
+---
+- name: Create service account for application
+  user: name=nyc-trees
+        system=yes
+        home=/var/lib/nyc-trees
+        shell=/bin/false
+        state=present
+
+- name: Add Vagrant user to the nyc-trees group
+  user: name=vagrant
+        append=yes
+        group=nyc-trees
+        state=present
+  when: developing_or_testing
+
+- name: Add Ubuntu user to the nyc-trees group
+  user: name=ubuntu
+        append=yes
+        group=nyc-trees
+        state=present
+  when: packing
+
+- name: Create configuration file directory
+  file: path={{ tiler_config_home }}
+        owner=root
+        group=nyc-trees
+        mode=0750
+        state=directory
+
+- name: Configure application
+  copy: content={{ item.content }}
+        dest={{ tiler_config_home }}/{{ item.file }}
+        owner=root
+        group=nyc-trees
+        mode=0750
+  with_items: tiler_config
+  notify:
+    - Restart nyc-trees-tiler
+
+- name: Configure service definition
+  template: src=upstart-nyc-trees-tiler.conf.j2 dest=/etc/init/nyc-trees-tiler.conf
+  notify:
+    - Restart nyc-trees-tiler

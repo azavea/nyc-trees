@@ -1,0 +1,6 @@
+---
+- { include: configuration.yml }
+- { include: app.yml }
+- { include: dependencies.yml }
+- { include: reverse-proxy.yml }
+- { include: log-rotation.yml }

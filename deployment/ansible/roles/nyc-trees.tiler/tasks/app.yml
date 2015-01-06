@@ -1,0 +1,21 @@
+---
+- name: Clone project source
+  git: repo=https://github.com/azavea/nyc-trees.git
+       dest=/opt/nyc-trees
+       version="{{ tiler_deploy_branch }}"
+  when: packing
+
+- name: Ensure that tiler_home exists
+  file: path="{{ tiler_home }}"
+        state=directory
+  when: packing
+
+- name: Synchronize tiler application into tiler_home
+  synchronize: archive=no
+               checksum=yes
+               compress=no
+               recursive=yes
+               set_remote_user=no
+               src=/opt/nyc-trees/src/tiler/
+               dest="{{ tiler_home }}/"
+  when: packing

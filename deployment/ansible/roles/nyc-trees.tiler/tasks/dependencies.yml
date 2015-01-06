@@ -1,0 +1,5 @@
+---
+- name: Install tiler javascript dependencies
+  command: npm install --unsafe-perm
+  args:
+    chdir: "{{ tiler_home }}"
