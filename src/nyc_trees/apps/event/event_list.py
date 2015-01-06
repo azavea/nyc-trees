@@ -89,10 +89,15 @@ class EventList(object):
     #########################################
 
     def __init__(self, qs_builder,
+                 name=None,
                  template_path='event/partials/event_list.html',
-                 chunk_size=None, active_filter=None, filterset_name=None):
+                 chunk_size=None,
+                 active_filter=None, filterset_name=None):
 
-        object.__setattr__(self, 'name', qs_builder.__code__.co_name)
+        # a name only needs to be specified when two
+        # EventList instances use the same qs_builder
+        name = name or qs_builder.__code__.co_name
+        object.__setattr__(self, 'name', name)
         object.__setattr__(self, 'qs_builder', qs_builder)
         object.__setattr__(self, 'template_path', template_path)
 
@@ -135,7 +140,10 @@ class EventList(object):
                            else getattr(self, key))
                      for key in
                      ('chunk_size', 'active_filter', 'filterset_name')}
-        return EventList(self.qs_builder, **newkwargs)
+        return EventList(self.qs_builder,
+                         name=self.name,
+                         template_path=self.template_path,
+                         **newkwargs)
 
     def __call__(self, *args, **kwargs):
         """
@@ -180,7 +188,13 @@ class EventList(object):
         return '%s?%s' % (url, urlencode(params))
 
     def as_context(self, request, *args, **kwargs):
-        qs = self.qs_builder(request, *args, **kwargs)
+        results = self.qs_builder(request, *args, **kwargs)
+
+        if isinstance(results, tuple):
+            qs, extra_context = results
+        else:
+            qs, extra_context = results, {}
+
         event_list = self.configure(**request.GET.dict())
 
         filter_fn = event_list._get_active_filter_fn()
@@ -204,11 +218,15 @@ class EventList(object):
                              ._control_url(show_all=False, *args, **kwargs))}
                     for k in filterset])
 
-        return {
+        context = {
             'filters': filters,
             'load_more_url': load_more_url,
             'event_infos': event_list.make_event_infos(request, qs),
         }
+
+        context.update(extra_context)
+
+        return context
 
 
 #########################################
