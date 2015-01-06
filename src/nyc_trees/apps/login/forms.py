@@ -8,28 +8,29 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
 from django.db.models import Q
-from django.forms import Form, BooleanField, CheckboxInput, EmailField
 from django.template import loader
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 
 from registration.forms import RegistrationFormUniqueEmail
 
+from apps.core.models import User, Group
 
-class ForgotUsernameForm(Form):
-    email = EmailField(label='Your email address')
+
+class ForgotUsernameForm(forms.Form):
+    email = forms.EmailField(label='Your email address')
 
 
 class NycRegistrationForm(RegistrationFormUniqueEmail):
-    tos = BooleanField(
-        widget=CheckboxInput,
+    tos = forms.BooleanField(
+        widget=forms.CheckboxInput,
         label='I agree to the terms of use',
         error_messages={
             'required': 'You must agree to the terms to register'
         }
     )
-    age_over_13 = BooleanField(
-        widget=CheckboxInput,
+    age_over_13 = forms.BooleanField(
+        widget=forms.CheckboxInput,
         label='I am over 13 years old',
         required=False
     )
@@ -96,3 +97,21 @@ class UsernameOrEmailPasswordResetForm(forms.Form):
                                        .filter(matched_and_active_q)
 
         return (u for u in active_users if u.has_usable_password())
+
+
+class OptionalInfoForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(OptionalInfoForm, self).__init__(*args, **kwargs)
+        self.fields['referrer_parks'].queryset = \
+            Group.objects.filter(is_active=True)
+        self.fields['referrer_parks'].widget.attrs['class'] = 'hidden'
+        self.fields['referrer_group'].widget.attrs['class'] = 'hidden'
+        self.fields['referrer_ad'].widget.attrs['class'] = 'hidden'
+        self.fields['referrer_other'].widget.attrs['class'] = 'hidden'
+
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'zip_code',
+                  'referrer_parks', 'referrer_group', 'referrer_ad',
+                  'referrer_social_media', 'referrer_friend', 'referrer_311',
+                  'referrer_other', 'opt_in_stewardship_info')
