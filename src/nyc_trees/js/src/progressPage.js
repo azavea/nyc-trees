@@ -1,5 +1,6 @@
 "use strict";
 
 require('./map').create({
-    geolocation: true
+    geolocation: true,
+    legend: true
 });

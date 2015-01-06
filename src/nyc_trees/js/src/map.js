@@ -27,6 +27,9 @@ function create(options) {
     if (options.geolocation && navigator.geolocation) {
         initGeolocation($controlsContainer, map);
     }
+    if (options.legend) {
+        initLegend($controlsContainer, map);
+    }
 
     // New York City bounds from http://www.mapdevelopers.com/geocode_bounding_box.php
     map.fitBounds([
@@ -62,4 +65,9 @@ function initGeolocation($controlsContainer, map) {
         window.alert('Unable to show your location.');
     }
 
+}
+
+function initLegend($controlsContainer, map) {
+    var $button = $('<a class="legend-button" data-toggle="modal" href="#legend" href="javascript:;" title="Legend">L</a>');
+    $controlsContainer.prepend($button);
 }

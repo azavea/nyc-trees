@@ -3,19 +3,21 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
-from django_tinsel.decorators import render_template
 
-
-@render_template('home/home.html')
 def home_page(request):
     # TODO: implement
     return {}
 
 
-@render_template('home/progress.html')
 def progress_page(request):
-    # TODO: implement
-    return {}
+    context = {
+        'legend_entries': [
+            {'css_class': 'mapped-by-you', 'label': 'Mapped by you'},
+            {'css_class': 'mapped-by-others', 'label': 'Mapped by others'},
+            {'css_class': 'not-mapped', 'label': 'Not mapped'},
+        ]
+    }
+    return context
 
 
 def retrieve_job_status(request):

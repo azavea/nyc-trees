@@ -1,0 +1,17 @@
+#legend {
+  .swatch {
+    float: left;
+    width: 1em;
+    height: 1em;
+    margin-right: 1em;
+  }
+  .mapped-by-you {
+    background-color: deepskyblue;
+  }
+  .mapped-by-others {
+    background-color: forestgreen;
+  }
+  .not-mapped {
+    background-color: gray;
+  }
+}
