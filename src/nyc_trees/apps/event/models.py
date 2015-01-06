@@ -33,7 +33,7 @@ class Event(NycModel, models.Model):
     ends_at = models.DateTimeField()
 
     address = models.CharField(max_length=1000)
-    location = models.PointField(srid=3857, db_column='the_geom_webmercator')
+    location = models.PointField()
 
     max_attendees = models.IntegerField()
 
