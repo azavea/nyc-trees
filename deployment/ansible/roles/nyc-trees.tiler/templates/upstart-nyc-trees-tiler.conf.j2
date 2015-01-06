@@ -12,4 +12,4 @@ setuid nyc-trees
 chdir {{ tiler_home }}
 env HOME="/var/lib/nyc-trees"
 
-exec envdir /etc/nyc-trees.d/env node server.js > {{ tiler_log }}
+exec envdir /etc/nyc-trees.d/env node server.js >> {{ tiler_log }} 2>&1
