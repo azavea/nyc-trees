@@ -10,11 +10,7 @@ from django.core.urlresolvers import reverse
 from django.template.loader import render_to_string
 from django.shortcuts import redirect
 
-from django_tinsel.decorators import render_template
-from django_tinsel.utils import decorate as do
-
 from apps.core.models import User
-
 from apps.login.forms import (ForgotUsernameForm,
                               UsernameOrEmailPasswordResetForm,
                               OptionalInfoForm)
@@ -42,7 +38,7 @@ def forgot_username_page(request):
 def forgot_username(request):
     form = ForgotUsernameForm(request.POST)
     if not form.is_valid():
-        return forgot_username_page_view(request)
+        return forgot_username_page(request)
 
     email = form.cleaned_data['email']
     users = User.objects.filter(email=email)
@@ -62,15 +58,6 @@ def forgot_username(request):
         user.email_user(subject, body, settings.DEFAULT_FROM_EMAIL)
 
     return {'email': email}
-
-
-forgot_username_page_view = do(
-    render_template('login/forgot_username.html'),
-    forgot_username_page)
-
-forgot_username_view = do(
-    render_template('login/forgot_username_complete.html'),
-    forgot_username)
 
 
 def activation_complete(request):

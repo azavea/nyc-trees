@@ -10,7 +10,7 @@ from apps.login.forms import NycRegistrationForm
 
 class NycRegistrationView(RegistrationView):
     def register(self, request, **cleaned_data):
-        new_user = super(NycRegistrationView, self)\
+        new_user = super(NycRegistrationView, self) \
             .register(request, **cleaned_data)
 
         new_user.is_minor = not cleaned_data['age_over_13']
