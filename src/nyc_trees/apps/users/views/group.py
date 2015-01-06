@@ -50,6 +50,11 @@ group_detail_events = EventList(
     template_path='groups/partials/detail_event_list.html')
 
 
+group_edit_events = EventList(
+    _group_events,
+    name="group_edit_events",
+    template_path='groups/partials/edit_event_list.html')
+
 
 def group_detail(request):
     group = request.group
@@ -109,13 +114,19 @@ def redirect_to_group_detail(request):
 
 
 def edit_group(request):
+    group = request.group
     form = GroupSettingsForm(instance=request.group, label_suffix='')
-    context = {
-        'group': request.group,
+    event_list = (group_edit_events
+                  .configure(chunk_size=2,
+                             active_filter=EventList.Filters.CURRENT,
+                             filterset_name=EventList.chronoFilters)
+                  .as_context(request, group_slug=group.slug))
+    return {
+        'group': group,
+        'event_list': event_list,
         'form': form,
-        'group_slug': request.group.slug,
+        'group_slug': group.slug,
     }
-    return context
 
 
 def update_group_settings(request):

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load utils %}
 
 {% block content %}
 
@@ -94,121 +95,8 @@
                         </div>
 
                         <div class="tab-pane" id="events">
-                            <ul class="nav nav-tabs nav-tabs--filter">
-                                <li class="active">
-                                    <a data-toggle="tab" href="#current">Current</a>
-                                </li>
-                                <li>
-                                    <a data-toggle="tab" href="#past">Past</a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'add_event' group_slug=group_slug %}">+ New</a>
-                                </li>
-                            </ul>
                             <div class="events">
-                                <div class="tab-content">
-                                    <div class="tab-pane active" id="current">
-                                        <a href="#" class="event block item">
-                                            <div class="row">
-                                                <div class="event-date col-xs-3">
-                                                    <div class="event-month">apr</div>
-                                                    <div class="event-day h4">25</div>
-                                                </div>
-                                                <div class="event-details col-xs-6">
-                                                    <h5 class="event-detail event-detail--title">tree like to party</h5>
-                                                    <div class="event-detail">4:30 pm</div>
-                                                    <div class="event-detail">450 may street</div>
-                                                </div>
-                                                <div class="event-action col-xs-3">
-
-                                                    <!-- This is all the dropdown menu. -->
-                                                    <div class="dropdown text-right">
-                                                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-                                                            <span class="caret"></span>
-                                                        </button>
-                                                        <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu1">
-                                                            <li>
-                                                                <button role="menuitem" tabindex="-1" href="#">
-                                                                RSVP to event
-                                                                </button>
-                                                            </li>
-                                                            <li>
-                                                                <button role="menuitem" tabindex="-1" href="#">
-                                                                Edit details
-                                                                </button>
-                                                            </li>
-                                                            <li>
-                                                                <button role="menuitem" tabindex="-1" href="#">
-                                                                Email attendees
-                                                                </button>
-                                                            </li>
-                                                            <li>
-                                                                <button role="menuitem" tabindex="-1" href="#">
-                                                                Event check-in
-                                                                </button>
-                                                            </li>
-                                                            <li>
-                                                                <button role="menuitem" tabindex="-1" href="#">
-                                                                Get shareable link
-                                                                </button>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="tab-pane" id="past">
-                                        <a href="#" class="event block item">
-                                            <div class="row">
-                                                <div class="event-date col-xs-3">
-                                                    <div class="event-month">apr</div>
-                                                    <div class="event-day h4">25</div>
-                                                </div>
-                                                <div class="event-details col-xs-6">
-                                                    <h5 class="event-detail event-detail--title">tree like to party</h5>
-                                                    <div class="event-detail">4:30 pm</div>
-                                                    <div class="event-detail">450 may street</div>
-                                                </div>
-                                                <div class="event-action col-xs-3">
-                                                    <div class="dropdown text-right">
-                                                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-                                                            <span class="caret"></span>
-                                                        </button>
-                                                        <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu1">
-                                                            <li>
-                                                                <button role="menuitem" tabindex="-1" href="#">
-                                                                RSVP to event
-                                                                </button>
-                                                            </li>
-                                                            <li>
-                                                                <button role="menuitem" tabindex="-1" href="#">
-                                                                Edit details
-                                                                </button>
-                                                            </li>
-                                                            <li>
-                                                                <button role="menuitem" tabindex="-1" href="#">
-                                                                Email attendees
-                                                                </button>
-                                                            </li>
-                                                            <li>
-                                                                <button role="menuitem" tabindex="-1" href="#">
-                                                                Event check-in
-                                                                </button>
-                                                            </li>
-                                                            <li>
-                                                                <button role="menuitem" tabindex="-1" href="#">
-                                                                Get shareable link
-                                                                </button>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
+                              {% include "groups/partials/edit_event_list.html" %}
                             </div>
                         </div>
 
@@ -317,3 +205,7 @@
 </div>
 
 {% endblock %}
+
+{% block page_js %}
+<script type="text/javascript" src="{{ "js/group_settings.js"|static_url }}"></script>
+{% endblock page_js %}

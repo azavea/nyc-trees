@@ -5,7 +5,7 @@ from __future__ import division
 
 from django.conf.urls import patterns, url
 from apps.users.routes import group as r
-from apps.users.views.group import group_detail_events
+from apps.users.views.group import group_edit_events, group_detail_events
 
 # These URLs have the prefix 'group/'
 urlpatterns = patterns(
@@ -14,8 +14,10 @@ urlpatterns = patterns(
 
     url(r'^(?P<group_slug>[\w-]+)/$', r.group_detail, name='group_detail'),
 
-    url(r'^(?P<group_slug>[\w-]+)/edit/$',
-        r.group_edit, name='group_edit'),
+    url(r'^(?P<group_slug>[\w-]+)/edit/$', r.group_edit, name='group_edit'),
+
+    url(r'^(?P<group_slug>[\w-]+)/edit/events/$',
+        group_edit_events.endpoint, name=group_edit_events.url_name()),
 
     url(r'^(?P<group_slug>[\w-]+)/follow/$',
         r.follow_group, name='follow_group'),
