@@ -47,7 +47,8 @@ DATABASES = {
         'USER': environ.get('NYC_TREES_DB_USER', 'nyc_trees'),
         'PASSWORD': environ.get('NYC_TREES_DB_PASSWORD', 'nyc_trees'),
         'HOST': environ.get('NYC_TREES_DB_HOST', 'localhost'),
-        'PORT': environ.get('NYC_TREES_DB_PORT', 5432)
+        'PORT': environ.get('NYC_TREES_DB_PORT', 5432),
+        'TEST_NAME': environ.get('NYC_TREES_TEST_DB_NAME', 'test_nyc_trees')
     }
 }
 

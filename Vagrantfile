@@ -95,33 +95,32 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     services.vm.hostname = "services"
     services.vm.network "private_network", ip: SERVICES_IP
 
-
     services.vm.synced_folder ".", "/vagrant", disabled: true
 
     # Graphite Web
     services.vm.network "forwarded_port", {
       guest: 8080,
-      host: ENV.fetch("NYC_TREES_PORT_8080", 8080)
+      host: 8080
     }.merge(VAGRANT_NETWORK_OPTIONS)
     # Kibana
     services.vm.network "forwarded_port", {
       guest: 5601,
-      host: ENV.fetch("NYC_TREES_PORT_5601", 15601),
+      host: 15601
     }.merge(VAGRANT_NETWORK_OPTIONS)
     # PostgreSQL
     services.vm.network "forwarded_port", {
       guest: 5432,
-      host: ENV.fetch("NYC_TREES_PORT_5432", 15432)
+      host: 15432
     }.merge(VAGRANT_NETWORK_OPTIONS)
     # Pgweb
     services.vm.network "forwarded_port", {
       guest: 5433,
-      host: ENV.fetch("NYC_TREES_PORT_5433", 15433)
+      host: 15433
     }.merge(VAGRANT_NETWORK_OPTIONS)
     # Redis
     services.vm.network "forwarded_port", {
       guest: 6379,
-      host: ENV.fetch("NYC_TREES_PORT_6379", 16379)
+      host: 16379
     }.merge(VAGRANT_NETWORK_OPTIONS)
 
     services.vm.provider "virtualbox" do |v|
@@ -152,7 +151,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "app" do |app|
     app.vm.hostname = "app"
-    app.vm.network "private_network", ip: ENV.fetch("NYC_TREES_APP_IP", "33.33.33.10")
+    app.vm.network "private_network", type: "dhcp", ip: "33.33.33.10"
 
     app.vm.synced_folder ".", "/vagrant", disabled: true
 
@@ -166,7 +165,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # Django via Nginx/Gunicorn
     app.vm.network "forwarded_port", {
       guest: 80,
-      host: ENV.fetch("NYC_TREES_PORT_8000", 8000)
+      host: 8000
     }.merge(VAGRANT_NETWORK_OPTIONS)
     # Livereload server (for gulp watch)
     app.vm.network "forwarded_port", {
@@ -176,7 +175,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # Testem server
     app.vm.network "forwarded_port", {
       guest: 7357,
-      host: ENV.fetch("NYC_TREES_PORT_7357", 7357)
+      host: 7357
     }.merge(VAGRANT_NETWORK_OPTIONS)
 
     app.ssh.forward_x11 = true
