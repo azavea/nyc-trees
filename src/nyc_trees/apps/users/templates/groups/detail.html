@@ -15,7 +15,9 @@
                         <div class="col-xs-4">
                             {# TODO: Show a default image if group.image is null #}
                             {% if group.image %}
-                            <img class="group-branding" src="{{group.image.url}}"/>
+                            <div class="group-branding">
+                                <img src="{{group.image.url}}"/>
+                            </div>
                             {% endif %}
                         </div>
                         <div class="col-xs-8">
