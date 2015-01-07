@@ -2,6 +2,7 @@
 
 
 from os import environ
+from urllib2 import urlopen, URLError
 
 from base import *  # NOQA
 
@@ -20,7 +21,23 @@ def get_env_setting(setting):
 
 # HOST CONFIGURATION
 # See: https://docs.djangoproject.com/en/1.5/releases/1.5/#allowed-hosts-required-in-production  # NOQA
-ALLOWED_HOSTS = ['treescount.nycgovparks.org', '.amazonaws.com']
+ALLOWED_HOSTS = [
+    'treescount.nycgovparks.org',
+    'treescount.azavea.com',
+    '.elb.amazonaws.com',
+    'localhost'
+]
+
+# ELBs use the instance IP in the Host header and ALLOWED_HOSTS checks against
+# the Host header.
+try:
+    ALLOWED_HOSTS.append(
+        urlopen(
+            'http://instance-data.ec2.internal/latest/meta-data/local-ipv4'
+        ).readline()
+    )
+except URLError:
+    pass
 # END HOST CONFIGURATION
 
 # EMAIL CONFIGURATION
@@ -29,7 +46,7 @@ ALLOWED_HOSTS = ['treescount.nycgovparks.org', '.amazonaws.com']
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#email-host
-EMAIL_HOST = environ.get('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_HOST = environ.get('EMAIL_HOST', 'email-smtp.us-east-1.amazonaws.com')
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#email-host-password
 EMAIL_HOST_PASSWORD = environ.get('EMAIL_HOST_PASSWORD', '')

@@ -1,8 +1,10 @@
 .PHONY: build clean
-.PHONY: vpc-stack update-vpc-stack
-.PHONY: private-dns-stack update-private-dns-stack
-.PHONY: data-store-stack monitoring-ami tiler-stack app-stack
-.PHONY: app-and-tiler-amis
+.PHONY: vpc-stack
+.PHONY: private-hosted-zones
+.PHONY: data-store-stack
+.PHONY: monitoring-ami app-ami tiler-ami app-and-tiler-amis
+.PHONY: tiler-stack app-stack app-stack-green app-stack-blue
+.PHONY: delete-green-app-stack delete-blue-app-stack
 
 build:
 	@find troposphere -name "*.py" | grep -v "utils" | xargs -I{} python {}
@@ -10,32 +12,41 @@ build:
 clean:
 	@rm troposphere/*.json
 
-vpc-stack:
+vpc-stack: build
 	./deployment-helper.sh create-vpc-stack
 
-data-store-stack:
+data-store-stack: build
 	./deployment-helper.sh create-data-store-stack
 
-private-dns-stack:
-	./deployment-helper.sh create-private-dns-stack
+private-hosted-zones:
+	./deployment-helper.sh create-private-hosted-zones
 
 monitoring-ami:
 	./deployment-helper.sh create-monitoring-ami
 
-update-vpc-stack:
-	./deployment-helper.sh update-vpc-stack
+app-ami:
+	./deployment-helper.sh create-app-ami
 
-update-private-dns-stack:
-	./deployment-helper.sh update-private-dns-stack
+tiler-ami:
+	./deployment-helper.sh create-tiler-ami
 
 app-and-tiler-amis:
 	./deployment-helper.sh create-app-and-tiler-amis
 
-tiler-stack:
+tiler-stack: build
 	./deployment-helper.sh create-tiler-stack
 
-app-stack:
+app-stack: build
 	./deployment-helper.sh create-app-stack
 
-app-ami:
-	./deployment-helper.sh create-app-ami
+delete-green-app-stack:
+	./deployment-helper.sh delete-green-app-stack
+
+delete-blue-app-stack:
+	./deployment-helper.sh delete-blue-app-stack
+
+app-stack-green: build
+	./deployment-helper.sh toggle-green-app-stack
+
+app-stack-blue: build
+	./deployment-helper.sh toggle-blue-app-stack
