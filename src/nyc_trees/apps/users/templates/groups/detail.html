@@ -30,7 +30,7 @@
                             <div class="h6">Followers</div>
                         </div>
                         <div class="col-xs-6 text-right">
-                            {% if user_can_edit_group %}
+                            {% if event_list.user_can_edit_group %}
                             <a href="{{edit_url}}" class="btn btn-switch icon-cog">Admin</a>
                             {% else %}
                             {% include 'groups/partials/follow_button.html' %}
@@ -85,7 +85,7 @@
                 <section class="events">
                     <h4 class="section-heading">Events</h4>
                     <div>
-                      {% include "groups/partials/event_list.html" %}
+                      {% include "groups/partials/detail_event_list.html" %}
                     </div>
                 </section>
                 {% if show_mapper_request %}

@@ -1,7 +1,5 @@
 {% with event=info.event %}
-
-{# If the user can edit the group, there will be a popover menu. Should not show "rightarrow" #}
-<a href="{{ event.get_absolute_url }}" class="event block item {% if not user_can_edit_group %} rightarrow{% endif %}">
+<a href="{{ event.get_absolute_url }}" class="event block item rightarrow">
     <div class="row">
         <div class="event-date col-xs-3">
             <div class="event-month">{{ event.begins_at.date|date:"M" }}</div>
@@ -14,10 +12,7 @@
             <div class="event-detail">{{ event.training_summary }}</div>
             {% if info.user_is_registered %}<div class="event-detail"><b>+ RSVP</b></div>{% endif %}
         </div>
-        <div class="event-action col-xs-3">
-            {% block extra_markup %}
-            {% endblock extra_markup %}
-        </div>
+        <div class="event-action col-xs-3"></div>
     </div>
 </a>
 

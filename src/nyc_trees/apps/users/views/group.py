@@ -10,6 +10,7 @@ from django.utils.timezone import now
 from libs.sql import get_group_tree_count
 
 from apps.core.helpers import user_is_group_admin
+from apps.core.decorators import group_request
 from apps.core.models import Group
 
 from apps.users.models import Follow
@@ -33,19 +34,35 @@ def group_list_page(request):
     }
 
 
-def _group_events(request, group_slug):
-    return Event.objects.filter(group__slug=group_slug, is_private=False)
+@group_request
+def _group_events(request):
+    qs = Event.objects.filter(group=request.group, is_private=False)
+    user_can_edit_group = user_is_group_admin(request.user,
+                                              request.group)
+    extra_context = {'user_can_edit_group': user_can_edit_group,
+                     'group_slug': request.group.slug}
+    return qs, extra_context
 
-group_events = EventList(_group_events, 'groups/partials/event_list.html')
+
+group_detail_events = EventList(
+    _group_events,
+    name="group_detail_events",
+    template_path='groups/partials/detail_event_list.html')
+
+
+group_edit_events = EventList(
+    _group_events,
+    name="group_edit_events",
+    template_path='groups/partials/edit_event_list.html')
 
 
 def group_detail(request):
     group = request.group
-    events = (group_events
-              .configure(chunk_size=2,
-                         active_filter=EventList.Filters.CURRENT,
-                         filterset_name=EventList.chronoFilters)
-              .as_context(request, group_slug=group.slug))
+    event_list = (group_detail_events
+                  .configure(chunk_size=2,
+                             active_filter=EventList.Filters.CURRENT,
+                             filterset_name=EventList.chronoFilters)
+                  .as_context(request, group_slug=group.slug))
     user_is_following = Follow.objects.filter(user_id=request.user.id,
                                               group=group).exists()
     show_mapper_request = group.allows_individual_mappers and \
@@ -76,8 +93,7 @@ def group_detail(request):
 
     return {
         'group': group,
-        'event_list': events,
-        'user_can_edit_group': user_is_group_admin(request.user, group),
+        'event_list': event_list,
         'user_is_following': user_is_following,
         'edit_url': reverse('group_edit', kwargs={'group_slug': group.slug}),
         'show_mapper_request': show_mapper_request,
@@ -98,13 +114,19 @@ def redirect_to_group_detail(request):
 
 
 def edit_group(request):
+    group = request.group
     form = GroupSettingsForm(instance=request.group, label_suffix='')
-    context = {
-        'group': request.group,
+    event_list = (group_edit_events
+                  .configure(chunk_size=2,
+                             active_filter=EventList.Filters.CURRENT,
+                             filterset_name=EventList.chronoFilters)
+                  .as_context(request, group_slug=group.slug))
+    return {
+        'group': group,
+        'event_list': event_list,
         'form': form,
-        'group_slug': request.group.slug,
+        'group_slug': group.slug,
     }
-    return context
 
 
 def update_group_settings(request):
