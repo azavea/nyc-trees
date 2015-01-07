@@ -1,7 +1,10 @@
 ---
-- name: Configure Beaver to collect Nginx logs
-  template: src=nginx.conf.j2
-            dest="{{ beaver_conf_dir }}/conf.d/nginx"
+- name: Configure Beaver to ship logs
+  template: src="{{ item }}.conf.j2"
+            dest="{{ beaver_conf_dir }}/conf.d/{{ item }}"
+  with_items:
+    - nginx
+    - django
   notify:
     - Restart Beaver
 
