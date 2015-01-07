@@ -23,3 +23,5 @@ postgresql_package_version: "9.3.5-2.pgdg14.04+1"
 postgresql_support_repository_channel: "9.3"
 
 elasticsearch_cluster_name: "logstash"
+
+nodejs_npm_version: 2.1.14
