@@ -1,111 +1,101 @@
-{% extends "base.html" %}
+{% extends "base_two_frames.html" %}
+
 {% load utils %}
 
-{% block content %}
+{% block aside %}
 
-<div class="page-group">
-
-    <div class="map" style="background-color: #ddd; height: 200px;"></div>
-
-    <div class="container">
+    <div class="pageheading-description block">
         <div class="row">
-            <aside class="pageheading col-sm-4">
-                <div class="pageheading-description block">
-                    <div class="row">
-                        <div class="col-xs-4">
-                            {# TODO: Show a default image if group.image is null #}
-                            {% if group.image %}
-                            <div class="group-branding">
-                                <img src="{{group.image.url}}"/>
-                            </div>
-                            {% endif %}
-                        </div>
-                        <div class="col-xs-8">
-                            <h2>{{group.name}}</h2>
-                        </div>
-                    </div>
+            <div class="col-xs-4">
+                {# TODO: Show a default image if group.image is null #}
+                {% if group.image %}
+                <div class="group-branding">
+                    <img src="{{group.image.url}}"/>
                 </div>
-                <div class="pageheading-controls block">
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <div class="h2">653</div>
-                            <div class="h6">Followers</div>
-                        </div>
-                        <div class="col-xs-6 text-right">
-                            {% if event_list.user_can_edit_group %}
-                            <a href="{{edit_url}}" class="btn btn-switch icon-cog">Admin</a>
-                            {% else %}
-                            {% include 'groups/partials/follow_button.html' %}
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-            </aside>
-            <main class="col-sm-8">
-                <section>
-                    <h4 class="section-heading">Profile</h4>
-                    <div class="contribution block item">
-                        <h5>Description</h5>
-                        <div>{{group.description}}</div>
-                    </div>
-                    <div class="contribution block item">
-                        <h5>Contact</h5>
-                        <div>{{group.contact_name}} <a href="mailto:{{group.contact_email}}">Email</a></div>
-                    </div>
-                    <div class="contribution block item">
-                        <h5>Website</h5>
-                        <div><a href="{{group.contact_url}}">{{group.contact_url}}</a></div>
-                    </div>
-                </section>
-                <section class="contributions">
-                    <h4 class="section-heading">Contributions</h4>
-                    <div class="contribution block item">
-                        <div class="row">
-                            <div class="contribution-label col-xs-6"><i class="icon-globe"></i>Trees</div>
-                            <div class="contribution-number col-xs-6">{{ counts.tree }}</div>
-                        </div>
-                    </div>
-                    <div class="contribution block item">
-                        <div class="row">
-                            <div class="contribution-label col-xs-6"><i class="icon-flow-tree"></i>Mapped in Area</div>
-                            <div class="contribution-number col-xs-6">{{ counts.block }}</div>
-                        </div>
-                    </div>
-                    <div class="contribution block item">
-                        <div class="row">
-                            <div class="contribution-label col-xs-6"><i class="icon-tag"></i>Events Held</div>
-                            <div class="contribution-number col-xs-6">{{ counts.event }}</div>
-                        </div>
-                    </div>
-                    <div class="contribution block item">
-                        <div class="row">
-                            <div class="contribution-label col-xs-6"><i class="icon-user"></i>Event Attendees</div>
-                            <div class="contribution-number col-xs-6">{{ counts.attendees }}</div>
-                        </div>
-                    </div>
-                </section>
-                <section class="events">
-                    <h4 class="section-heading">Events</h4>
-                    <div>
-                      {% include "groups/partials/detail_event_list.html" %}
-                    </div>
-                </section>
-                {% if show_mapper_request %}
-                <section>
-                    <h4 class="section-heading">Individual Mapping</h4>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu congue lorem, id feugiat tortor. Aliquam ante elit, sodales eget porttitor vel, commodo et felis.</p>
-                    <button class="btn btn-primary btn-mobile--max">Request Individual Mapper Status</button>
-                </section>
                 {% endif %}
-            </main>
+            </div>
+            <div class="col-xs-8">
+                <h2>{{group.name}}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="pageheading-controls block">
+        <div class="row">
+            <div class="col-xs-6">
+                <div class="h2">653</div>
+                <div class="h6">Followers</div>
+            </div>
+            <div class="col-xs-6 text-right">
+                {% if event_list.user_can_edit_group %}
+                <a href="{{edit_url}}" class="btn btn-switch icon-cog">Admin</a>
+                {% else %}
+                {% include 'groups/partials/follow_button.html' %}
+                {% endif %}
+            </div>
         </div>
     </div>
 
-</div>
+{% endblock aside %}
 
+{% block main %}
 
+    <section>
+        <h4 class="section-heading">Profile</h4>
+        <div class="contribution block item">
+            <h5>Description</h5>
+            <div>{{group.description}}</div>
+        </div>
+        <div class="contribution block item">
+            <h5>Contact</h5>
+            <div>{{group.contact_name}} <a href="mailto:{{group.contact_email}}">Email</a></div>
+        </div>
+        <div class="contribution block item">
+            <h5>Website</h5>
+            <div><a href="{{group.contact_url}}">{{group.contact_url}}</a></div>
+        </div>
+    </section>
+    <section class="contributions">
+        <h4 class="section-heading">Contributions</h4>
+        <div class="contribution block item">
+            <div class="row">
+                <div class="contribution-label col-xs-6"><i class="icon-globe"></i>Trees</div>
+                <div class="contribution-number col-xs-6">{{ counts.tree }}</div>
+            </div>
+        </div>
+        <div class="contribution block item">
+            <div class="row">
+                <div class="contribution-label col-xs-6"><i class="icon-flow-tree"></i>Mapped in Area</div>
+                <div class="contribution-number col-xs-6">{{ counts.block }}</div>
+            </div>
+        </div>
+        <div class="contribution block item">
+            <div class="row">
+                <div class="contribution-label col-xs-6"><i class="icon-tag"></i>Events Held</div>
+                <div class="contribution-number col-xs-6">{{ counts.event }}</div>
+            </div>
+        </div>
+        <div class="contribution block item">
+            <div class="row">
+                <div class="contribution-label col-xs-6"><i class="icon-user"></i>Event Attendees</div>
+                <div class="contribution-number col-xs-6">{{ counts.attendees }}</div>
+            </div>
+        </div>
+    </section>
+    <section class="events">
+        <h4 class="section-heading">Events</h4>
+        <div>
+          {% include "groups/partials/detail_event_list.html" %}
+        </div>
+    </section>
+    {% if show_mapper_request %}
+    <section>
+        <h4 class="section-heading">Individual Mapping</h4>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu congue lorem, id feugiat tortor. Aliquam ante elit, sodales eget porttitor vel, commodo et felis.</p>
+        <button class="btn btn-primary btn-mobile--max">Request Individual Mapper Status</button>
+    </section>
+    {% endif %}
 
-{% endblock %}
+{% endblock main %}
 
 {% block page_js %}
 <script type="text/javascript" src="{{ "js/group_detail.js"|static_url }}"></script>

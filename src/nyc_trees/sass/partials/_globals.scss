@@ -122,8 +122,8 @@ main {
   background-color: #fff;
   padding-top: 20px;
   padding-bottom: 20px;
-  &.main-manage {
-    padding-top: 0;
+  & > .row > .nav-tabs {
+    margin-top: -2rem;
   }
 }
 

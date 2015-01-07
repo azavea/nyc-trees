@@ -1,98 +1,93 @@
-{% extends "base.html" %}
+{% extends "base_two_frames.html" %}
+
 {% load utils %}
 
-{% block content %}
+{% block aside %}
 
-<div class="page-settings">
-    <div class="container">
+    <div class="pageheading-description block">
         <div class="row">
-            <aside class="pageheading col-sm-4">
-                <div class="pageheading-description block">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <h2>Settings</h2>
-                        </div>
-                    </div>
-                </div>
-            </aside>
-            <main class="main-manage col-sm-8">
-
-                <div class="row">
-                    <ul class="nav nav-tabs">
-                        <li class="active">
-                            <a href="#account-pane" data-toggle="tab">Account</a>
-                        </li>
-                        <li>
-                            <a href="#emails-pane" data-toggle="tab">Emails</a>
-                        </li>
-                        {# A minor's profile is always private #}
-                        {% if not request.user.is_minor %}
-                        <li>
-                            <a href="#privacy-pane" data-toggle="tab">Privacy</a>
-                        </li>
-                        {% endif %}
-                    </ul>
-                </div>
-
-                <section>
-                    <form id="form" method="POST">
-                        {% csrf_token %}
-                        <div class="tab-content">
-
-                            <div class="tab-pane active" id="account-pane">
-                                <div class="block">
-                                    {{ profile_form.first_name.label_tag }}
-                                    {{ profile_form.first_name }}
-                                </div>
-                                <div class="block">
-                                    {{ profile_form.last_name.label_tag }}
-                                    {{ profile_form.last_name }}
-                                </div>
-                            </div>
-
-                            <div class="tab-pane" id="emails-pane">
-                                <h4>NYC Parks</h4>
-                                <div class="row">
-                                    <div class="col-xs-10">I am interested in receiving additional information on stewardship opportunities available through NYC Parks.</div>
-                                    <div class="col-xs-2">
-                                        {{ profile_form.opt_in_stewardship_info }}
-                                        {{ profile_form.opt_in_stewardship_info.label_tag }}
-                                    </div>
-                                </div>
-                                <hr>
-                                <h4>Events</h4>
-                                <div>I want to receive emails for these events:</div>
-                                {% for event_form in event_formset %}
-                                    {% with info=event_form.instance %}
-                                        {% include "users/partials/event_email_opt_in.html" %}
-                                    {% endwith %}
-                                {% endfor %}
-                                {{ event_formset.management_form }}
-                            </div>
-
-                            {# A minor's profile is always private #}
-                            {% if not request.user.is_minor %}
-                            <div class="tab-pane" id="privacy-pane">
-                                {% include 'users/partials/privacy_controls.html' %}
-                            </div>
-                            {% endif %}
-
-                            <hr>
-
-                            <div style="float:right;">
-                                <input type="submit" class="btn btn-primary" value="Save" />
-                            </div>
-                            <a class="btn" href="{% url 'user_profile_settings' %}">Cancel</a>
-
-                        </div>
-                    </form>
-                </section>
-            </main>
+            <div class="col-xs-12">
+                <h2>Settings</h2>
+            </div>
         </div>
     </div>
-</div>
 
-{% endblock %}
+{% endblock aside %}
+
+{% block main %}
+
+    <div class="row">
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a href="#account-pane" data-toggle="tab">Account</a>
+            </li>
+            <li>
+                <a href="#emails-pane" data-toggle="tab">Emails</a>
+            </li>
+            {# A minor's profile is always private #}
+            {% if not request.user.is_minor %}
+            <li>
+                <a href="#privacy-pane" data-toggle="tab">Privacy</a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+
+    <section>
+        <form id="form" method="POST">
+            {% csrf_token %}
+            <div class="tab-content">
+
+                <div class="tab-pane active" id="account-pane">
+                    <div class="block">
+                        {{ profile_form.first_name.label_tag }}
+                        {{ profile_form.first_name }}
+                    </div>
+                    <div class="block">
+                        {{ profile_form.last_name.label_tag }}
+                        {{ profile_form.last_name }}
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="emails-pane">
+                    <h4>NYC Parks</h4>
+                    <div class="row">
+                        <div class="col-xs-10">I am interested in receiving additional information on stewardship opportunities available through NYC Parks.</div>
+                        <div class="col-xs-2">
+                            {{ profile_form.opt_in_stewardship_info }}
+                            {{ profile_form.opt_in_stewardship_info.label_tag }}
+                        </div>
+                    </div>
+                    <hr>
+                    <h4>Events</h4>
+                    <div>I want to receive emails for these events:</div>
+                    {% for event_form in event_formset %}
+                        {% with info=event_form.instance %}
+                            {% include "users/partials/event_email_opt_in.html" %}
+                        {% endwith %}
+                    {% endfor %}
+                    {{ event_formset.management_form }}
+                </div>
+
+                {# A minor's profile is always private #}
+                {% if not request.user.is_minor %}
+                <div class="tab-pane" id="privacy-pane">
+                    {% include 'users/partials/privacy_controls.html' %}
+                </div>
+                {% endif %}
+
+                <hr>
+
+                <div style="float:right;">
+                    <input type="submit" class="btn btn-primary" value="Save" />
+                </div>
+                <a class="btn" href="{% url 'user_profile_settings' %}">Cancel</a>
+
+            </div>
+        </form>
+    </section>
+
+{% endblock main %}
 
 {% block page_js %}
     <script type="text/javascript" src="{{ "js/userSettings.js"|static_url }}"></script>

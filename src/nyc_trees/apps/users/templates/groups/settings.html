@@ -1,210 +1,205 @@
-{% extends "base.html" %}
+{% extends "base_two_frames.html" %}
+
 {% load utils %}
 
-{% block content %}
+{% block aside %}
 
-<div class="page-settings">
-    <div class="container">
+    <div class="pageheading-description block">
         <div class="row">
-            <aside class="pageheading col-sm-4">
-                <div class="pageheading-description block">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <a href="{{ group.get_absolute_url }}" class="breadcrumb">
-                                <i class="icon-left-open-mini"></i>
-                                {{ group.name }}
-                            </a>
-                        </div>
-                        <div class="col-xs-12">
-                            <h2>Manage</h2>
-                        </div>
-                    </div>
-                </div>
-            </aside>
-            <main class="main-manage col-sm-8">
-
-                <div class="row">
-                    <ul class="nav nav-tabs">
-                        <li class="active">
-                            <a data-toggle="tab" href="#details">Details</a>
-                        </li>
-                        <li>
-                            <a data-toggle="tab" href="#events">Events</a>
-                        </li>
-                        <li>
-                            <a data-toggle="tab" href="#mappers">Mappers</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <section>
-
-                    <div class="tab-content">
-                        <div class="tab-pane active" id="details">
-
-                            <form method="POST" enctype="multipart/form-data">
-                              {% csrf_token %}
-
-                                <fieldset>
-
-                                    {{ form.non_field_errors }}
-                                    <div class="block item">
-                                        {{ form.description.errors }}
-                                        {{ form.description.label_tag }}
-                                        {{ form.description }}
-                                    </div>
-                                    <div class="block item">
-                                        {{ form.contact_name.errors }}
-                                        {{ form.contact_name.label_tag }}
-                                        {{ form.contact_name }}
-                                    </div>
-                                    <div class="block item">
-                                        {{ form.contact_email.errors }}
-                                        {{ form.contact_email.label_tag }}
-                                        {{ form.contact_email }}
-                                    </div>
-                                    <div class="block item">
-                                        {{ form.contact_url.errors }}
-                                        {{ form.contact_url.label_tag }}
-                                        {{ form.contact_url }}
-                                    </div>
-                                    <div class="block item">
-                                        {{ form.image.errors }}
-                                        {{ form.image.label_tag }}
-                                        {{ form.image }}
-                                    </div>
-
-                                    {% comment %}
-                                    The form is repeated on two different tabs, with a different set
-                                    of fields on each tab. The Django forms system expects to see
-                                    every field on every postback, so fields that aren't on the tab
-                                    need to be included as hidden input elements.
-                                    {% endcomment %}
-                                    {{ form.allows_individual_mappers.as_hidden }}
-
-                                    <div class="main-footer">
-                                        <div class="pull-right">
-                                            <input type="submit" class="btn" value="Save group details" />
-                                        </div>
-                                        <a class="btn btn-link" href="{% url 'group_detail' group_slug=group_slug %}">Cancel</a>
-                                    </div>
-
-                                </fieldset>
-                            </form>
-
-                        </div>
-
-                        <div class="tab-pane" id="events">
-                            <div class="events">
-                              {% include "groups/partials/edit_event_list.html" %}
-                            </div>
-                        </div>
-
-                        <div class="tab-pane" id="mappers">
-                            <div class="block">
-                                <div class="mappers-option">
-                                    <form method="POST">
-                                        {% csrf_token %}
-
-                                        <div class="block-item">
-                                            {{ form.allows_individual_mappers.errors }}
-                                            {{ form.allows_individual_mappers.label_tag }}
-                                            {{ form.allows_individual_mappers }}
-                                        </div>
-
-                                        {% comment %}
-                                        The form is repeated on two different tabs, with a different set
-                                        of fields on each tab. The Django forms system expects to see
-                                        every field on every postback, so fields that aren't on the tab
-                                        need to be included as hidden input elements.
-                                        {% endcomment %}
-                                        {{ form.description.as_hidden }}
-                                        {{ form.contact_name.as_hidden }}
-                                        {{ form.contact_email.as_hidden }}
-                                        {{ form.contact_url.as_hidden }}
-                                        {{ form.image.as_hidden }}
-
-                                        <div class="pull-right">
-                                          <input id="submit-individual-mappers-form" type="submit" class="btn" value="Save" />
-                                        </div>
-                                        <a class="btn btn-link" href="{% url 'group_detail' group_slug=group_slug %}">Cancel</a>
-                                    </form>
-                                </div>
-                                <hr>
-                            </div>
-                            <div class="mappers-view content--disabled">
-                                <ul class="nav nav-tabs nav-tabs--filter">
-                                    <li class="active">
-                                        <a data-toggle="tab" href="#pending">Pending</a>
-                                    </li>
-                                    <li>
-                                        <a data-toggle="tab" href="#all">All</a>
-                                    </li>
-                                </ul>
-                                <div class="mappers">
-                                    <div class="tab-content">
-                                        <div class="tab-pane active" id="pending">
-                                            <div class="mapper block item">
-                                                <div class="row">
-                                                    <div class="col-xs-6">
-                                                        <h4>
-                                                            rreading
-                                                        </h4>
-                                                        <h5 class="nobold">
-                                                            Rachel Reading
-                                                        </h5>
-                                                    </div>
-                                                    <div class="col-xs-6 text-right">
-                                                        <a href="{{edit_url}}" class="btn btn-switch">Access Granted</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="tab-pane" id="all">
-                                            <div class="mapper block item">
-                                                <div class="row">
-                                                    <div class="col-xs-6">
-                                                        <h4>
-                                                            rreading
-                                                        </h4>
-                                                        <h5 class="nobold">
-                                                            Rachel Reading
-                                                        </h5>
-                                                    </div>
-                                                    <div class="col-xs-6 text-right">
-                                                        <a href="{{edit_url}}" class="btn btn-switch">Access Granted</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="mapper block item">
-                                                <div class="row">
-                                                    <div class="col-xs-6">
-                                                        <h4>
-                                                            rreading
-                                                        </h4>
-                                                        <h5 class="nobold">
-                                                            Rachel Reading
-                                                        </h5>
-                                                    </div>
-                                                    <div class="col-xs-6 text-right">
-                                                        <a href="{{edit_url}}" class="btn btn-switch">Access Granted</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </section>
-            </main>
+            <div class="col-xs-12">
+                <a href="{{ group.get_absolute_url }}" class="breadcrumb">
+                    <i class="icon-left-open-mini"></i>
+                    {{ group.name }}
+                </a>
+            </div>
+            <div class="col-xs-12">
+                <h2>Manage</h2>
+            </div>
         </div>
     </div>
-</div>
 
-{% endblock %}
+{% endblock aside %}
+
+{% block main %}
+
+    <div class="row">
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a data-toggle="tab" href="#details">Details</a>
+            </li>
+            <li>
+                <a data-toggle="tab" href="#events">Events</a>
+            </li>
+            <li>
+                <a data-toggle="tab" href="#mappers">Mappers</a>
+            </li>
+        </ul>
+    </div>
+
+    <section>
+
+        <div class="tab-content">
+            <div class="tab-pane active" id="details">
+
+                <form method="POST" enctype="multipart/form-data">
+                  {% csrf_token %}
+
+                    <fieldset>
+
+                        {{ form.non_field_errors }}
+                        <div class="block item">
+                            {{ form.description.errors }}
+                            {{ form.description.label_tag }}
+                            {{ form.description }}
+                        </div>
+                        <div class="block item">
+                            {{ form.contact_name.errors }}
+                            {{ form.contact_name.label_tag }}
+                            {{ form.contact_name }}
+                        </div>
+                        <div class="block item">
+                            {{ form.contact_email.errors }}
+                            {{ form.contact_email.label_tag }}
+                            {{ form.contact_email }}
+                        </div>
+                        <div class="block item">
+                            {{ form.contact_url.errors }}
+                            {{ form.contact_url.label_tag }}
+                            {{ form.contact_url }}
+                        </div>
+                        <div class="block item">
+                            {{ form.image.errors }}
+                            {{ form.image.label_tag }}
+                            {{ form.image }}
+                        </div>
+
+                        {% comment %}
+                        The form is repeated on two different tabs, with a different set
+                        of fields on each tab. The Django forms system expects to see
+                        every field on every postback, so fields that aren't on the tab
+                        need to be included as hidden input elements.
+                        {% endcomment %}
+                        {{ form.allows_individual_mappers.as_hidden }}
+
+                        <div class="main-footer">
+                            <div class="pull-right">
+                                <input type="submit" class="btn" value="Save group details" />
+                            </div>
+                            <a class="btn btn-link" href="{% url 'group_detail' group_slug=group_slug %}">Cancel</a>
+                        </div>
+
+                    </fieldset>
+                </form>
+
+            </div>
+
+            <div class="tab-pane" id="events">
+                <div class="events">
+                  {% include "groups/partials/edit_event_list.html" %}
+                </div>
+            </div>
+
+            <div class="tab-pane" id="mappers">
+                <div class="block">
+                    <div class="mappers-option">
+                        <form method="POST">
+                            {% csrf_token %}
+
+                            <div class="block-item">
+                                {{ form.allows_individual_mappers.errors }}
+                                {{ form.allows_individual_mappers.label_tag }}
+                                {{ form.allows_individual_mappers }}
+                            </div>
+
+                            {% comment %}
+                            The form is repeated on two different tabs, with a different set
+                            of fields on each tab. The Django forms system expects to see
+                            every field on every postback, so fields that aren't on the tab
+                            need to be included as hidden input elements.
+                            {% endcomment %}
+                            {{ form.description.as_hidden }}
+                            {{ form.contact_name.as_hidden }}
+                            {{ form.contact_email.as_hidden }}
+                            {{ form.contact_url.as_hidden }}
+                            {{ form.image.as_hidden }}
+
+                            <div class="pull-right">
+                              <input id="submit-individual-mappers-form" type="submit" class="btn" value="Save" />
+                            </div>
+                            <a class="btn btn-link" href="{% url 'group_detail' group_slug=group_slug %}">Cancel</a>
+                        </form>
+                    </div>
+                    <hr>
+                </div>
+                <div class="mappers-view content--disabled">
+                    <ul class="nav nav-tabs nav-tabs--filter">
+                        <li class="active">
+                            <a data-toggle="tab" href="#pending">Pending</a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#all">All</a>
+                        </li>
+                    </ul>
+                    <div class="mappers">
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="pending">
+                                <div class="mapper block item">
+                                    <div class="row">
+                                        <div class="col-xs-6">
+                                            <h4>
+                                                rreading
+                                            </h4>
+                                            <h5 class="nobold">
+                                                Rachel Reading
+                                            </h5>
+                                        </div>
+                                        <div class="col-xs-6 text-right">
+                                            <a href="{{edit_url}}" class="btn btn-switch">Access Granted</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="all">
+                                <div class="mapper block item">
+                                    <div class="row">
+                                        <div class="col-xs-6">
+                                            <h4>
+                                                rreading
+                                            </h4>
+                                            <h5 class="nobold">
+                                                Rachel Reading
+                                            </h5>
+                                        </div>
+                                        <div class="col-xs-6 text-right">
+                                            <a href="{{edit_url}}" class="btn btn-switch">Access Granted</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mapper block item">
+                                    <div class="row">
+                                        <div class="col-xs-6">
+                                            <h4>
+                                                rreading
+                                            </h4>
+                                            <h5 class="nobold">
+                                                Rachel Reading
+                                            </h5>
+                                        </div>
+                                        <div class="col-xs-6 text-right">
+                                            <a href="{{edit_url}}" class="btn btn-switch">Access Granted</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+{% endblock main %}
 
 {% block page_js %}
 <script type="text/javascript" src="{{ "js/group_settings.js"|static_url }}"></script>
