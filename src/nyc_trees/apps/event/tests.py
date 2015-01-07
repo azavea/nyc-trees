@@ -17,7 +17,8 @@ from apps.event.views import (events_list_page,
                               event_email,
                               register_for_event,
                               event_check_in_page,
-                              check_in_user_to_event)
+                              check_in_user_to_event,
+                              increase_rsvp_limit)
 
 
 class EventTestCase(UsersTestCase):
@@ -110,3 +111,27 @@ class CheckinEventTest(EventTestCase):
                                self.event.slug,
                                self.user.username)
         self._assert_num_checkins(0)
+
+    def test_rsvp_limit_increase(self):
+        request = make_request(user=self.user, group=self.group)
+
+        self.event.max_attendees = 0
+        self.event.save()
+
+        self.event = Event.objects.get(id=self.event.id)
+        self.assertEqual(0, self.event.max_attendees)
+
+        context = increase_rsvp_limit(request, self.event.slug)
+        self.event = Event.objects.get(id=self.event.id)
+        self.assertEqual(5, context['max_attendees'])
+        self.assertEqual(5, self.event.max_attendees)
+
+        context = increase_rsvp_limit(request, self.event.slug)
+        self.event = Event.objects.get(id=self.event.id)
+        self.assertEqual(10, context['max_attendees'])
+        self.assertEqual(10, self.event.max_attendees)
+
+        context = increase_rsvp_limit(request, self.event.slug)
+        self.event = Event.objects.get(id=self.event.id)
+        self.assertEqual(15, context['max_attendees'])
+        self.assertEqual(15, self.event.max_attendees)

@@ -53,9 +53,11 @@
 
     <div class="row">
         <a href="javascript:void(0)"
+           id="increase-rsvp-limit"
            data-verb="POST"
-           data-url="#"
-           class="col-sm-12 btn btn-primary">Increase RSVP limit</a>
+           data-url="{% url 'increase_rsvp_limit' group_slug=group.slug event_slug=event.slug %}"
+           data-text="Increase RSVP limit"
+           class="col-sm-12 btn btn-primary">Increase RSVP limit ({{ event.max_attendees }})</a>
     </div>
 </div>
 {% endblock content %}

@@ -246,6 +246,16 @@ def check_in_user_to_event(request, event_slug, username):
     }
 
 
+@transaction.atomic
+def increase_rsvp_limit(request, event_slug):
+    event = get_object_or_404(Event, group=request.group, slug=event_slug)
+    event.max_attendees += 5
+    event.save()
+    return {
+        'max_attendees': event.max_attendees
+    }
+
+
 def email_event_registered_users(request, event_slug):
     # TODO: implement
     pass

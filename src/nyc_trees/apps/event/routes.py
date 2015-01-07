@@ -5,7 +5,7 @@ from __future__ import division
 
 from django.contrib.auth.decorators import login_required
 
-from django_tinsel.decorators import route, render_template
+from django_tinsel.decorators import route, render_template, json_api_call
 
 from django_tinsel.utils import decorate as do
 
@@ -71,6 +71,9 @@ event_check_in = group_admin_do(
     render_template('event/partials/checkin_button.html'),
     route(POST=v.check_in_user_to_event,
           DELETE=v.check_in_user_to_event))
+
+increase_rsvp_limit = route(POST=group_admin_do(json_api_call,
+                                                v.increase_rsvp_limit))
 
 email_event_registered_users = group_admin_do(
     route(POST=v.email_event_registered_users))

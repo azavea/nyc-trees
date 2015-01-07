@@ -264,3 +264,14 @@ class CheckinEventUITest(EventTestCase):
         self.click('.btn-checkout')
         self.wait_until_visible('.btn-checkin')
         self.assertEqual(num_checkins(self.event), 0)
+
+    def test_rsvp_limit_increase(self):
+        self.login(self.user.username)
+        self.get(self.event.get_checkin_url())
+        self.wait_for_text("Increase RSVP limit (0)")
+        self.click('#increase-rsvp-limit')
+        self.wait_for_text("Increase RSVP limit (5)")
+        self.click('#increase-rsvp-limit')
+        self.wait_for_text("Increase RSVP limit (10)")
+        self.click('#increase-rsvp-limit')
+        self.wait_for_text("Increase RSVP limit (15)")
