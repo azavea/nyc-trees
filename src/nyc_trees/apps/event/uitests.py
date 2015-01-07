@@ -17,33 +17,30 @@ from apps.core.models import User, Group
 from apps.event.models import Event, EventRegistration
 
 
-def add_event(group, begins_at, ends_at):
-    kwargs = {
-        'group': group,
-        'title': 'Test event',
-        'slug': 'test-event-slug',
-        'begins_at': begins_at,
-        'ends_at': ends_at,
-        'location': Point(0, 0),
-        'max_attendees': 0,
-        'contact_email': 'test@aol.com',
-        'address': '340 N 12th St.'
-    }
-    event = Event(**kwargs)
-    event.clean_and_save()
-    return event
+def num_checkins(event):
+    return len(EventRegistration.objects.filter(event=event,
+                                                did_attend=True))
 
 
 class EventTestCase(NycTreesSeleniumTestCase):
     def setUp(self):
         super(EventTestCase, self).setUp()
 
+        # Group admin
         self.user = User(username='leela',
                          email='leela@planetexpress.nyc',
                          first_name='Turanga',
                          last_name='Leela')
         self.user.set_password('password')
         self.user.clean_and_save()
+
+        # Non-Group admin
+        self.nonadmin_user = User(username='zapp',
+                                  email='zapp@hotmail.com',
+                                  first_name='Zapp',
+                                  last_name='Brannigan')
+        self.nonadmin_user.set_password('password')
+        self.nonadmin_user.clean_and_save()
 
         self.group = Group.objects.create(
             name='Planet Express',
@@ -99,7 +96,15 @@ class EditEventUITest(EventTestCase):
         ends_at = make_aware(datetime(2014, 1, 1, 14),
                              get_current_timezone())
 
-        event = add_event(self.group, begins_at, ends_at)
+        event = Event.objects.create(group=self.group,
+                                     title="The event",
+                                     slug="the-event",
+                                     contact_email="a@b.com",
+                                     address="123 Main St",
+                                     location=Point(0, 0),
+                                     max_attendees=0,
+                                     begins_at=begins_at,
+                                     ends_at=ends_at)
 
         self.get(reverse('event_edit', kwargs={
             'group_slug': self.group.slug,
@@ -207,3 +212,55 @@ class RsvpForEventUITest(EventTestCase):
         self.wait_for_text("At Capacity")
         self.click('#rsvp')  # clicking should do nothing
         self.wait_for_text("At Capacity")
+
+
+class CheckinEventUITest(EventTestCase):
+    def setUp(self):
+        super(CheckinEventUITest, self).setUp()
+
+        self.event = Event.objects.create(group=self.group,
+                                          title="The event",
+                                          slug="the-event",
+                                          contact_email="a@b.com",
+                                          address="123 Main St",
+                                          location=Point(0, 0),
+                                          max_attendees=0,
+                                          begins_at=now(),
+                                          ends_at=now())
+
+    def test_group_admin_access_only(self):
+        self.login(self.user.username)
+        self.get(self.event.get_checkin_url())
+        self.wait_for_text("Check-in")
+
+        self.login(self.nonadmin_user.username)
+        self.get(self.event.get_checkin_url())
+        self.wait_for_text("403 Forbidden")
+
+    def test_checkin(self):
+        self.event.max_attendees = 1
+        self.event.clean_and_save()
+
+        self.assertEqual(num_checkins(self.event), 0)
+
+        # RSVP for event
+        self.login(self.nonadmin_user.username)
+        self.get(self.event.get_absolute_url())
+        self.click('#rsvp')
+        self.wait_for_text("RSVPed")
+
+        # Admin check-in
+        self.login(self.user.username)
+        self.get(self.event.get_checkin_url())
+        self.wait_for_text("Check-in")
+
+        self.assert_text_in_body(self.nonadmin_user.username)
+
+        self.wait_for_element('.btn-checkin')
+        self.click('.btn-checkin')
+        self.wait_until_visible('.btn-checkout')
+        self.assertEqual(num_checkins(self.event), 1)
+
+        self.click('.btn-checkout')
+        self.wait_until_visible('.btn-checkin')
+        self.assertEqual(num_checkins(self.event), 0)

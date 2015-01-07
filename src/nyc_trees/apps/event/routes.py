@@ -67,8 +67,10 @@ event_check_in_page = group_admin_do(
     route(GET=do(render_template('event/admin_checkin.html'),
                  v.event_check_in_page)))
 
-event_check_in = group_admin_do(route(POST=v.check_in_user_to_event,
-                                      DELETE=v.un_check_in_user_to_event))
+event_check_in = group_admin_do(
+    render_template('event/partials/checkin_button.html'),
+    route(POST=v.check_in_user_to_event,
+          DELETE=v.check_in_user_to_event))
 
 email_event_registered_users = group_admin_do(
     route(POST=v.email_event_registered_users))

@@ -57,6 +57,16 @@ class Event(NycModel, models.Model):
     def has_space_available(self):
         return self.eventregistration_set.count() < self.max_attendees
 
+    @property
+    def starting_soon(self):
+        # TODO: Implement
+        return True
+
+    def get_checkin_url(self):
+        return reverse('event_check_in_page',
+                       kwargs={'group_slug': self.group.slug,
+                               'event_slug': self.slug})
+
     def get_absolute_url(self):
         return reverse('event_detail', kwargs={'group_slug': self.group.slug,
                                                'event_slug': self.slug})

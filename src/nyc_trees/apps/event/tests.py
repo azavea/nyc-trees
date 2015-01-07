@@ -3,14 +3,21 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
+from functools import partial
+
 from django.core import mail
+from django.http import HttpResponseForbidden
 
 from apps.core.test_utils import make_request, make_event
 
 from apps.users.tests import UsersTestCase
 
-from apps.event.models import EventRegistration
-from apps.event.views import events_list_page, event_email
+from apps.event.models import Event, EventRegistration
+from apps.event.views import (events_list_page,
+                              event_email,
+                              register_for_event,
+                              event_check_in_page,
+                              check_in_user_to_event)
 
 
 class EventTestCase(UsersTestCase):
@@ -66,3 +73,40 @@ class EventEmailTest(EventTestCase):
 
         # Clear the test inbox
         mail.outbox = []
+
+
+class CheckinEventTest(EventTestCase):
+    def _assert_num_checkins(self, expected_amount):
+        request = make_request(user=self.user, group=self.group)
+        context = event_check_in_page(request, self.event.slug)
+        self.assertEqual(self.event, context['event'])
+        self.assertEqual(self.group, context['group'])
+
+        checkins = sum(1 if did_attend else 0
+                       for user, did_attend in context['users'])
+        self.assertEqual(expected_amount, checkins)
+
+    def test_checkin_checkout(self):
+        self._assert_num_checkins(0)
+        request = partial(make_request, user=self.user, group=self.group)
+
+        # Checkin (should fail because user has not RSVPed yet)
+        context = check_in_user_to_event(request(method='POST'),
+                                         self.event.slug,
+                                         self.user.username)
+        self.assertTrue(isinstance(context, HttpResponseForbidden))
+
+        # RSVP
+        register_for_event(request(method='POST'), self.event.slug)
+
+        # Checkin again (should succeed this time)
+        check_in_user_to_event(request(method='POST'),
+                               self.event.slug,
+                               self.user.username)
+        self._assert_num_checkins(1)
+
+        # Un-Checkin
+        check_in_user_to_event(request(method='DELETE'),
+                               self.event.slug,
+                               self.user.username)
+        self._assert_num_checkins(0)

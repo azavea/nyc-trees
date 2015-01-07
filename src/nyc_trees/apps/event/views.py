@@ -6,7 +6,8 @@ from __future__ import division
 from django.contrib.gis.geos import Point
 from django.core.urlresolvers import reverse
 from django.db import transaction
-from django.http import HttpResponseRedirect
+from django.http import (HttpResponseRedirect, HttpResponseForbidden,
+                         HttpResponseNotAllowed)
 from django.shortcuts import get_object_or_404
 from django.utils.timezone import get_current_timezone
 
@@ -209,18 +210,40 @@ def start_event_map_print_job(request, event_slug):
 
 
 def event_check_in_page(request, event_slug):
-    # TODO: implement
-    return {}
+    event = get_object_or_404(Event, group=request.group, slug=event_slug)
+    rsvps = EventRegistration.objects.filter(event=event)
+    users = [(row.user, row.did_attend) for row in rsvps]
+    return {
+        'group': request.group,
+        'event': event,
+        'users': users
+    }
 
 
+@transaction.atomic
 def check_in_user_to_event(request, event_slug, username):
-    # TODO: implement
-    pass
+    if request.method == 'POST':
+        did_attend = True
+    elif request.method == 'DELETE':
+        did_attend = False
+    else:
+        return HttpResponseNotAllowed()
 
+    event = get_object_or_404(Event, group=request.group, slug=event_slug)
+    try:
+        rsvp = EventRegistration.objects.get(event=event,
+                                             user__username=username)
+        rsvp.did_attend = did_attend
+        rsvp.save()
+    except EventRegistration.DoesNotExist:
+        return HttpResponseForbidden()
 
-def un_check_in_user_to_event(request, event_slug, username):
-    # TODO: implement
-    pass
+    return {
+        'group': request.group,
+        'event': event,
+        'user': rsvp.user,
+        'did_attend': did_attend
+    }
 
 
 def email_event_registered_users(request, event_slug):
