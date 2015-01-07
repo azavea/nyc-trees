@@ -1,0 +1,12 @@
+---
+- name: Configure Beaver to collect Nginx logs
+  template: src=nginx.conf.j2
+            dest="{{ beaver_conf_dir }}/conf.d/nginx"
+  notify:
+    - Restart Beaver
+
+- name: Add Beaver user to service group
+  user: name=beaver
+        append=yes
+        groups=adm
+        state=present
