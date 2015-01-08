@@ -2,3 +2,4 @@
 dependencies:
   - { role: "azavea.relp" }
   - { role: "nyc-trees.collectd" }
+  - { role: "nyc-trees.beaver" }
