@@ -16,3 +16,6 @@ progress_page = route(GET=do(render_template('home/progress.html'),
                              v.progress_page))
 
 retrieve_job_status = do(v.retrieve_job_status)
+
+training_list_page = route(GET=do(render_template('home/training.html'),
+                                  v.training_list_page))
