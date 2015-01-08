@@ -1,6 +1,7 @@
 {
     "indent": 4,
     "globalstrict": true,
+    "node": true,
     "globals": {
         "require": false,
         "module": true,
