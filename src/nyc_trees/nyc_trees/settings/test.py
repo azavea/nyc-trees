@@ -3,6 +3,8 @@ import os
 from base import *  # NOQA
 
 # TEST SETTINGS
+ALLOWED_HOSTS = ['localhost']
+
 PASSWORD_HASHERS = (
     'django.contrib.auth.hashers.MD5PasswordHasher',
 )
