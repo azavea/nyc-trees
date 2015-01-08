@@ -43,6 +43,12 @@ if [ "up", "provision", "status" ].include?(ARGV.first)
   install_dependent_roles
 end
 
+ANSIBLE_GROUPS = {
+  "app-servers" => [ "app" ],
+  "tile-servers" => [ "tiler" ],
+  "services" => [ "services" ],
+}
+
 if !ENV["VAGRANT_ENV"].nil? && ENV["VAGRANT_ENV"] == "TEST"
   ANSIBLE_ENV_GROUPS = {
     "test:children" => [
@@ -60,19 +66,6 @@ else
   VAGRANT_NETWORK_OPTIONS = { auto_correct: false }
 end
 
-SERVICES_IP = ENV.fetch("NYC_TREES_SERVICES_IP", "33.33.33.30")
-ANSIBLE_GROUPS = {
-  "app-servers" => [ "app" ],
-  "tile-servers" => [ "tiler" ],
-  "services" => [ "services" ],
-}
-ANSIBLE_EXTRA_VARS = {
-  redis_host: SERVICES_IP,
-  postgresql_host: SERVICES_IP,
-  relp_host: SERVICES_IP,
-  graphite_host: SERVICES_IP,
-  statsite_host: SERVICES_IP
-}
 VAGRANT_PROXYCONF_ENDPOINT = ENV["VAGRANT_PROXYCONF_ENDPOINT"]
 VAGRANTFILE_API_VERSION = "2"
 
@@ -93,7 +86,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "services" do |services|
     services.vm.hostname = "services"
-    services.vm.network "private_network", ip: SERVICES_IP
+    services.vm.network "private_network", ip: ENV.fetch("NYC_TREES_SERVICES_IP", "33.33.33.30")
 
     services.vm.synced_folder ".", "/vagrant", disabled: true
 
@@ -130,7 +123,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     services.vm.provision "ansible" do |ansible|
       ansible.playbook = "deployment/ansible/services.yml"
       ansible.groups = ANSIBLE_GROUPS.merge(ANSIBLE_ENV_GROUPS)
-      ansible.extra_vars = ANSIBLE_EXTRA_VARS
       ansible.raw_arguments = ["--timeout=60"]
     end
   end
@@ -144,7 +136,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     tiler.vm.provision "ansible" do |ansible|
       ansible.playbook = "deployment/ansible/tile-servers.yml"
       ansible.groups = ANSIBLE_GROUPS.merge(ANSIBLE_ENV_GROUPS)
-      ansible.extra_vars = ANSIBLE_EXTRA_VARS
       ansible.raw_arguments = ["--timeout=60"]
     end
   end
@@ -183,7 +174,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     app.vm.provision "ansible" do |ansible|
       ansible.playbook = "deployment/ansible/app-servers.yml"
       ansible.groups = ANSIBLE_GROUPS.merge(ANSIBLE_ENV_GROUPS)
-      ansible.extra_vars = ANSIBLE_EXTRA_VARS
       ansible.raw_arguments = ["--timeout=60"]
     end
   end

@@ -9,3 +9,11 @@ postgresql_password: nyc_trees
 postgresql_database: nyc_trees
 postgresql_hba_mapping:
   - { type: "host", database: "all", user: "all", address: "33.33.33.1/24", method: "md5" }
+
+services_ip: "{{ lookup('env', 'NYC_TREES_SERVICES_IP') | default('33.33.33.30', true) }}"
+
+redis_host: "{{ services_ip }}"
+postgresql_host: "{{ services_ip }}"
+relp_host: "{{ services_ip }}"
+graphite_host: "{{ services_ip }}"
+statsite_host: "{{ services_ip }}"
