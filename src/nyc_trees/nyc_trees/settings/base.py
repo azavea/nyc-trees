@@ -13,9 +13,10 @@ DJANGO_ROOT = dirname(dirname(abspath(__file__)))
 # Absolute filesystem path to the top-level nyc_trees/ folder:
 SITE_ROOT = dirname(DJANGO_ROOT)
 
-
 # Site name:
 SITE_NAME = basename(DJANGO_ROOT)
+
+SITE_ID = 1  # Needed by django.contrib.sites (used by Django flatpages)
 
 # Add our project to our pythonpath, this way we don't need to type our project
 # name in our dotted import paths:
@@ -195,8 +196,10 @@ DJANGO_APPS = (
     # Default Django apps:
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.flatpages',
     'django.contrib.gis',
     'django.contrib.sessions',
+    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
 

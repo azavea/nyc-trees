@@ -3,7 +3,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
-from django.conf.urls import patterns, url
+from django.conf.urls import patterns, url, include
 
 from apps.home import routes as r
 
@@ -17,11 +17,9 @@ urlpatterns = patterns(
     url(r'^jobs/(?P<job_id>\d+)/$', r.retrieve_job_status,
         name='retrieve_job_status'),
 
-    # TODO: The following are all good candidates for the Django flatpages app
-    #
-    # url(r'^faq/$', route(GET=faq_page)),
-    # url(r'^about/$', route(GET=about_page)),
-    # url(r'^training/$', route(GET=training_material_list_page)),
-    # url(r'^training/(?P<training_material_url_name>\w+)/$',
-    #     route(GET=training_material_detail_page)),
+    url(r'^training/$', r.training_list_page),
+
+    # "training" instead of "training/" because the flatpages admin interface
+    # insists that the "URL" (really a URL segment) start with a leading slash
+    url(r'^training', include('django.contrib.flatpages.urls')),
 )

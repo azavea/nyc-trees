@@ -20,6 +20,11 @@ def progress_page(request):
     return context
 
 
+def training_list_page(request):
+    # TODO: implement
+    return {}
+
+
 def retrieve_job_status(request):
     # TODO: implement
     pass
