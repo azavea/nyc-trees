@@ -1,0 +1,15 @@
+{% extends "groups/list.html" %}
+
+{% block pre_loop_section %}
+<p>Groups are the backbone of the census- they organize training and mapping events. Following a group is a great way to find out about upcoming events.</p>
+<span>Search: </span><input data-class="group-search"/>
+<hr>
+{% endblock pre_loop_section %}
+
+{% block list_footer %}
+<div>
+<hr>
+<a href="{% url 'training_list_page' %}">Skip</a>
+<a class="btn" href="{% url 'training_list_page' %}">Continue</button>
+</div>
+{% endblock list_footer %}

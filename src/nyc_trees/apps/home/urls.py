@@ -17,7 +17,9 @@ urlpatterns = patterns(
     url(r'^jobs/(?P<job_id>\d+)/$', r.retrieve_job_status,
         name='retrieve_job_status'),
 
-    url(r'^training/$', r.training_list_page),
+    url(r'^training/$', r.training_list_page, name="training_list_page"),
+
+    url(r'^training/groups_to_follow/$', r.groups_to_follow),
 
     # "training" instead of "training/" because the flatpages admin interface
     # insists that the "URL" (really a URL segment) start with a leading slash
