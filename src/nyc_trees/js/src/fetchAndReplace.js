@@ -20,6 +20,21 @@ handling.
 */
 
 module.exports = function(options) {
+    var handlers = $(options.target).map(function(i, el) {
+        var $el = $(el);
+        return fetchAndReplace($.extend({}, options, {
+            target: $el,
+            container: $el.parents(options.container)
+        }));
+    });
+    return function() {
+        $.each(handlers, function(i, remove) {
+            remove();
+        });
+    };
+};
+
+function fetchAndReplace(options) {
     var domEventName = options.domEventName || 'click',
         handler = function(event) {
             var url = $(event.target).data('url'),
@@ -33,5 +48,7 @@ module.exports = function(options) {
         };
 
     $(options.container).on(domEventName, options.target, handler);
-    return function() { $(options.container).off(domEventName, options.target, handler); };
-};
+    return function() {
+        $(options.container).off(domEventName, options.target, handler);
+    };
+}

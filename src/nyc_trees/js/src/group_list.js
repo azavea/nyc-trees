@@ -1,4 +1,8 @@
 "use strict";
 
-// Needed for Follow button event handlers.
-require('./followGroupButton');
+var fetchAndReplace = require('./fetchAndReplace');
+
+fetchAndReplace({
+    container: '.btn-follow-container',
+    target: '.btn-follow, .btn-unfollow'
+});
