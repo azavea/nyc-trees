@@ -1,0 +1,34 @@
+{% extends "base_two_frames.html" %}
+
+{% load utils %}
+
+{% block aside %}
+    <div class="pageheading-description block">
+        <div class="row">
+            <!-- Sub-page: if this is a sub-page and needs back button, you can use this. If not, just delete this code. An example is if the page is showing "Settings" for the "Super Group". This link will go back to the main "Super Group" page.  -->
+            <div class="col-xs-12">
+                <a href="{{ group.get_absolute_url }}" class="breadcrumb">
+                    <i class="icon-left-open-mini"></i>
+                    Super Group
+                </a>
+            </div>
+            <!-- End Sub-page -->
+            <!-- Page Name: add the page name and also description here -->
+            <div class="col-xs-12">
+                <h2>Settings</h2>
+                <p class="pageheading-description-detail">
+                    Settings are a place where you can change settings for an app. Use this to change your settings for the application, aka the "app".
+                </p>
+            </div>
+            <!-- End Page Name -->
+        </div>
+    </div>
+{% endblock aside %}
+
+{% block main %}
+<!-- Add the rest of your content here. -->
+{% endblock main %}
+
+{% block page_js %}
+<script type="text/javascript" src="{{ "js/your_javascript_file.js"|static_url }}"></script>
+{% endblock page_js %}
