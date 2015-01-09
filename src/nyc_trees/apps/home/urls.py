@@ -23,5 +23,5 @@ urlpatterns = patterns(
 
     # "training" instead of "training/" because the flatpages admin interface
     # insists that the "URL" (really a URL segment) start with a leading slash
-    url(r'^training', include('django.contrib.flatpages.urls')),
+    url(r'^training(?P<url>.*/)$', include('django.contrib.flatpages.urls')),
 )
