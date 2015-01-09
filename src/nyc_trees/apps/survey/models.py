@@ -11,8 +11,7 @@ from libs.mixins import NycModel
 
 
 class Blockface(NycModel, models.Model):
-    geom = models.MultiLineStringField(srid=3857,
-                                       db_column='the_geom_webmercator')
+    geom = models.MultiLineStringField()
     is_available = models.BooleanField(default=True)
 
 

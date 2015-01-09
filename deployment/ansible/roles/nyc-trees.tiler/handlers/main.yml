@@ -1,0 +1,3 @@
+---
+- name: Restart nyc-trees-tiler
+  service: name=nyc-trees-tiler state=restarted

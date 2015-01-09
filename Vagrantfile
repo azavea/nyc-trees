@@ -133,6 +133,18 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     tiler.vm.synced_folder ".", "/vagrant", disabled: true
 
+    if Vagrant::Util::Platform.windows? || Vagrant::Util::Platform.cygwin?
+      tiler.vm.synced_folder "src/tiler", "/opt/tiler/", type: "rsync", rsync__exclude: ["node_modules/"]
+    else
+      tiler.vm.synced_folder "src/tiler", "/opt/tiler/"
+    end
+
+    # Windshaft via Nginx
+    tiler.vm.network "forwarded_port", {
+      guest: 80,
+      host: 7000
+    }.merge(VAGRANT_NETWORK_OPTIONS)
+
     tiler.vm.provision "ansible" do |ansible|
       ansible.playbook = "deployment/ansible/tile-servers.yml"
       ansible.groups = ANSIBLE_GROUPS.merge(ANSIBLE_ENV_GROUPS)

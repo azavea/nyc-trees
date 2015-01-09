@@ -1,0 +1,13 @@
+---
+- name: Configure Nginx site
+  template: src=nginx-nyc-trees-tiler.conf.j2
+            dest=/etc/nginx/sites-available/nyc-trees-tiler.conf
+  notify:
+    - Restart Nginx
+
+- name: Enable Nginx site
+  file: src=/etc/nginx/sites-available/nyc-trees-tiler.conf
+        dest=/etc/nginx/sites-enabled/nyc-trees-tiler
+        state=link
+  notify:
+    - Restart Nginx

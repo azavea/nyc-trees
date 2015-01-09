@@ -1,0 +1,8 @@
+---
+dependencies:
+  - { role: "azavea.nginx", nginx_delete_default_site: True }
+  - { role: "azavea.mapnik" }
+  - { role: "azavea.daemontools" }
+  - { role: "azavea.build-essential" }
+  - { role: "azavea.swapfile", when: developing_or_testing }
+  - { role: "azavea.nodejs" }
