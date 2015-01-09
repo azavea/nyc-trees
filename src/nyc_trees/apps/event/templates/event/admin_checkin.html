@@ -1,5 +1,67 @@
 {% extends "base.html" %}
+{% load utils %}
 
 {% block content %}
-{# TODO #}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <p>
+                <a href="{{ event.get_absolute_url }}"
+                    ><i class="icon-left-open-big"></i> {{ event.title }}</a>
+            </p>
+            <h2>Check-in</h2>
+        </div>
+    </div>
+
+    {% if users %}
+    <div class="registrants">
+        {% for user, did_attend in users %}
+        {% if forloop.first %}
+        <div class="row first">
+        {% elif forloop.last %}
+        <div class="row last">
+        {% else %}
+        <div class="row">
+        {% endif %}
+            <div class="col-sm-12">
+                <div class="btn-checkin-container pull-right">
+                {% include "event/partials/checkin_button.html" %}
+                </div>
+
+                {% if user.profile_is_public %}
+                <a href="{{ user.get_absolute_url}}">{{ user.username }}</a>
+                {% else %}
+                {{ user.username }}
+                {% endif %}
+
+                {% if user.real_name_is_public %}
+                <br />{{ user.get_full_name }}
+                {% endif %}
+
+                <hr />
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="row">
+        <div class="col-sm-12">
+            <p>Nobody has RSVPd, yet!</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="row">
+        <a href="javascript:void(0)"
+           id="increase-rsvp-limit"
+           data-verb="POST"
+           data-url="{% url 'increase_rsvp_limit' group_slug=group.slug event_slug=event.slug %}"
+           data-text="Increase RSVP limit"
+           class="col-sm-12 btn btn-primary">Increase RSVP limit ({{ event.max_attendees }})</a>
+    </div>
+</div>
 {% endblock content %}
+
+{% block page_js %}
+<script type="text/javascript" src="{{ "js/eventCheckin.js"|static_url }}"></script>
+{% endblock page_js %}

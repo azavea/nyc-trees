@@ -1,0 +1,21 @@
+{% comment %}
+
+The following variables must be in scope:
+===
+  - user (object)      Model object
+  - group (object)     Model object
+  - event (object)     Model object
+  - did_attend (bool)  Is `user` checked-in to this `event`?
+
+{% endcomment %}
+{% if did_attend %}
+<a href="javascript:void(0)"
+   data-verb="DELETE"
+   data-url="{% url 'event_check_in' group_slug=group.slug event_slug=event.slug username=user.username %}"
+   class="btn btn-checkout btn-primary icon-check"></a>
+{% else %}
+<a href="javascript:void(0)"
+   data-verb="POST"
+   data-url="{% url 'event_check_in' group_slug=group.slug event_slug=event.slug username=user.username %}"
+   class="btn btn-checkin btn-switch">Check-in</a>
+{% endif %}
