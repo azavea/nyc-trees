@@ -39,7 +39,7 @@ body {
 }
 
 section {
-  padding: 3rem 0;
+  padding: 1rem 0;
 }
 
 // Reset fonts for relevant elements
@@ -196,6 +196,7 @@ aside {
 .event-detail {
   font-size: $font-size-h6;
   color: $gray-light;
+  vertical-align: top;
   &.event-detail--title {
     font-size: $font-size-h5;
     color: $text-color;
@@ -269,4 +270,25 @@ label {
   margin-top: 3rem;
   padding: 4rem;
   background-color: lighten($brand-primary, 60%);
+}
+
+.calendar {
+  background-color: #fff;
+  max-width: 10rem;
+}
+
+.calendar-heading {
+  background-color: $brand-tertiary;
+  color: #fff;
+  font-size: $font-size-h6;
+  text-transform: uppercase;
+}
+
+.calendar-body {
+  font-size: $font-size-h3;
+}
+
+.calendar-body, .calendar-heading {
+  padding: .5rem;
+  text-align: center;
 }

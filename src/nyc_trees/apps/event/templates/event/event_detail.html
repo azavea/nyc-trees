@@ -1,9 +1,9 @@
-{% extends "base.html" %}
+{% extends "base_two_frames.html" %}
+
 {% load utils %}
 
-{% block content %}
+{% block top %}
 
-<div class="container">
     {% if event.starting_soon %}
     <div class="row">
         <div class="col-sm-12">
@@ -15,108 +15,149 @@
         </div>
     </div>
     {% endif %}
-    <div class="row">
-        <div class="col-sm-12">
-            <h2>{{ event.title }}</h2>
-            <p>
-                by <a href="{{ group.get_absolute_url }}">{{ group.name }}</a>
-            </p>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-6">
-            <p>
-                {{ event.begins_at|date:"DATE_FORMAT" }}
-            </p>
-            <p>
-                <i class="icon-clock"></i>
-                {{ event.begins_at|date:"TIME_FORMAT" }}
-            </p>
-            <p>
-                <i class="icon-globe"></i>
-                {{ event.address }}
-            </p>
-        </div>
-        <div class="col-sm-6">
-            {% if event.includes_training %}
-            <p><i class="icon-leaf"></i> Training</p>
-            {% endif %}
 
-            <p>
-            {% if event.is_private %}
-            <i class="icon-lock"></i> Private
-            {% else %}
-            <i class="icon-eye"></i> Public
-            {% endif %}
-            </p>
+{% endblock top %}
+
+{% block aside %}
+
+    <div class="pageheading-description block">
+        <div class="row">
+            <div class="col-xs-12">
+                <h2>{{ event.title }}</h2>
+                <p class="h4">
+                    by <a href="{{ group.get_absolute_url }}">{{ group.name }}</a>
+                </p>
+            </div>
         </div>
+
+        <div class="row">
+            <div class="col-xs-4">
+                <div class="calendar">
+                    <div class="calendar-heading">
+                        {{ event.begins_at|date:"M" }}
+                    </div>
+                    <div class="calendar-body">
+                        {{ event.begins_at|date:"d" }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-8">
+                <table>
+                    {% if event.includes_training %}
+                    <tr class="event-detail">
+                        <td>
+                            <i class="icon-leaf"></i>
+                        </td>
+                        <td>
+                            Training
+                        </td>
+                    </tr>
+                    {% endif %}
+                    <tr class="event-detail">
+                        <td>
+                            <i class="icon-globe"></i>
+                        </td>
+                        <td>
+                            {{ event.address }}
+                        </td>
+                    </tr>
+                    <tr class="event-detail">
+                        {% if event.is_private %}
+                            <td>
+                                <i class="icon-lock"></i>
+                            </td>
+                            <td>
+                                Private
+                            </td>
+                        {% else %}
+                            <td>
+                                <i class="icon-eye"></i>
+                            </td>
+                            <td>
+                                Public
+                            </td>
+                        {% endif %}
+                    </tr>
+                </table>
+            </div>
+        </div>
+
     </div>
 
-    <div id="rsvp-section" class="row">
-    {% include "event/partials/rsvp.html" %}
-    </div>
-
-    <div class="row">
-        <div class="col-sm-12">
-            <h3>Description</h3>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12">
-            {{ event.description }}
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-sm-12">
-            <h3>How to find us</h3>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12">
-            {{ event.location_description }}
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-sm-12">
-            <h3>Contact</h3>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-6">
-            {{ event.contact_name }}
-        </div>
-        <div class="col-sm-6">
-            <a href="mailto:{{ event.contact_email }}" class="btn btn-switch"
-                >Email</a>
+    <div class="pageheading-controls block">
+        <div id="rsvp-section" class="row">
+            {% include "event/partials/rsvp.html" %}
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-sm-12">
-            <h3>Share Link</h3>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-6">
-            {{ share_url }}
-        </div>
-        <div class="col-sm-6">
-            <a href="#" class="btn btn-switch">Copy</a>
-        </div>
-    </div>
+{% endblock aside %}
 
-    <div class="row">
-        <div class="col-sm-12">
-            <p><a href="{{ group_events_url }}"
-                >Find more events by this group</a></p>
+{% block main %}
+
+    <section>
+        <div class="row">
+            <div class="col-sm-12">
+                <h4 class="section-heading">Description</h4>
+            </div>
         </div>
-    </div>
-</div>
+        <div class="row">
+            <div class="col-sm-12">
+                {{ event.description }}
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="row">
+            <div class="col-sm-12">
+                <h4 class="section-heading">How to find us</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                {{ event.location_description }}
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="row">
+            <div class="col-sm-12">
+                <h4 class="section-heading">Contact</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                {{ event.contact_name }}
+            </div>
+            <div class="col-sm-6 text-right">
+                <a href="mailto:{{ event.contact_email }}" class="btn btn-switch"
+                    >Email</a>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="row">
+            <div class="col-sm-12">
+                <h4 class="section-heading">Share Link</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                {{ share_url }}
+            </div>
+            <div class="col-sm-6 text-right">
+                <a href="#" class="btn btn-switch">Copy</a>
+            </div>
+        </div>
 
+        <div class="row">
+            <div class="col-sm-12">
+                <p><a href="{{ group_events_url }}"
+                    >Find more events by this group</a></p>
+            </div>
+        </div>
+    </section>
+{% endblock main %}
 
-{% endblock content %}
 
 
 {% block page_js %}
