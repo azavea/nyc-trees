@@ -5,6 +5,9 @@ from __future__ import division
 
 import shortuuid
 
+from datetime import timedelta
+from django.utils import timezone
+
 from django.contrib.gis.db import models
 from django.core.urlresolvers import reverse
 from django.utils.text import slugify
@@ -12,6 +15,11 @@ from django.utils.text import slugify
 from apps.core.models import User, Group
 
 from libs.mixins import NycModel
+
+
+# Amount of time before an event starts to display
+# the "Starting soon" notification message.
+STARTING_SOON_WINDOW = timedelta(hours=1)
 
 
 class Event(NycModel, models.Model):
@@ -57,10 +65,14 @@ class Event(NycModel, models.Model):
     def has_space_available(self):
         return self.eventregistration_set.count() < self.max_attendees
 
-    @property
-    def starting_soon(self):
-        # TODO: Implement
-        return True
+    def starting_soon(self, target_dt=None):
+        """
+        Return True if `target_dt` is within the event starting period.
+        Argument `target_dt` defaults to `timezone.now` if omitted.
+        """
+        target_dt = target_dt or timezone.now()
+        return target_dt >= self.begins_at - STARTING_SOON_WINDOW \
+            and target_dt < self.ends_at
 
     def get_checkin_url(self):
         return reverse('event_check_in_page',

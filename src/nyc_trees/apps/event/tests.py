@@ -5,6 +5,9 @@ from __future__ import division
 
 from functools import partial
 
+from datetime import datetime, timedelta
+from django.utils import timezone
+
 from django.core import mail
 from django.http import HttpResponseForbidden
 
@@ -135,3 +138,21 @@ class CheckinEventTest(EventTestCase):
         self.event = Event.objects.get(id=self.event.id)
         self.assertEqual(15, context['max_attendees'])
         self.assertEqual(15, self.event.max_attendees)
+
+    def test_starting_soon(self):
+        tz = timezone.get_current_timezone()
+        event = Event(begins_at=datetime(2015, 1, 13, hour=12, tzinfo=tz),
+                      ends_at=datetime(2015, 1, 13, hour=13, tzinfo=tz))
+
+        dt = datetime(2015, 1, 13, hour=10, minute=59, tzinfo=tz)
+        self.assertFalse(event.starting_soon(dt))
+
+        # From hour=10, minute=59
+        #   to hour=12, minute=59
+        for i in xrange(120):
+            dt = dt + timedelta(minutes=1)
+            self.assertTrue(event.starting_soon(dt))
+
+        # hour=13, minute=0
+        dt = dt + timedelta(minutes=1)
+        self.assertFalse(event.starting_soon(dt))
