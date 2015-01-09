@@ -1,13 +1,16 @@
 "use strict";
 
-var $ = require('jquery');
-
-// Needed for Check-in button event handlers.
-require('./eventCheckinButton');
+var $ = require('jquery'),
+    fetchAndReplace = require('./fetchAndReplace');
 
 var dom = {
     increaseRsvpLimitButton: '#increase-rsvp-limit'
 };
+
+fetchAndReplace({
+    container: '.btn-checkin-container',
+    target: '.btn-checkin, .btn-checkout'
+});
 
 $(dom.increaseRsvpLimitButton).click(function() {
     var $el = $(this);

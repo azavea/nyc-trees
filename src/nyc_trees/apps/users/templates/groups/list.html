@@ -12,7 +12,7 @@
     {% for group, user_is_following in groups %}
     <div class="row">
         <div class="col-sm-12">
-            <div class="pull-right">
+            <div class="btn-follow-container pull-right">
                 {% include 'groups/partials/follow_button.html' %}
             </div>
             <a href="{% url 'group_detail' group_slug=group.slug %}"

@@ -29,7 +29,9 @@
                 {% if event_list.user_can_edit_group %}
                 <a href="{{edit_url}}" class="btn btn-switch icon-cog">Admin</a>
                 {% else %}
-                {% include 'groups/partials/follow_button.html' %}
+                <div class="btn-follow-container">
+                    {% include 'groups/partials/follow_button.html' %}
+                </div>
                 {% endif %}
             </div>
         </div>
