@@ -3,9 +3,8 @@
 var $ = require('jquery'),
     L = require('leaflet');
 
-var zoom = {
-    NEIGHBORHOOD: 16
-};
+var zoom = require('./mapUtil').zoom,
+    searchController = require('./searchController');
 
 module.exports = {
     create: create
@@ -30,12 +29,11 @@ function create(options) {
     if (options.legend) {
         initLegend($controlsContainer, map);
     }
+    if (options.search) {
+        initLocationSearch($controlsContainer, map);
+    }
 
-    // New York City bounds from http://www.mapdevelopers.com/geocode_bounding_box.php
-    map.fitBounds([
-        [40.495996, -74.259088],
-        [40.915256, -73.700272]
-    ]);
+    map.fitBounds(config.bounds);
 
     return map;
 }
@@ -65,6 +63,10 @@ function initGeolocation($controlsContainer, map) {
         window.alert('Unable to show your location.');
     }
 
+}
+
+function initLocationSearch($controlsContainer, map) {
+    searchController.create($controlsContainer, map);
 }
 
 function initLegend($controlsContainer, map) {

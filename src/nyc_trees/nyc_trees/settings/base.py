@@ -151,6 +151,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.tz',
     'django.contrib.messages.context_processors.messages',
     'django.core.context_processors.request',
+    'nyc_trees.context_processors.nyc_bounds',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#template-loaders
@@ -282,9 +283,8 @@ OMGEO_SETTINGS = [[
     'omgeo.services.EsriWGS', {}
 ]]
 
-# A conservative bounding box around New York City, drawn freehand
-# on boundingbox.info
-GEOCODE_BBOX_WEBM = (-8279353, 4934956, -8200470, 5005583)
+# New York City bounds from http://www.mapdevelopers.com/geocode_bounding_box.php
+NYC_BOUNDS = (-74.259088, 40.495996, -73.700272, 40.915256)
 
 # If geocoding a string produces no results, this string will be
 # appended for a second attempt.

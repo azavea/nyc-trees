@@ -59,7 +59,7 @@ def _make_response_dict(candidates):
     return {'candidates': candidates}
 
 
-def _omgeo_candidate_to_dict(candidate, srid=3857):
+def _omgeo_candidate_to_dict(candidate, srid=4326):
     p = Point(candidate.x, candidate.y, srid=candidate.wkid)
     if candidate.wkid != srid:
         p.transform(srid)
@@ -86,15 +86,15 @@ def _in_bbox(bbox, c):
 
 
 def _build_viewbox():
-    xmin, ymin, xmax, ymax = settings.GEOCODE_BBOX_WEBM
+    xmin, ymin, xmax, ymax = settings.NYC_BOUNDS
     return Viewbox(left=float(xmin),
                    right=float(xmax),
                    bottom=float(ymin),
                    top=float(ymax),
-                   wkid=3857)
+                   wkid=4326)
 
 
 def _build_bbox_dict():
-    xmin, ymin, xmax, ymax = settings.GEOCODE_BBOX_WEBM
+    xmin, ymin, xmax, ymax = settings.NYC_BOUNDS
     return {'xmin': xmin, 'ymin': ymin,
             'xmax': xmax, 'ymax': ymax}

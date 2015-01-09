@@ -2,5 +2,6 @@
 
 require('./map').create({
     geolocation: true,
-    legend: true
+    legend: true,
+    search: true
 });
