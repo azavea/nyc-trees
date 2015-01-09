@@ -6,7 +6,8 @@ var $ = require('jquery');
 require('./eventCheckinButton');
 
 var dom = {
-    increaseRsvpLimitButton: '#increase-rsvp-limit'
+    increaseRsvpLimitButton: '#increase-rsvp-limit',
+    maxAttendees: '#max-attendees'
 };
 
 $(dom.increaseRsvpLimitButton).click(function() {
@@ -17,8 +18,7 @@ $(dom.increaseRsvpLimitButton).click(function() {
         dataType: 'json'
     }).done(function(data) {
         if (data.max_attendees) {
-            var text = $el.data('text') + ' (' + data.max_attendees + ')';
-            $el.text(text);
+            $(dom.maxAttendees).text(data.max_attendees);
         }
     });
 });

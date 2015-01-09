@@ -216,7 +216,8 @@ def event_check_in_page(request, event_slug):
     return {
         'group': request.group,
         'event': event,
-        'users': users
+        'users': users,
+        'rsvp_count': len(users)
     }
 
 
