@@ -14,7 +14,7 @@ from django.utils.timezone import make_aware, utc
 from apps.survey.models import Blockface, Survey
 
 
-def js_settings(request):
+def settings_js(request):
     blockface_updated_at = _get_last_updated_datetime(Blockface)
     survey_updated_at = _get_last_updated_datetime(Survey)
 

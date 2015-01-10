@@ -5,7 +5,7 @@ from __future__ import division
 
 from django_tinsel.decorators import route
 
-from apps.core.views import js_settings
+from apps.core.views import settings_js
 
 
-js_settings = route(GET=js_settings)
+settings_js = route(GET=settings_js)

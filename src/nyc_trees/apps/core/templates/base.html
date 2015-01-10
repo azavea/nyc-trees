@@ -1,5 +1,5 @@
-{% load utils %}
 <!DOCTYPE html>
+{% load utils %}
 <html>
     <head>
         <meta charset="utf-8">
@@ -56,7 +56,7 @@
             {% endblock content %}
         </div>
     </body>
-    <script type="text/javascript" src="{% url "js_settings" %}"></script>
+    <script type="text/javascript" src="{% url "settings_js" %}"></script>
     {# TODO: Concatenate common.js and base.js #}
     <script type="text/javascript" src="{{ "js/common.js"|static_url }}"></script>
     <script type="text/javascript" src="{{ "js/base.js"|static_url }}"></script>
