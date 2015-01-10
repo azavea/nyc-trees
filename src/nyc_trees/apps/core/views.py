@@ -21,6 +21,10 @@ def js_settings(request):
     max_timestamp = lambda *datetimes: timegm(max(*datetimes).utctimetuple())
 
     context = {
+        'bounds_xmin': float(settings.NYC_BOUNDS[0]),
+        'bounds_ymin': float(settings.NYC_BOUNDS[1]),
+        'bounds_xmax': float(settings.NYC_BOUNDS[2]),
+        'bounds_ymax': float(settings.NYC_BOUNDS[3]),
         "tiler_url": settings.TILER_URL,
         "db_name": settings.DATABASES['default']['NAME'],
         "cache_buster": {

@@ -13,7 +13,7 @@ window.config = {
             }
         }
     },
-    "bounds": [[{{NYC_BOUNDS_YMIN}}, {{NYC_BOUNDS_XMIN}}], [{{NYC_BOUNDS_YMAX}}, {{NYC_BOUNDS_XMAX}}]]
+    "bounds": [[{{bounds_ymin}}, {{bounds_xmin}}], [{{bounds_ymax}}, {{bounds_xmax}}]]
 };
 
 if (Object.freeze) {
