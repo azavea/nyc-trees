@@ -3,10 +3,12 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.utils.timezone import now
 
+from libs.formatters import humanize_bytes
 from libs.sql import get_group_tree_count
 
 from apps.core.helpers import user_is_group_admin
@@ -113,9 +115,10 @@ def redirect_to_group_detail(request):
         }))
 
 
-def edit_group(request):
+def edit_group(request, form=None):
     group = request.group
-    form = GroupSettingsForm(instance=request.group, label_suffix='')
+    if not form:
+        form = GroupSettingsForm(instance=request.group, label_suffix='')
     event_list = (group_edit_events
                   .configure(chunk_size=2,
                              active_filter=EventList.Filters.CURRENT,
@@ -126,6 +129,8 @@ def edit_group(request):
         'event_list': event_list,
         'form': form,
         'group_slug': group.slug,
+        'max_image_size': humanize_bytes(
+            settings.MAX_GROUP_IMAGE_SIZE_IN_BYTES, 0)
     }
 
 
@@ -136,11 +141,7 @@ def update_group_settings(request):
         form.save()
         return HttpResponseRedirect(request.group.get_absolute_url())
     else:
-        context = {
-            'form': form,
-            'group_slug': request.group.slug
-        }
-        return context
+        return edit_group(request, form=form)
 
 
 def follow_group(request):
