@@ -282,7 +282,8 @@ OMGEO_SETTINGS = [[
     'omgeo.services.EsriWGS', {}
 ]]
 
-# New York City bounds from http://www.mapdevelopers.com/geocode_bounding_box.php
+# New York City bounds from
+# http://www.mapdevelopers.com/geocode_bounding_box.php
 NYC_BOUNDS = (-74.259088, 40.495996, -73.700272, 40.915256)
 
 # If geocoding a string produces no results, this string will be
