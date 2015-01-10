@@ -8,6 +8,7 @@ from calendar import timegm
 
 from django.conf import settings
 from django.shortcuts import render_to_response
+from django.template import RequestContext
 from django.utils.timezone import make_aware, utc
 
 from apps.survey.models import Blockface, Survey
@@ -19,13 +20,19 @@ def js_settings(request):
 
     max_timestamp = lambda *datetimes: timegm(max(*datetimes).utctimetuple())
 
-    return render_to_response('core/settings.js', {
+    context = {
         "tiler_url": settings.TILER_URL,
         "db_name": settings.DATABASES['default']['NAME'],
         "cache_buster": {
             "progress": max_timestamp(blockface_updated_at, survey_updated_at)
         }
-    })
+    }
+
+    return render_to_response('core/settings.js',
+                              context,
+                              content_type='application/javascript',
+                              # required to invoke the context processors
+                              context_instance=RequestContext(request))
 
 
 def _get_last_updated_datetime(Model):
