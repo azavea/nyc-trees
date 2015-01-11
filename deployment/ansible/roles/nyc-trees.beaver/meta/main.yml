@@ -1,3 +1,4 @@
 ---
 dependencies:
+  - { role: "nyc-trees.python", python_development: False }
   - { role: "azavea.beaver" }

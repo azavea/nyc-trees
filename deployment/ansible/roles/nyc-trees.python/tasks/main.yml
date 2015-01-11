@@ -1,0 +1,3 @@
+---
+- name: Install Python Docutils
+  apt: pkg=python-docutils=0.11-3 state=present
