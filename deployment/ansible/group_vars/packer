@@ -12,9 +12,8 @@ postgresql_host: "database.service.nyc-trees.internal"
 relp_host: "monitoring.service.nyc-trees.internal"
 graphite_host: "monitoring.service.nyc-trees.internal"
 statsite_host: "monitoring.service.nyc-trees.internal"
-tile_server_endpoint: "tile.service.nyc-trees.internal"
+tiler_host: "tile.service.nyc-trees.internal"
 
 postgresql_username: nyctrees
 postgresql_password: nyctrees
 postgresql_database: nyc_trees
-

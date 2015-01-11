@@ -77,22 +77,6 @@ In order to speed up things up, you may want to consider using a local caching p
 $ VAGRANT_PROXYCONF_ENDPOINT="http://192.168.96.10:8123/" vagrant up
 ```
 
-### Log Aggregation
-
-In order to view the Kibana web UI, navigate to the following URL from a browser on the virtual machine host:
-
-```
-http://localhost:5601/
-```
-
-### Statistics Aggregation
-
-In order to view the Graphite Web UI, navigate to the following URL from a browser on the virtual machine host:
-
-```
-http://localhost:8080/
-```
-
 ## Testing
 
 In order to simulate the testing environment used in CI, bring up the testing environment with:

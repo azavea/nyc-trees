@@ -2,10 +2,7 @@
 dependencies:
   - { role: "azavea.python", python_development: True }
   - { role: "azavea.pip" }
-  - { role: "azavea.git" }
   - { role: "azavea.postgresql-support" }
-  - { role: "azavea.daemontools" }
-  - { role: "azavea.nginx", nginx_delete_default_site: True }
-  - { role: "azavea.nodejs" }
   - { role: "azavea.ruby" }
   - { role: "azavea.sauce-connect", when: sauce_labs_api_key_is_defined }
+  - { role: "nyc-trees.monitoring", collectd_prefix: "collectd.app.", when: not_testing }

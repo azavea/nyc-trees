@@ -1,3 +1,7 @@
 ---
 dependencies:
   - { role: "azavea.ntp" }
+  - { role: "azavea.git" }
+  - { role: "azavea.nginx", nginx_delete_default_site: True, when: not_monitoring | bool }
+  - { role: "azavea.daemontools", when: not_monitoring | bool }
+  - { role: "azavea.nodejs", when: not_monitoring | bool }

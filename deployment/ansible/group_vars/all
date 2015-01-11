@@ -4,6 +4,7 @@ developing_or_testing: "'development' in group_names or 'test' in group_names"
 developing: "'development' in group_names"
 not_developing: "'development' not in group_names"
 packing: "'packer' in group_names"
+not_monitoring: "'monitoring-servers' not in group_names"
 
 django_test_database: "{{ lookup('env', 'NYC_TREES_TEST_DB_NAME') | default('test_nyc_trees', true) }}"
 

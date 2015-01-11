@@ -1,5 +1,7 @@
 ---
-- hosts: services
+- hosts:
+    - services
+    - monitoring-servers
   sudo: True
 
   pre_tasks:
@@ -12,11 +14,6 @@
     - { role: "nyc-trees.postgresql", when: developing_or_testing }
     - { role: "nyc-trees.pgweb", when: developing_or_testing }
     - { role: "azavea.redis", when: developing_or_testing }
-
-- hosts: monitoring-servers
-  sudo: True
-
-  roles:
     - { role: "nyc-trees.graphite", when: not_testing }
     - { role: "nyc-trees.logstash", when: not_testing }
     - { role: "azavea.kibana", when: not_testing }
