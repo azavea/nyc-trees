@@ -221,6 +221,14 @@ def event_admin_check_in_page(request, event_slug):
     }
 
 
+def event_user_check_in_page(request, event_slug):
+    event = get_object_or_404(Event, group=request.group, slug=event_slug)
+    return {
+        'event': event,
+        'user': request.user
+    }
+
+
 @transaction.atomic
 def check_in_user_to_event(request, event_slug, username):
     if request.method == 'POST':

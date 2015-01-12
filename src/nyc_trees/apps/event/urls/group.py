@@ -10,7 +10,7 @@ from apps.event.routes import (events, add_event, event_detail,
                                event_registration, start_event_map_print_job,
                                event_admin_check_in_page, check_in_user_to_event,
                                email_event_registered_users, event_email,
-                               increase_rsvp_limit)
+                               increase_rsvp_limit, event_user_check_in_page)
 
 # These URLs have the prefix 'group/'
 urlpatterns = patterns(
@@ -42,6 +42,9 @@ urlpatterns = patterns(
 
     url(r'^(?P<group_slug>[\w-]+)/event/(?P<event_slug>[\w-]+)/checkin/$',
         event_admin_check_in_page, name='event_admin_check_in_page'),
+
+    url(r'^(?P<group_slug>[\w-]+)/event/(?P<event_slug>[\w-]+)/arrive/$',
+        event_user_check_in_page, name='event_user_check_in_page'),
 
     url(r'^(?P<group_slug>[\w-]+)/event/'
         r'(?P<event_slug>[\w-]+)/checkin/(?P<username>[^/]+)/$',

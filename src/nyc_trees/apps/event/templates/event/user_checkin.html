@@ -1,0 +1,19 @@
+{% extends "base_two_frames.html" %}
+{% load utils %}
+
+{% block aside %}
+    <div class="pageheading-description block">
+        <div class="row">
+            {% include "event/partials/back_to_event.html" %}
+            <div class="col-xs-12">
+                <h2>Check-in to event</h2>
+            </div>
+        </div>
+    </div>
+{% endblock aside %} 
+
+{% block main %}
+    <div>When you arrive on site, check in with the event coordinator.
+         They will enable you to start mapping!</div>
+    <div>Actually, I need to <a href="#">change my RSVP</a>.</div>
+{% endblock main %}

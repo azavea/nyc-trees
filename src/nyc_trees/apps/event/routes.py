@@ -67,6 +67,12 @@ event_admin_check_in_page = group_admin_do(
     route(GET=do(render_template('event/admin_checkin.html'),
                  v.event_admin_check_in_page)))
 
+event_user_check_in_page = do(
+    login_required,
+    group_request,
+    route(GET=do(render_template('event/user_checkin.html'),
+                 v.event_user_check_in_page )))
+
 check_in_user_to_event = group_admin_do(
     render_template('event/partials/checkin_button.html'),
     route(POST=v.check_in_user_to_event,
