@@ -5,10 +5,10 @@ from __future__ import division
 
 from django.conf.urls import patterns, url
 
-from apps.core.routes import js_settings
+from apps.core.routes import settings_js
 
 
 urlpatterns = patterns(
     '',
-    url(r'^js-settings/$', js_settings, name='js_settings'),
+    url(r'^settings.js$', settings_js, name='settings_js'),
 )
