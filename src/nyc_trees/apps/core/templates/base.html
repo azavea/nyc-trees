@@ -56,7 +56,27 @@
             {% endblock content %}
         </div>
     </body>
-    <script type="text/javascript" src="{% url "js_settings" %}"></script>
+    <script type="text/javascript">
+        window.config = {
+            "files": {
+                "datetimepicker_polyfill.js": "{{ 'js/datetimepicker_polyfill.js'|static_url }}"
+            },
+            "urls": {
+                "geocode": "{% url 'geocode' %}",
+                "layers": {
+                    "progress": {
+                        "tiles": "{{ tiler_url }}/{{ cache_buster.progress }}/{{ db_name }}/progress/{z}/{x}/{y}.png",
+                        "grids": "{{ tiler_url }}/{{ cache_buster.progress }}/{{ db_name }}/progress/{z}/{x}/{y}.grid.json"
+                    }
+                }
+            },
+            "bounds": [[{{nyc_bounds.ymin}}, {{nyc_bounds.xmin}}], [{{nyc_bounds.ymax}}, {{nyc_bounds.xmax}}]]
+        };
+
+        if (Object.freeze) {
+            window.config = Object.freeze(window.config);
+        }
+    </script>
     {# TODO: Concatenate common.js and base.js #}
     <script type="text/javascript" src="{{ "js/common.js"|static_url }}"></script>
     <script type="text/javascript" src="{{ "js/base.js"|static_url }}"></script>
