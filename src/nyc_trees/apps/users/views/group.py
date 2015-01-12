@@ -26,13 +26,15 @@ from apps.event.event_list import EventList
 
 def group_list_page(request):
     # TODO: pagination
-    groups = Group.objects.all()
+    groups = Group.objects.order_by('name')
     group_ids = Follow.objects.filter(user_id=request.user.id) \
         .values_list('group_id', flat=True)
     user_is_following = [group.id in group_ids for group in groups]
 
+    group_infos = zip(groups, user_is_following)
     return {
-        'groups': zip(groups, user_is_following)
+        'groups': group_infos,
+        'groups_count': len(group_infos),
     }
 
 

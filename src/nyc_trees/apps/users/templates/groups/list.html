@@ -1,37 +1,55 @@
-{% extends "base.html" %}
+{% extends "base_two_frames.html" %}
 {% load utils %}
 
-{% block content %}
 
-<div class="container">
+{% block aside %}
+<div class="pageheading-description block">
     <div class="row">
-        <div class="col-sm-12">
-            <h1>Groups</h1>
+        <div class="col-xs-12">
+            <h2>Groups</h2>
         </div>
     </div>
-    {% for group, user_is_following in groups %}
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="btn-follow-container pull-right">
-                {% include 'groups/partials/follow_button.html' %}
-            </div>
-            <a href="{% url 'group_detail' group_slug=group.slug %}"
-                >{{ group.name }}</a>
-            <p>
-                {{ group.description }}
-            </p>
-        </div>
-    </div>
-    {% empty %}
-    <div class="row">
-        <div class="col-sm-12">
-            <p>No groups have been added, yet!</p>
-        </div>
-    </div>
-    {% endfor %}
 </div>
+{% endblock aside %}
 
-{% endblock %}
+{% block main %}
+{% block pre_loop_section %}
+{% endblock pre_loop_section %}
+{% if groups %}
+{% for group, user_is_following in groups %}
+<div class="row">
+    <div class="col-sm-12"
+         {% if chunk_size != None and forloop.counter > chunk_size %}
+         style="display: none;"
+         {% endif %}
+         data-group-name="{{ group.name|lower }}"
+         data-group-description="{{ group.description.lower }}">
+        <div class="btn-follow-container pull-right">{% include 'groups/partials/follow_button.html' %}</div>
+        <a href="{% url 'group_detail' group_slug=group.slug %}">{{ group.name }}</a>
+        <p>{{ group.description }}</p>
+    </div>
+</div>
+{% endfor %}
+<a href="#"
+   {% if chunk_size == None or groups_count <= chunk_size %}
+   style="display: none;"
+   {% endif %}
+   data-class="group-view-all">View All</a>
+
+<div data-class="group-search-none-found" style="display: none;">
+    <p>No groups match your search criteria.</p>
+</div>
+{% else %}
+<div class="row">
+    <div class="col-sm-12">
+        <p>No groups have been added, yet!</p>
+    </div>
+</div>
+{% endif %}
+
+{% block list_footer %}
+{% endblock list_footer %}
+{% endblock main %}
 
 {% block page_js %}
 <script type="text/javascript" src="{{ "js/group_list.js"|static_url }}"></script>
