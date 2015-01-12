@@ -19,7 +19,7 @@ from apps.event.models import Event, EventRegistration
 from apps.event.views import (events_list_page,
                               event_email,
                               register_for_event,
-                              event_check_in_page,
+                              event_admin_check_in_page,
                               check_in_user_to_event,
                               increase_rsvp_limit)
 
@@ -82,7 +82,7 @@ class EventEmailTest(EventTestCase):
 class CheckinEventTest(EventTestCase):
     def _assert_num_checkins(self, expected_amount):
         request = make_request(user=self.user, group=self.group)
-        context = event_check_in_page(request, self.event.slug)
+        context = event_admin_check_in_page(request, self.event.slug)
         self.assertEqual(self.event, context['event'])
         self.assertEqual(self.group, context['group'])
 

@@ -74,8 +74,8 @@ class Event(NycModel, models.Model):
         return target_dt >= self.begins_at - STARTING_SOON_WINDOW \
             and target_dt < self.ends_at
 
-    def get_checkin_url(self):
-        return reverse('event_check_in_page',
+    def get_admin_checkin_url(self):
+        return reverse('event_admin_check_in_page',
                        kwargs={'group_slug': self.group.slug,
                                'event_slug': self.slug})
 

@@ -230,11 +230,11 @@ class CheckinEventUITest(EventTestCase):
 
     def test_group_admin_access_only(self):
         self.login(self.user.username)
-        self.get(self.event.get_checkin_url())
+        self.get(self.event.get_admin_checkin_url())
         self.wait_for_text("Check-in")
 
         self.login(self.nonadmin_user.username)
-        self.get(self.event.get_checkin_url())
+        self.get(self.event.get_admin_checkin_url())
         self.wait_for_text("403 Forbidden")
 
     def test_checkin(self):
@@ -251,7 +251,7 @@ class CheckinEventUITest(EventTestCase):
 
         # Admin check-in
         self.login(self.user.username)
-        self.get(self.event.get_checkin_url())
+        self.get(self.event.get_admin_checkin_url())
         self.wait_for_text("Check-in")
 
         self.assert_text_in_body(self.nonadmin_user.username)
@@ -267,7 +267,7 @@ class CheckinEventUITest(EventTestCase):
 
     def test_rsvp_limit_increase(self):
         self.login(self.user.username)
-        self.get(self.event.get_checkin_url())
+        self.get(self.event.get_admin_checkin_url())
         self.wait_until_element_contains('#max-attendees', '0')
         self.click('#increase-rsvp-limit')
         self.wait_until_element_contains('#max-attendees', '5')
