@@ -27,6 +27,16 @@ def settings(request):
 
 
 def tiler_cache_busters(request):
+    # At the time this function was written, the generated context was
+    # only used in the base.html template, and our AJAX requests all
+    # render partials, not full templates inheriting from base. Given
+    # those constraints, we can skip generating this context, which
+    # saves some database query time.
+    if request.is_ajax():
+        # The Django 1.7 docs say "Each context processor _must_ return
+        # a dictionary."
+        return {}
+
     blockface_updated_at = _get_last_updated_datetime(Blockface)
     survey_updated_at = _get_last_updated_datetime(Survey)
 
