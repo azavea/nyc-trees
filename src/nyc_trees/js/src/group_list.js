@@ -11,9 +11,6 @@ var $ = require('jquery'),
     $groups,
     $searchNoneFound;
 
-// Needed for Follow button event handlers.
-require('./followGroupButton');
-
 fetchAndReplace({
     container: '.btn-follow-container',
     target: '.btn-follow, .btn-unfollow'
