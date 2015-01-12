@@ -57,8 +57,8 @@ class GroupSettingsForm(ModelForm):
                 size_string = humanize_bytes(image._size)
                 max_size_string = humanize_bytes(
                     settings.MAX_GROUP_IMAGE_SIZE_IN_BYTES)
-                raise ValidationError('Files must be less than %s in size. '
-                                      'The file you uploaded is %s' % (
+                raise ValidationError('Images must be less than %s in size. '
+                                      'The image you uploaded is %s' % (
                                           max_size_string, size_string))
         except AttributeError:
             # If an image was not submitted, image won't have a _size property
