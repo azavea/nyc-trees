@@ -1,10 +1,21 @@
-{% extends "base.html" %}
+{% extends "base_two_frames.html" %}
+
 {% load utils %}
 
-{% block content %}
-<h2>New Event</h2>
-{% include 'event/partials/event_form.html' %}
-{% endblock content %}
+{% block aside %}
+
+  <h2>New Event</h2>
+  <p class="pageheading-description-detail">
+      Add a new event for your group.
+  </p>
+
+{% endblock aside %}
+
+{% block main %}
+
+  {% include 'event/partials/event_form.html' %}
+
+{% endblock main %}
 
 {% block page_js %}
 <script type="text/javascript" src="{{ "js/event_form.js"|static_url }}"></script>

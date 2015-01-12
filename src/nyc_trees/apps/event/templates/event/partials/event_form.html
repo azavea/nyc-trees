@@ -5,19 +5,19 @@
         {{ form.errors }}
         {{ form.non_field_errors }}
 
-        <div class="fieldWrapper">
+        <div class="field">
             {{ form.title.errors }}
             {{ form.title.label_tag }}
             {{ form.title }}
         </div>
 
-        <div class="fieldWrapper">
+        <div class="field">
             {{ form.date.errors }}
             {{ form.date.label_tag }}
             {{ form.date }}
         </div>
 
-        <div class="fieldWrapper">
+        <div class="field">
             <label>Time</label>
             <div style="display: inline-block;">
                 {{ form.begins_at_time.errors }}
@@ -29,7 +29,7 @@
             </div>
         </div>
 
-        <div class="fieldWrapper">
+        <div class="field">
             {{ form.address.errors }}
             {{ form.location.errors }}
 
@@ -39,43 +39,43 @@
             {{ form.location.as_hidden }}
         </div>
 
-        <div class="fieldWrapper">
+        <div class="field">
             {{ form.location_description.errors }}
             {{ form.location_description.label_tag }}
             {{ form.location_description }}
         </div>
 
-        <div class="fieldWrapper">
+        <div class="field">
             {{ form.description.errors }}
             {{ form.description.label_tag }}
             {{ form.description }}
         </div>
 
-        <div class="fieldWrapper">
+        <div class="field">
             {{ form.is_private.errors }}
             {{ form.is_private.label_tag }}
             {{ form.is_private }}
         </div>
 
-        <div class="fieldWrapper">
+        <div class="field">
             {{ form.includes_training.errors }}
             {{ form.includes_training.label_tag }}
             {{ form.includes_training }}
         </div>
 
-        <div class="fieldWrapper">
+        <div class="field">
             {{ form.max_attendees.errors }}
             {{ form.max_attendees.label_tag }}
             {{ form.max_attendees }}
         </div>
 
-        <div class="fieldWrapper">
+        <div class="field">
             {{ form.contact_email.errors }}
             {{ form.contact_email.label_tag }}
             {{ form.contact_email }}
         </div>
 
-        <div class="fieldWrapper">
+        <div class="field">
             {{ form.contact_name.errors }}
             {{ form.contact_name.label_tag }}
             {{ form.contact_name }}

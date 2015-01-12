@@ -20,7 +20,7 @@
 // Body reset
 
 html {
-  font-size: 10px;
+  font-size: 62.5%;
   -webkit-tap-highlight-color: rgba(0,0,0,0);
   overflow-x: hidden;
 }
@@ -39,7 +39,7 @@ body {
 }
 
 section {
-  padding: 1rem 0;
+  padding: 3rem 0;
 }
 
 // Reset fonts for relevant elements
@@ -186,6 +186,10 @@ aside {
   }
 }
 
+.field {
+  @include blockpadding();
+}
+
 .contribution-number {
   font-size: $font-size-h2;
   font-weight: bold;
@@ -196,7 +200,6 @@ aside {
 .event-detail {
   font-size: $font-size-h6;
   color: $gray-light;
-  vertical-align: top;
   &.event-detail--title {
     font-size: $font-size-h5;
     color: $text-color;
