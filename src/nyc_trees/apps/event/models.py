@@ -79,12 +79,20 @@ class Event(NycModel, models.Model):
                        kwargs={'group_slug': self.group.slug,
                                'event_slug': self.slug})
 
+    def get_user_checkin_url(self):
+        return reverse('event_user_check_in_page',
+                       kwargs={'group_slug': self.group.slug,
+                               'event_slug': self.slug})
+
     def get_absolute_url(self):
         return reverse('event_detail', kwargs={'group_slug': self.group.slug,
                                                'event_slug': self.slug})
 
     class Meta:
         unique_together = (("group", "slug"), ("group", "title"))
+
+    def __unicode__(self):
+        return "'%s'" % self.title
 
 
 class EventRegistration(NycModel, models.Model):
@@ -99,6 +107,24 @@ class EventRegistration(NycModel, models.Model):
 
     class Meta:
         unique_together = ('user', 'event')
+
+    @classmethod
+    def my_events_now(cls, user):
+        """
+        Return events for which user has RSVPd but not checked in,
+        with times:  start-1h < now < end
+        """
+        now = timezone.now()
+        registrations = EventRegistration.objects \
+            .filter(user=user,
+                    did_attend=False,
+                    event__begins_at__lte=now + STARTING_SOON_WINDOW,
+                    event__ends_at__gt=now) \
+            .prefetch_related('event')
+        return [r.event for r in registrations]
+
+    def has_started(self):
+        return self.begins_at > timezone.now()
 
     def __unicode__(self):
         return "'%s' registration for '%s'" % (self.user.username,

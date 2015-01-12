@@ -6,6 +6,7 @@ from __future__ import division
 from functools import partial
 
 from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 
 from django.core import mail
@@ -156,3 +157,46 @@ class CheckinEventTest(EventTestCase):
         # hour=13, minute=0
         dt = dt + timedelta(minutes=1)
         self.assertFalse(event.starting_soon(dt))
+
+
+class MyEventsNowTestCase(UsersTestCase):
+    def _get_my_events_now(self, start_delta, end_delta, **kwargs):
+        now = timezone.now()
+        event = make_event(
+            self.group,
+            begins_at=now + relativedelta(hours=start_delta),
+            ends_at=now + relativedelta(hours=end_delta))
+
+        args = {
+            'event': event,
+            'user': self.user,
+        }
+        args.update(kwargs)
+
+        EventRegistration.objects.create(**args)
+
+        events = EventRegistration.my_events_now(self.user)
+        return events
+
+    def assert_included(self, start_delta, end_delta, **kwargs):
+        events = self._get_my_events_now(start_delta, end_delta, **kwargs)
+        self.assertEqual(len(events), 1)
+
+    def assert_excluded(self, start_delta, end_delta, **kwargs):
+        events = self._get_my_events_now(start_delta, end_delta, **kwargs)
+        self.assertEqual(len(events), 0)
+
+    def test_included_if_starting_now(self):
+        self.assert_included(+0, +1)
+
+    def test_excluded_if_ended_6_hours_ago(self):
+        self.assert_excluded(-5, -6)
+
+    def test_excluded_if_starting_in_6_hours(self):
+        self.assert_excluded(+6, +7)
+
+    def test_excluded_if_checked_in(self):
+        self.assert_excluded(+0, +1, did_attend=True)
+
+    def test_excluded_if_not_registered(self):
+        self.assert_excluded(+0, +1, user=self.other_user)

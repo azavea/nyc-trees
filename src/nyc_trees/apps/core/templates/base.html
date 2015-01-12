@@ -18,6 +18,11 @@
                     </div>
                 </div>
                 <ul>
+                    {% if my_events_now|length == 1 %}
+                        {% with event=my_events_now.0 %}
+                            <li><a href="{{ event.get_user_checkin_url }}">Start Mapping</a></li>
+                        {% endwith %}
+                    {% endif %}
                     <li><a href="{% url 'home_page' %}">Dashboard</a></li>
                     <li>Training</li>
                     <li><a href="{% url 'group_list_page' %}">Groups</a></li>
@@ -50,6 +55,30 @@
                         | <a href="{% url 'registration_register' %}">Register</a>
                         {% endif %}
                     </div>
+                    {% if my_events_now %}
+                    <div class="nav-right">
+                        <div class="dropdown">
+                            <button class="btn btn-default dropdown-toggle" type="button" id="eventNowAlert" data-toggle="dropdown" aria-expanded="false">
+                                !
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="eventNowAlert">
+                                {% for event in my_events_now %}
+                                <li role="presentation">
+                                    <a role="menuitem" tabindex="-1" href="{{ event.get_user_checkin_url }}">
+                                        The event
+                                        {{ event.title }}
+                                        {% if event.has_started %}
+                                            has started
+                                        {% else %}
+                                            is starting soon
+                                        {% endif %}
+                                    </a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    {% endif %}
                 </nav>
             </header>
             {% block content %}

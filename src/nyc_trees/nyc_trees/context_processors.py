@@ -8,12 +8,22 @@ from django.conf import settings
 from calendar import timegm
 from datetime import datetime
 
+
 from django.utils.timezone import make_aware, utc
 
+from apps.event.models import EventRegistration
 from apps.survey.models import (Blockface, Survey, Territory,
                                 BlockfaceReservation)
 from apps.users.models import TrustedMapper
 
+
+def my_events_now(request):
+    user = request.user
+    if user.is_authenticated():
+        events = EventRegistration.my_events_now(user)
+        if len(events) > 0:
+            return {'my_events_now': events}
+    return {}
 
 def config(request):
     # At the time this function was written, the generated context was
