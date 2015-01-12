@@ -1,6 +1,7 @@
 "use strict";
 
 var Windshaft = require('windshaft'),
+    fs = require('fs'),
 
     workerCount = process.env.WORKERS || require('os').cpus().length,
     port = process.env.PORT || 4000,
@@ -15,6 +16,9 @@ var Windshaft = require('windshaft'),
 
     statsdHost = process.env.NYC_TREES_STATSD_HOST || 'localhost',
     statsdPort = process.env.NYC_TREES_STATSD_PORT || 8125,
+
+    progressSql = fs.readFileSync('sql/progress.sql', {encoding: 'utf8'}),
+    progressStyle = fs.readFileSync('style/progress.mss', {encoding: 'utf8'}),
 
     config = {
         base_url: '/:cache_buster/:dbname/:type',
@@ -36,8 +40,8 @@ var Windshaft = require('windshaft'),
         },
 
         statsd: {
-          host: statsdHost,
-          port: statsdPort
+            host: statsdHost,
+            port: statsdPort
         },
 
         enable_cors: true,
@@ -45,10 +49,11 @@ var Windshaft = require('windshaft'),
         req2params: function(req, callback) {
             if (req.params.type == 'progress') {
                 req.params.table = 'survey_blockface';
-                req.params.interactivity = ['id'];
 
-                req.params.sql = "(SELECT geom, id FROM survey_blockface) AS query";
-                req.params.style = "#survey_blockface { line-color: #000000; line-opacity: 1; line-width: 2; }";
+                req.params.interactivity = 'id,group_id,survey_type';
+
+                req.params.sql = progressSql;
+                req.params.style = progressStyle;
             } else {
                 callback("Unrecognized request type", null);
             }
