@@ -23,6 +23,6 @@ azavea.java,0.1.1
 azavea.curator,0.1.0
 azavea.ruby,0.3.0
 azavea.sauce-connect,0.2.0
-azavea.beaver,0.1.0
+azavea.beaver,0.1.1
 azavea.swapfile,0.1.0
 azavea.build-essential,0.1.0
