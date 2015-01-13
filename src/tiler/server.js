@@ -4,7 +4,6 @@ var Windshaft = require('windshaft'),
     fs = require('fs'),
     _ = require('lodash'),
 
-    workerCount = process.env.WORKERS || require('os').cpus().length,
     port = process.env.PORT || 4000,
 
     dbUser = process.env.NYC_TREES_DB_USER || 'nyc_trees',
