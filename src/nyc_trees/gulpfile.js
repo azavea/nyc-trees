@@ -153,6 +153,7 @@ function browserifyTask(bundler) {
         })
         .bundle()
         .on('error', gutil.log.bind(gutil, 'Browserify Error'))
+        .on('error', process.exit.bind(process, 1))
         .pipe(source('common.js'));
 
     var bundles = entryBundles.concat(commonBundle);
