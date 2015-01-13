@@ -13,6 +13,9 @@ var Windshaft = require('windshaft'),
     redisHost = process.env.NYC_TREES_REDIS_HOST || 'localhost',
     redisPort = process.env.NYC_TREES_REDIS_PORT || 6379,
 
+    statsdHost = process.env.NYC_TREES_STATSD_HOST || 'localhost',
+    statsdPort = process.env.NYC_TREES_STATSD_PORT || 8125,
+
     config = {
         base_url: '/:cache_buster/:dbname/:type',
         base_url_notable: '/:cache_buster/:dbname',
@@ -30,6 +33,11 @@ var Windshaft = require('windshaft'),
         redis: {
             host: redisHost,
             port: redisPort
+        },
+
+        statsd: {
+          host: statsdHost,
+          port: statsdPort
         },
 
         enable_cors: true,
