@@ -151,7 +151,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.tz',
     'django.contrib.messages.context_processors.messages',
     'django.core.context_processors.request',
-    'nyc_trees.context_processors.nyc_bounds',
+    'nyc_trees.context_processors.settings',
+    'nyc_trees.context_processors.tiler_cache_busters',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#template-loaders

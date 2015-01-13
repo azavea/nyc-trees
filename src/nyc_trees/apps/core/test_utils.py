@@ -18,7 +18,8 @@ def make_request(params={}, user=None, method='GET', body=None, file=None,
     if user is None:
         user = AnonymousUser()
 
-    extra = {}
+    if not extra:
+        extra = {}
     if body:
         body_stream = StringIO(body)
         extra['wsgi.input'] = body_stream

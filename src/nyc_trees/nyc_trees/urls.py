@@ -13,7 +13,6 @@ urlpatterns = patterns(
     '',
     url(r'^admin/', include(admin.site.urls)),
 
-    url(r'^', include('apps.core.urls')),
     url(r'^', include('apps.home.urls')),
     url(r'^accounts/', include('apps.login.urls.accounts')),
     url(r'^blockface/', include('apps.survey.urls.blockface')),

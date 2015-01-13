@@ -56,7 +56,9 @@
             {% endblock content %}
         </div>
     </body>
-    <script type="text/javascript" src="{% url "js_settings" %}"></script>
+    <script type="text/javascript">
+      {% include 'core/partials/config.js' %}
+    </script>
     {# TODO: Concatenate common.js and base.js #}
     <script type="text/javascript" src="{{ "js/common.js"|static_url }}"></script>
     <script type="text/javascript" src="{{ "js/base.js"|static_url }}"></script>
