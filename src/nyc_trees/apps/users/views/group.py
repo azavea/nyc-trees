@@ -74,12 +74,15 @@ def group_detail(request):
 
     tree_count = get_group_tree_count(group)
 
-    group_blocks = Territory.objects.filter(group=group)
+    group_blocks = Territory.objects \
+        .filter(group=group) \
+        .values_list('blockface_id', flat=True)
+
     group_blocks_count = group_blocks.count()
 
     if group_blocks_count > 0:
         completed_blocks = Survey.objects \
-            .filter(blockface__in=group_blocks) \
+            .filter(blockface_id__in=group_blocks) \
             .distinct('blockface')
         block_percent = "{:.1%}".format(
             float(completed_blocks.count()) / float(group_blocks.count()))
