@@ -14,10 +14,16 @@ class Blockface(NycModel, models.Model):
     geom = models.MultiLineStringField()
     is_available = models.BooleanField(default=True)
 
+    def __unicode__(self):
+        return '%s (available: %s)' % (self.pk, self.is_available)
+
 
 class Territory(NycModel, models.Model):
     group = models.ForeignKey(Group)
     blockface = models.ForeignKey(Blockface, unique=True)
+
+    def __unicode__(self):
+        return '%s -> %s' % (self.group, self.blockface_id)
 
 
 class Survey(NycModel, models.Model):
@@ -28,7 +34,8 @@ class Survey(NycModel, models.Model):
     # a User object to automatically cascade and delete the Survey
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     teammate = models.ForeignKey(User, null=True, on_delete=models.PROTECT,
-                                 related_name='surveys_as_teammate')
+                                 related_name='surveys_as_teammate',
+                                 blank=True)
     is_flagged = models.BooleanField(default=False)
 
 
@@ -51,4 +58,7 @@ class BlockfaceReservation(NycModel, models.Model):
     blockface = models.ForeignKey(Blockface, on_delete=models.PROTECT)
     is_mapping_with_paper = models.BooleanField(default=False)
     expires_at = models.DateTimeField()
-    canceled_at = models.DateTimeField(null=True)
+    canceled_at = models.DateTimeField(null=True, blank=True)
+
+    def __unicode__(self):
+        return '%s -> %s' % (self.user, self.blockface_id)
