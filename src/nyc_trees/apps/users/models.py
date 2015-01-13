@@ -66,6 +66,9 @@ class TrustedMapper(NycModel, models.Model):
     user = models.ForeignKey(User)
     group = models.ForeignKey(Group)
 
+    class Meta:
+        unique_together = ("user", "group")
+
 
 class TrainingResult(NycModel, models.Model):
     user = models.ForeignKey(User)
