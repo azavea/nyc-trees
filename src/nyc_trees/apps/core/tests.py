@@ -7,6 +7,7 @@ from django.test import TestCase
 from django.core.exceptions import ValidationError
 
 from apps.core.models import User, Group
+from apps.core.email import hash_smtp_pass_from_secret_key
 
 
 class UserModelTest(TestCase):
@@ -73,3 +74,18 @@ class GroupModelTest(TestCase):
         group.clean_and_save()
 
         self.assertEqual('planet-express', group.slug)
+
+
+class AWSEmailCredentialTest(TestCase):
+    def test_credential_conversion(self):
+        test_string = 'test'
+        recoded_string = 'AsuNxtdhciTpIaQYwF9CtO/nlNX2hCZkD8E+4vZzrjs0'
+
+        string_case = hash_smtp_pass_from_secret_key(test_string)
+        unicode_case = hash_smtp_pass_from_secret_key(unicode(test_string))
+
+        self.assertEqual(recoded_string, string_case)
+        self.assertEqual(str, type(string_case))
+
+        self.assertEqual(recoded_string, unicode_case)
+        self.assertEqual(str, type(unicode_case))

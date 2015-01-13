@@ -45,6 +45,10 @@ except URLError:
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
+# TODO: UNCOMMENT THESE WHEN IAM ROLE BASED CREDENTIALS ARE WORKING
+# EMAIL_BACKEND = 'apps.core.email.IAMCredentialsBackend'
+# AWS_IAM_ROLE_NAME = environ.get('AWS_IAM_ROLE_NAME', '')
+
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#email-host
 EMAIL_HOST = environ.get('EMAIL_HOST', 'email-smtp.us-east-1.amazonaws.com')
 
