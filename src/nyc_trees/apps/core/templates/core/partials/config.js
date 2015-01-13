@@ -8,8 +8,8 @@
             "geocode": "{% url 'geocode' %}",
             "layers": {
                 "progress": {
-                    "tiles": "{{ tiler_url }}/{{ cache_buster.progress }}/{{ db_name }}/progress/{z}/{x}/{y}.png",
-                    "grids": "{{ tiler_url }}/{{ cache_buster.progress }}/{{ db_name }}/progress/{z}/{x}/{y}.grid.json"
+                    "tiles": "{{ progress_tiles_url }}",
+                    "grids": "{{ progress_grids_url }}"
                 }
             }
         },

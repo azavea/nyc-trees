@@ -151,8 +151,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.tz',
     'django.contrib.messages.context_processors.messages',
     'django.core.context_processors.request',
-    'nyc_trees.context_processors.settings',
-    'nyc_trees.context_processors.tiler_cache_busters',
+    'nyc_trees.context_processors.config',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#template-loaders
@@ -284,7 +283,7 @@ OMGEO_SETTINGS = [[
     'omgeo.services.EsriWGS', {}
 ]]
 
-# New York City bounds from http://www.mapdevelopers.com/geocode_bounding_box.php
+# New York City bounds from http://www.mapdevelopers.com/geocode_bounding_box.php  # NOQA
 NYC_BOUNDS = (-74.259088, 40.495996, -73.700272, 40.915256)
 
 # If geocoding a string produces no results, this string will be
@@ -293,4 +292,4 @@ GEOCODE_FALLBACK_SUFFIX = ', New York, NY'
 
 TILER_URL = environ.get('TILER_HOST', 'localhost')
 
-MAX_GROUP_IMAGE_SIZE_IN_BYTES = 102400 # 100 KB
+MAX_GROUP_IMAGE_SIZE_IN_BYTES = 102400  # 100 KB
