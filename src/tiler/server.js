@@ -2,6 +2,7 @@
 
 var Windshaft = require('windshaft'),
     fs = require('fs'),
+    _ = require('lodash'),
 
     workerCount = process.env.WORKERS || require('os').cpus().length,
     port = process.env.PORT || 4000,
@@ -18,6 +19,8 @@ var Windshaft = require('windshaft'),
     statsdPort = process.env.NYC_TREES_STATSD_PORT || 8125,
 
     progressSql = fs.readFileSync('sql/progress.sql', {encoding: 'utf8'}),
+    userProgressSql = _.template(fs.readFileSync('sql/user_progress.sql', {encoding: 'utf8'})),
+
     progressStyle = fs.readFileSync('style/progress.mss', {encoding: 'utf8'}),
 
     config = {
@@ -47,15 +50,27 @@ var Windshaft = require('windshaft'),
         enable_cors: true,
 
         req2params: function(req, callback) {
-            if (req.params.type == 'progress') {
-                req.params.table = 'survey_blockface';
+            var user_id;
 
-                req.params.interactivity = 'id,group_id,survey_type';
+            try {
+                if (req.params.type == 'progress') {
+                    req.params.table = 'survey_blockface';
+                    req.params.interactivity = 'id,group_id,survey_type';
 
-                req.params.sql = progressSql;
-                req.params.style = progressStyle;
-            } else {
-                callback("Unrecognized request type", null);
+                    req.params.style = progressStyle;
+
+                    if ('user' in req.query) {
+                        user_id = parseInt(req.query.user, 10);
+                        req.params.sql = userProgressSql({user_id: user_id});
+                    } else {
+                        req.params.sql = progressSql;
+                    }
+
+                } else {
+                    callback("Unrecognized request type", null);
+                }
+            } catch(err) {
+                callback(err, null);
             }
 
             callback(null, req);
