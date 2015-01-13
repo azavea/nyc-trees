@@ -8,7 +8,8 @@ from django.conf.urls import patterns, url
 from apps.event.routes import (events, add_event, event_detail,
                                event_edit, event_popup_partial,
                                event_registration, start_event_map_print_job,
-                               event_admin_check_in_page, check_in_user_to_event,
+                               event_admin_check_in_page,
+                               check_in_user_to_event,
                                email_event_registered_users, event_email,
                                increase_rsvp_limit, event_user_check_in_page)
 

@@ -91,9 +91,6 @@ class Event(NycModel, models.Model):
     class Meta:
         unique_together = (("group", "slug"), ("group", "title"))
 
-    def __unicode__(self):
-        return "'%s'" % self.title
-
 
 class EventRegistration(NycModel, models.Model):
     user = models.ForeignKey(User)
