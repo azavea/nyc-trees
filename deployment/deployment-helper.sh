@@ -31,7 +31,7 @@ function get_stack_outputs() {
 function wait_for_stack() {
   local n=0
 
-  until [ $n -ge 15 ]  # 15 * 60 = 900 = 15 minutes
+  until [ $n -ge 30 ]  # 30 * 60 = 1800 = 30 minutes
   do
     echo "Waiting for stack..."
 
@@ -50,7 +50,7 @@ function wait_for_stack() {
 wait_for_elb_health() {
   local n=0
 
-  until [ $n -ge 10 ]  # 5 * 30 = 300 = 25 minutes
+  until [ $n -ge 20 ]  # 20 * 30 = 600 = 10 minutes
   do
     echo "Waiting for ELB health..."
 
@@ -74,23 +74,48 @@ toggle_app_server_stack() {
   AWS_ELB_HOSTED_ZONE_ID=$(echo $AWS_APP_STACK_OUTPUTS | grep "AppServerLoadBalancerHostedZoneNameID" | cut -d' ' -f4)
 
   # Build parameters argument
-  AWS_STACK_PARAMS="ParameterKey=AppServerHostedZone,ParameterValue=${AWS_APP_HOSTED_ZONE}"
+  AWS_STACK_PARAMS="ParameterKey=PublicHostedZone,ParameterValue=${AWS_PUBLIC_HOSTED_ZONE}"
   AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=AppServerAliasTarget,ParameterValue=${AWS_ELB_APP_ENDPOINT}"
   AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=AppServerLoadBalancerHostedZoneNameID,ParameterValue=${AWS_ELB_HOSTED_ZONE_ID}"
 
-  if echo "${AWS_STACKS}" | grep -q "NYCTreesHostedZoneRecords"; then
+  if echo "${AWS_STACKS}" | grep -q "NYCTreesAppHostedZone"; then
     aws cloudformation update-stack \
-      --stack-name "NYCTreesHostedZoneRecords" \
+      --stack-name "NYCTreesAppHostedZone" \
       --use-previous-template \
       --parameters ${AWS_STACK_PARAMS}
   else
     aws cloudformation create-stack \
-      --stack-name "NYCTreesHostedZoneRecords" \
-      --template-body "file://troposphere/hosted_zone_records_template.json" \
+      --stack-name "NYCTreesAppHostedZone" \
+      --template-body "file://troposphere/app_hosted_zone_template.json" \
       --parameters ${AWS_STACK_PARAMS}
   fi
 
-  wait_for_stack "NYCTreesHostedZoneRecords"
+  wait_for_stack "NYCTreesAppHostedZone"
+}
+
+toggle_tile_server_stack() {
+  AWS_STACKS=$(aws cloudformation describe-stacks | grep STACKS | cut -f7)
+  AWS_TILE_STACK_OUTPUTS=$(get_stack_outputs "NYCTrees${1}TileServers")
+
+  AWS_ELB_TILE_ENDPOINT=$(echo $AWS_TILE_STACK_OUTPUTS | grep "TileServerLoadBalancerEndpoint" | cut -d' ' -f2)
+
+  # Build parameters argument
+  AWS_STACK_PARAMS="ParameterKey=PublicHostedZone,ParameterValue=${AWS_PUBLIC_HOSTED_ZONE}"
+  AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=TileServerAliasTarget,ParameterValue=${AWS_ELB_TILE_ENDPOINT}"
+
+  if echo "${AWS_STACKS}" | grep -q "NYCTreesTileHostedZone"; then
+    aws cloudformation update-stack \
+      --stack-name "NYCTreesTileHostedZone" \
+      --use-previous-template \
+      --parameters ${AWS_STACK_PARAMS}
+  else
+    aws cloudformation create-stack \
+      --stack-name "NYCTreesTileHostedZone" \
+      --template-body "file://troposphere/tiler_hosted_zone_template.json" \
+      --parameters ${AWS_STACK_PARAMS}
+  fi
+
+  wait_for_stack "NYCTreesTileHostedZone"
 }
 
 function get_latest_internal_ami() {
@@ -181,16 +206,36 @@ case "$1" in
 
 
   create-tiler-stack)
-    # Get CloudFormation VPC stack outputs
     AWS_VPC_STACK_OUTPUTS=$(get_stack_outputs "NYCTreesVPC")
+    AWS_STACKS=$(aws cloudformation describe-stacks | grep STACKS | cut -f7)
 
     AWS_VPC_ID=$(echo "${AWS_VPC_STACK_OUTPUTS}" | grep "VpcId" | cut -f2)
     AWS_TILE_SERVER_AMI=$(get_latest_internal_ami "nyc-trees-tiler" )
     AWS_PUBLIC_SUBNETS=$(echo "${AWS_VPC_STACK_OUTPUTS}" | grep "PublicSubnets" | cut -f2)
     AWS_PRIVATE_SUBNETS=$(echo "${AWS_VPC_STACK_OUTPUTS}" | grep "PrivateSubnets" | cut -f2)
 
+    # Determine stack color
+    if echo "${AWS_STACKS}" | grep -q "NYCTreesBlueTileServers" &&
+       echo "${AWS_STACKS}" | grep -q "NYCTreesGreenTileServers"; then
+      # Both stack already exists
+      echo "Both tiler stacks already exist."
+      exit 1
+    elif echo "${AWS_STACKS}" | grep -q "NYCTreesBlueTileServers"; then
+      # Blue exists, so deploy green
+      AWS_TILE_STACK_COLOR="Green"
+    elif echo "${AWS_STACKS}" | grep -q "NYCTreesGreenTileServers"; then
+      # Green exists, so deploy blue
+      AWS_TILE_STACK_COLOR="Blue"
+    else
+      # No color exists, so deploy green
+      AWS_TILE_STACK_COLOR="Green"
+    fi
+
+    echo "Launching the [${AWS_TILE_STACK_COLOR}] tiler stack..."
+
     # Build parameters argument
     AWS_STACK_PARAMS="ParameterKey=KeyName,ParameterValue=${AWS_KEY_NAME}"
+    AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=StackColor,ParameterValue=${AWS_TILE_STACK_COLOR}"
     AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=GlobalNotificationsARN,ParameterValue=${AWS_SNS_TOPIC}"
     AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=VpcId,ParameterValue=${AWS_VPC_ID}"
     AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=TileServerAMI,ParameterValue=${AWS_TILE_SERVER_AMI}"
@@ -199,11 +244,18 @@ case "$1" in
 
     # Create tile server stack
     aws cloudformation create-stack \
-      --stack-name "NYCTreesTileServers" \
+      --stack-name "NYCTrees${AWS_TILE_STACK_COLOR}TileServers" \
       --template-body "file://troposphere/tiler_template.json" \
       --parameters ${AWS_STACK_PARAMS}
 
-    wait_for_stack "NYCTreesTileServers"
+    wait_for_stack "NYCTrees${AWS_TILE_STACK_COLOR}TileServers"
+
+    AWS_TILE_LOAD_BALANCER=$(aws cloudformation list-stack-resources \
+      --stack-name "NYCTrees${AWS_TILE_STACK_COLOR}TileServers" \
+      | grep "elbTileServer" \
+      | cut -f4)
+
+    wait_for_elb_health "${AWS_TILE_LOAD_BALANCER}"
     ;;
 
 
@@ -233,7 +285,7 @@ case "$1" in
       AWS_APP_STACK_COLOR="Green"
     fi
 
-    echo "Launching the [${AWS_APP_STACK_COLOR}] stack..."
+    echo "Launching the [${AWS_APP_STACK_COLOR}] application stack..."
 
     # Build parameters argument
     AWS_STACK_PARAMS="ParameterKey=KeyName,ParameterValue=${AWS_KEY_NAME}"
@@ -281,6 +333,26 @@ case "$1" in
     ;;
 
 
+  toggle-green-tiler-stack)
+    toggle_tile_server_stack "Green"
+    ;;
+
+
+  toggle-blue-tiler-stack)
+    toggle_tile_server_stack "Blue"
+    ;;
+
+
+  delete-green-tiler-stack)
+    aws cloudformation delete-stack --stack-name "NYCTreesGreenTileServers"
+    ;;
+
+
+  delete-blue-tiler-stack)
+    aws cloudformation delete-stack --stack-name "NYCTreesBlueTileServers"
+    ;;
+
+
   create-monitoring-ami)
     create_ami "nyc-trees-monitoring"
     ;;
@@ -315,6 +387,10 @@ case "$1" in
     echo "    - toggle-blue-app-stack"
     echo "    - delete-green-app-stack"
     echo "    - delete-blue-app-stack"
+    echo "    - toggle-green-tiler-stack"
+    echo "    - toggle-blue-tiler-stack"
+    echo "    - delete-green-tiler-stack"
+    echo "    - delete-blue-tiler-stack"
     echo "    - create-monitoring-ami"
     echo "    - create-tiler-ami"
     echo "    - create-app-ami"

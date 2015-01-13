@@ -45,8 +45,20 @@ delete-green-app-stack:
 delete-blue-app-stack:
 	./deployment-helper.sh delete-blue-app-stack
 
+delete-green-tiler-stack:
+	./deployment-helper.sh delete-green-tiler-stack
+
+delete-blue-tiler-stack:
+	./deployment-helper.sh delete-blue-tiler-stack
+
 app-stack-green: build
 	./deployment-helper.sh toggle-green-app-stack
 
 app-stack-blue: build
 	./deployment-helper.sh toggle-blue-app-stack
+
+tiler-stack-green: build
+	./deployment-helper.sh toggle-green-tiler-stack
+
+tiler-stack-blue: build
+	./deployment-helper.sh toggle-blue-tiler-stack

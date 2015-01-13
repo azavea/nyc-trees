@@ -37,13 +37,12 @@ app_server_ami_param = t.add_parameter(Parameter(
     Description='Application server AMI'
 ))
 
-# app_server_instance_profile_param = t.add_parameter(Parameter(
-#     'AppServerInstanceProfile', Type='String',
-#     Default=
-#     'arn:aws:iam::900325299081:instance-profile/AppServerInstanceProfile',
-#     Description='Physical resource ID of an AWS::IAM::Role for the '
-#                 'application servers'
-# ))
+app_server_instance_profile_param = t.add_parameter(Parameter(
+    'AppServerInstanceProfile', Type='String',
+    Default='SendEmail',
+    Description='Physical resource ID of an AWS::IAM::Role for the '
+                'application servers'
+))
 
 app_server_instance_type_param = t.add_parameter(Parameter(
     'AppServerInstanceType', Type='String', Default='t2.micro',
@@ -163,7 +162,7 @@ app_server_load_balancer = t.add_resource(elb.LoadBalancer(
 app_server_launch_config = t.add_resource(asg.LaunchConfiguration(
     'lcAppServer',
     ImageId=Ref(app_server_ami_param),
-    # IamInstanceProfile=Ref(app_server_instance_profile_param),
+    IamInstanceProfile=Ref(app_server_instance_profile_param),
     InstanceType=Ref(app_server_instance_type_param),
     KeyName=Ref(keyname_param),
     SecurityGroups=[Ref(app_server_security_group)]

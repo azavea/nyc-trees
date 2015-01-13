@@ -1,7 +1,6 @@
 from troposphere import Template, Parameter, Ref, Tags, Output, GetAtt, ec2
 
 import template_utils as utils
-import troposphere.route53 as r53
 import troposphere.autoscaling as asg
 import troposphere.elasticloadbalancing as elb
 
@@ -13,6 +12,12 @@ t.add_description('A tiler stack for the nyc-trees project.')
 #
 # Parameters
 #
+color_param = t.add_parameter(Parameter(
+    'StackColor', Type='String',
+    Description='Stack color', AllowedValues=['Blue', 'Green'],
+    ConstraintDescription='must be either Blue or Green'
+))
+
 vpc_param = t.add_parameter(Parameter(
     'VpcId', Type='String', Description='Name of an existing VPC'
 ))
@@ -32,13 +37,12 @@ tile_server_ami_param = t.add_parameter(Parameter(
     Description='Tile server AMI'
 ))
 
-# tile_server_instance_profile_param = t.add_parameter(Parameter(
-#     'TileServerInstanceProfile', Type='String',
-#     Default=
-#     'arn:aws:iam::900325299081:instance-profile/TileServerInstanceProfile',
-#     Description='Physical resource ID of an AWS::IAM::Role for the '
-#                 'tile servers'
-# ))
+tile_server_instance_profile_param = t.add_parameter(Parameter(
+    'TileServerInstanceProfile', Type='String',
+    Default='SendEmail',
+    Description='Physical resource ID of an AWS::IAM::Role for the '
+                'tile servers'
+))
 
 tile_server_instance_type_param = t.add_parameter(Parameter(
     'TileServerInstanceType', Type='String', Default='t2.micro',
@@ -76,7 +80,10 @@ tile_server_load_balancer_security_group = t.add_resource(ec2.SecurityGroup(
         )
         for p in [80]
     ],
-    Tags=Tags(Name='sgTileServerLoadBalancer')
+    Tags=Tags(
+        Name='sgTileServerLoadBalancer',
+        Color=Ref(color_param)
+    )
 ))
 
 tile_server_security_group = t.add_resource(ec2.SecurityGroup(
@@ -110,7 +117,11 @@ tile_server_security_group = t.add_resource(ec2.SecurityGroup(
             IpProtocol='tcp', CidrIp=utils.ALLOW_ALL_CIDR, FromPort=p, ToPort=p
         )
         for p in [80, 443]
-    ]
+    ],
+    Tags=Tags(
+        Name='sgTileServer',
+        Color=Ref(color_param)
+    )
 ))
 
 #
@@ -118,14 +129,13 @@ tile_server_security_group = t.add_resource(ec2.SecurityGroup(
 #
 tile_server_load_balancer = t.add_resource(elb.LoadBalancer(
     'elbTileServer',
-    LoadBalancerName='elbTileServer',
     # TODO: Create an S3 bucket automatically and enable logging.
     ConnectionDrainingPolicy=elb.ConnectionDrainingPolicy(
         Enabled=True,
         Timeout=300,
     ),
     CrossZone=True,
-    SecurityGroups=[Ref(tile_server_security_group)],
+    SecurityGroups=[Ref(tile_server_load_balancer_security_group)],
     Listeners=[
         elb.Listener(
             LoadBalancerPort='80',
@@ -141,7 +151,10 @@ tile_server_load_balancer = t.add_resource(elb.LoadBalancer(
         Timeout="5",
     ),
     Subnets=Ref(public_subnets_param),
-    Tags=Tags(Name='elbTileServer')
+    Tags=Tags(
+        Name='elbTileServer',
+        Color=Ref(color_param)
+    )
 ))
 
 #
@@ -150,7 +163,7 @@ tile_server_load_balancer = t.add_resource(elb.LoadBalancer(
 tile_server_launch_config = t.add_resource(asg.LaunchConfiguration(
     'lcTileServer',
     ImageId=Ref(tile_server_ami_param),
-    # IamInstanceProfile=Ref(tile_server_instance_profile_param),
+    IamInstanceProfile=Ref(tile_server_instance_profile_param),
     InstanceType=Ref(tile_server_instance_type_param),
     KeyName=Ref(keyname_param),
     SecurityGroups=[Ref(tile_server_security_group)]
@@ -178,23 +191,9 @@ tile_server_auto_scaling_group = t.add_resource(asg.AutoScalingGroup(
         ]
     ),
     VPCZoneIdentifier=Ref(private_subnets_param),
-    Tags=[asg.Tag('Name', 'TileServer', True)]
-))
-
-#
-# Route53 Resources
-#
-private_dns_records_sets = t.add_resource(r53.RecordSetGroup(
-    'dnsPrivateRecords',
-    HostedZoneName='nyc-trees.internal.',
-    RecordSets=[
-        r53.RecordSet(
-            'dnsTileServers',
-            Name='tile.service.nyc-trees.internal.',
-            Type='CNAME',
-            TTL='10',
-            ResourceRecords=[GetAtt(tile_server_load_balancer, 'DNSName')]
-        )
+    Tags=[
+        asg.Tag('Name', 'TileServer', True),
+        asg.Tag('Color', Ref(color_param), True)
     ]
 ))
 
@@ -206,6 +205,14 @@ t.add_output([
         'TileServerLoadBalancerEndpoint',
         Description='Tile server endpoint',
         Value=GetAtt(tile_server_load_balancer, 'DNSName')
+    ),
+    Output(
+        'TileServerLoadBalancerHostedZoneNameID',
+        Description='ID of canonical hosted zone name for ELB',
+        Value=GetAtt(
+            tile_server_load_balancer,
+            'CanonicalHostedZoneNameID'
+        )
     )
 ])
 
