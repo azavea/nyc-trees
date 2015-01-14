@@ -74,6 +74,10 @@ class Event(NycModel, models.Model):
         return target_dt >= self.begins_at - STARTING_SOON_WINDOW \
             and target_dt < self.ends_at
 
+    @property
+    def has_started(self):
+        return self.begins_at <= timezone.now()
+
     def get_admin_checkin_url(self):
         return reverse('event_admin_check_in_page',
                        kwargs={'group_slug': self.group.slug,
@@ -119,9 +123,6 @@ class EventRegistration(NycModel, models.Model):
                     event__ends_at__gt=now) \
             .prefetch_related('event')
         return [r.event for r in registrations]
-
-    def has_started(self):
-        return self.begins_at > timezone.now()
 
     def __unicode__(self):
         return "'%s' registration for '%s'" % (self.user.username,

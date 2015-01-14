@@ -160,15 +160,17 @@ class CheckinEventTest(EventTestCase):
 
 
 class MyEventsNowTestCase(UsersTestCase):
-    def _get_my_events_now(self, start_delta, end_delta, **kwargs):
+    def _make_event(self, start_delta, end_delta):
         now = timezone.now()
         event = make_event(
             self.group,
-            begins_at=now + relativedelta(hours=start_delta),
-            ends_at=now + relativedelta(hours=end_delta))
+            begins_at=now + timedelta(hours=start_delta),
+            ends_at=now + timedelta(hours=end_delta))
+        return event
 
+    def _get_my_events_now(self, start_delta, end_delta, **kwargs):
         args = {
-            'event': event,
+            'event': self._make_event(start_delta, end_delta),
             'user': self.user,
         }
         args.update(kwargs)
@@ -200,3 +202,11 @@ class MyEventsNowTestCase(UsersTestCase):
 
     def test_excluded_if_not_registered(self):
         self.assert_excluded(+0, +1, user=self.other_user)
+
+    def test_has_started(self):
+        event = self._make_event(-1, +1)
+        self.assertTrue(event.has_started)
+
+    def test_has_not_started(self):
+        event = self._make_event(+3, +5)
+        self.assertFalse(event.has_started)
