@@ -12,7 +12,7 @@
                 <h4 class="section-heading">Recipients</h4>
                 <span>{{ rsvp_count }}</span> RSVPS
                 {% if rsvp_count > 0 %}
-                    <a href="{% url 'event_check_in_page' group_slug=group.slug event_slug=event.slug%}">See all</a>
+                    <a href="{% url 'event_admin_check_in_page' group_slug=group.slug event_slug=event.slug%}">See all</a>
                     {% include "core/partials/email_form.html" %}
                 {% else %}
                     {# There is no one to email! #}

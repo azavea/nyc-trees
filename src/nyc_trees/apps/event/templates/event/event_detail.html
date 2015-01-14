@@ -8,8 +8,11 @@
     <div class="row">
         <div class="col-sm-12">
             {% if is_admin %}
-            <a href="{{ event.get_checkin_url }}"
+            <a href="{{ event.get_admin_checkin_url }}"
                 class="btn btn-switch pull-right">Check-in guests</a>
+            {% elif event in my_events_now %}
+            <a href="{{ event.get_user_checkin_url }}"
+                class="btn btn-switch pull-right">Start Mapping</a>
             {% endif %}
             <p>This event is starting soon!</p>
         </div>

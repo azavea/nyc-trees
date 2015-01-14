@@ -4,12 +4,7 @@
 {% block aside %}
     <div class="pageheading-description block">
         <div class="row">
-            <div class="col-xs-12">
-                <a href="{{ event.get_absolute_url }}" class="breadcrumb">
-                    <i class="icon-left-open-mini"></i>
-                    {{ event.title }}
-                </a>
-            </div>
+            {% include "event/partials/back_to_event.html" %}
             <div class="col-xs-12">
                 <h2>Check-in</h2>
             </div>

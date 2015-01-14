@@ -6,6 +6,7 @@ from __future__ import division
 from functools import partial
 
 from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 
 from django.core import mail
@@ -19,7 +20,7 @@ from apps.event.models import Event, EventRegistration
 from apps.event.views import (events_list_page,
                               event_email,
                               register_for_event,
-                              event_check_in_page,
+                              event_admin_check_in_page,
                               check_in_user_to_event,
                               increase_rsvp_limit)
 
@@ -82,7 +83,7 @@ class EventEmailTest(EventTestCase):
 class CheckinEventTest(EventTestCase):
     def _assert_num_checkins(self, expected_amount):
         request = make_request(user=self.user, group=self.group)
-        context = event_check_in_page(request, self.event.slug)
+        context = event_admin_check_in_page(request, self.event.slug)
         self.assertEqual(self.event, context['event'])
         self.assertEqual(self.group, context['group'])
 
@@ -156,3 +157,56 @@ class CheckinEventTest(EventTestCase):
         # hour=13, minute=0
         dt = dt + timedelta(minutes=1)
         self.assertFalse(event.starting_soon(dt))
+
+
+class MyEventsNowTestCase(UsersTestCase):
+    def _make_event(self, start_delta, end_delta):
+        now = timezone.now()
+        event = make_event(
+            self.group,
+            begins_at=now + timedelta(hours=start_delta),
+            ends_at=now + timedelta(hours=end_delta))
+        return event
+
+    def _get_my_events_now(self, start_delta, end_delta, **kwargs):
+        args = {
+            'event': self._make_event(start_delta, end_delta),
+            'user': self.user,
+        }
+        args.update(kwargs)
+
+        EventRegistration.objects.create(**args)
+
+        events = EventRegistration.my_events_now(self.user)
+        return events
+
+    def assert_included(self, start_delta, end_delta, **kwargs):
+        events = self._get_my_events_now(start_delta, end_delta, **kwargs)
+        self.assertEqual(len(events), 1)
+
+    def assert_excluded(self, start_delta, end_delta, **kwargs):
+        events = self._get_my_events_now(start_delta, end_delta, **kwargs)
+        self.assertEqual(len(events), 0)
+
+    def test_included_if_starting_now(self):
+        self.assert_included(+0, +1)
+
+    def test_excluded_if_ended_6_hours_ago(self):
+        self.assert_excluded(-5, -6)
+
+    def test_excluded_if_starting_in_6_hours(self):
+        self.assert_excluded(+6, +7)
+
+    def test_excluded_if_checked_in(self):
+        self.assert_excluded(+0, +1, did_attend=True)
+
+    def test_excluded_if_not_registered(self):
+        self.assert_excluded(+0, +1, user=self.other_user)
+
+    def test_has_started(self):
+        event = self._make_event(-1, +1)
+        self.assertTrue(event.has_started)
+
+    def test_has_not_started(self):
+        event = self._make_event(+3, +5)
+        self.assertFalse(event.has_started)

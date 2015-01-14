@@ -43,7 +43,6 @@ def make_request(params={}, user=None, method='GET', body=None, file=None,
 def make_event(group, **kwargs):
     defaults = {
         'group': group,
-        'title': 'The title',
         'title': "The event",
         'contact_email': "a@b.com",
         'address': "123 Main St",
