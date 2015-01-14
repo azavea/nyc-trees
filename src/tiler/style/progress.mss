@@ -1,3 +1,4 @@
+/* If you change these colors, also change src/nyc_trees/sass/partials/_legend.scss */
 @surveyed-by-me: #8BC34A;
 @surveyed-by-others: #03A9F4;
 @available: #7B1FA2;

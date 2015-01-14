@@ -5,13 +5,20 @@
     height: 1em;
     margin-right: 1em;
   }
-  .mapped-by-you {
-    background-color: deepskyblue;
+  // If you change these colors, also change src/tiler/style/progress.mss
+  .surveyed-by-me {
+    background-color: #8BC34A;
   }
-  .mapped-by-others {
-    background-color: forestgreen;
+  .surveyed-by-others {
+    background-color: #03A9F4;
   }
-  .not-mapped {
-    background-color: gray;
+  .available{
+    background-color: #7B1FA2;
+  }
+  .reserved{
+    background-color: #E64A19;
+  }
+  .unavailable{
+    background-color: #455A64;
   }
 }
