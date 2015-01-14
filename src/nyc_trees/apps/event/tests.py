@@ -6,7 +6,6 @@ from __future__ import division
 from functools import partial
 
 from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 
 from django.core import mail
