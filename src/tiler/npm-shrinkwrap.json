@@ -2,6 +2,11 @@
   "name": "nyc-trees-tiler",
   "version": "0.0.0",
   "dependencies": {
+    "lodash": {
+      "version": "2.4.1",
+      "from": "https://registry.npmjs.org/lodash/-/lodash-2.4.1.tgz",
+      "resolved": "https://registry.npmjs.org/lodash/-/lodash-2.4.1.tgz"
+    },
     "windshaft": {
       "version": "0.19.4",
       "from": "https://registry.npmjs.org/windshaft/-/windshaft-0.19.4.tgz",

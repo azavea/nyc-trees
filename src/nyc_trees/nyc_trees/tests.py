@@ -10,10 +10,10 @@ from apps.core.models import User
 from apps.core.test_utils import make_request
 from apps.survey.models import Blockface, Survey
 
-from nyc_trees.context_processors import tiler_cache_busters
+from nyc_trees.context_processors import config
 
 
-class CacheBustersContextProcessorTest(TestCase):
+class ContextProcessorTest(TestCase):
     def setUp(self):
         self.user = User.objects.create(
             username='pat',
@@ -26,20 +26,18 @@ class CacheBustersContextProcessorTest(TestCase):
                                             blockface=self.blockface)
 
     def test_full_request(self):
-        context = tiler_cache_busters(make_request())
-        self.assertTrue('cache_buster' in context,
-                        'Expected the context to have a "cache_buster" key.')
-        self.assertTrue('progress' in context['cache_buster'],
-                        'Expected the "cache_buster" dict to have a '
-                        '"progress" key.')
-        self.assertTrue(context['cache_buster']['progress'],
-                        'Expected the "progress" key of the "cache_buster" '
+        context = config(make_request())
+        self.assertTrue('progress_tiles_url' in context,
+                        'Expected the context dict to have a "progress_tiles" '
+                        'key.')
+        self.assertTrue(context['progress_tiles_url'],
+                        'Expected the "progress_tiles" key of the context '
                         'dict to be truthy.')
 
     def test_ajax_request(self):
-        context = tiler_cache_busters(make_request(
+        context = config(make_request(
             HTTP_X_REQUESTED_WITH='XMLHttpRequest'))
-        self.assertFalse('cache_buster' in context,
-                         'Expected the context to not have a "cache_buster" '
-                         'key when the HTTP_X_REQUESTED_WITH header is set '
-                         'to "XMLHttpRequest"')
+        self.assertEquals({}, context,
+                          'Expected the context to be an empty dict when the '
+                          'HTTP_X_REQUESTED_WITH header is set to '
+                          '"XMLHttpRequest"')

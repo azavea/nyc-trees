@@ -1,8 +1,9 @@
 "use strict";
 
 var Windshaft = require('windshaft'),
+    fs = require('fs'),
+    _ = require('lodash'),
 
-    workerCount = process.env.WORKERS || require('os').cpus().length,
     port = process.env.PORT || 4000,
 
     dbUser = process.env.NYC_TREES_DB_USER || 'nyc_trees',
@@ -15,6 +16,11 @@ var Windshaft = require('windshaft'),
 
     statsdHost = process.env.NYC_TREES_STATSD_HOST || 'localhost',
     statsdPort = process.env.NYC_TREES_STATSD_PORT || 8125,
+
+    progressSql = fs.readFileSync('sql/progress.sql', {encoding: 'utf8'}),
+    userProgressSql = _.template(fs.readFileSync('sql/user_progress.sql', {encoding: 'utf8'})),
+
+    progressStyle = fs.readFileSync('style/progress.mss', {encoding: 'utf8'}),
 
     config = {
         base_url: '/:cache_buster/:dbname/:type',
@@ -36,21 +42,40 @@ var Windshaft = require('windshaft'),
         },
 
         statsd: {
-          host: statsdHost,
-          port: statsdPort
+            host: statsdHost,
+            port: statsdPort
         },
 
         enable_cors: true,
 
         req2params: function(req, callback) {
-            if (req.params.type == 'progress') {
-                req.params.table = 'survey_blockface';
-                req.params.interactivity = ['id'];
+            var user_id;
 
-                req.params.sql = "(SELECT geom, id FROM survey_blockface) AS query";
-                req.params.style = "#survey_blockface { line-color: #000000; line-opacity: 1; line-width: 2; }";
-            } else {
-                callback("Unrecognized request type", null);
+            try {
+                if (req.params.type == 'progress') {
+                    req.params.table = 'survey_blockface';
+                    req.params.interactivity = 'id,group_id,survey_type';
+
+                    req.params.style = progressStyle;
+
+                    if ('user' in req.query) {
+                        user_id = parseInt(req.query.user, 10);
+                        if (isNaN(user_id)) {
+                            callback("Could not parse user id", null);
+                            return;
+                        }
+                        req.params.sql = userProgressSql({user_id: user_id});
+                    } else {
+                        req.params.sql = progressSql;
+                    }
+
+                } else {
+                    callback("Unrecognized request type", null);
+                    return;
+                }
+            } catch(err) {
+                callback(err, null);
+                return;
             }
 
             callback(null, req);
