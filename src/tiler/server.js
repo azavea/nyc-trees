@@ -60,6 +60,10 @@ var Windshaft = require('windshaft'),
 
                     if ('user' in req.query) {
                         user_id = parseInt(req.query.user, 10);
+                        if (isNaN(user_id)) {
+                            callback("Could not parse user id", null);
+                            return;
+                        }
                         req.params.sql = userProgressSql({user_id: user_id});
                     } else {
                         req.params.sql = progressSql;
@@ -67,9 +71,11 @@ var Windshaft = require('windshaft'),
 
                 } else {
                     callback("Unrecognized request type", null);
+                    return;
                 }
             } catch(err) {
                 callback(err, null);
+                return;
             }
 
             callback(null, req);
