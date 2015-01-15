@@ -46,17 +46,17 @@ running in the VMs. You can change the host port numbers by setting
 the environment variables listed in the ``Env Variable Override``
 column.
 
-Service                | Port  | URL                                              | Env Variable Override
----------------------- | ----- | ------------------------------------------------ | ---------------------
-Django Web Application | 8000  | [http://localhost:8000](http://localhost:8000)   | NYC_TREES_PORT_8000
-Graphite Dashboard     | 8080  | [http://localhost:8080](http://localhost:8080)   | NYC_TREES_PORT_8080
-Kibana Dashboard       | 15601 | [http://localhost:15601](http://localhost:15601) | NYC_TREES_PORT_5601
-PostgreSQL             | 15432 |                                                  | NYC_TREES_PORT_5432
-pgweb                  | 15433 | [http://localhost:15433](http://localhost:15433) | NYC_TREES_PORT_5433
-Redis                  | 16379 | `redis-cli -h localhost 16379`                   | NYC_TREES_PORT_6379
-livereload             | 35729 | (for gulp watch)                                 | N/A
-LiveServer Tests       | 9001  | (for Sauce Labs)                                 | NYC_TREES_PORT_9001
-Testem                 | 7357  |                                                  | NYC_TREES_PORT_7357
+Service                | Port  | URL
+---------------------- | ----- | ------------------------------------------------
+Django Web Application | 8000  | [http://localhost:8000](http://localhost:8000)
+Graphite Dashboard     | 8080  | [http://localhost:8080](http://localhost:8080)
+Kibana Dashboard       | 15601 | [http://localhost:15601](http://localhost:15601)
+PostgreSQL             | 15432 |
+pgweb                  | 15433 | [http://localhost:15433](http://localhost:15433)
+Redis                  | 16379 | `redis-cli -h localhost 16379`
+livereload             | 35729 | (for gulp watch)
+LiveServer Tests       | 9001  | (for Sauce Labs)
+Testem                 | 7357  |
 
 
 ### JavaScript and CSS
