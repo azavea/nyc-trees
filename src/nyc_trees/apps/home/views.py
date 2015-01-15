@@ -12,13 +12,25 @@ def home_page(request):
 
 
 def progress_page(request):
-    context = {
-        'legend_entries': [
-            {'css_class': 'mapped-by-you', 'label': 'Mapped by you'},
-            {'css_class': 'mapped-by-others', 'label': 'Mapped by others'},
-            {'css_class': 'not-mapped', 'label': 'Not mapped'},
-        ]
-    }
+    if request.user.is_authenticated():
+        context = {
+            'legend_entries': [
+                {'css_class': 'surveyed-by-me', 'label': 'Mapped by you'},
+                {'css_class': 'surveyed-by-others',
+                 'label': 'Mapped by others'},
+                {'css_class': 'available', 'label': 'Available'},
+                {'css_class': 'reserved', 'label': 'Reserved by you'},
+                {'css_class': 'unavailable', 'label': 'Unavailable'},
+            ]
+        }
+    else:
+        context = {
+            'legend_entries': [
+                {'css_class': 'surveyed-by-others', 'label': 'Mapped'},
+                {'css_class': 'available', 'label': 'Available'},
+                {'css_class': 'unavailable', 'label': 'Unavailable'},
+            ]
+        }
     return context
 
 
