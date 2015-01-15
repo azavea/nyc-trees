@@ -8,6 +8,7 @@ from django_tinsel.decorators import route, render_template
 from apps.core.decorators import individual_mapper_do
 
 from apps.survey import views as v
+from apps.core.views import map_legend
 
 #####################################
 # RESERVATION ROUTES
@@ -16,7 +17,7 @@ from apps.survey import views as v
 reserve_blockface_page = route(
     GET=individual_mapper_do(
         render_template('survey/reserve_blockface.html'),
-        v.reserve_blockface_page))
+        map_legend))
 
 cancel_reservation = route(
     GET=individual_mapper_do(

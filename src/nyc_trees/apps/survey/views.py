@@ -6,11 +6,6 @@ from __future__ import division
 from django_tinsel.decorators import render_template
 
 
-def reserve_blockface_page(request):
-    # TODO: implement
-    return {}
-
-
 def cancel_reservation(request, blockface_id):
     # TODO: implement
     pass

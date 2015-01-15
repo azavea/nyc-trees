@@ -11,29 +11,6 @@ def home_page(request):
     return {}
 
 
-def progress_page(request):
-    if request.user.is_authenticated():
-        context = {
-            'legend_entries': [
-                {'css_class': 'surveyed-by-me', 'label': 'Mapped by you'},
-                {'css_class': 'surveyed-by-others',
-                 'label': 'Mapped by others'},
-                {'css_class': 'available', 'label': 'Available'},
-                {'css_class': 'reserved', 'label': 'Reserved by you'},
-                {'css_class': 'unavailable', 'label': 'Unavailable'},
-            ]
-        }
-    else:
-        context = {
-            'legend_entries': [
-                {'css_class': 'surveyed-by-others', 'label': 'Mapped'},
-                {'css_class': 'available', 'label': 'Available'},
-                {'css_class': 'unavailable', 'label': 'Unavailable'},
-            ]
-        }
-    return context
-
-
 def training_list_page(request):
     # TODO: implement
     return {}
