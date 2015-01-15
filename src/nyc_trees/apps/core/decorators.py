@@ -93,3 +93,7 @@ group_admin_do = partial(do,
 census_admin_do = partial(do,
                           login_required,
                           user_must_be_census_admin)
+
+individual_mapper_do = partial(do,
+                               login_required,
+                               user_must_be_individual_mapper)

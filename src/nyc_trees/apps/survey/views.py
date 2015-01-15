@@ -6,7 +6,6 @@ from __future__ import division
 from django_tinsel.decorators import render_template
 
 
-@render_template('survey/reserve_blockface.html')
 def reserve_blockface_page(request):
     # TODO: implement
     return {}
