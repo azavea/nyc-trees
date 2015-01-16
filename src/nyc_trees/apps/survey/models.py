@@ -14,6 +14,8 @@ class Blockface(NycModel, models.Model):
     geom = models.MultiLineStringField()
     is_available = models.BooleanField(default=True)
 
+    objects = models.GeoManager()
+
     def __unicode__(self):
         return '%s (available: %s)' % (self.pk, self.is_available)
 
