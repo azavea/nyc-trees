@@ -19,8 +19,10 @@ apache_port: 8080
 graphite_web_port: "{{ apache_port }}"
 
 postgresql_version: "9.3"
-postgresql_package_version: "9.3.5-2.pgdg14.04+1"
+postgresql_package_version: "9.3.5*.pgdg14.04+1"
 postgresql_support_repository_channel: "9.3"
+postgis_version: "2.1"
+postgis_package_version: "2.1.5*.pgdg14.04+1"
 
 elasticsearch_cluster_name: "logstash"
 
