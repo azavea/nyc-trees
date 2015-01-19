@@ -88,6 +88,10 @@ class User(NycModel, AbstractUser):
     def get_absolute_url(self):
         return reverse('user_detail', args=[self.username])
 
+    def completed_training(self):
+        # TODO: implement
+        return False
+
 
 class Group(NycModel, models.Model):
     name = models.CharField(max_length=255, unique=True)

@@ -9,9 +9,7 @@
         </div>
         <div class="hero-box">
             <div class="hero-content">
-                <h2 class="hero-heading color--white">
-                    Welcome back, tree mapper!
-                </h2>
+                <h2 class="hero-heading color--white">Welcome back, tree mapper!</h2>
                 <p class="hero-text color--white">
                     In the past week, 405 trees in 12 blocks have been added. We're 43% of our way to our goal!
                 </p>
@@ -24,37 +22,11 @@
 
     <div class="container">
         <div class="row">
+            {% if not user.completed_training %}
             <main class="col-sm-12">
-                <section class="trainings">
-                    <h3>You're almost there! Continue your training.</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu congue lorem, id feugiat tortor. Aliquam ante elit, sodales eget porttitor vel, commodo et felis.</p>
-
-                    <a href="#" class="training block item">
-                        <div class="row">
-                            <div class="col-xs-8">
-                                <h5>Introduction video</h5>
-                                <div class="h6">20 minutes</div>
-                            </div>
-                            <div class="col-xs-4 text-right">
-                                <i class="icon-check h4"></i>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="#" class="training block item">
-                        <div class="row">
-                            <div class="col-xs-8">
-                                <h5>Introduction video</h5>
-                                <div class="h6">20 minutes</div>
-                            </div>
-                            <div class="col-xs-4 text-right">
-                                <button class="btn-primary btn">Start</button>
-                            </div>
-                        </div>
-                    </a>
-
-                </section>
+                <section class="trainings">{% include "home/partials/training.html" %}</section>
             </main>
+            {% endif %}
         </div>
     </div>
 
