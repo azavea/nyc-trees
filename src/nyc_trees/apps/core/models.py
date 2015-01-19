@@ -30,6 +30,12 @@ class User(NycModel, AbstractUser):
     is_ambassador = models.BooleanField(default=False)
     is_minor = models.BooleanField(default=False)
 
+    training_finished_getting_started = models.BooleanField(default=False)
+    training_finished_the_mapping_method = models.BooleanField(default=False)
+    training_finished_tree_data = models.BooleanField(default=False)
+    training_finished_tree_surroundings = models.BooleanField(default=False)
+    visited_training_page_groups_to_follow = models.BooleanField(default=False)
+
     opt_in_stewardship_info = models.BooleanField(default=False)
 
     objects = UserManager()
@@ -62,8 +68,11 @@ class User(NycModel, AbstractUser):
         return reverse('user_detail', args=[self.username])
 
     def completed_training(self):
-        # TODO: implement
-        return False
+        return (self.training_finished_getting_started and
+                self.training_finished_the_mapping_method and
+                self.training_finished_tree_data and
+                self.training_finished_tree_surroundings and
+                self.visited_training_page_groups_to_follow)
 
 
 class Group(NycModel, models.Model):
