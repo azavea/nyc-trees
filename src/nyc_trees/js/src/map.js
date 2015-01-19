@@ -3,7 +3,7 @@
 var $ = require('jquery'),
     L = require('leaflet');
 
-var zoom = require('./mapUtil').zoom,
+var zoomModule = require('./mapUtil').zoom,
     searchController = require('./searchController');
 
 module.exports = {
@@ -21,6 +21,13 @@ function create(options) {
         zoomControl = L.control.zoom({position: 'bottomleft'}).addTo(map),
         $controlsContainer = $(zoomControl.getContainer());
 
+    if (options.center) {
+        var zoom = options.zoom || zoomModule.NEIGHBORHOOD;
+        map.setView(options.center, zoom);
+    } else {
+        map.fitBounds(config.bounds);
+    }
+
     initBaseMap(map);
 
     if (options.geolocation && navigator.geolocation) {
@@ -32,8 +39,6 @@ function create(options) {
     if (options.search) {
         initLocationSearch($controlsContainer, map);
     }
-
-    map.fitBounds(config.bounds);
 
     return map;
 }
@@ -56,7 +61,7 @@ function initGeolocation($controlsContainer, map) {
 
     function showPosition(position) {
         var center = L.latLng(position.coords.latitude, position.coords.longitude);
-        map.setView(center, zoom.NEIGHBORHOOD);
+        map.setView(center, zoomModule.NEIGHBORHOOD);
     }
 
     function showError() {
