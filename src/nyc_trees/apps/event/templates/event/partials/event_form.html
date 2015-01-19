@@ -31,13 +31,14 @@
 
         <div class="field">
             {{ form.address.errors }}
-            {{ form.location.errors }}
-
             {{ form.address.label_tag }}
             {{ form.address }}
-
-            {{ form.location.as_hidden }}
         </div>
+
+        <input type="hidden" name="lat" value="{{ event.location.y }}">
+        <input type="hidden" name="lng" value="{{ event.location.x }}">
+
+        <div id="map-small" class="map-small"></div>
 
         <div class="field">
             {{ form.location_description.errors }}
