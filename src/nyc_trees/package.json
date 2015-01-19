@@ -28,7 +28,7 @@
     "moment": "^2.8.4"
   },
   "devDependencies": {
-    "browserify": "~6.1.0",
+    "browserify": "^8.1.1",
     "browserify-shim": "^3.8.1",
     "chai": "^1.10.0",
     "csswring": "~1.3.0",
@@ -56,8 +56,8 @@
     "testem": "^0.5.15",
     "through2": "~0.6.3",
     "vinyl-buffer": "~1.0.0",
-    "vinyl-source-stream": "~1.0.0",
-    "watchify": "~2.0.0"
+    "vinyl-source-stream": "^1.0.0",
+    "watchify": "^2.1.1"
   },
   "scripts": {
     "build": "sudo -u nyc-trees ./node_modules/.bin/gulp",
