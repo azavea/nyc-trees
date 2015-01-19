@@ -210,8 +210,9 @@ def edit_event(request, event_slug):
 
 
 def event_popup_partial(request, event_slug):
-    # TODO: implement
-    pass
+    return {
+        'event': get_object_or_404(Event, group=request.group, slug=event_slug)
+    }
 
 
 @transaction.atomic

@@ -1,15 +1,10 @@
-{% with event=info.event %}
 <a href="{{ event.get_absolute_url }}" class="event block item rightarrow">
     <div class="row">
         {% include 'event/partials/event_calendar.html' %}
         <div class="event-details col-xs-6">
             <h5 class="event-detail event-detail--title">{{ event.title }}</h5>
-            <div class="event-detail">{{ event.begins_at|date:"f A" }} at {{ event.address }}</div>
             <div class="event-detail">{{ event.group.name }}</div>
-            <div class="event-detail">{{ event.training_summary }}</div>
-            {% if info.user_is_registered %}<div class="event-detail"><b>+ RSVP</b></div>{% endif %}
         </div>
         <div class="event-action col-xs-3"></div>
     </div>
 </a>
-{% endwith %}

@@ -6,7 +6,10 @@
         },
         "urls": {
             "geocode": "{% url 'geocode' %}",
-            "layers": {{ layers_json|safe }}
+            "layers": {{ layers_json|safe }},
+            "geojson": {
+                "events": "{% url 'future_events_geojson' %}"
+            }
         },
         "bounds": [[{{nyc_bounds.ymin}}, {{nyc_bounds.xmin}}], [{{nyc_bounds.ymax}}, {{nyc_bounds.xmax}}]]
     };

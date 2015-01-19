@@ -52,7 +52,10 @@ event_email = group_admin_do(render_template('event/email_rsvps.html'),
                              route(GET=v.event_email_page,
                                    POST=v.event_email))
 
-event_popup_partial = group_request(route(GET=v.event_popup_partial))
+event_popup_partial = do(
+    render_template('event/partials/event_popup.html'),
+    group_request,
+    route(GET=v.event_popup_partial))
 
 event_registration = do(login_required,
                         group_request,
