@@ -9,7 +9,7 @@ from django.db import transaction
 from django.http import (HttpResponseRedirect, HttpResponseForbidden,
                          HttpResponseNotAllowed)
 from django.shortcuts import get_object_or_404
-from django.utils.timezone import get_current_timezone
+from django.utils.timezone import get_current_timezone, now
 
 from apps.core.forms import EmailForm
 
@@ -132,6 +132,25 @@ def events_list_page(request):
 
     return {'immediate_events': immediate_events_list,
             'all_events': all_events_list}
+
+
+def future_events_geojson(request):
+    return [_event_geojson(e) for e
+            in Event.objects.filter(ends_at__gt=now()).select_related('group')]
+
+
+def _event_geojson(event):
+    return {
+        'type': 'Feature',
+        'geometry': {
+            'type': 'Point',
+            'coordinates': [event.location.x, event.location.y],
+        },
+        'properties': {
+            'url': reverse('event_popup_partial', kwargs={
+                'group_slug': event.group.slug, 'event_slug': event.slug}),
+        }
+    }
 
 
 def events_list_page_partial(request):
