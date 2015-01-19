@@ -32,7 +32,6 @@ function create(options) {
 
     if (options.location && options.location.lat !== 0) {
         map.setView(options.location, zoom.NEIGHBORHOOD);
-        addLocationMarker(map, options.location);
     } else {
         map.fitBounds(config.bounds);
     }
@@ -48,21 +47,15 @@ function create(options) {
     if (options.search) {
         initLocationSearch($controlsContainer, map);
     }
+    if (options.crosshairs) {
+        initCrosshairs(options.domId);
+    }
     if (options.static) {
         // We had to add zoomControl to find its container, but now remove it.
         zoomControl.removeFrom(map);
     }
 
     return map;
-}
-
-function addLocationMarker(map, location) {
-    L.circleMarker(location, {
-        stroke: false,
-        fillColor: '#198d5e',
-        radius: 10,
-        fillOpacity: 1
-    }).addTo(map);
 }
 
 function initBaseMap(map) {
@@ -89,7 +82,6 @@ function initGeolocation($controlsContainer, map) {
     function showError() {
         window.alert('Unable to show your location.');
     }
-
 }
 
 function initLocationSearch($controlsContainer, map) {
@@ -99,4 +91,11 @@ function initLocationSearch($controlsContainer, map) {
 function initLegend($controlsContainer, map) {
     var $button = $('<a class="legend-button" data-toggle="modal" href="#legend" href="javascript:;" title="Legend">L</a>');
     $controlsContainer.prepend($button);
+}
+
+function initCrosshairs(domId) {
+    var $map = $('#' + domId),
+        $hHair = $('<div style="position:absolute; left:0; right:0; bottom:50%; height:1px; background:black"></div>'),
+        $vHair = $('<div style="position:absolute; right:50%; width:1px; top:0; bottom:0; background:black"></div>');
+    $map.append([$hHair, $vHair]);
 }

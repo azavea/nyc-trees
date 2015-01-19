@@ -28,16 +28,26 @@ def event_dashboard(request):
 
 def add_event(request):
     form = EventForm(request.POST.copy())
-    form.data['group'] = request.group.pk
+    is_valid = _process_event_form(form, request)
 
-    if form.is_valid():
-        form.save()
+    if is_valid:
         return HttpResponseRedirect(
             reverse('group_edit', kwargs={'group_slug': request.group.slug}))
-    return {
-        'form': form,
-        'group': request.group
-    }
+    else:
+        return {
+            'form': form,
+            'group': request.group
+        }
+
+
+def _process_event_form(form, request):
+    form.data['group'] = request.group.pk
+    form.data['location'] = Point(float(request.POST['lng']),
+                                  float(request.POST['lat']))
+    is_valid = form.is_valid()
+    if is_valid:
+        form.save()
+    return is_valid
 
 
 def add_event_page(request):
@@ -164,20 +174,20 @@ def edit_event_page(request, event_slug):
 def edit_event(request, event_slug):
     event = get_object_or_404(Event, group=request.group, slug=event_slug)
     form = EventForm(request.POST.copy(), instance=event)
-    form.data['group'] = request.group.pk
+    is_valid = _process_event_form(form, request)
 
-    if form.is_valid():
-        form.save()
+    if is_valid:
         return HttpResponseRedirect(
             reverse('event_detail', kwargs={
                 'group_slug': request.group.slug,
                 'event_slug': event_slug
             }))
-    return {
-        'form': form,
-        'group': request.group,
-        'event': event
-    }
+    else:
+        return {
+            'form': form,
+            'group': request.group,
+            'event': event
+        }
 
 
 def event_popup_partial(request, event_slug):

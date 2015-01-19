@@ -25,6 +25,7 @@ def my_events_now(request):
             return {'my_events_now': events}
     return {}
 
+
 def config(request):
     # At the time this function was written, the generated context was
     # only used in the base.html template, and our AJAX requests all

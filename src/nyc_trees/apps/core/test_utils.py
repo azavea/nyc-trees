@@ -46,7 +46,7 @@ def make_event(group, **kwargs):
         'title': "The event",
         'contact_email': "a@b.com",
         'address': "123 Main St",
-        'location': Point(0, 0),
+        'location': Point(-73.9679007, 40.7764977),
         'max_attendees': 100,
         'begins_at': now(),
         'ends_at': now()
