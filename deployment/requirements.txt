@@ -1,3 +1,4 @@
+ansible==1.8.2
 awscli==1.6.10
 boto==2.34.0
 requests==2.4.1

@@ -5,7 +5,7 @@ NYC Parks Trees Count! 2015 tree census
 
 ## Local Development
 
-A combination of Vagrant 1.5+ and Ansible 1.6+ is used to setup the development environment for this project. It of the following virtual machines:
+A combination of Vagrant 1.5+ and Ansible 1.8+ is used to setup the development environment for this project. It of the following virtual machines:
 
 - `app`
 - `tiler`
