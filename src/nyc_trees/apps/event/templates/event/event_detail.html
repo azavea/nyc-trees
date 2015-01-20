@@ -4,6 +4,10 @@
 
 {% block top %}
 
+    <div id="map" class="map-small"
+         data-lat="{{ event.location.y }}" data-lon="{{ event.location.x }}">
+    </div>
+
     {% if event.starting_soon %}
     <div class="row">
         <div class="col-sm-12">

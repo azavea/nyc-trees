@@ -3,14 +3,20 @@
 require('bootstrap');
 
 var Modernizr = require('modernizr'),
-    $ = require('jquery');
+    $ = require('jquery'),
+    L = require('leaflet'),
+    mapModule = require('./map');
 
 var dom = {
     useMyInfo: '#use-my-contact-info',
     userContactName: '#user-contact-name',
     userContactEmail: '#user-contact-email',
     eventContactName: '#event-form [name="contact_name"]',
-    eventContactEmail: '#event-form [name="contact_email"]'
+    eventContactEmail: '#event-form [name="contact_email"]',
+    lat: '#event-form [name="lat"]',
+    lng: '#event-form [name="lng"]',
+    mapIdSmall: 'map-small',
+    mapIdLarge: 'map-large'
 };
 
 Modernizr.load({
@@ -27,3 +33,19 @@ $(dom.useMyInfo).on('click', function(e) {
     $(dom.eventContactEmail).val(userEmail);
     $(dom.eventContactName).val(userContactName);
 });
+
+mapModule.create({
+    domId: dom.mapIdSmall,
+    location: L.latLng(getFloatValue(dom.lat), getFloatValue(dom.lng)),
+    static: true
+});
+
+function getFloatValue(selector) {
+    var value = $(selector).val();
+    if (value) {
+        value = parseFloat(value, 10);
+    } else {
+        value = 0;
+    }
+    return value;
+}

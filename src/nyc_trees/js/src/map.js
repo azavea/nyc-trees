@@ -15,11 +15,27 @@ function create(options) {
         domId: 'map'
     }, options);
 
-    var map = L.map(options.domId, {
-            zoomControl: false
-        }),
+    var mapOptions = {
+        zoomControl: false
+    }
+    if (options.static) {
+        mapOptions.dragging = false;
+        mapOptions.touchZoom = false;
+        mapOptions.scrollWheelZoom = false;
+        mapOptions.doubleClickZoom = false;
+        mapOptions.boxZoom = false;
+    }
+
+    var map = L.map(options.domId, mapOptions),
         zoomControl = L.control.zoom({position: 'bottomleft'}).addTo(map),
         $controlsContainer = $(zoomControl.getContainer());
+
+    if (options.location && options.location.lat !== 0) {
+        map.setView(options.location, zoom.NEIGHBORHOOD);
+        addLocationMarker(map, options.location);
+    } else {
+        map.fitBounds(config.bounds);
+    }
 
     initBaseMap(map);
 
@@ -32,10 +48,21 @@ function create(options) {
     if (options.search) {
         initLocationSearch($controlsContainer, map);
     }
-
-    map.fitBounds(config.bounds);
+    if (options.static) {
+        // We had to add zoomControl to find its container, but now remove it.
+        zoomControl.removeFrom(map);
+    }
 
     return map;
+}
+
+function addLocationMarker(map, location) {
+    L.circleMarker(location, {
+        stroke: false,
+        fillColor: '#198d5e',
+        radius: 10,
+        fillOpacity: 1
+    }).addTo(map);
 }
 
 function initBaseMap(map) {
