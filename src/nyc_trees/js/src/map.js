@@ -17,7 +17,7 @@ function create(options) {
 
     var mapOptions = {
         zoomControl: false
-    }
+    };
     if (options.static) {
         mapOptions.dragging = false;
         mapOptions.touchZoom = false;
