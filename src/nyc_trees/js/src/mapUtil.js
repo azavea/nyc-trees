@@ -1,7 +1,8 @@
 "use strict";
 
 var zoom = {
-    NEIGHBORHOOD: 16
+    NEIGHBORHOOD: 16,
+    MAX: 19
 };
 
 module.exports = {

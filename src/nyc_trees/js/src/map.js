@@ -68,7 +68,7 @@ function addLocationMarker(map, location) {
 function initBaseMap(map) {
     var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
         osmAttrib = 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
-        osm = new L.TileLayer(osmUrl, {attribution: osmAttrib});
+        osm = new L.TileLayer(osmUrl, {maxZoom: zoom.MAX, attribution: osmAttrib});
 
     map.addLayer(osm);
 }
