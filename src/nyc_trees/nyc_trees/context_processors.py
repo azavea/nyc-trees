@@ -8,6 +8,7 @@ from django.conf import settings
 from calendar import timegm
 from datetime import datetime
 
+import json
 
 from django.utils.timezone import make_aware, utc
 
@@ -36,29 +37,8 @@ def config(request):
         # a dictionary."
         return {}
 
-    cache_busters = _tiler_cache_busters(request)
-
-    tile_url_format = \
-        "%(tiler_url)s/%(cache_buster)s/%(db)s/%(type)s/{z}/{x}/{y}.png"
-    grid_url_format = \
-        "%(tiler_url)s/%(cache_buster)s/%(db)s/%(type)s/{z}/{x}/{y}.grid.json"
-
-    progress_kwargs = {'tiler_url': settings.TILER_URL,
-                       'cache_buster': cache_busters['progress'],
-                       'db': settings.DATABASES['default']['NAME'],
-                       'type': 'progress'}
-
-    progress_tiles = tile_url_format % progress_kwargs
-    progress_grids = grid_url_format % progress_kwargs
-
-    if request.user.is_authenticated():
-        extra_params = "?user=%s" % request.user.pk
-        progress_tiles += extra_params
-        progress_grids += extra_params
-
     return {
-        "progress_tiles_url": progress_tiles,
-        "progress_grids_url": progress_grids,
+        'layers_json': json.dumps(_make_layers_context(request)),
         'nyc_bounds': {
             'xmin': float(settings.NYC_BOUNDS[0]),
             'ymin': float(settings.NYC_BOUNDS[1]),
@@ -66,6 +46,34 @@ def config(request):
             'ymax': float(settings.NYC_BOUNDS[3])
         }
     }
+
+
+def _make_layers_context(request):
+    tiler_url_format = \
+        "%(tiler_url)s/%(cache_buster)s/%(db)s/%(type)s/{z}/{x}/{y}"
+
+    if request.user.is_authenticated():
+        params = '?user=%s' % request.user.pk
+    else:
+        params = ''
+
+    context = {}
+    for layer in ['progress']:
+        tile_url = tiler_url_format % _make_tiler_url_kwargs(request, layer)
+        context[layer] = {
+            'tiles': tile_url + '.png' + params,
+            'grids': tile_url + '.grid.json' + params,
+        }
+
+    return context
+
+
+def _make_tiler_url_kwargs(request, layer):
+    cache_busters = _tiler_cache_busters(request)
+    return {'tiler_url': settings.TILER_URL,
+            'cache_buster': cache_busters[layer],
+            'db': settings.DATABASES['default']['NAME'],
+            'type': layer}
 
 
 def _tiler_cache_busters(request):
