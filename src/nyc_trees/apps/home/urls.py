@@ -30,9 +30,18 @@ urlpatterns = patterns(
         flatpage_view, {'url': '/tree_surroundings/'}),
     url(r'^training/groups_to_follow/$', r.groups_to_follow),
 
-    # "training" instead of "training/" because the flatpages admin interface
-    # insists that the "URL" (really a URL segment) start with a leading slash
-    url(r'^training(?P<url>.*/)$', include('django.contrib.flatpages.urls')),
+    # state changing training pages
+    url(r'^training/pages/the_mapping_method/',
+        r.the_mapping_method_from_previous),
+    url(r'^training/pages/tree_data/',
+        r.tree_data_from_previous),
+    url(r'^training/pages/tree_surroundings/',
+        r.tree_surroundings_from_previous),
+    url(r'^training/groups_to_follow/$',
+        r.groups_to_follow_from_previous),
+    url(r'^training/done/$',
+        r.training_list_from_groups_to_follow),
+
     # TODO: should we even still allow arbitrary flat pages?
     # "training/pages" instead of "training/pages/" because the
     # flatpages admin interface insists that the "URL" (really a URL
