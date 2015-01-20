@@ -21,7 +21,8 @@ var Windshaft = require('windshaft'),
     styles = files('./style'),
 
     interactivity = {
-        progress: 'id,group_id,survey_type'
+        progress: 'id,group_id,survey_type',
+        reservable: 'id,group_id,survey_type,restriction'
     },
 
     config = {

@@ -8,3 +8,6 @@ var reservationMap = MapModule.create({
     legend: true,
     search: true
 });
+
+// TODO: Only show this layer in "add" mode.
+L.tileLayer(config.urls.layers.reservable.tiles).addTo(reservationMap);

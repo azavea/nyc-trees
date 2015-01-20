@@ -58,7 +58,7 @@ def _make_layers_context(request):
         params = ''
 
     context = {}
-    for layer in ['progress']:
+    for layer in ['progress', 'reservable']:
         tile_url = tiler_url_format % _make_tiler_url_kwargs(request, layer)
         context[layer] = {
             'tiles': tile_url + '.png' + params,
@@ -96,7 +96,8 @@ def _tiler_cache_busters(request):
             reservation_updated_at)
 
     return {
-        "progress": progress_cache_buster
+        "progress": progress_cache_buster,
+        "reservable": progress_cache_buster  # uses the same tables as progress
     }
 
 
