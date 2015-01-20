@@ -7,13 +7,13 @@ from django_tinsel.decorators import route, render_template
 from django_tinsel.utils import decorate as do
 
 from apps.home import views as v
-
+from apps.core.views import map_legend
 
 home_page = route(GET=do(render_template('home/home.html'),
                          v.home_page))
 
 progress_page = route(GET=do(render_template('home/progress.html'),
-                             v.progress_page))
+                             map_legend))
 
 retrieve_job_status = do(v.retrieve_job_status)
 

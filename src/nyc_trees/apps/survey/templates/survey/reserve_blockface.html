@@ -1,5 +1,22 @@
 {% extends "base.html" %}
 
+{% load utils %}
+
 {% block content %}
-{# TODO #}
+    <aside class="pageheading col-am-4">
+        <div class="pageheading-description block">
+            <div class="row">
+                <div class="col-as-12">
+                    <h2>Reservations</h2>
+                </div>
+            </div>
+        </div>
+    </aside>
+    <div id="map" style="width: 100%; height: 400px"></div>
+    {% include 'home/partials/legend.html' %}
+    {% include 'home/partials/location_search.html' %}
 {% endblock content %}
+
+{% block page_js %}
+    <script type="text/javascript" src="{{ "js/reservationPage.js"|static_url }}"></script>
+{% endblock page_js %}
