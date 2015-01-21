@@ -1,1 +1,2 @@
 -r base.txt
+boto==2.34.0
