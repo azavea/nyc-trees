@@ -8,30 +8,22 @@
 </head>
 
 <body>
-<p>
-    {% blocktrans %}
-    You (or someone pretending to be you) have asked to register an account at
-    NYC TreesCount!  If this wasn't you, please ignore this email
-    and your address will be removed from our records.
-    {% endblocktrans %}
-</p>
-<p>
-    {% blocktrans %}
-    To activate this account, please click the following link within the next
-    {{ expiration_days }} days:
-    {% endblocktrans %}
-</p>
 
+<p>
+    Thank you for signing up for Trees Count!
+</p>
+<p>
+    Your username is {{ user.username }}<br />
+    Please click on this link to confirm your email address.
+</p>
 <p>
     <a href="http://{{site.domain}}{% url 'registration_activate' activation_key %}">
         {{site.domain}}{% url 'registration_activate' activation_key %}
     </a>
 </p>
 <p>
-    {% blocktrans %}
-    Sincerely,
-    NYC TreesCount! Management
-    {% endblocktrans %}
+    If you have additional questions or need help with your account, please email
+    us at <a href="mailto:TreesCount.Help@parks.nyc.gov">TreesCount.Help@parks.nyc.gov</a>
 </p>
 </body>
 

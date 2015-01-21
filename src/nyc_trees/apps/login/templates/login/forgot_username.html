@@ -11,15 +11,17 @@
       <fieldset>
         {% csrf_token %}
         <legend>Retrieve your Username</legend>
-        <p>Forgot the username for your account? Enter your email address and click \"Send\" to receive an email with your username.</p>
-        <h5>Fields marked with an asterisk (*) are required.</h5>
+        <p>
+            Forgot your username? Enter the Email address you used to register
+            with Trees Count! and click the “Find” button below.
+        </p>
         {{ form.non_field_errors }}
         <div class="fieldWrapper">
           {{ form.email.errors }}
-          <label for="{{ form.email.id_for_label }}">Email Address:</label> *
+          <label for="{{ form.email.id_for_label }}">Email Address:</label>
           {{ form.email }}
         </div>
-        <input type="submit" class="btn btn-block btn-primary" value="'Send'" />
+        <input type="submit" class="btn btn-block btn-primary" value="Send" />
       </fieldset>
     </form>
   </div>

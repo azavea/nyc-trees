@@ -24,7 +24,9 @@ class ForgotUsernameForm(forms.Form):
 class NycRegistrationForm(RegistrationFormUniqueEmail):
     tos = forms.BooleanField(
         widget=forms.CheckboxInput,
-        label='I agree to the terms of use',
+        label=mark_safe('I agree to the <a href="'
+                        'http://www1.nyc.gov/home/terms-of-use.page"'
+                        ' target="new">terms of use</a>'),
         error_messages={
             'required': 'You must agree to the terms to register'
         }
