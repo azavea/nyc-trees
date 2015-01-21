@@ -3,6 +3,8 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
+import json
+
 from django.contrib.gis.geos import LineString, MultiLineString
 from django.test import TestCase
 
@@ -27,12 +29,11 @@ class ContextProcessorTest(TestCase):
 
     def test_full_request(self):
         context = config(make_request())
-        self.assertTrue('progress_tiles_url' in context,
-                        'Expected the context dict to have a "progress_tiles" '
+        self.assertTrue('layers_json' in context,
+                        'Expected the context dict to have a "layers_json" '
                         'key.')
-        self.assertTrue(context['progress_tiles_url'],
-                        'Expected the "progress_tiles" key of the context '
-                        'dict to be truthy.')
+        self.assertTrue(json.loads(context['layers_json']),
+                        'Expected "layers_json" to be parsable as JSON')
 
     def test_ajax_request(self):
         context = config(make_request(

@@ -1,6 +1,7 @@
 "use strict";
 
 var MapModule = require('./map'),
+    zoom = require('./mapUtil').zoom,
     L = require('leaflet');
 
 var progressMap = MapModule.create({
@@ -9,4 +10,6 @@ var progressMap = MapModule.create({
     search: true
 });
 
-L.tileLayer(config.urls.layers.progress.tiles).addTo(progressMap);
+L.tileLayer(config.urls.layers.progress.tiles, {
+    maxZoom: zoom.MAX
+}).addTo(progressMap);

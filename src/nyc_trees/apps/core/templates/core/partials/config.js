@@ -6,12 +6,7 @@
         },
         "urls": {
             "geocode": "{% url 'geocode' %}",
-            "layers": {
-                "progress": {
-                    "tiles": "{{ progress_tiles_url }}",
-                    "grids": "{{ progress_grids_url }}"
-                }
-            }
+            "layers": {{ layers_json|safe }}
         },
         "bounds": [[{{nyc_bounds.ymin}}, {{nyc_bounds.xmin}}], [{{nyc_bounds.ymax}}, {{nyc_bounds.xmax}}]]
     };
