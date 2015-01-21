@@ -11,6 +11,7 @@ from django.db.models import Q
 from django.template import loader
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
+from django.utils.safestring import mark_safe
 
 from registration.forms import RegistrationFormUniqueEmail
 
@@ -24,7 +25,9 @@ class ForgotUsernameForm(forms.Form):
 class NycRegistrationForm(RegistrationFormUniqueEmail):
     tos = forms.BooleanField(
         widget=forms.CheckboxInput,
-        label='I agree to the terms of use',
+        label=mark_safe('I agree to the <a href="'
+                        'http://www1.nyc.gov/home/terms-of-use.page"'
+                        ' target="new">terms of use</a>'),
         error_messages={
             'required': 'You must agree to the terms to register'
         }

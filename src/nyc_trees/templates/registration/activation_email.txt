@@ -1,22 +1,15 @@
 {% load i18n %}
 {% load url from future %}
-{% blocktrans %}
-You (or someone pretending to be you) have asked to register an account at
-NYC TreesCount!  If this wasn't you, please ignore this email
-and your address will be removed from our records.
-{% endblocktrans %}
-{% blocktrans %}
-To activate this account, please click the following link within the next
-{{ expiration_days }} days:
-{% endblocktrans %}
+Thank you for signing up for Trees Count!
+
+Your username is {{ user.username }}
+
+Please click on this link to confirm your email address.
 
 http://{{site.domain}}{% url 'registration_activate' activation_key %}
 
-{% blocktrans %}
-Sincerely,
-NYC TreesCount! Management
-{% endblocktrans %}
-
+If you have additional questions or need help with your account, please email
+us at TreesCount.Help@parks.nyc.gov
 
 {% comment %}
 **registration/activation_email.txt**
