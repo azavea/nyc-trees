@@ -5,16 +5,13 @@ from __future__ import division
 
 from django.conf.urls import patterns, url
 
-from django_tinsel.decorators import route
-
-from apps.login.views import forgot_username_page_view, forgot_username_view
+from apps.login import routes as r
 
 
 # Everything is mounted on login/
 urlpatterns = patterns(
     '',
     url(r'^forgot-username/$',
-        route(GET=forgot_username_page_view,
-              POST=forgot_username_view),
+        r.forgot_username,
         name='forgot_username'),
 )

@@ -12,6 +12,21 @@ from django.utils.text import slugify
 from libs.mixins import NycModel
 
 
+REFERRER_PARKS = (
+    ('website', 'Website'),
+    ('newsletter', 'Newsletter'),
+    ('employee', 'I am a Parks employee')
+)
+
+REFERRER_AD = (
+    ('bus', 'Bus Poster'),
+    ('subway', 'Subway Poster'),
+    ('tv', 'Television'),
+    ('radio', 'Radio'),
+    ('website', 'Website')
+)
+
+
 class User(NycModel, AbstractUser):
     online_training_complete = models.BooleanField(default=False)
     individual_mapper = models.BooleanField(default=False)
@@ -30,6 +45,18 @@ class User(NycModel, AbstractUser):
     is_ambassador = models.BooleanField(default=False)
     is_minor = models.BooleanField(default=False)
 
+    zip_code = models.CharField(max_length=25, default='', blank=True)
+
+    referrer_parks = models.CharField(max_length=25, default='', blank=True,
+                                      choices=REFERRER_PARKS)
+    referrer_group = models.ForeignKey('Group', on_delete=models.PROTECT,
+                                       null=True, blank=True)
+    referrer_ad = models.CharField(max_length=25, default='', blank=True,
+                                   choices=REFERRER_AD)
+    referrer_social_media = models.BooleanField(default=False)
+    referrer_friend = models.BooleanField(default=False)
+    referrer_311 = models.BooleanField(default=False)
+    referrer_other = models.CharField(max_length=255, default='', blank=True)
     opt_in_stewardship_info = models.BooleanField(default=False)
 
     objects = UserManager()

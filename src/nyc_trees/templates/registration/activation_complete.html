@@ -9,55 +9,88 @@ Optional Information
 {% endblock %}
 
 {% block registration_content %}
-<form method="get" action="{% url 'home_page' %}">
+<form method="POST">
     {% csrf_token %}
-    <h3>
-        <label for="first_name">First Name</label>
-    </h3>
-    <p>
-        <input type="text" name="first_name" id="first_name" />
-    </p>
-    <h3>
-        <label for="last_name">Last Name</label>
-    </h3>
-    <p>
-        <input type="text" name="last_name" id="last_name" />
-    </p>
+
+    {{ form.errors }}
+    {{ form.non_field_errors }}
+
+    <div class="field">
+        {{ form.first_name.label_tag }}
+        {{ form.first_name }}
+    </div>
+    <div class="field">
+        {{ form.last_name.label_tag }}
+        {{ form.last_name }}
+    </div>
+    <div class="field">
+        {{ form.zip_code.label_tag }}
+        {{ form.zip_code }}
+    </div>
     <h3>
         How did you hear about this?
     </h3>
     <ul>
-        <li><label><input type="checkbox" name="referer_subway" />
-            Subway ads</label></li>
-        <li><label><input type="checkbox" name="referer_friend" />
-            My friend told me</label></li>
-        <li><label><input type="checkbox" name="referer_311" />
-            3-1-1</label></li>
-        <li><label><input type="checkbox" name="referer_other" />
-            Other</label></li>
-        <li><label><input type="checkbox" id="chk_referer_group" />
-            Group</label>
-            <select name="referer_group" id="referer_group" class="hidden">
-                <option>NYC Parks</option>
-            </select>
+        <li>
+            <label>
+                <input type="checkbox" data-toggle-field="#id_referrer_parks" />
+                NYC Parks
+            </label>
+            {{ form.referrer_parks }}
+        </li>
+        <li>
+            <label>
+                <input type="checkbox" data-toggle-field="#id_referrer_group" />
+                Census Group
+            </label>
+            {{ form.referrer_group }}
+        </li>
+        <li>
+            <label>
+                <input type="checkbox" data-toggle-field="#id_referrer_ad" />
+                Advertisement/Promotion
+            </label>
+            {{ form.referrer_ad }}
+        </li>
+        <li>
+            <label>
+                {{ form.referrer_social_media }}
+                Social Media
+            </label>
+        </li>
+        <li>
+            <label>
+                {{ form.referrer_friend }}
+                Friends, family or co-workers
+            </label>
+        </li>
+        <li>
+            <label>
+                {{ form.referrer_311 }}
+                3-1-1
+            </label>
+        </li>
+        <li>
+            <label>
+                <input type="checkbox" data-toggle-field="#id_referrer_other" />
+                Other
+            </label>
+            {{ form.referrer_other }}
         </li>
     </ul>
-    <h3>
-        <label for="email_opt_in">
+    <div class="field">
+        <label for="id_opt_in_stewardship_info">
             Are you interested in receiving additional information on
             stewardship opportunities available through NYC Parks?
         </label>
-    </h3>
-    <p>
-        <label><input type="checkbox" name="email_opt_in" id="email_opt_in" />
-            Yes</label>
-    </p>
-    <hr />
-    <p>
-        <input type="submit" class="btn btn-primary pull-right"
-            value="Submit" />
-        <a href="{% url 'home_page' %}">Skip</a>
-    </p>
+        <label>
+            {{ form.opt_in_stewardship_info }} Yes
+        </label>
+    </div>
+    <div>
+        <input type="submit" class="btn btn-primary pull-right" value="Submit" />
+        <a class="btn" href="{% url 'home_page' %}">Skip</a>
+    </div>
 </form>
 {% endblock %}
 

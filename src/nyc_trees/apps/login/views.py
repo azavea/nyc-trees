@@ -8,14 +8,12 @@ import django.contrib.auth.views as contrib_auth
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.template.loader import render_to_string
-
-from django_tinsel.decorators import render_template
-from django_tinsel.utils import decorate as do
+from django.shortcuts import redirect
 
 from apps.core.models import User
-
 from apps.login.forms import (ForgotUsernameForm,
-                              UsernameOrEmailPasswordResetForm)
+                              UsernameOrEmailPasswordResetForm,
+                              OptionalInfoForm)
 
 
 def logout(request):
@@ -40,7 +38,7 @@ def forgot_username_page(request):
 def forgot_username(request):
     form = ForgotUsernameForm(request.POST)
     if not form.is_valid():
-        return forgot_username_page_view(request)
+        return forgot_username_page(request)
 
     email = form.cleaned_data['email']
     users = User.objects.filter(email=email)
@@ -62,10 +60,22 @@ def forgot_username(request):
     return {'email': email}
 
 
-forgot_username_page_view = do(
-    render_template('login/forgot_username.html'),
-    forgot_username_page)
+def activation_complete(request):
+    form = OptionalInfoForm(instance=request.user)
+    return {
+        'form': form
+    }
 
-forgot_username_view = do(
-    render_template('login/forgot_username_complete.html'),
-    forgot_username)
+
+def save_optional_info(request):
+    form = OptionalInfoForm(request.POST, instance=request.user)
+
+    # This shouldn't happen since all fields on this form are optional.
+    if not form.is_valid():
+        return {
+            'form': form
+        }
+
+    form.save()
+
+    return redirect('home_page')
