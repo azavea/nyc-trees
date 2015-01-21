@@ -59,7 +59,7 @@ def _make_layers_context(request):
         params = ''
 
     context = {}
-    for layer in ['progress', 'reservable']:
+    for layer in ['progress', 'reservable', 'reservations']:
         tile_url = tiler_url_format % _make_tiler_url_kwargs(request, layer)
         context[layer] = {
             'tiles': tile_url + '.png' + params,
@@ -85,6 +85,9 @@ def _tiler_cache_busters(request):
 
     max_timestamp = lambda *datetimes: timegm(max(*datetimes).utctimetuple())
 
+    reservations_cache_buster = max_timestamp(blockface_updated_at,
+        reservation_updated_at)
+
     if request.user.is_authenticated():
         mapper_updated_at = _get_last_updated_datetime(TrustedMapper)
 
@@ -98,7 +101,8 @@ def _tiler_cache_busters(request):
 
     return {
         "progress": progress_cache_buster,
-        "reservable": progress_cache_buster  # uses the same tables as progress
+        "reservable": progress_cache_buster, # uses the same tables as progress
+        "reservations": reservations_cache_buster
     }
 
 
