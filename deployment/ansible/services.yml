@@ -1,7 +1,5 @@
 ---
-- hosts:
-    - services
-    - monitoring-servers
+- hosts: services
   sudo: True
 
   pre_tasks:
@@ -11,9 +9,10 @@
   roles:
     - { role: "nyc-trees.common" }
 
-    - { role: "nyc-trees.postgresql", when: developing_or_testing }
-    - { role: "nyc-trees.pgweb", when: developing_or_testing }
-    - { role: "azavea.redis", when: developing_or_testing }
-    - { role: "nyc-trees.graphite", when: not_testing }
-    - { role: "nyc-trees.logstash", when: not_testing }
-    - { role: "azavea.kibana", when: not_testing }
+    - { role: "nyc-trees.postgresql", when: "['development', 'test'] | some_are_in(group_names)" }
+    - { role: "nyc-trees.pgweb", when: "['development', 'test'] | some_are_in(group_names)" }
+    - { role: "azavea.redis", when: "['development', 'test'] | some_are_in(group_names)" }
+
+    - { role: "nyc-trees.graphite", when: "['test'] | is_not_in(group_names)" }
+    - { role: "nyc-trees.logstash", when: "['test'] | is_not_in(group_names)"}
+    - { role: "azavea.kibana", when: "['test'] | is_not_in(group_names)" }

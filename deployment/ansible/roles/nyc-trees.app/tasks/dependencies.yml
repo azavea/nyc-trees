@@ -15,6 +15,6 @@
 
 - name: Install application Python dependencies for production
   pip: chdir="{{ app_home }}/requirements" requirements=production.txt
-  when: packing
+  when: "['packer'] | is_in(group_names)"
   notify:
     - Restart nyc-trees-app

@@ -1,8 +1,8 @@
 ---
 - { include: configuration.yml }
-- { include: app.yml }
+- { include: app.yml, when: "['packer'] | is_in(group_names)" }
 - { include: dependencies.yml }
-- { include: dev-and-test-dependencies.yml, when: developing_or_testing }
+- { include: dev-and-test-dependencies.yml, when: "['development', 'test'] | some_are_in(group_names)" }
 - { include: static-files.yml }
 - { include: reverse-proxy.yml }
 - { include: log-rotation.yml }

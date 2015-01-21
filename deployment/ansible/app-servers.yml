@@ -10,7 +10,7 @@
       lineinfile: dest="/etc/hosts"
                   regexp="^127.0.0.1"
                   line="127.0.0.1 localhost {{ statsite_host }}"
-      when: packing
+      when: "['packer'] | is_in(group_names)"
 
   roles:
     - { role: "nyc-trees.common" }
@@ -21,4 +21,4 @@
       lineinfile: dest="/etc/hosts"
                   regexp="^127.0.0.1"
                   line="127.0.0.1 localhost"
-      when: packing
+      when: "['packer'] | is_in(group_names)"

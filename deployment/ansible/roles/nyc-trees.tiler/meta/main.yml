@@ -2,5 +2,5 @@
 dependencies:
   - { role: "azavea.mapnik" }
   - { role: "azavea.build-essential" }
-  - { role: "azavea.swapfile", when: developing_or_testing }
-  - { role: "nyc-trees.monitoring", collectd_prefix: "collectd.tile.", when: not_testing }
+  - { role: "azavea.swapfile", when: "['development', 'test'] | some_are_in(group_names)" }
+  - { role: "nyc-trees.monitoring", collectd_prefix: "collectd.tile.", when: "['test'] | is_not_in(group_names)" }
