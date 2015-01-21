@@ -38,7 +38,12 @@
         <input type="hidden" name="lat" value="{{ event.location.y }}">
         <input type="hidden" name="lng" value="{{ event.location.x }}">
 
+        {{ form.location.errors }}
         <div id="map-small" class="map-small"></div>
+
+        <div>
+            <a href="#edit-map" data-toggle="tab" class="js-edit">Edit Map</a>
+        </div>
 
         <div class="field">
             {{ form.location_description.errors }}

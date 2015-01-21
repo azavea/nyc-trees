@@ -1,0 +1,11 @@
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="form">
+        {% include 'event/partials/event_form.html' %}
+    </div>
+    <div role="tabpanel" class="tab-pane" id="edit-map">
+        <div>Move the map so your event location is under the crosshairs.</div>
+        <div id="map-large" style="height:400px"></div>
+        <a class="btn btn-primary pull-right js-done" href="#form" data-toggle="tab">Done</a>
+        <a class="btn btn-default js-cancel" href="#form" data-toggle="tab">Cancel</a>
+    </div>
+</div>

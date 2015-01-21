@@ -8,7 +8,9 @@ import shortuuid
 from datetime import timedelta
 from django.utils import timezone
 
+from django.conf import settings
 from django.contrib.gis.db import models
+from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.utils.text import slugify
 
@@ -57,6 +59,13 @@ class Event(NycModel, models.Model):
             self.slug = slugify(self.title)
         elif not self.slug:
             self.slug = shortuuid.uuid()
+
+        xmin, ymin, xmax, ymax = settings.NYC_BOUNDS
+        p = self.location
+        if p.x < xmin or p.x > xmax or p.y < ymin or p.y > ymax:
+            raise ValidationError({'location': [
+                "Please choose a location in New York City"
+            ]})
 
     def training_summary(self):
         return 'Training' if self.includes_training else 'Mapping'

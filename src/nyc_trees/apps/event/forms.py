@@ -30,6 +30,7 @@ class EventForm(ModelForm):
             'group',
             'title',
             'address',
+            'location',
             'location_description',
             'description',
             'is_private',

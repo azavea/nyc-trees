@@ -2,11 +2,11 @@
 
 var $ = require('jquery'),
     L = require('leaflet'),
-    mapModule = require('./map'),
+    EventMap = require('./EventMap'),
     fetchAndReplace = require('./fetchAndReplace');
 
 var $map = $('#map');
-mapModule.create({
+new EventMap({
     location: L.latLng($map.data('lat'), $map.data('lon')),
     static: true
 });
