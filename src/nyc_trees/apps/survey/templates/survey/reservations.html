@@ -7,7 +7,11 @@
         <div class="pageheading-description block">
             <div class="row">
                 <div class="col-xs-4">
-                    <h2>New Reservation</h2>
+                    <h2>Reservations</h2>
+                </div>
+                <div class="col-xs-8">
+                    <a href="{% url 'reserve_blockface_page' %}" id="new-reservation"
+                        class="btn btn-primary pull-right">New</a>
                 </div>
             </div>
         </div>
@@ -18,5 +22,5 @@
 {% endblock content %}
 
 {% block page_js %}
-    <script type="text/javascript" src="{{ "js/reserveBlockfacePage.js"|static_url }}"></script>
+    <script type="text/javascript" src="{{ "js/reservationPage.js"|static_url }}"></script>
 {% endblock page_js %}

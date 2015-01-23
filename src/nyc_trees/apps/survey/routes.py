@@ -14,6 +14,11 @@ from apps.core.views import map_legend
 # RESERVATION ROUTES
 #####################################
 
+reservations = route(
+    GET=individual_mapper_do(
+        render_template('survey/reservations.html'),
+        map_legend))
+
 reserve_blockface_page = route(
     GET=individual_mapper_do(
         render_template('survey/reserve_blockface.html'),

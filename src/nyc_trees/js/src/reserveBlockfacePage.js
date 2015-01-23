@@ -10,6 +10,6 @@ var reservationMap = MapModule.create({
     search: true
 });
 
-L.tileLayer(config.urls.layers.reservations.tiles, {
+L.tileLayer(config.urls.layers.reservable.tiles, {
     maxZoom: zoom.MAX
 }).addTo(reservationMap);
