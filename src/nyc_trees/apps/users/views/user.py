@@ -192,8 +192,3 @@ def start_map_for_tool_depots_job(request, username):
 def achievements_page(request):
     # TODO: implement
     return {}
-
-
-def training_page(request):
-    # TODO: implement
-    return {}

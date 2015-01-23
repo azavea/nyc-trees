@@ -26,10 +26,6 @@ achievements = do(login_required,
                   route(GET=do(render_template('users/achievement.html'),
                                v.achievements_page)))
 
-training = do(login_required,
-              route(GET=do(render_template('users/training.html'),
-                           v.training_page)))
-
 user_detail = route(
     GET=do(render_user_template, v.user_detail),
     POST=do(login_required, render_user_template, v.set_privacy))
