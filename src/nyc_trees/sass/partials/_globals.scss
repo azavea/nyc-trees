@@ -325,3 +325,18 @@ label {
     }
   }
 }
+
+.group-table {
+  table-layout: fixed;
+  vertical-align: top;
+  tr {
+    border-bottom: 1px solid $gray-lighter;
+    vertical-align: top;
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+  td {
+    padding: 10px;
+  }
+}

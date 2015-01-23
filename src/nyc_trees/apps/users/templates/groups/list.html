@@ -16,20 +16,24 @@
 {% block pre_loop_section %}
 {% endblock pre_loop_section %}
 {% if groups %}
+<table class="group-table">
 {% for group, user_is_following in groups %}
-<div class="row">
-    <div class="col-sm-12"
+    <tr
          {% if chunk_size != None and forloop.counter > chunk_size %}
          style="display: none;"
          {% endif %}
          data-group-name="{{ group.name|lower }}"
          data-group-description="{{ group.description.lower }}">
-        <div class="btn-follow-container pull-right">{% include 'groups/partials/follow_button.html' %}</div>
-        <a href="{% url 'group_detail' group_slug=group.slug %}">{{ group.name }}</a>
-        <p>{{ group.description }}</p>
-    </div>
-</div>
+        <td>
+            <a href="{% url 'group_detail' group_slug=group.slug %}">{{ group.name }}</a>
+            <div>{{ group.description }}</div>
+        </td>
+        <td>
+            <div class="btn-follow-container pull-right">{% include 'groups/partials/follow_button.html' %}</div>
+        </td>
+    </tr>
 {% endfor %}
+</table>
 <a href="#"
    {% if chunk_size == None or groups_count <= chunk_size %}
    style="display: none;"
