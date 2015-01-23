@@ -22,7 +22,7 @@ var Windshaft = require('windshaft'),
 
     interactivity = {
         progress: 'id,group_id,survey_type',
-        reservable: 'id,group_id,survey_type,restriction',
+        reservable: 'id,group_id,survey_type,restriction,geojson',
         reservations: 'id'
     },
 
@@ -81,6 +81,7 @@ function req2context(req) {
         }
         context.user_id = user_id;
     }
+    context.is_utf_grid = req.params.format === 'grid.json';
     return context;
 }
 
