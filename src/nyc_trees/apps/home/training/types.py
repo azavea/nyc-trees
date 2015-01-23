@@ -4,14 +4,15 @@ from __future__ import unicode_literals
 from __future__ import division
 
 from django.core.urlresolvers import reverse
+from django.contrib.auth.decorators import login_required
 from django_tinsel.decorators import route
 from django_tinsel.utils import decorate as do
 from apps.home.training.decorators import render_flatpage, mark_user
+from django.contrib.flatpages.views import flatpage
 
 _PURE_URL_NAME_TEMPLATE = '%s_pure'
 _MARK_PROGRESS_URL_NAME_TEMPLATE = '%s_mark_progress'
 _TRAINING_FINISHED_BOOLEAN_FIELD_TEMPLATE = 'training_finished_%s'
-_FLATPAGE_VIEW = 'django.contrib.flatpages.views.flatpage'
 
 
 class AbstractTrainingStep(object):
@@ -114,7 +115,8 @@ class TrainingGateway(AbstractTrainingStep):
         return training_steps
 
     def pure_kwargs(self):
-        return {'name': '%s_pure' % self.name, 'view': self.view}
+        return {'name': '%s_pure' % self.name,
+                'view': login_required(self.view)}
 
     def mark_kwargs(self):
         raise ValueError('Gateways do not have a progress boolean')
@@ -127,10 +129,10 @@ class TrainingStep(AbstractTrainingStep):
         self.duration = duration
         self.next_step = None
         self.previous_step = None
-        self.view = view or _FLATPAGE_VIEW
+        self.view = view or flatpage
 
     def is_flatpage(self):
-        return self.view == _FLATPAGE_VIEW
+        return self.view == flatpage
 
     def pure_url(self):
         return reverse(_PURE_URL_NAME_TEMPLATE % self.name)
@@ -141,13 +143,14 @@ class TrainingStep(AbstractTrainingStep):
     def pure_kwargs(self):
         kwargs = {'url': '/%s/' % self.name} if self.is_flatpage() else {}
         return {'name': _PURE_URL_NAME_TEMPLATE % self.name,
-                'view': self.view,
+                'view': login_required(self.view),
                 'kwargs': kwargs}
 
     def mark_kwargs(self):
         inner_view = (render_flatpage('/%s/' % self.next_step.name)
                       if self.next_step.is_flatpage() else self.next_step.view)
         view = route(GET=do(
+            login_required,
             mark_user(_TRAINING_FINISHED_BOOLEAN_FIELD_TEMPLATE % self.name),
             inner_view))
         return {'name': _MARK_PROGRESS_URL_NAME_TEMPLATE % self.name,
