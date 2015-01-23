@@ -96,11 +96,8 @@ class User(NycModel, AbstractUser):
         return reverse('user_detail', args=[self.username])
 
     def completed_training(self):
-        return (self.training_finished_getting_started and
-                self.training_finished_the_mapping_method and
-                self.training_finished_tree_data and
-                self.training_finished_tree_surroundings and
-                self.training_finished_groups_to_follow)
+        from apps.home.training import training_summary
+        return training_summary.is_complete(self)
 
 
 class Group(NycModel, models.Model):

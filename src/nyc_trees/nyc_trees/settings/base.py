@@ -294,8 +294,3 @@ GEOCODE_FALLBACK_SUFFIX = ', New York, NY'
 TILER_URL = environ.get('TILER_HOST', 'localhost')
 
 MAX_GROUP_IMAGE_SIZE_IN_BYTES = 102400  # 100 KB
-
-TRAINING_FLAT_PAGES = ('getting_started',
-                       'the_mapping_method',
-                       'tree_data',
-                       'tree_surroundings')
