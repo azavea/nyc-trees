@@ -2,22 +2,13 @@
 
 {% load utils %}
 
-{% block aside %}
+{% block map %}
 
-  <h2>New Event</h2>
-  <p class="pageheading-description-detail">
-      Add a new event for your group.
-  </p>
-
-{% endblock aside %}
-
-{% block top %}
-
-<div id="map" style="width: 100%; height: 400px"></div>
+<div id="map" class="map"></div>
 {% include 'home/partials/legend.html' %}
 {% include 'home/partials/location_search.html' %}
 
-{% endblock top %}
+{% endblock map %}
 
 {% block page_js %}
   <script type="text/javascript" src="{{ "js/progressPage.js"|static_url }}"></script>

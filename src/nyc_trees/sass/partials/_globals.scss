@@ -23,6 +23,7 @@ html {
   font-size: 62.5%;
   -webkit-tap-highlight-color: rgba(0,0,0,0);
   overflow-x: hidden;
+  height: 100%;
 }
 
 body {
@@ -36,6 +37,7 @@ body {
   width: 100%;
   transition: all 500ms ease-in-out;
   position: relative;
+  height: 100%;
 }
 
 section {
@@ -51,9 +53,6 @@ textarea {
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;
-  @media only screen and (max-width : $screen-xs) {
-    width: 100%;
-  }
 }
 
 // Links
@@ -298,4 +297,41 @@ label {
 
 .map-small {
   padding-top: 40%; // Makes height 40% of width
+}
+
+.map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}
+
+@media (min-width: 768px) {
+  .legend-button {
+    display: none !important;
+  }
+  .modal-hidden-xs {
+    position: absolute;
+    left: 3rem;
+    top: 4rem;
+    width: 40rem;
+    opacity: 1 !important;
+    display: block !important;
+    .modal-content {
+      box-shadow: none;
+      border-radius: 0;
+      width: 40rem;
+      border: 0;
+    }
+    .modal-backdrop {
+      display: none;
+    }
+    .modal-dialog {
+      -webkit-transform: translate(0, 0) !important;
+      -ms-transform: translate(0, 0) !important;
+      -o-transform: translate(0, 0) !important;
+      transform: translate(0, 0) !important;
+    }
+  }
 }
