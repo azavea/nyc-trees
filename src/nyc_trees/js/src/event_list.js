@@ -13,4 +13,3 @@ $(dom.eventListContainer).on('click', dom.eventListActionLink, function (e) {
     e.preventDefault();
     $container.load(url);
 });
-

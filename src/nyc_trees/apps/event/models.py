@@ -51,6 +51,8 @@ class Event(NycModel, models.Model):
     is_canceled = models.BooleanField(default=False)
     is_private = models.BooleanField(default=False)
 
+    objects = models.GeoManager()
+
     def __unicode__(self):
         return "%s - group '%s'" % (self.title, self.group)
 

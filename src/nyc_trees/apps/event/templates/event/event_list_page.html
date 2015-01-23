@@ -19,7 +19,7 @@
               <a data-toggle="tab" href="#list">List</a>
           </li>
           <li>
-              <a data-toggle="tab" href="#map">Map</a>
+              <a data-toggle="tab" href="#map-tab">Map</a>
           </li>
       </ul>
   </div>
@@ -39,8 +39,12 @@
                 {% include "event/partials/event_list.html" with event_list=all_events %}
             {% endif %}
           </div>
-          <div class="tab-pane" id="map">
+          <div class="tab-pane" id="map-tab" class="map-container">
+            <div id="map" class="map">
+            </div>
+            <div id="action-bar" class="action-bar"></div>
           </div>
+          {% include 'home/partials/location_search.html' %}
       </div>
   </section>
 

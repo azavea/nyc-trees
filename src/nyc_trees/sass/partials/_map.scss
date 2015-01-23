@@ -1,0 +1,30 @@
+.map-container {
+  position: relative;
+  width: 100%;
+  height: 440px;
+
+  .action-bar {
+    position: absolute;
+    bottom: 0;
+
+    width: 100%;
+    height: 40px;
+  }
+}
+
+.map {
+  width: 100%;
+  height: 400px;
+}
+
+.map-small {
+  padding-top: 40%; // Makes height 40% of width
+}
+
+.map-full {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}

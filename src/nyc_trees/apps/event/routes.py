@@ -27,6 +27,8 @@ events_list_page_partial = route(GET=v.events_list_page_partial)
 
 events_list_feed = route(GET=v.events_list_feed)
 
+future_events_geojson = route(GET=do(json_api_call, v.future_events_geojson))
+
 #####################################
 # GROUP ROUTES
 #####################################
@@ -44,13 +46,16 @@ event_detail = do(group_request,
 
 event_edit = group_admin_do(render_template('event/edit_event.html'),
                             route(GET=v.edit_event_page,
-                            POST=v.edit_event))
+                                  POST=v.edit_event))
 
 event_email = group_admin_do(render_template('event/email_rsvps.html'),
                              route(GET=v.event_email_page,
                                    POST=v.event_email))
 
-event_popup_partial = group_request(route(GET=v.event_popup_partial))
+event_popup_partial = do(
+    render_template('event/partials/event_popup.html'),
+    group_request,
+    route(GET=v.event_popup_partial))
 
 event_registration = do(login_required,
                         group_request,
