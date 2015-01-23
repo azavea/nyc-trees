@@ -295,7 +295,7 @@ label {
   text-align: center;
 }
 
-@media (min-width: 768px) {
+@media (min-width: $screen-sm) {
   .legend-button {
     display: none !important;
   }
