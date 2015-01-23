@@ -45,6 +45,7 @@ var args = minimist(process.argv.slice(2),
         'reservationPage.js',
         'userProfile.js',
         'userSettings.js',
+        'quiz.js'
     ],
     entryFiles = entries.map(function(file) { return './js/src/' + file; }),
 
