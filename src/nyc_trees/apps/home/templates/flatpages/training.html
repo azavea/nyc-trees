@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% load training %}
+
+{% block content %}
+<a href="/training/">training</a>
+    {{ flatpage.content }}
+    <p><a href="{{ flatpage|flatpage_next_url }}">Next</a></p>
+{% endblock content %}
