@@ -67,7 +67,7 @@ function initBaseMap(map) {
 }
 
 function initGeolocation($controlsContainer, map) {
-    var $button = $('<a class="geolocate-button" href="javascript:;" title="Show my location">X</a>');
+    var $button = $('<a class="geolocate-button" href="javascript:;" title="Show my location"><i class="icon-location"></i></a>');
     $controlsContainer.prepend($button);
 
     $button.on('click', function () {
@@ -89,7 +89,7 @@ function initLocationSearch($controlsContainer, map) {
 }
 
 function initLegend($controlsContainer, map) {
-    var $button = $('<a class="legend-button" data-toggle="modal" href="#legend" href="javascript:;" title="Legend">L</a>');
+    var $button = $('<a class="legend-button" data-toggle="modal" href="#legend" href="javascript:;" title="Legend">?</a>');
     $controlsContainer.prepend($button);
 }
 

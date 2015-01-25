@@ -60,8 +60,14 @@ nav {
 .right-content {
   left: 0;
   position: relative;
+  height: 100%;
   transition: all 400ms ease-in-out;
   .menu-active & {
     left: 30rem;
   }
+}
+
+.main-header {
+  z-index: 1000;
+  position: relative;
 }
