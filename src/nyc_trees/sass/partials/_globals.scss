@@ -302,7 +302,8 @@ label {
   .modal-hidden-xs {
     position: absolute;
     left: 3rem;
-    top: 4rem;
+    top: 7rem;
+    bottom: auto;
     width: 40rem;
     opacity: 1 !important;
     display: block !important;
@@ -316,6 +317,7 @@ label {
       display: none;
     }
     .modal-dialog {
+      margin: 0;
       -webkit-transform: translate(0, 0) !important;
       -ms-transform: translate(0, 0) !important;
       -o-transform: translate(0, 0) !important;
