@@ -11,6 +11,7 @@ class Quiz(object):
     passing_score - int; How many correct answers are needed to pass the quiz
     """
     def __init__(self, title, questions, passing_score):
+        assert len(questions) > 0
         assert passing_score <= len(questions)
         self.title = unicode(title)
         self.questions = list(questions)
@@ -26,7 +27,7 @@ class Quiz(object):
         for field_name, values in post_fields.iteritems():
             # Parse field name format like "question.1", "question.2", etc.
             parts = field_name.split('.')
-            if len(parts) == 2:
+            if len(parts) == 2 and parts[0] == 'question':
                 try:
                     value = int(values[0])
                     question_index = int(parts[1])
@@ -54,6 +55,7 @@ class Question(object):
     choices - iterable<string>
     """
     def __init__(self, text, answer, choices):
+        assert len(choices) > 0
         assert answer >= 0
         assert answer < len(choices)
         self.text = unicode(text)
