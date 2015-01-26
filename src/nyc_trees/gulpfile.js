@@ -46,6 +46,7 @@ var args = minimist(process.argv.slice(2),
         'reserveBlockfacePage.js',
         'userProfile.js',
         'userSettings.js',
+        'quiz.js'
     ],
     entryFiles = entries.map(function(file) { return './js/src/' + file; }),
 
