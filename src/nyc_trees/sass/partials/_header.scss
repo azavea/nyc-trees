@@ -3,6 +3,7 @@ nav {
   padding-right: 1.0rem;
   @include clearfix;
   color: #fff;
+  height: $navbar-height;
 }
 
 .nav-right {

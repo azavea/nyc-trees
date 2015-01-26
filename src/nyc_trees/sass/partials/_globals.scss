@@ -294,34 +294,3 @@ label {
   padding: .5rem;
   text-align: center;
 }
-
-@media (min-width: $screen-sm) {
-  .legend-button {
-    display: none !important;
-  }
-  .modal-hidden-xs {
-    position: absolute;
-    left: 3rem;
-    top: 7rem;
-    bottom: auto;
-    width: 40rem;
-    opacity: 1 !important;
-    display: block !important;
-    .modal-content {
-      box-shadow: none;
-      border-radius: 0;
-      width: 40rem;
-      border: 0;
-    }
-    .modal-backdrop {
-      display: none;
-    }
-    .modal-dialog {
-      margin: 0;
-      -webkit-transform: translate(0, 0) !important;
-      -ms-transform: translate(0, 0) !important;
-      -o-transform: translate(0, 0) !important;
-      transform: translate(0, 0) !important;
-    }
-  }
-}

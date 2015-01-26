@@ -1,21 +1,30 @@
-{% extends "base.html" %}
+{% extends "base_map.html" %}
 
 {% load utils %}
 
-{% block content %}
-    <aside class="pageheading col-xs-12">
-        <div class="pageheading-description block">
-            <div class="row">
-                <div class="col-xs-4">
-                    <h2>New Reservation</h2>
-                </div>
-            </div>
-        </div>
-    </aside>
-    <div id="map" style="width: 100%; height: 400px"></div>
+{% block aside %}
+
+  <div class="map-sidebar">
+    <div class="map-sidebar-context block">
+      <h2>New Reservation</h2>
+      <div class="hide-xs hidden-xs">
+        The new reservation map shows lorem ipsum dolor sit amet, consectetur adipiscing
+        elit. Sed eu congue lorem, id feugiat tortor. Aliquam ante elit, sodales eget
+        porttitor vel, commodo et felis.
+      </div>
+    </div>
     {% include 'home/partials/legend.html' %}
-    {% include 'home/partials/location_search.html' %}
-{% endblock content %}
+  </div>
+
+  {% include 'home/partials/location_search.html' %}
+
+{% endblock aside %}
+
+{% block map %}
+
+<div id="map" class="map-full"></div>
+
+{% endblock map %}
 
 {% block page_js %}
     <script type="text/javascript" src="{{ "js/reserveBlockfacePage.js"|static_url }}"></script>

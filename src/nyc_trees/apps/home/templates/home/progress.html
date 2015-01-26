@@ -2,11 +2,27 @@
 
 {% load utils %}
 
+{% block aside %}
+
+  <div class="map-sidebar">
+    <div class="map-sidebar-context block">
+      <h2>Progress</h2>
+      <div class="hide-xs hidden-xs">
+        The progress map shows lorem ipsum dolor sit amet, consectetur adipiscing
+        elit. Sed eu congue lorem, id feugiat tortor. Aliquam ante elit, sodales eget
+        porttitor vel, commodo et felis.
+      </div>
+    </div>
+    {% include 'home/partials/legend.html' %}
+  </div>
+
+  {% include 'home/partials/location_search.html' %}
+
+{% endblock aside %}
+
 {% block map %}
 
 <div id="map" class="map-full"></div>
-{% include 'home/partials/legend.html' %}
-{% include 'home/partials/location_search.html' %}
 
 {% endblock map %}
 
