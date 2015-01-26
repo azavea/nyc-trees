@@ -19,10 +19,20 @@ server {
   access_log /var/log/nginx/nyc-trees-app.access.log logstash_json;
 
   location /static/ {
+    {% if ['packer'] | is_in(group_names) -%}
+    etag on;
+    expires max;
+    {% endif %}
+
     alias {{ app_static_root }};
   }
 
   location /media/ {
+    {% if ['packer'] | is_in(group_names) -%}
+    etag on;
+    expires 1h;
+    {% endif %}
+
     alias {{ app_media_root }};
   }
 
