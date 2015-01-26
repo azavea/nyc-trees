@@ -325,3 +325,21 @@ label {
     }
   }
 }
+
+.group-table {
+  width: 100%;
+  vertical-align: top;
+  tr {
+    border-bottom: 1px solid $gray-lighter;
+    vertical-align: top;
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+  td {
+    padding: 1rem 1rem 1rem 0;
+    &:last-child {
+      padding-right: 0;
+    }
+  }
+}
