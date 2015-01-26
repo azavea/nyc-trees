@@ -82,3 +82,5 @@ CACHES = {
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 SECRET_KEY = get_env_setting('DJANGO_SECRET_KEY')
 # END SECRET CONFIGURATION
+
+SOFT_LAUNCH_ENABLED = True

@@ -180,6 +180,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_statsd.middleware.GraphiteRequestTimingMiddleware',
     'django_statsd.middleware.GraphiteMiddleware',
+    'nyc_trees.middleware.SoftLaunchMiddleware',
 )
 # END MIDDLEWARE CONFIGURATION
 
@@ -294,3 +295,9 @@ GEOCODE_FALLBACK_SUFFIX = ', New York, NY'
 TILER_URL = environ.get('TILER_HOST', 'localhost')
 
 MAX_GROUP_IMAGE_SIZE_IN_BYTES = 102400  # 100 KB
+
+SOFT_LAUNCH_REDIRECT_URL = "/"
+SOFT_LAUNCH_REGEXES = [
+    r'^/user/',
+    r'^/accounts/',
+]
