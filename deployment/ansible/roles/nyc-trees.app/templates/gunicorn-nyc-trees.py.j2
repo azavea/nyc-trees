@@ -1,6 +1,6 @@
 bind = "127.0.0.1:8000"
 
-{% if 'development' in group_names or 'test' in group_names -%}
+{% if ['development', 'test'] | some_are_in(group_names) -%}
 accesslog = "-"
 errorlog = "-"
 loglevel = 'debug'

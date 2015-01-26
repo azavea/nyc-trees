@@ -47,6 +47,7 @@ ANSIBLE_GROUPS = {
   "app-servers" => [ "app" ],
   "tile-servers" => [ "tiler" ],
   "services" => [ "services" ],
+  "monitoring-servers" => [ "services" ]
 }
 
 if !ENV["VAGRANT_ENV"].nil? && ENV["VAGRANT_ENV"] == "TEST"
@@ -58,7 +59,6 @@ if !ENV["VAGRANT_ENV"].nil? && ENV["VAGRANT_ENV"] == "TEST"
   VAGRANT_NETWORK_OPTIONS = { auto_correct: true }
 else
   ANSIBLE_ENV_GROUPS = {
-    "monitoring-servers" => [ "services" ],
     "development:children" => [
       "app-servers", "tile-servers", "services", "monitoring-servers"
     ]

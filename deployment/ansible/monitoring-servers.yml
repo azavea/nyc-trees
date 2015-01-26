@@ -9,6 +9,6 @@
   roles:
     - { role: "nyc-trees.common" }
 
-    - { role: "nyc-trees.graphite", when: not_testing }
-    - { role: "nyc-trees.logstash", when: not_testing }
-    - { role: "azavea.kibana", when: not_testing }
+    - { role: "nyc-trees.graphite", when: "['test'] | is_not_in(group_names)" }
+    - { role: "nyc-trees.logstash", when: "['test'] | is_not_in(group_names)" }
+    - { role: "azavea.kibana", when: "['test'] | is_not_in(group_names)" }
