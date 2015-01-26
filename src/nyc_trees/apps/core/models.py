@@ -28,7 +28,6 @@ REFERRER_AD = (
 
 
 class User(NycModel, AbstractUser):
-    online_training_complete = models.BooleanField(default=False)
     individual_mapper = models.BooleanField(default=False)
     requested_individual_mapping_at = models.DateTimeField(null=True,
                                                            blank=True)
@@ -95,7 +94,8 @@ class User(NycModel, AbstractUser):
     def get_absolute_url(self):
         return reverse('user_detail', args=[self.username])
 
-    def completed_training(self):
+    @property
+    def online_training_complete(self):
         from apps.home.training import training_summary
         return training_summary.is_complete(self)
 

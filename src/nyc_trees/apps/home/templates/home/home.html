@@ -22,7 +22,7 @@
 
     <div class="container">
         <div class="row">
-            {% if user.is_authenticated and not user.completed_training %}
+            {% if user.is_authenticated and not user.online_training_complete %}
             <main class="col-sm-12">
                 <section class="trainings">{% include "home/partials/training.html" %}</section>
             </main>
