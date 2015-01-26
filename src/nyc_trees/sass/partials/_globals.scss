@@ -327,7 +327,7 @@ label {
 }
 
 .group-table {
-  table-layout: fixed;
+  width: 100%;
   vertical-align: top;
   tr {
     border-bottom: 1px solid $gray-lighter;
@@ -337,6 +337,9 @@ label {
     }
   }
   td {
-    padding: 10px;
+    padding: 1rem 1rem 1rem 0;
+    &:last-child {
+      padding-right: 0;
+    }
   }
 }
