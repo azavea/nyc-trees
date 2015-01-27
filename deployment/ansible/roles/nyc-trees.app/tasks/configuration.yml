@@ -11,14 +11,14 @@
         append=yes
         group=nyc-trees
         state=present
-  when: developing_or_testing
+  when: "['development', 'test'] | some_are_in(group_names)"
 
 - name: Add Ubuntu user to the nyc-trees group
   user: name=ubuntu
         append=yes
         group=nyc-trees
         state=present
-  when: packing
+  when: "['packer'] | is_in(group_names)"
 
 - name: Create configuration file directory
   file: path={{ app_config_home }}

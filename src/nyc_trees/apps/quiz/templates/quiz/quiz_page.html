@@ -1,0 +1,76 @@
+{% extends "base_two_frames.html" %}
+
+{% load utils %}
+
+{% block aside %}
+    <div class="pageheading-description block">
+        <div class="row">
+            <div class="col-xs-12">
+                <a href="{% url 'training' %}" class="breadcrumb">
+                    <i class="icon-left-open-mini"></i>
+                    Training
+                </a>
+            </div>
+            <div class="col-xs-12">
+                <h2>{{ quiz.title }}</h2>
+            </div>
+        </div>
+    </div>
+{% endblock aside %}
+
+{% block main %}
+
+<form method="POST" action="" class="quiz">
+{% csrf_token %}
+{% for question in quiz.questions %}
+<div class="question
+    {% if forloop.first %}active{% else %}hidden{% endif %}"
+    data-question="{{ forloop.counter0 }}">
+<p>
+    Question {{ forloop.counter }} --
+    {{ forloop.counter }}/{{ quiz.questions|length }}
+</p>
+<p>{{ question.text }}</p>
+
+<div class="hidden alert alert-danger">
+    <p><strong>Please select one of the choices below before moving
+        to the next question.</strong></p>
+</div>
+
+<ul>
+    {% with question_no=forloop.counter0 %}
+        {% for choice in question.choices %}
+        <li><label><input type="radio" name="question.{{ question_no }}"
+                value="{{ forloop.counter0 }}" />{{ choice }}</label></li>
+        {% endfor %}
+    {% endwith %}
+</ul>
+<hr />
+
+<div class="controls">
+{% if not forloop.last %}
+    <a href="javascript:void(0)"
+       data-question="{{ forloop.counter0 }}"
+       class="next btn btn-primary pull-right">Next</a>
+{% else %}
+    <input type="submit" value="Submit"
+        data-question="{{ forloop.counter0 }}"
+        class="submit btn btn-primary pull-right" />
+{% endif %}
+
+{% if not forloop.first %}
+    <a href="javascript:void(0)"
+       data-question="{{ forloop.counter0 }}"
+       class="prev btn">Back</a>
+{% endif %}
+</div>
+
+</div>
+{% endfor %}
+</form>
+
+{% endblock main %}
+
+{% block page_js %}
+<script type="text/javascript" src="{{ "js/quiz.js"|static_url }}"></script>
+{% endblock page_js %}

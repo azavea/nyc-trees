@@ -132,10 +132,10 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-xs-6">
                 {{ event.contact_name }}
             </div>
-            <div class="col-sm-6 text-right">
+            <div class="col-xs-6 text-right">
                 <a href="mailto:{{ event.contact_email }}" class="btn btn-switch"
                     >Email</a>
             </div>
@@ -148,21 +148,21 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-xs-6">
                 {{ share_url }}
             </div>
-            <div class="col-sm-6 text-right">
+            <div class="col-xs-6 text-right">
                 <a href="#" class="btn btn-switch">Copy</a>
             </div>
         </div>
-
+    </section>
+    <div class="content-nextsteps">
         <div class="row">
             <div class="col-sm-12">
-                <p><a href="{{ group_events_url }}"
-                    >Find more events by this group</a></p>
+                <div><a href="{{ group_events_url }}">Find more events by this group</a></div>
             </div>
         </div>
-    </section>
+    </div>
 {% endblock main %}
 
 
