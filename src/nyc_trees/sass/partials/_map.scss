@@ -77,6 +77,10 @@
   padding-left: $grid-gutter-width/2;
 }
 
+.location-search-container {
+    position: relative;
+}
+
 @media (min-width: $screen-sm) {
   .toggle-tab-button {
     border: 0 !important;
