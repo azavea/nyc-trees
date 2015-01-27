@@ -67,7 +67,9 @@ function create($controlsContainer, map) {
             },
             onAdd: function (map) {
                 // The [0] returns the native DOM element
-                return $searchControlContainer[0];
+                var el = $searchControlContainer[0];
+                L.DomEvent.disableClickPropagation(el);
+                return el;
             }
         }),
         searchControl = new SearchControl(),
