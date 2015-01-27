@@ -30,8 +30,7 @@ def forgot_username_page(request):
     if request.method == 'GET':
         form = ForgotUsernameForm()
     else:
-        form = ForgotUsernameForm(request.REQUEST)
-
+        form = ForgotUsernameForm(request.POST)
     return {'form': form}
 
 
@@ -57,7 +56,11 @@ def forgot_username(request):
 
         user.email_user(subject, body, settings.DEFAULT_FROM_EMAIL)
 
-    return {'email': email}
+    return redirect('forgot_username_sent')
+
+
+def forgot_username_sent(request):
+    return {}
 
 
 def activation_complete(request):
@@ -69,13 +72,10 @@ def activation_complete(request):
 
 def save_optional_info(request):
     form = OptionalInfoForm(request.POST, instance=request.user)
-
     # This shouldn't happen since all fields on this form are optional.
     if not form.is_valid():
         return {
             'form': form
         }
-
     form.save()
-
     return redirect('home_page')

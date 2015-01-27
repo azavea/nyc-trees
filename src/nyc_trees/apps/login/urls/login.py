@@ -14,4 +14,8 @@ urlpatterns = patterns(
     url(r'^forgot-username/$',
         r.forgot_username,
         name='forgot_username'),
+
+    url(r'^forgot-username/sent/$',
+        r.forgot_username_sent,
+        name='forgot_username_sent'),
 )

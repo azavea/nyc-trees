@@ -137,7 +137,7 @@ class FullRegistrationUITest(NycUITest):
 
         self.wait_for_textbox_then_type('[name="email"]', self.email)
         self.click('form input[type="submit"]')
-        self.wait_for_text('An email has been sent')
+        self.wait_for_text('Please check your email')
 
         self.assertEqual(mail.outbox[0].subject, "Account Recovery")
         self.assertRegexpMatches(mail.outbox[0].body, self.username)
