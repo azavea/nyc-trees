@@ -153,6 +153,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
     'nyc_trees.context_processors.config',
     'nyc_trees.context_processors.my_events_now',
+    'nyc_trees.context_processors.soft_launch',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#template-loaders
@@ -180,6 +181,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_statsd.middleware.GraphiteRequestTimingMiddleware',
     'django_statsd.middleware.GraphiteMiddleware',
+    'nyc_trees.middleware.SoftLaunchMiddleware',
 )
 # END MIDDLEWARE CONFIGURATION
 
@@ -294,3 +296,9 @@ GEOCODE_FALLBACK_SUFFIX = ', New York, NY'
 TILER_URL = environ.get('TILER_HOST', 'localhost')
 
 MAX_GROUP_IMAGE_SIZE_IN_BYTES = 102400  # 100 KB
+
+SOFT_LAUNCH_REDIRECT_URL = "/"
+SOFT_LAUNCH_REGEXES = [
+    r'^/user/',
+    r'^/accounts/',
+]

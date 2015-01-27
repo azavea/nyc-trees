@@ -18,6 +18,15 @@ from apps.survey.models import (Blockface, Survey, Territory,
 from apps.users.models import TrustedMapper
 
 
+def soft_launch(request):
+    # Convert a truthy setting to a boolean
+    if getattr(settings, 'SOFT_LAUNCH_ENABLED', True):
+        soft_launch = True
+    else:
+        soft_launch = False
+    return {'soft_launch': soft_launch}
+
+
 def my_events_now(request):
     user = request.user
     if user.is_authenticated():

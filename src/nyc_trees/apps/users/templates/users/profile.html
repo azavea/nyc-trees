@@ -38,6 +38,14 @@
 
 {% block main %}
 
+    {% if soft_launch %}
+    <section class="soft-launch">
+        {% with title="Your Profile" section_id="soft-launch" public=False %}
+            {% include "users/partials/profile/soft_launch.html"%}
+        {% endwith %}
+    </section>
+    {% else %}
+
     {% if show_contributions %}
     <section class="contributions">
         {% with title="Contributions" section_id="contributions" public=user.contributions_are_public %}
@@ -60,6 +68,8 @@
             {% include "users/partials/profile/achievements.html" with section_id="achievements" %}
         {% endwith %}
     </section>
+    {% endif %}
+
     {% endif %}
 
     {% if viewing_own_profile and not user.profile_is_public and not user.is_minor %}

@@ -18,6 +18,7 @@
                     </div>
                 </div>
                 <ul>
+                    {% if not soft_launch %}
                     {% if my_events_now|length == 1 %}
                         {% with event=my_events_now.0 %}
                             <li><a href="{{ event.get_user_checkin_url }}">Start Mapping</a></li>
@@ -29,6 +30,7 @@
                     <li><a href="{% url 'events_list_page' %}">Events</a></li>
                     <li><a href="{% url 'reservations' %}">Reservations</a></li>
                     <li>Achievements</li>
+                    {% endif %}
                     <li>About &amp; FAQ</li>
                 </ul>
             </nav>
