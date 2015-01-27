@@ -25,7 +25,7 @@ class Command(BaseCommand):
             for finder in get_finders():
                 full_src_path = finder.find(src_path)
                 if full_src_path:
-                    flatpages[name] = full_src_path
+                    flatpages[full_src_path] = step
                     break
             else:
                 raise CommandError("static file '%s' should always exist. "
@@ -35,10 +35,11 @@ class Command(BaseCommand):
             if FlatPage.objects.filter(url=url).exists():
                 raise CommandError("FlatPage '%s' already exists." % url)
 
-        for name, full_src_path in flatpages.items():
-            url = '/%s/' % name
+        for full_src_path, step in flatpages.items():
+            url = '/%s/' % step.name
             with open(full_src_path, 'r') as f:
                 fp = FlatPage.objects.create(
+                    title=step.description,
                     url=url,
                     template_name='flatpages/training.html',
                     content=f.read())
