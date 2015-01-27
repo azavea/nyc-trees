@@ -199,6 +199,7 @@ aside {
 .event-detail {
   font-size: $font-size-h6;
   color: $gray-light;
+  vertical-align: top;
   &.event-detail--title {
     font-size: $font-size-h5;
     color: $text-color;

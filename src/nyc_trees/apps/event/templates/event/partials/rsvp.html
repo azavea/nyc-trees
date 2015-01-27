@@ -16,13 +16,13 @@
        href="#"
        data-verb="DELETE"
        data-url="{{ rsvp_url }}"
-       class="btn btn-switch">RSVPed</a>
+       class="btn btn-switch btn-rsvp active">RSVPed</a>
     {% elif can_rsvp %}
     <a id="rsvp"
        href="#"
        data-verb="POST"
        data-url="{{ rsvp_url }}"
-       class="btn btn-switch">RSVP</a>
+       class="btn btn-switch btn-rsvp">RSVP</a>
     {% else %}
     <a id="rsvp" href="#" class="btn btn-switch disabled">At Capacity</a>
     {% endif %}
