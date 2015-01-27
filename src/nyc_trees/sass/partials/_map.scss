@@ -29,6 +29,17 @@
   left: 0;
 }
 
+.map-with-action-bar {
+  @extend .map-full;
+  bottom: 40px;
+}
+.action-bar {
+  position: absolute;
+  bottom: 0;
+
+  width: 100%;
+}
+
 .map-sidebar-context {
   position: relative;
   background-color: $body-bg;
