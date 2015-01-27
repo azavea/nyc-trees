@@ -24,6 +24,11 @@ reserve_blockface_page = route(
         render_template('survey/reserve_blockface.html'),
         v.reserve_blockfaces_page))
 
+reserved_blockface_popup = route(
+    GET=individual_mapper_do(
+        render_template('survey/partials/reserved_blockface_popup.html'),
+        v.reserved_blockface_popup))
+
 cancel_reservation = route(
     GET=individual_mapper_do(
         v.cancel_reservation))
