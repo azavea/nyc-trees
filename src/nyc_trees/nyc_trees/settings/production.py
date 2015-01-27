@@ -42,6 +42,7 @@ except URLError:
 
 # EMAIL CONFIGURATION
 EMAIL_BACKEND = 'apps.core.mail.backends.boto.EmailBackend'
+EMAIL_BOTO_CHECK_QUOTA = False
 # END EMAIL CONFIGURATION
 
 

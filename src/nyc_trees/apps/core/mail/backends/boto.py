@@ -5,8 +5,10 @@ from __future__ import division
 
 import json
 import logging
+import sys
 import traceback
 
+from django.conf import settings
 from django.core.mail.backends.base import BaseEmailBackend
 
 from django_statsd.clients import statsd
@@ -21,13 +23,18 @@ class EmailBackend(BaseEmailBackend):
     def __init__(self, fail_silently=False, aws_region='us-east-1'):
         super(EmailBackend, self).__init__(fail_silently=fail_silently)
         self.mailer = BotoMailer(aws_region)
+        self.check_quota = getattr(settings, 'EMAIL_BOTO_CHECK_QUOTA', False)
 
     def send_messages(self, email_messages):
         if not email_messages:
             return
         sent_message_count = 0
-        remaining_quota = self.mailer.get_remaining_message_quota()
-        self._log_quota(remaining_quota)
+
+        if self.check_quota:
+            remaining_quota = self.mailer.get_remaining_message_quota()
+            self._log_quota(remaining_quota)
+        else:
+            remaining_quota = sys.maxint
 
         if len(email_messages) <= remaining_quota:
             for email_message in email_messages:
