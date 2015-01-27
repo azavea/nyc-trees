@@ -5,6 +5,13 @@ from __future__ import division
 
 from django_tinsel.decorators import render_template
 
+from django.utils.timezone import now
+
+from apps.survey.models import BlockfaceReservation
+
+
+RESERVATIONS_LIMIT = 20
+
 
 def cancel_reservation(request, blockface_id):
     # TODO: implement
@@ -25,6 +32,25 @@ def remove_blockface_from_cart(request, blockface_id):
 def blockface_cart_page(request):
     # TODO: implement
     return {}
+
+
+def reserve_blockfaces_page(request):
+    current_reservations_amount = BlockfaceReservation.objects \
+        .filter(user=request.user) \
+        .filter(canceled_at__isnull=True) \
+        .filter(expires_at__gt=now()) \
+        .count()
+
+    return {
+        'reservations': {
+            'current': current_reservations_amount,
+            'total': RESERVATIONS_LIMIT - current_reservations_amount
+        },
+        'legend_entries': [
+            {'css_class': 'available', 'label': 'Available'},
+            {'css_class': 'unavailable', 'label': 'Unavailable'},
+        ]
+    }
 
 
 def reserve_blockfaces(request):

@@ -24,6 +24,15 @@
 
 <div id="map" class="map-full"></div>
 
+<div class="action-bar">
+   <div>
+     <span id="current-reservations">{{ reservations.current }}</span>
+     /
+     <span id="total-reservations">{{ reservations.total }}</span>
+   </div>
+   <a href="javascript:">Finish Reservation</a>
+</div>
+
 {% endblock map %}
 
 {% block page_js %}
