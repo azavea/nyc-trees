@@ -22,7 +22,7 @@ reservations = route(
 reserve_blockface_page = route(
     GET=individual_mapper_do(
         render_template('survey/reserve_blockface.html'),
-        map_legend))
+        v.reserve_blockfaces_page))
 
 cancel_reservation = route(
     GET=individual_mapper_do(
