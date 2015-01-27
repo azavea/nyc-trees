@@ -17,6 +17,9 @@ from apps.core.models import User, Group
 from apps.event.models import Event, EventRegistration
 
 
+CENTRAL_PARK = Point(-73.965355, 40.782865)
+
+
 def num_checkins(event):
     return len(EventRegistration.objects.filter(event=event,
                                                 did_attend=True))
@@ -66,6 +69,10 @@ class AddEventUITest(EventTestCase):
         self.wait_for_textbox_then_type('[name="address"]', 'Central Park')
         self.wait_for_textbox_then_type('[name="max_attendees"]', '35')
 
+        # Populate lat/lng hidden form fields.
+        self.click('.js-edit')
+        self.click('.js-done')
+
         self.click('#use-my-contact-info')
 
         self.click('form input[type="submit"]')
@@ -101,7 +108,7 @@ class EditEventUITest(EventTestCase):
                                      slug="the-event",
                                      contact_email="a@b.com",
                                      address="123 Main St",
-                                     location=Point(0, 0),
+                                     location=CENTRAL_PARK,
                                      max_attendees=0,
                                      begins_at=begins_at,
                                      ends_at=ends_at)
@@ -133,7 +140,7 @@ class RsvpForEventUITest(EventTestCase):
                                           slug="the-event",
                                           contact_email="a@b.com",
                                           address="123 Main St",
-                                          location=Point(0, 0),
+                                          location=CENTRAL_PARK,
                                           max_attendees=100,
                                           begins_at=now(),
                                           ends_at=now())
@@ -223,7 +230,7 @@ class CheckinEventUITest(EventTestCase):
                                           slug="the-event",
                                           contact_email="a@b.com",
                                           address="123 Main St",
-                                          location=Point(0, 0),
+                                          location=CENTRAL_PARK,
                                           max_attendees=0,
                                           begins_at=now(),
                                           ends_at=now())
