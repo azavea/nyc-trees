@@ -153,6 +153,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
     'nyc_trees.context_processors.config',
     'nyc_trees.context_processors.my_events_now',
+    'nyc_trees.context_processors.soft_launch',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#template-loaders
