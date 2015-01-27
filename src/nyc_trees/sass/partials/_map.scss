@@ -23,8 +23,62 @@
 
 .map-full {
   position: absolute;
-  top: 0;
+  top: 10.7rem;
   bottom: 0;
   right: 0;
   left: 0;
+}
+
+.map-sidebar-context {
+  position: relative;
+  background-color: $body-bg;
+  padding-right: $grid-gutter-width/2;
+  padding-left: $grid-gutter-width/2;
+}
+
+@media (min-width: $screen-sm) {
+  .map-full {
+    top: $navbar-height;
+  }
+  .map-sidebar-context {
+    background-color: transparent;
+    padding-right: 0;
+    padding-left: 0;
+  }
+  .map-sidebar {
+    position: absolute;
+    z-index: 2000;
+    top: 6rem;
+    left: 2rem;
+    width: 32rem;
+    background-color: #fff;
+    padding: 2rem;
+  }
+  .legend-button {
+    display: none !important;
+  }
+  .modal-hidden-xs {
+    position: relative;
+    bottom: auto;
+    opacity: 1 !important;
+    display: block !important;
+    .modal-content {
+      box-shadow: none;
+      border-radius: 0;
+      border: 0;
+    }
+    .modal-body {
+      padding: 0;
+    }
+    .modal-backdrop {
+      display: none;
+    }
+    .modal-dialog {
+      margin: 0;
+      -webkit-transform: translate(0, 0) !important;
+      -ms-transform: translate(0, 0) !important;
+      -o-transform: translate(0, 0) !important;
+      transform: translate(0, 0) !important;
+    }
+  }
 }
