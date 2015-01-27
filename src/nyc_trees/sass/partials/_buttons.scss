@@ -1,12 +1,11 @@
 .btn-switch {
   border: 2px solid $brand-primary;
-  color: $brand-primary;
+  color: $brand-primary !important;
   background-color: transparent;
-  max-width: 9rem;
   white-space: normal;
   &.active {
     border: 2px solid $brand-primary;
-    color: #fff;
+    color: #fff !important;
     background-color: $brand-primary;
     -webkit-box-shadow: none;
     box-shadow: none;
@@ -23,4 +22,12 @@
   background-color: transparent;
   border: 0;
   box-shadow: none;
+}
+
+.btn-unfollow, .btn-follow {
+  width: 9rem;
+}
+
+.btn-rsvp {
+  width: 8.5rem;
 }
