@@ -16,9 +16,3 @@ progress_page = route(GET=do(render_template('home/progress.html'),
                              map_legend))
 
 retrieve_job_status = do(v.retrieve_job_status)
-
-training_list_page = route(GET=do(render_template('home/training.html'),
-                                  v.training_list_page))
-
-groups_to_follow = route(GET=do(render_template('home/groups_to_follow.html'),
-                                v.groups_to_follow))

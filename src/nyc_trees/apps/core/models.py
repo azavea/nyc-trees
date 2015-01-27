@@ -28,7 +28,6 @@ REFERRER_AD = (
 
 
 class User(NycModel, AbstractUser):
-    online_training_complete = models.BooleanField(default=False)
     individual_mapper = models.BooleanField(default=False)
     requested_individual_mapping_at = models.DateTimeField(null=True,
                                                            blank=True)
@@ -57,6 +56,13 @@ class User(NycModel, AbstractUser):
     referrer_friend = models.BooleanField(default=False)
     referrer_311 = models.BooleanField(default=False)
     referrer_other = models.CharField(max_length=255, default='', blank=True)
+
+    training_finished_getting_started = models.BooleanField(default=False)
+    training_finished_the_mapping_method = models.BooleanField(default=False)
+    training_finished_tree_data = models.BooleanField(default=False)
+    training_finished_tree_surroundings = models.BooleanField(default=False)
+    training_finished_groups_to_follow = models.BooleanField(default=False)
+
     opt_in_stewardship_info = models.BooleanField(default=False)
 
     objects = UserManager()
@@ -87,6 +93,11 @@ class User(NycModel, AbstractUser):
 
     def get_absolute_url(self):
         return reverse('user_detail', args=[self.username])
+
+    @property
+    def online_training_complete(self):
+        from apps.home.training import training_summary
+        return training_summary.is_complete(self)
 
 
 class Group(NycModel, models.Model):

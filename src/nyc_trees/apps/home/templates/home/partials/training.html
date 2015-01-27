@@ -1,0 +1,21 @@
+<h3>You're almost there! Continue your training.</h3>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu congue lorem, id feugiat tortor. Aliquam ante elit, sodales eget porttitor vel, commodo et felis.</p>
+
+{% for step_info in training_steps %}
+<a href="{{ step_info.step.pure_url }}"
+   class="training block item">
+    <div class="row">
+        <div class="col-xs-8">
+            <h5>{{ step_info.step.description }}</h5>
+            <div class="h6">{{ step_info.step.duration }}</div>
+        </div>
+        <div class="col-xs-4 text-right">
+          {% if step_info.is_complete %}
+          <i class="icon-check h4"></i>
+          {% elif step_info.is_next %}
+            <button class="btn-primary btn">Start</button>
+          {% endif %}
+        </div>
+    </div>
+</a>
+{% endfor %}

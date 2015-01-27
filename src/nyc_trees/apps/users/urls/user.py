@@ -15,8 +15,6 @@ urlpatterns = patterns(
 
     url(r'^achievements/$', r.achievements, name='achievements'),
 
-    url(r'^training/$', r.training, name='training'),
-
     url(r'^(?P<username>\w+)/$', r.user_detail, name='user_detail'),
 
     url(r'^(?P<username>\w+)/request-individual-mapper-status/$',
