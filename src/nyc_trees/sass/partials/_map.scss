@@ -36,6 +36,10 @@
   padding-left: $grid-gutter-width/2;
 }
 
+.location-search-container {
+    position: relative;
+}
+
 @media (min-width: $screen-sm) {
   .map-full {
     top: $navbar-height;

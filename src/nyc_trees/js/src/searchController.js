@@ -61,19 +61,6 @@ function create($controlsContainer, map) {
         $status = $searchControlContainer.find('.location-search-status'),
         $closeSearchButton = $searchControlContainer.find('.location-search-close'),
 
-        SearchControl = L.Control.extend({
-            options: {
-                position: 'topleft'
-            },
-            onAdd: function (map) {
-                // The [0] returns the native DOM element
-                var el = $searchControlContainer[0];
-                L.DomEvent.disableClickPropagation(el);
-                return el;
-            }
-        }),
-        searchControl = new SearchControl(),
-
         toggleSearch = function() {
             $showSearchButton.toggleClass('active');
             $searchControlContainer.toggle();
@@ -143,7 +130,11 @@ function create($controlsContainer, map) {
         };
 
     $controlsContainer.prepend($showSearchButton);
-    map.addControl(searchControl);
+
+    // Add the search box and related controls directly to the Leaflet
+    // control container for easier styling
+    $(map.getContainer()).find('.leaflet-control-container')
+                         .prepend($searchControlContainer);
 
     locationSearch({
         url: config.urls.geocode,
