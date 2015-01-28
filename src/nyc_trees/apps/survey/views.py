@@ -19,16 +19,6 @@ def cancel_reservation(request, blockface_id):
     pass
 
 
-def add_blockface_to_cart(request, blockface_id):
-    # TODO: implement
-    pass
-
-
-def remove_blockface_from_cart(request, blockface_id):
-    # TODO: implement
-    pass
-
-
 @render_template('survey/blockface_cart.html')
 def blockface_cart_page(request):
     # TODO: implement

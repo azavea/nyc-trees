@@ -6,9 +6,9 @@ from __future__ import division
 from django.conf.urls import patterns, url
 
 from apps.survey.routes import (reserve_blockface_page, cancel_reservation,
-                                edit_cart_for_blockface, reserve_blockfaces,
-                                blockface_reservations_confirmation_page,
-                                survey, reservations, reserved_blockface_popup)
+                                reserve_blockfaces, survey, reservations,
+                                reserved_blockface_popup,
+                                blockface_reservations_confirmation_page)
 
 
 # These URLs have the prefix 'blockface/'
@@ -20,9 +20,6 @@ urlpatterns = patterns(
 
     url(r'^(?P<blockface_id>\d+)/cancel-reservation/$', cancel_reservation,
         name='cancel_reservation'),
-
-    url(r'^(?P<blockface_id>\d+)/cart/$', edit_cart_for_blockface,
-        name='edit_cart_for_blockface'),
 
     # Note: changes here must be kept in sync with
     # src/nyc_trees/js/src/reservationPage.js

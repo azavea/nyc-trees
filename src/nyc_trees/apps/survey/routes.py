@@ -33,14 +33,6 @@ cancel_reservation = route(
     GET=individual_mapper_do(
         v.cancel_reservation))
 
-edit_cart_for_blockface = individual_mapper_do(
-    route(POST=v.add_blockface_to_cart,
-          DELETE=v.remove_blockface_from_cart))
-
-remove_blockface_from_cart = route(
-    DELETE=individual_mapper_do(
-        v.remove_blockface_from_cart))
-
 reserve_blockfaces = individual_mapper_do(
     render_template('survey/blockface_cart.html'),
     route(POST=v.reserve_blockfaces,
