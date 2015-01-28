@@ -5,6 +5,7 @@ var mapModule = require('./map'),
     selectableBlockfaceLayer = require('./selectableBlockfaceLayer'),
     L = require('leaflet'),
     $ = require('jquery'),
+    Storage = require('./lib/storage'),
 
     dom = {
         currentReservations: "#current-reservations",
@@ -34,8 +35,21 @@ var $current = $(dom.currentReservations),
         useJsonP: false
     });
 
+var progress = new Storage({
+    key: 'reserve-blockfaces',
+    getState: function() {
+        return {
+            selections: selectedBlockfaces
+        };
+    },
+    validate: function(state) {
+        if (!$.isPlainObject(state.selections)) {
+            throw new Error('Expected `state.selections` to contain blockfaces');
+        }
+    }
+});
 
-selectableBlockfaceLayer.create({
+var blockfaceLayer = selectableBlockfaceLayer.create({
     map: reservationMap,
     grid: grid,
 
@@ -45,6 +59,7 @@ selectableBlockfaceLayer.create({
             selectedBlockfacesCount++;
             $current.text(selectedBlockfacesCount);
 
+            progress.save();
             return true;
         }
 
@@ -58,6 +73,15 @@ selectableBlockfaceLayer.create({
         }
         delete selectedBlockfaces[feature.properties.id];
 
+        progress.save();
         return true;
     }
 });
+
+// Load any existing data.
+var state = progress.load();
+if (state) {
+    $.each(state.selections, function(id, data) {
+        blockfaceLayer.addBlockface(data);
+    });
+}

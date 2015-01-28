@@ -45,16 +45,20 @@ function createBlockfaceLayer(options) {
         });
 
     grid.on('click', function(e) {
-        if (e.data && e.data.geojson) {
-            if (onAdd(e.data)) {
+        addBlockface(e.data);
+    });
+
+    function addBlockface(data) {
+        if (data && data.geojson) {
+            if (onAdd(data)) {
                 blockfaceLayer.addData({
                     "type": "Feature",
-                    "geometry": JSON.parse(e.data.geojson),
-                    "properties": e.data
+                    "geometry": JSON.parse(data.geojson),
+                    "properties": data
                 });
             }
         }
-    });
+    }
 
     map.addLayer(blockfaceLayer);
     map.addLayer(grid);
@@ -63,7 +67,9 @@ function createBlockfaceLayer(options) {
         blockfaceLayer.setStyle(getStyle(map));
     });
 
-    return blockfaceLayer;
+    return {
+        addBlockface: addBlockface
+    };
 }
 
 function getStyle(map) {
