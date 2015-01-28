@@ -25,6 +25,10 @@ tree_data = FlatPageTrainingStep('tree_data',
 tree_surroundings = FlatPageTrainingStep('tree_surroundings',
                                          'Tree Surroundings', '40 minutes')
 
+intro_quiz = ViewTrainingStep(r.intro_quiz,
+                              'intro_quiz',
+                              'Intro Quiz', '30 minutes')
+
 groups_to_follow = ViewTrainingStep(r.groups_to_follow,
                                     'groups_to_follow',
                                     'Groups To Follow', '5 minutes')
@@ -35,4 +39,5 @@ training_summary = TrainingGateway('training_summary',
                                     the_mapping_method,
                                     tree_data,
                                     tree_surroundings,
+                                    intro_quiz,
                                     groups_to_follow])

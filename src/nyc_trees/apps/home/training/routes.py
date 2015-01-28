@@ -9,6 +9,7 @@ from django_tinsel.utils import decorate as do
 from apps.home.training.decorators import render_flatpage
 
 from apps.home.training import views as v
+from apps.quiz import routes as quiz_routes
 
 
 groups_to_follow = route(GET=do(login_required,
@@ -24,3 +25,7 @@ def make_flatpage_route(name):
     return route(GET=do(
         login_required,
         render_flatpage('/%s/' % name)))
+
+
+def intro_quiz(request):
+    return quiz_routes.quiz_page(request, 'intro_quiz')
