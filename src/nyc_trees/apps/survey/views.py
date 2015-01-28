@@ -44,7 +44,7 @@ def reserve_blockfaces_page(request):
 
     return {
         'reservations': {
-            'current': current_reservations_amount,
+            'current': 0,
             'total': RESERVATIONS_LIMIT - current_reservations_amount
         },
         'legend_entries': [
