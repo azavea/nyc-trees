@@ -17,7 +17,8 @@ def quiz_list_page(request):
 def quiz_page(request, quiz_slug):
     quiz = get_quiz_or_404(quiz_slug)
     return {
-        'quiz': quiz
+        'quiz': quiz,
+        'quiz_slug': quiz_slug
     }
 
 
