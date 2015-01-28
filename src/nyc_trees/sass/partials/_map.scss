@@ -37,7 +37,27 @@
 }
 
 .location-search-container {
-    position: relative;
+  position: relative;
+  font-size: $font-size-h6;
+  background-color: #fff;
+  padding: $grid-gutter-width/2;
+}
+
+.location-search-results {
+  padding: 0;
+  list-style: none;
+  position: absolute;
+  right: $grid-gutter-width/2;
+  left: $grid-gutter-width/2;
+  background-color: $gray-lightest;
+}
+
+.location-search-result {
+  padding: 1rem 1rem;
+  border-bottom: 1px solid $gray-lighter;
+  &:last-child {
+    border-bottom: none;
+  }
 }
 
 @media (min-width: $screen-sm) {

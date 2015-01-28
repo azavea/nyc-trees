@@ -3,10 +3,13 @@
 </script>
 
 <script type="text/template" id="template-map-search">
-    <div class="location-search-container" style="background: pink; display: none;">
-        <input type="text" class="location-search-box">
-        <a class="location-search-button" href="javascript:;" title="Run search">Search</a>
-        <a class="btn icon-cancel location-search-close" href="javascript:;" title="Close search"></a>
+    <div class="location-search-container" style="display: none;">
+        <div class="input-group">
+            <input type="text" class="location-search-box form-control" placeholder="Search for address">
+            <span class="input-group-btn">
+                <button class="location-search-button btn btn-default" href="javascript:;" type="button"><i class="icon-search"></i></button>
+            </span>
+        </div>
         <div class="location-search-status" style="display: none;">Searching...</div>
         <!-- location-search-results is appended to location-search-container -->
     </div>
