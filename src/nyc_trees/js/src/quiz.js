@@ -65,8 +65,8 @@ function show(id) {
 }
 
 function restore() {
-    var state = progress.restore();
-    if (state.form) {
+    var state = progress.load();
+    if (state && state.form) {
         // Restore radio button selections.
         $.each(state.form, function(fieldName, value) {
             // Assumes that only checked values are serialized.
@@ -74,7 +74,7 @@ function restore() {
             radio.prop('checked', true);
         });
     }
-    if (state.question && state.question > 0) {
+    if (state && state.question > 0) {
         hide(0);
         show(state.question);
     }
