@@ -9,12 +9,13 @@ from django.contrib.staticfiles.finders import get_finders
 from django.contrib.flatpages.models import FlatPage
 
 from apps.home.training import training_summary
+from apps.home.training.types import FlatPageTrainingStep
 
 
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         training_flatpages = [step for step in training_summary.steps
-                              if step.is_flatpage()]
+                              if isinstance(self, FlatPageTrainingStep)]
         flatpages = {}
 
         # exit early if anything exists or file
