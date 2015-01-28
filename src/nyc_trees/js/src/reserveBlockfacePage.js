@@ -84,4 +84,6 @@ if (state) {
     $.each(state.selections, function(id, data) {
         blockfaceLayer.addBlockface(data);
     });
+    // Zoom to extent of selected blockface reservations.
+    reservationMap.fitBounds(blockfaceLayer.getLayer().getBounds());
 }

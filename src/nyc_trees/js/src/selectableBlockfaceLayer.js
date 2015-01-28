@@ -60,6 +60,10 @@ function createBlockfaceLayer(options) {
         }
     }
 
+    function getLayer() {
+        return blockfaceLayer;
+    }
+
     map.addLayer(blockfaceLayer);
     map.addLayer(grid);
 
@@ -68,7 +72,8 @@ function createBlockfaceLayer(options) {
     });
 
     return {
-        addBlockface: addBlockface
+        addBlockface: addBlockface,
+        getLayer: getLayer
     };
 }
 
