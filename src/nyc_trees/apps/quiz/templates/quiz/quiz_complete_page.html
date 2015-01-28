@@ -6,7 +6,7 @@
     <div class="pageheading-description block">
         <div class="row">
             <div class="col-xs-12">
-                <a href="{% url 'training' %}" class="breadcrumb">
+                <a href="{% url 'training_summary_pure' %}" class="breadcrumb">
                     <i class="icon-left-open-mini"></i>
                     Training
                 </a>
@@ -24,7 +24,7 @@
 <h3>Great job!</h3>
 <p>You answered {{ score }}/{{ quiz.questions|length }}
     question{{ quiz.questions|length|pluralize }} correctly.</p>
-<p><a href="{% url 'training' %}" class="btn btn-primary">Finish</a></p>
+<p><a href="{% url 'training_summary_pure' %}" class="btn btn-primary">Finish</a></p>
 
 {% else %}
 <h3>Better luck next time...</h3>
