@@ -1,52 +1,55 @@
-{% extends "base_two_frames.html" %}
+{% extends "base_event.html" %}
 
 {% load utils %}
 
 {% block aside %}
 
-  <h2>Events</h2>
-  <p class="pageheading-description-detail">
+  <div class="map-sidebar">
+    <h2>Events</h2>
+    <p class="pageheading-description-detail hidden-xs">
       Take a look at upcoming events and find your next tree mapping project.
-  </p>
+    </p>
+    <div id="action-bar" class="action-bar">
+      Select an event to view details
+    </div>
+    <div class="row">
+      <ul class="nav nav-tabs nav-tabs-event">
+        <li class="active">
+          <a class="toggle-tab-button" data-toggle="tab" href="#list">List</a>
+        </li>
+        <li>
+          <a class="toggle-tab-button" data-toggle="tab" href="#map-tab">Map</a>
+        </li>
+      </ul>
+    </div>
+  </div>
 
 {% endblock aside %}
 
 {% block main %}
 
-  <div class="row">
-      <ul class="nav nav-tabs">
-          <li class="active">
-              <a data-toggle="tab" href="#list">List</a>
-          </li>
-          <li>
-              <a data-toggle="tab" href="#map-tab">Map</a>
-          </li>
-      </ul>
-  </div>
+  <div class="tab-content">
+    <div class="tab-pane active" id="list">
+      <section>
+        {# TODO: make event_list return a totally empty context to avoid introspection #}
+        {% if immediate_events.event_infos %}
+          <h4>Your Events this week</h4>
+          {% include "event/partials/event_list.html" with event_list=immediate_events %}
+        {% endif %}
 
-  <section>
-      <div class="tab-content">
-          <div class="tab-pane active" id="list">
-            {# TODO: make event_list return a totally empty context to avoid introspection #}
-            {% if immediate_events.event_infos %}
-                <h4>Your Events this week</h4>
-                {% include "event/partials/event_list.html" with event_list=immediate_events %}
-            {% endif %}
-
-            {# TODO: make event_list return a totally empty context to avoid introspection #}
-            {% if all_events.event_infos %}
-                <h4>Browse events</h4>
-                {% include "event/partials/event_list.html" with event_list=all_events %}
-            {% endif %}
-          </div>
-          <div class="tab-pane" id="map-tab" class="map-container">
-            <div id="map" class="map">
-            </div>
-            <div id="action-bar" class="action-bar"></div>
-          </div>
-          {% include 'home/partials/location_search.html' %}
+        {# TODO: make event_list return a totally empty context to avoid introspection #}
+        {% if all_events.event_infos %}
+          <h4>Browse events</h4>
+          {% include "event/partials/event_list.html" with event_list=all_events %}
+        {% endif %}
+      </section>
+    </div>
+    <div class="tab-pane map-container" id="map-tab">
+      <div id="map" class="map-event">
       </div>
-  </section>
+    </div>
+    {% include 'home/partials/location_search.html' %}
+  </div>
 
 
 {% endblock main %}
