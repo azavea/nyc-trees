@@ -18,7 +18,7 @@
         {{ form.non_field_errors }}
         <div class="fieldWrapper">
           {{ form.email.errors }}
-          <label for="{{ form.email.id_for_label }}">Email Address:</label>
+          {{ form.email.label_tag }}
           {{ form.email }}
         </div>
         <input type="submit" class="btn btn-block btn-primary" value="Send" />

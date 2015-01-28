@@ -64,7 +64,11 @@ class Event(NycModel, models.Model):
 
         xmin, ymin, xmax, ymax = settings.NYC_BOUNDS
         p = self.location
-        if p.x < xmin or p.x > xmax or p.y < ymin or p.y > ymax:
+        if not p:
+            raise ValidationError({'location': [
+                "Location is required"
+            ]})
+        elif p.x < xmin or p.x > xmax or p.y < ymin or p.y > ymax:
             raise ValidationError({'location': [
                 "Please choose a location in New York City"
             ]})

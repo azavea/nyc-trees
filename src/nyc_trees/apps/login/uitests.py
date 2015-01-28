@@ -7,6 +7,7 @@ import re
 
 from django.core import mail
 from django.core.urlresolvers import reverse
+from django.contrib.sites.models import Site
 
 from libs.ui_test_helpers import NycTreesSeleniumTestCase
 
@@ -14,6 +15,12 @@ from apps.core.models import User
 
 
 class NycUITest(NycTreesSeleniumTestCase):
+    def setUp(self):
+        super(NycUITest, self).setUp()
+        site = Site.objects.get_current()
+        site.domain = self.live_server_url.replace('http://', '')
+        site.save()
+
     def _get_link_from_email(self, email):
         matches = re.findall(r"http://.*$", email.body, re.MULTILINE)
         self.assertEqual(1, len(matches))
@@ -137,7 +144,7 @@ class FullRegistrationUITest(NycUITest):
 
         self.wait_for_textbox_then_type('[name="email"]', self.email)
         self.click('form input[type="submit"]')
-        self.wait_for_text('An email has been sent')
+        self.wait_for_text('Please check your email')
 
         self.assertEqual(mail.outbox[0].subject, "Account Recovery")
         self.assertRegexpMatches(mail.outbox[0].body, self.username)
@@ -178,7 +185,7 @@ class PasswordResetUITest(NycUITest):
         self.wait_for_textbox_then_type('input[name="email_or_username"]',
                                         value)
         self.click('form input[type="submit"]')
-        self.wait_for_text('We have sent you an email')
+        self.wait_for_text('Please check your email')
         self._get_link_from_email(mail.outbox[0])
         # TODO: Calling self.get with the link in the password reset
         # Email results in an exception being thrown inside the
