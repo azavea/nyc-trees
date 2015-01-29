@@ -38,6 +38,8 @@ body {
   transition: all 500ms ease-in-out;
   position: relative;
   height: 100%;
+  font-feature-settings: "kern" 1;
+  text-rendering: geometricPrecision;
 }
 
 section {
@@ -58,13 +60,12 @@ textarea {
 // Links
 
 a {
-  color: $link-color;
+  color: $text-color;
   text-decoration: none;
 
   &:hover,
   &:focus {
-    color: $link-hover-color;
-    text-decoration: $link-hover-decoration;
+    color: darken($text-color, .3);
   }
 
   &:focus {
@@ -80,7 +81,6 @@ hr {
   border: 0;
   border-top: 1px solid $hr-border;
 }
-
 
 // Only display content to screen readers
 //
@@ -278,10 +278,11 @@ label {
 .calendar {
   background-color: #fff;
   max-width: 10rem;
+  box-shadow: 0px 0px 20px 0px rgba(50, 50, 50, 0.3);
 }
 
 .calendar-heading {
-  background-color: $brand-tertiary;
+  background-color: $brand-secondary;
   color: #fff;
   font-size: $font-size-h6;
   text-transform: uppercase;
@@ -289,6 +290,8 @@ label {
 
 .calendar-body {
   font-size: $font-size-h3;
+  color: $headings-color;
+  font-weight: $headings-font-weight;
 }
 
 .calendar-body, .calendar-heading {

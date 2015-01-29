@@ -1,8 +1,8 @@
-nav {
-  background-color: $brand-secondary;
-  padding-right: 1.0rem;
+.nav-main {
   @include clearfix;
+  background-color: $nav-color;
   color: #fff;
+  padding: 1rem 0;
   height: $navbar-height;
 }
 
@@ -17,7 +17,15 @@ nav {
 
 .brand {
   display: inline-block;
-  vertical-align: text-bottom;
+  vertical-align: middle;
+  width: 15rem;
+  @media (min-width: $screen-sm) {
+    width: auto;
+  }
+}
+
+.nav-account {
+  padding: 1rem;
 }
 
 .nav-menubutton {
@@ -28,6 +36,7 @@ nav {
   border: 0;
   padding: 1.0rem 1.0rem;
   width: auto;
+  z-index: 6200;
 }
 
 .icon-bar {
@@ -42,19 +51,24 @@ nav {
   }
 }
 
+.nav-side {
+  background-color: $nav-side-color;
+}
+
 .left-content {
   position: fixed;
   overflow-y: auto;
   height: 100%;
   top: 0;
   bottom: 0;
-  background-color: #000;
+  background-color: $nav-side-color;
   width: 30rem;
   left: -30rem;
   z-index: 1000;
   transition: all 400ms ease-in-out;
   .menu-active & {
     left: 0;
+    box-shadow: 0px 1rem 6rem 0px #0A0B0B;
   }
 }
 
@@ -71,4 +85,73 @@ nav {
 .main-header {
   z-index: 1000;
   position: relative;
+}
+
+.btn-nav-user {
+  color: #fff;
+}
+
+.nav-side-user {
+  border-bottom: 1px solid transparentize($gray-lightest, .85);
+  padding: 1rem;
+}
+
+.nav-side-user-name {
+  color: #fff;
+}
+
+.nav-side-achievement {
+  width: 8rem;
+  height: 8rem;
+  background-color: #000;
+  border-radius: 100%;
+  float: left;
+  margin: 0 1rem 0 -2rem;
+}
+
+.nav-side-list {
+  padding: 0;
+  list-style: none;
+  & > li {
+    &.active {
+      & > a {
+        border-left: 3px solid $brand-primary;
+        color: #fff;
+      }
+    }
+    & > a {
+      color: $gray-lighter;
+      border-bottom: 1px solid transparentize($gray-lightest, .85);
+      padding: 1rem;
+      width: 100%;
+      display: block;
+      transition: all 100ms ease-in-out;
+      &:hover {
+        background-color: $gray-dark;
+      }
+    }
+  }
+}
+
+.nav-side-sub {
+  text-align: center;
+  & > a {
+    color: $gray-lighter;
+    width: 100%;
+    display: block;
+  }
+}
+
+.overlay-menued {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  z-index: 6000;
+  display: none;
+  opacity: .2;
+  .menu-active & {
+    display: block;
+    transition: all 400ms ease-in-out;
+    cursor: pointer;
+  }
 }

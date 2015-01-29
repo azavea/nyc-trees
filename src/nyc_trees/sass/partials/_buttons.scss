@@ -1,12 +1,12 @@
 .btn-switch {
-  border: 2px solid $brand-primary;
-  color: $brand-primary !important;
+  border: 2px solid $brand-secondary;
+  color: $brand-secondary !important;
   background-color: transparent;
   white-space: normal;
   &.active {
-    border: 2px solid $brand-primary;
+    border: 2px solid $brand-secondary;
     color: #fff !important;
-    background-color: $brand-primary;
+    background-color: $brand-secondary;
     -webkit-box-shadow: none;
     box-shadow: none;
   }
@@ -30,4 +30,8 @@
 
 .btn-rsvp {
   width: 8.5rem;
+}
+
+.btn {
+  transition: all 100ms ease-in-out;
 }
