@@ -11,10 +11,6 @@ from django_tinsel.utils import decorate as do
 from apps.quiz import views as v
 
 
-quiz_list_page = do(login_required,
-                    render_template('quiz/quiz_list_page.html'),
-                    route(GET=v.quiz_list_page))
-
 quiz_page = do(login_required,
                route(GET=do(render_template('quiz/quiz_page.html'),
                             v.quiz_page),

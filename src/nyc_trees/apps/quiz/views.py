@@ -5,15 +5,9 @@ from __future__ import division
 
 from django.db import transaction
 
-from apps.quiz.models import Quiz, quizzes
+from apps.quiz.models import Quiz
 from apps.quiz.utils import get_quiz_or_404
 from apps.users.models import TrainingResult
-
-
-def quiz_list_page(request):
-    return {
-        'quizzes': quizzes.iteritems()
-    }
 
 
 def quiz_page(request, quiz_slug):
