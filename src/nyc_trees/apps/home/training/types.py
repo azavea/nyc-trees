@@ -4,26 +4,18 @@ from __future__ import unicode_literals
 from __future__ import division
 
 from django.core.urlresolvers import reverse
-from django.contrib.auth.decorators import login_required
-from django_tinsel.decorators import route
-from django_tinsel.utils import decorate as do
-from apps.home.training.decorators import render_flatpage, mark_user
-from django.contrib.flatpages.views import flatpage
+from apps.home.training.routes import make_flatpage_route
+from apps.home.training.decorators import mark_user
 
 _PURE_URL_NAME_TEMPLATE = '%s_pure'
 _MARK_PROGRESS_URL_NAME_TEMPLATE = '%s_mark_progress'
 _TRAINING_FINISHED_BOOLEAN_FIELD_TEMPLATE = 'training_finished_%s'
 
 
-class AbstractTrainingStep(object):
+class AbstractTrainingNode(object):
     def pure_kwargs(self):
-        """
-        This dictionary, when given as a **kwarg argument to a
-        `url()` function call, produce an endpoint that will render
-        the associated training step without marking progress on
-        any previously visited page. This is necessary
-        """
-        raise NotImplementedError()
+        return {'name': _PURE_URL_NAME_TEMPLATE % self.name,
+                'view': self.view}
 
     def mark_kwargs(self):
         """
@@ -36,15 +28,8 @@ class AbstractTrainingStep(object):
     def is_complete(self):
         raise NotImplementedError()
 
-    def is_flatpage(self):
-        """
-        TODO: refactor into classes,
-        `FlatPageTrainingStep` and `ViewTrainingStep`
-        """
-        raise NotImplementedError()
 
-
-class TrainingGateway(AbstractTrainingStep):
+class TrainingGateway(AbstractTrainingNode):
     """
     A TrainingGateway is a doubly-linked list of step objects.
 
@@ -83,9 +68,6 @@ class TrainingGateway(AbstractTrainingStep):
         self.view = view
         self.steps = steps
 
-    def is_flatpage(self):
-        return False
-
     def get_step(self, name):
         for step in self.steps:
             if step.name == name:
@@ -114,25 +96,18 @@ class TrainingGateway(AbstractTrainingStep):
 
         return training_steps
 
-    def pure_kwargs(self):
-        return {'name': '%s_pure' % self.name,
-                'view': login_required(self.view)}
-
     def mark_kwargs(self):
         raise ValueError('Gateways do not have a progress boolean')
 
 
-class TrainingStep(AbstractTrainingStep):
+class AbstractTrainingStep(AbstractTrainingNode):
+
     def __init__(self, name, description, duration, view=None):
         self.name = name
         self.description = description
         self.duration = duration
         self.next_step = None
         self.previous_step = None
-        self.view = view or flatpage
-
-    def is_flatpage(self):
-        return self.view == flatpage
 
     def pure_url(self):
         return reverse(_PURE_URL_NAME_TEMPLATE % self.name)
@@ -140,21 +115,10 @@ class TrainingStep(AbstractTrainingStep):
     def mark_progress_url(self):
         return reverse(_MARK_PROGRESS_URL_NAME_TEMPLATE % self.name)
 
-    def pure_kwargs(self):
-        kwargs = {'url': '/%s/' % self.name} if self.is_flatpage() else {}
-        return {'name': _PURE_URL_NAME_TEMPLATE % self.name,
-                'view': login_required(self.view),
-                'kwargs': kwargs}
-
     def mark_kwargs(self):
-        inner_view = (render_flatpage('/%s/' % self.next_step.name)
-                      if self.next_step.is_flatpage() else self.next_step.view)
-        view = route(GET=do(
-            login_required,
-            mark_user(_TRAINING_FINISHED_BOOLEAN_FIELD_TEMPLATE % self.name),
-            inner_view))
+        user_bool = _TRAINING_FINISHED_BOOLEAN_FIELD_TEMPLATE % self.name
         return {'name': _MARK_PROGRESS_URL_NAME_TEMPLATE % self.name,
-                'view': view}
+                'view': mark_user(user_bool)(self.next_step.view)}
 
     def is_complete(self, user):
         return getattr(user,
@@ -163,3 +127,15 @@ class TrainingStep(AbstractTrainingStep):
 
     def __str__(self):
         return self.name
+
+
+class FlatPageTrainingStep(AbstractTrainingStep):
+    def __init__(self, *args, **kwargs):
+        super(FlatPageTrainingStep, self).__init__(*args, **kwargs)
+        self.view = make_flatpage_route(self.name)
+
+
+class ViewTrainingStep(AbstractTrainingStep):
+    def __init__(self, view, *args, **kwargs):
+        super(ViewTrainingStep, self).__init__(*args, **kwargs)
+        self.view = view
