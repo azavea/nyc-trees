@@ -83,4 +83,4 @@ except exception.DNSException:
                      environ.get('TILER_HOST'))
 # END TILER CONFIGURATION
 
-SOFT_LAUNCH_ENABLED = True
+SOFT_LAUNCH_ENABLED = False
