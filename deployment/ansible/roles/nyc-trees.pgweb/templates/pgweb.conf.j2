@@ -1,6 +1,6 @@
 description	"pgweb"
 
-start on (local-filesystems and net-device-up IFACE!=lo)
+start on postgresql-started
 stop on shutdown
 
 respawn
