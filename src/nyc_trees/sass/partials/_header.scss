@@ -8,11 +8,53 @@ nav {
 
 .nav-right {
   float: right;
-  padding-top: .7rem;
 }
 
 .nav-left {
   float: left;
+}
+
+.nav-account {
+  padding-top: .7rem;
+}
+
+.nav-alert {
+  & > .dropdown {
+    &.open {
+      & > button {
+        background-color: #fff;
+      }
+    }
+    & > button {
+      border: 0;
+      background-color: transparent;
+    }
+    & > .dropdown-menu {
+      padding: 0;
+      margin: 0;
+      border: 0;
+      & > li > a {
+        padding: $block-unit;
+        background-color: #fff;
+      }
+    }
+  }
+  @media (max-width: $screen-sm) {
+    & > .dropdown {
+      position: static;
+      & > .dropdown-menu {
+        left: 0;
+        right: 0;
+      }
+    }
+  }
+}
+
+.nav-alert-badge {
+  border-radius: 100%;
+  background-color: $brand-primary;
+  color: #fff;
+  width: 2.4rem;
 }
 
 .brand {

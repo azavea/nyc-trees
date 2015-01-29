@@ -49,7 +49,7 @@
                             TreesCount!
                         </div>
                     </div>
-                    <div class="nav-right">
+                    <div class="nav-right nav-account">
                         {% if request.user.is_authenticated %}
                         <a href="{% url 'auth_logout' %}">Logout</a>
                         {% else %}
@@ -58,17 +58,17 @@
                         {% endif %}
                     </div>
                     {% if my_events_now %}
-                    <div class="nav-right">
+                    <div class="nav-right nav-alert">
                         <div class="dropdown">
-                            <button class="btn btn-default dropdown-toggle" type="button" id="eventNowAlert" data-toggle="dropdown" aria-expanded="false">
-                                !
+                            <button class="btn dropdown-toggle" type="button" id="eventNowAlert" data-toggle="dropdown" aria-expanded="false">
+                                <div class="nav-alert-badge">!</div>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="eventNowAlert">
                                 {% for event in my_events_now %}
-                                <li role="presentation">
+                                <li class="text-right" role="presentation">
                                     <a role="menuitem" tabindex="-1" href="{{ event.get_user_checkin_url }}">
                                         The event
-                                        {{ event.title }}
+                                        <b>{{ event.title }}</b>
                                         {% if event.has_started %}
                                             has started
                                         {% else %}
