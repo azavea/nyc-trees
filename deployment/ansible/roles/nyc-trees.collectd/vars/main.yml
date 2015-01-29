@@ -1,3 +1,4 @@
+collectd_install_recommends: False
 collectd_load_plugins:
   - syslog
   - cpu
