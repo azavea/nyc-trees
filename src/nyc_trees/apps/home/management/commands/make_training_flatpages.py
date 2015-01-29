@@ -43,6 +43,6 @@ class Command(BaseCommand):
                 fp = FlatPage.objects.create(
                     title=step.description,
                     url=url,
-                    template_name='flatpages/training.html',
+                    template_name=step.flatpage_template_name,
                     content=f.read())
                 fp.sites.add(settings.SITE_ID)
