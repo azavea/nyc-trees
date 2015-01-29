@@ -15,7 +15,8 @@ from apps.home.training.types import FlatPageTrainingStep
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         training_flatpages = [step for step in training_summary.steps
-                              if isinstance(self, FlatPageTrainingStep)]
+                              if isinstance(step, FlatPageTrainingStep)]
+
         flatpages = {}
 
         # exit early if anything exists or file
