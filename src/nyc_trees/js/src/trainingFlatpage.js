@@ -2,19 +2,29 @@
 
 var $ = require('jquery'),
     dom = {container: '[data-class="training-flatpage-container"]',
-           trainingSubpage: 'div',
-           nextButton: '[data-class="training-flatpage-subpage-next"]'},
+           nextButton: '[data-class="training-flatpage-subpage-next"]',
+           previousButton: '[data-class="training-flatpage-subpage-previous"]'},
     $container = $(dom.container),
-    $subpages = $container.find(dom.trainingSubpage),
-    pageCount = $subpages.length,
     $nextButton = $(dom.nextButton),
+    $previousButton = $(dom.previousButton),
+    $subpages = $container.children('div'),
+    pageCount = $subpages.length,
     currentPage = 0;
+
+function showSubpage($subpage, index) {
+    if (index > 0) {
+        $previousButton.show();
+    } else {
+        $previousButton.hide();
+    }
+
+    $subpage.show();
+}
 
 function showPageOrStep() {
     if (currentPage < pageCount) {
         $subpages.hide();
-        $($subpages[currentPage]).show();
-        currentPage++;
+        showSubpage($($subpages[currentPage]), currentPage);
     } else {
         window.location.href = $nextButton.attr('data-href');
     }
@@ -25,7 +35,14 @@ function showPageOrStep() {
 $subpages.hide();
 $container.show();
 
-$nextButton.on('click', showPageOrStep);
+$nextButton.on('click', function () {
+    currentPage++;
+    showPageOrStep();
+});
+$previousButton.on('click', function () {
+    currentPage--;
+    showPageOrStep();
+});
 
 if (pageCount > 0) {
     showPageOrStep();
