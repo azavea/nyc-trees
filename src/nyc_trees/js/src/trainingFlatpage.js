@@ -3,7 +3,8 @@
 var $ = require('jquery'),
     dom = {container: '[data-class="training-flatpage-container"]',
            nextButton: '[data-class="training-flatpage-subpage-next"]',
-           previousButton: '[data-class="training-flatpage-subpage-previous"]'},
+           previousButton: '[data-class="training-flatpage-subpage-previous"]',
+           answer: '[data-class="answer"]'},
     $container = $(dom.container),
     $nextButton = $(dom.nextButton),
     $previousButton = $(dom.previousButton),
@@ -12,13 +13,49 @@ var $ = require('jquery'),
     currentPage = 0;
 
 function showSubpage($subpage, index) {
+    var $exercise = $subpage.children('form');
+
+    if ($exercise.length === 0) {
+        $nextButton.show();
+    } else {
+        $nextButton.hide();
+    }
+
     if (index > 0) {
         $previousButton.show();
     } else {
         $previousButton.hide();
     }
 
+    $exercise.children(dom.answer).each(function (__, member) {
+        var $member = $(member),
+            $input = $member.children('input'),
+            $failureEl = $member.children('div');
+
+        $failureEl.hide();
+
+        // for brevity, these get set to radio, rather than forcing
+        // the flatpage author to have set them for each one
+        $input.attr('type', 'radio');
+
+        $input.attr('checked', false);
+        // use the index (currentPage) to make a unique
+        // radio button group
+        $input.attr('name', index);
+    });
+
     $subpage.show();
+}
+
+
+function evaluateExerciseInput (event) {
+    var $el = $(event.target),
+        $exercise = $el.parent('div'),
+        correctValue = $exercise.parent('form').attr('data-correct-value');
+    window.alert($exercise.children('div').html());
+    if ($el.attr('value') === correctValue) {
+        $nextButton.show();
+    }
 }
 
 function showPageOrStep() {
@@ -34,6 +71,8 @@ function showPageOrStep() {
 // this js has a chance to hide them
 $subpages.hide();
 $container.show();
+
+$container.on('click', 'input', evaluateExerciseInput);
 
 $nextButton.on('click', function () {
     currentPage++;
