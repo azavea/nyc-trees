@@ -1,10 +1,11 @@
 "use strict";
 
-var mapModule = require('./map'),
-    zoom = require('./mapUtil').zoom,
-    selectableBlockfaceLayer = require('./selectableBlockfaceLayer'),
+var $ = require('jquery'),
     L = require('leaflet'),
-    $ = require('jquery'),
+    mapModule = require('./map'),
+    zoom = require('./mapUtil').zoom,
+    SelectableBlockfaceLayer = require('./lib/SelectableBlockfaceLayer'),
+    Storage = require('./lib/Storage'),
 
     dom = {
         currentReservations: "#current-reservations",
@@ -34,20 +35,30 @@ var $current = $(dom.currentReservations),
         useJsonP: false
     });
 
+var progress = new Storage({
+    key: 'reserve-blockfaces',
+    getState: function() {
+        return {
+            selections: selectedBlockfaces
+        };
+    },
+    validate: function(state) {
+        if (!$.isPlainObject(state.selections)) {
+            throw new Error('Expected `state.selections` to contain blockfaces');
+        }
+    }
+});
 
-selectableBlockfaceLayer.create({
-    map: reservationMap,
-    grid: grid,
-
+var selectedLayer = new SelectableBlockfaceLayer(reservationMap, grid, {
     onAdd: function(gridData) {
         if (selectedBlockfacesCount < blockfaceLimit && gridData.restriction === 'none') {
             selectedBlockfaces[gridData.id] = gridData;
             selectedBlockfacesCount++;
             $current.text(selectedBlockfacesCount);
 
+            progress.save();
             return true;
         }
-
         return false;
     },
 
@@ -58,6 +69,20 @@ selectableBlockfaceLayer.create({
         }
         delete selectedBlockfaces[feature.properties.id];
 
+        progress.save();
         return true;
     }
 });
+
+reservationMap.addLayer(grid);
+reservationMap.addLayer(selectedLayer);
+
+// Load any existing data.
+var state = progress.load();
+if (state) {
+    $.each(state.selections, function(id, data) {
+        selectedLayer.addBlockface(data);
+    });
+    // Zoom to extent of selected blockface reservations.
+    reservationMap.fitBounds(selectedLayer.getBounds());
+}
