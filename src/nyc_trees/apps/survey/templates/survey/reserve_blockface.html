@@ -1,39 +1,36 @@
-{% extends "base_map.html" %}
+{% extends "base_reservation.html" %}
 
 {% load utils %}
 
 {% block aside %}
 
   <div class="map-sidebar">
-    <div class="map-sidebar-context block">
-      <h2>New Reservation</h2>
-      <div class="hide-xs hidden-xs">
-        The new reservation map shows lorem ipsum dolor sit amet, consectetur adipiscing
-        elit. Sed eu congue lorem, id feugiat tortor. Aliquam ante elit, sodales eget
-        porttitor vel, commodo et felis.
-      </div>
-    </div>
+    <h2>New Reservation</h2>
+    <p class="pageheading-description-detail hidden-xs">
+      The new reservation map shows lorem ipsum dolor sit amet, consectetur adipiscing
+      elit. Sed eu congue lorem, id feugiat tortor. Aliquam ante elit, sodales eget
+      porttitor vel, commodo et felis.
+    </p>
     {% include 'home/partials/legend.html' %}
+    <div class="action-bar">
+       <div>
+         <span id="current-reservations">{{ reservations.current }}</span>
+         /
+         <span id="total-reservations">{{ reservations.total }}</span>
+       </div>
+       <a href="javascript:">Finish Reservation</a>
+    </div>
   </div>
 
   {% include 'home/partials/location_search.html' %}
 
 {% endblock aside %}
 
-{% block map %}
+{% block main %}
 
-<div id="map" class="map-with-action-bar"></div>
+<div id="map" class="map-event">
 
-<div class="action-bar">
-   <div>
-     <span id="current-reservations">{{ reservations.current }}</span>
-     /
-     <span id="total-reservations">{{ reservations.total }}</span>
-   </div>
-   <a href="javascript:">Finish Reservation</a>
-</div>
-
-{% endblock map %}
+{% endblock main %}
 
 {% block page_js %}
     <script type="text/javascript" src="{{ "js/reserveBlockfacePage.js"|static_url }}"></script>

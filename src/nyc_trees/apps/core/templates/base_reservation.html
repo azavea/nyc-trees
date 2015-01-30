@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load utils %}
+
+{% block content %}
+
+<div class="page-map page-action-bar page-new-reservation">
+
+    {% block top %}
+    {% endblock top %}
+
+    <div class="container">
+        <div class="row">
+            <aside class="pageheading-details block map-action-sidebar">
+
+                {% block aside %}
+                {% endblock aside %}
+
+            </aside>
+            <div class="map-container">
+
+                {% block main %}
+                {% endblock main %}
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
