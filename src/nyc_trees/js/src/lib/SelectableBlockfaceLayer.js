@@ -1,8 +1,8 @@
 "use strict";
 
-var L = require('leaflet'),
-    zoom = require('./mapUtil').zoom,
-    $ = require('jquery'),
+var $ = require('jquery'),
+    L = require('leaflet'),
+    zoom = require('../mapUtil').zoom,
 
     color = '#FFEB3B';
 

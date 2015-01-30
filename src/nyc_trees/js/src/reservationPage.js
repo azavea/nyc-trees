@@ -1,10 +1,10 @@
 "use strict";
 
-var MapModule = require('./map'),
-    zoom = require('./mapUtil').zoom,
-    selectableBlockfaceLayer = require('./selectableBlockfaceLayer'),
+var $ = require('jquery'),
     L = require('leaflet'),
-    $ = require('jquery'),
+    MapModule = require('./map'),
+    zoom = require('./mapUtil').zoom,
+    SelectableBlockfaceLayer = require('./lib/SelectableBlockfaceLayer'),
 
     dom = {
         actionBar: '#reserve-blockface-action-bar'
@@ -30,10 +30,7 @@ var grid = L.utfGrid(config.urls.layers.reservations.grids, {
         useJsonP: false
     }),
 
-    selectedLayer = selectableBlockfaceLayer.create({
-        map: reservationMap,
-        grid: grid,
-
+    selectedLayer = new SelectableBlockfaceLayer(reservationMap, grid, {
         onAdd: function(gridData) {
             selectedLayer.clearLayers();
 
@@ -43,3 +40,6 @@ var grid = L.utfGrid(config.urls.layers.reservations.grids, {
             return true;
         }
     });
+
+reservationMap.addLayer(grid);
+reservationMap.addLayer(selectedLayer);

@@ -2,7 +2,7 @@
 
 var $ = require('jquery'),
     util = require('./lib/util'),
-    Storage = require('./lib/storage');
+    Storage = require('./lib/Storage');
 
 var dom = {
     next: '.quiz .next',
