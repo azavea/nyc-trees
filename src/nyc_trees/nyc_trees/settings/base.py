@@ -38,6 +38,9 @@ STATSD_CLIENT = 'django_statsd.clients.normal'
 STATSD_HOST = environ.get('NYC_TREES_STATSD_HOST', 'localhost')
 # END STATSD CONFIGURATION
 
+# EMAIL CONFIGURATION
+DEFAULT_FROM_EMAIL = 'azaveadev@azavea.com'
+# END EMAIL CONFIGURATION
 
 # DATABASE CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
