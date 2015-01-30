@@ -48,6 +48,22 @@ suite('fetchAndReplace AJAX', function() {
         });
     });
 
+    afterEach(function() {
+      $.ajax.restore();
+      removeFixture();
+    });
+
+    after(function() {
+        removeFixture();
+    });
+
+    test('Remove callback', function() {
+        remove();
+        assert.equal(ajaxStub.callCount, 0);
+        $('#__target').trigger('click');
+        assert.equal(ajaxStub.callCount, 0);
+    });
+
     test('Clicking the trigger makes a request and replaces content', function(done) {
         $('#__target').trigger('click');
         setTimeout(function() {
@@ -78,12 +94,39 @@ suite('fetchAndReplace AJAX', function() {
         }, 0);
     });
 
-    afterEach(function() {
-      $.ajax.restore();
-      removeFixture();
+    test('Multiple buttons do not interfere with each other', function() {
+        remove();
+
+        $('#__container')
+            .empty()
+            .append('<span class="btn"><a id="__target1" data-url="a_fake_url1"></a></span>')
+            .append('<span class="btn"><a id="__target2" data-url="a_fake_url2"></a></span>');
+
+        remove = fetchAndReplace({
+            container: '.btn',
+            target: 'a'
+        });
+
+        $('#__target1').trigger('click');
+        assert.equal(ajaxStub.callCount, 1);
+
+        $('#__target2').trigger('click');
+        assert.equal(ajaxStub.callCount, 2);
     });
 
-    after(function() {
-        removeFixture();
+    test('Events still fire after replacing content', function() {
+        // Create an ajax stub that simulates the most common use case for
+        // fetchAndReplace -- returning a clickable "toggle" button.
+        $.ajax.restore();
+        ajaxStub = sinon.stub($, 'ajax', function (url, options) {
+            var d = $.Deferred();
+            d.resolve('<a id="__target" href="#" data-url="a_fake_url"></a>');
+            return d.promise();
+        });
+        $('#__target').trigger('click');
+        assert.equal(ajaxStub.callCount, 1);
+        // The click event should still work after the content is replaced.
+        $('#__target').trigger('click');
+        assert.equal(ajaxStub.callCount, 2);
     });
 });
