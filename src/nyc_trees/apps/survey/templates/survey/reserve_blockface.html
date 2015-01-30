@@ -1,4 +1,4 @@
-{% extends "base_new_reservation.html" %}
+{% extends "base_reservation.html" %}
 
 {% load utils %}
 
@@ -12,7 +12,6 @@
       porttitor vel, commodo et felis.
     </p>
     {% include 'home/partials/legend.html' %}
-
     <div class="action-bar">
        <div>
          <span id="current-reservations">{{ reservations.current }}</span>
@@ -21,8 +20,6 @@
        </div>
        <a href="javascript:">Finish Reservation</a>
     </div>
-
-
   </div>
 
   {% include 'home/partials/location_search.html' %}
