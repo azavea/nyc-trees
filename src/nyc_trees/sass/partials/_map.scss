@@ -3,6 +3,9 @@
   .tab-status-map-tab &, .page-new-reservation & {
     position: static;
   }
+  .action-bar .dropdown-menu {
+    z-index: 1100;
+  }
 }
 
 .map-container {
