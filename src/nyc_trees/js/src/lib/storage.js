@@ -3,7 +3,33 @@
 var $ = require('jquery'),
     storage = window.localStorage || {};
 
-
+// Responsible for serializing and deserializing data to `localStorage`.
+//
+// Any valid JS object returned from `getState` will be stringified and
+// saved to `localStorage` when the `save` function is invoked.
+//
+// Calling `load` will deserialize and return the current value from
+// `localStorage`. If there is no current value, or if there was an error
+// during deserialization, then `load` will return `false`.
+//
+// Example usage:
+//
+//     var cache = new Storage({
+//         key: 'cart',
+//         getState: function() {
+//             return { items: [...] };
+//         }
+//     });
+//
+//     var state = cache.load();
+//     if (state) {
+//         _.each(state.items, addToCart);
+//     }
+//
+//     btnAddToCart
+//         .doAction(addToCart)
+//         .onValue(cache, 'save');
+//
 function Storage(options) {
     var opts = $.extend({}, {
         key: '',
@@ -11,7 +37,7 @@ function Storage(options) {
         validate: $.noop
     }, options);
 
-    if (!!opts.key) {
+    if (!opts.key) {
         throw new Error('The `key` option is required');
     }
 
@@ -19,10 +45,20 @@ function Storage(options) {
         storage[opts.key] = serialize();
     }
 
+    // Return false if there is no current value to load of if there was an
+    // error validating the state.
     function load() {
         var state = deserialize(storage[opts.key]);
         if (state) {
-            opts.validate(state);
+            try {
+                opts.validate(state);
+            } catch (ex) {
+                console.warn(ex);
+                // State may have become corrupt or the data format may have
+                // changed.
+                clear();
+                return false;
+            }
         }
         return state;
     }
