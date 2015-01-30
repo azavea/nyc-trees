@@ -2,7 +2,7 @@
 
 var mapModule = require('./map'),
     zoom = require('./mapUtil').zoom,
-    selectableBlockfaceLayer = require('./selectableBlockfaceLayer'),
+    SelectableBlockfaceLayer = require('./selectableBlockfaceLayer'),
     L = require('leaflet'),
     $ = require('jquery'),
     Storage = require('./lib/storage'),
@@ -49,10 +49,7 @@ var progress = new Storage({
     }
 });
 
-var blockfaceLayer = selectableBlockfaceLayer.create({
-    map: reservationMap,
-    grid: grid,
-
+var blockfaceLayer = new SelectableBlockfaceLayer(reservationMap, grid, {
     onAdd: function(gridData) {
         if (selectedBlockfacesCount < blockfaceLimit && gridData.restriction === 'none') {
             selectedBlockfaces[gridData.id] = gridData;
@@ -62,7 +59,6 @@ var blockfaceLayer = selectableBlockfaceLayer.create({
             progress.save();
             return true;
         }
-
         return false;
     },
 
@@ -78,6 +74,9 @@ var blockfaceLayer = selectableBlockfaceLayer.create({
     }
 });
 
+reservationMap.addLayer(blockfaceLayer);
+reservationMap.addLayer(grid);
+
 // Load any existing data.
 var state = progress.load();
 if (state) {
@@ -85,5 +84,5 @@ if (state) {
         blockfaceLayer.addBlockface(data);
     });
     // Zoom to extent of selected blockface reservations.
-    reservationMap.fitBounds(blockfaceLayer.getLayer().getBounds());
+    reservationMap.fitBounds(blockfaceLayer.getBounds());
 }

@@ -6,10 +6,6 @@ var L = require('leaflet'),
 
     color = '#FFEB3B';
 
-module.exports = {
-    create: createBlockfaceLayer
-};
-
 /* Adds a geojson layer to the given map, based on the geojson data of a UtfGrid.
  * The UtfGrid must have a "geojson" property as a data attribute.
  *
@@ -23,35 +19,43 @@ module.exports = {
  * If the callbacks do not return a truthy value, the feature will not be
  * added/removed.
  *
- * Returns the created geojson layer
  */
-function createBlockfaceLayer(options) {
-    var map = options.map,
-        grid = options.grid,
-        onAdd = options.onAdd || $.noop,
-        onRemove = options.onRemove || $.noop,
+module.exports = L.GeoJSON.extend({
+    options: {
+        onAdd: $.noop,
+        onRemove: $.noop
+    },
 
-        blockfaceLayer = L.geoJson([], {
-            style: function() {
-                return getStyle(map);
-            },
-            onEachFeature: function(feature, layer) {
-                layer.on('click', function() {
-                    if (onRemove(feature)) {
-                        blockfaceLayer.removeLayer(layer);
-                    }
-                });
-            }
+    initialize: function(map, grid, options) {
+        L.GeoJSON.prototype.initialize.call(this, null, options);
+
+        var self = this;
+
+        this.options.style = function() {
+            return getStyle(map);
+        };
+
+        this.options.onEachFeature = function(feature, layer) {
+            layer.on('click', function() {
+                if (self.options.onRemove(feature)) {
+                    self.removeLayer(layer);
+                }
+            });
+        };
+
+        grid.on('click', function(e) {
+            self.addBlockface(e.data);
         });
 
-    grid.on('click', function(e) {
-        addBlockface(e.data);
-    });
+        map.on('zoomend', function() {
+            self.setStyle(getStyle(map));
+        });
+    },
 
-    function addBlockface(data) {
+    addBlockface: function(data) {
         if (data && data.geojson) {
-            if (onAdd(data)) {
-                blockfaceLayer.addData({
+            if (this.options.onAdd(data)) {
+                this.addData({
                     "type": "Feature",
                     "geometry": JSON.parse(data.geojson),
                     "properties": data
@@ -59,23 +63,7 @@ function createBlockfaceLayer(options) {
             }
         }
     }
-
-    function getLayer() {
-        return blockfaceLayer;
-    }
-
-    map.addLayer(blockfaceLayer);
-    map.addLayer(grid);
-
-    map.on('zoomend', function() {
-        blockfaceLayer.setStyle(getStyle(map));
-    });
-
-    return {
-        addBlockface: addBlockface,
-        getLayer: getLayer
-    };
-}
+});
 
 function getStyle(map) {
     return {
