@@ -79,7 +79,7 @@ reservationMap.addLayer(selectedLayer);
 
 // Load any existing data.
 var state = progress.load();
-if (state) {
+if (state && state.selections.length > 0) {
     $.each(state.selections, function(id, data) {
         selectedLayer.addBlockface(data);
     });
