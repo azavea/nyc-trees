@@ -10,7 +10,9 @@ var $ = require('jquery'),
 
     dom = {
         currentReservations: "#current-reservations",
-        totalReservations: "#total-reservations"
+        totalReservations: "#total-reservations",
+        finishReservations: "#finish-reservations",
+        hiddenInput: "#reservation-ids"
     };
 
 // Extends the leaflet object
@@ -27,6 +29,9 @@ L.tileLayer(config.urls.layers.reservable.tiles, {
 }).addTo(reservationMap);
 
 var $current = $(dom.currentReservations),
+    $hiddenInput = $(dom.hiddenInput),
+    $finishButton = $(dom.finishReservations),
+
     selectedBlockfacesCount = +($current.text()),
     blockfaceLimit = +($(dom.totalReservations).text()),
     selectedBlockfaces = {},
@@ -58,6 +63,8 @@ var selectedLayer = new SelectableBlockfaceLayer(reservationMap, grid, {
             selectedBlockfacesCount++;
             $current.text(selectedBlockfacesCount);
 
+            updateForm();
+
             progress.save();
             return true;
         }
@@ -70,11 +77,22 @@ var selectedLayer = new SelectableBlockfaceLayer(reservationMap, grid, {
             $current.text(selectedBlockfacesCount);
         }
         delete selectedBlockfaces[feature.properties.id];
+        updateForm();
 
         progress.save();
         return true;
     }
 });
+
+function updateForm() {
+    var ids = Object.keys(selectedBlockfaces);
+    if (ids.length > 0) {
+        $hiddenInput.val(ids.join());
+        $finishButton.prop('disabled', false);
+    } else {
+        $finishButton.prop('disabled', true);
+    }
+}
 
 grid.on('click', function(e) {
     if (selectedBlockfacesCount >= blockfaceLimit) {

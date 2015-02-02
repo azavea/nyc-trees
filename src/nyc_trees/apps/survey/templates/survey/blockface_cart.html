@@ -1,5 +1,31 @@
-{% extends "base.html" %}
+{% extends "base_two_frames.html" %}
 
-{% block content %}
-{# TODO #}
-{% endblock content %}
+{% block aside %}
+    <h2>New Reservation</h2>
+{% endblock aside %}
+
+{% block main %}
+    <h3>Confirm</h3>
+    Lorem impsum dolor sit amet, consectetur adipiscing elit.  Integer mollies viverra ante.
+
+    <form method="post" action="{% url 'blockface_reservations_confirmation_page' %}">
+        {% csrf_token %}
+        <input type="hidden" name="ids" value="{{ blockface_ids }}" />
+
+        <h4>How will you map these blocks?</h4>
+        <label>
+            <input type="radio" name="is_mapping_with_paper" value="False" checked="checked" />
+            Mobile App
+        </label>
+        <p>Lorem ipsum dolor sit amet</p>
+
+        <label>
+            <input type="radio" name="is_mapping_with_paper" value="True" />
+            Paper Worksheets
+        </label>
+        <p>Lorem ipsum dolor sit amet</p>
+
+        <a href="{% url 'reserve_blockface_page' %}">Cancel</a>
+        <input type="submit" value="Confirm Blocks" class="btn btn-primary pull-right" />
+    </form>
+{% endblock main %}

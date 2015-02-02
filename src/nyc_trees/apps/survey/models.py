@@ -22,7 +22,7 @@ class Blockface(NycModel, models.Model):
 
 class Territory(NycModel, models.Model):
     group = models.ForeignKey(Group)
-    blockface = models.ForeignKey(Blockface, unique=True)
+    blockface = models.OneToOneField(Blockface)
 
     def __unicode__(self):
         return '%s -> %s' % (self.group, self.blockface_id)

@@ -35,13 +35,11 @@ cancel_reservation = route(
 
 reserve_blockfaces = individual_mapper_do(
     render_template('survey/blockface_cart.html'),
-    route(POST=v.reserve_blockfaces,
-          GET=v.blockface_cart_page))
+    route(POST=v.blockface_cart_page))
 
-blockface_reservations_confirmation_page = route(
-    GET=individual_mapper_do(
-        render_template('survey/reserve_blockface_confirmation.html'),
-        v.blockface_reservations_confirmation_page))
+blockface_reservations_confirmation_page = individual_mapper_do(
+    render_template('survey/reserve_blockface_confirmation.html'),
+    route(POST=v.confirm_blockface_reservations))
 
 #####################################
 # SURVEY ROUTES
