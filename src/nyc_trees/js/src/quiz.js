@@ -2,7 +2,7 @@
 
 var $ = require('jquery'),
     util = require('./lib/util'),
-    Storage = require('./lib/Storage');
+    SavedState = require('./lib/SavedState');
 
 var dom = {
     next: '.quiz .next',
@@ -16,7 +16,7 @@ var dom = {
 };
 
 var slug = $(dom.quizSlug).data('quiz-slug'),
-    progress = new Storage({
+    progress = new SavedState({
         key: 'quiz-progress-' + slug,
         getState: function() {
             var formData = {};

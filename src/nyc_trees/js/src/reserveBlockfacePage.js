@@ -6,7 +6,7 @@ var $ = require('jquery'),
     mapModule = require('./map'),
     zoom = require('./mapUtil').zoom,
     SelectableBlockfaceLayer = require('./lib/SelectableBlockfaceLayer'),
-    Storage = require('./lib/Storage'),
+    SavedState = require('./lib/SavedState'),
 
     dom = {
         currentReservations: "#current-reservations",
@@ -41,7 +41,7 @@ var $current = $(dom.currentReservations),
         useJsonP: false
     });
 
-var progress = new Storage({
+var progress = new SavedState({
     key: 'reserve-blockfaces',
     getState: function() {
         return {
