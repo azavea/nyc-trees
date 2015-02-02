@@ -21,9 +21,9 @@
     </div>
     <div class="pageheading-controls block">
         <div class="row">
-            <div class="col-xs-6">
-                <div class="h2">653</div>
-                <div class="h6">Followers</div>
+            <div class="col-xs-6 secondary-heading">
+                <span class="h2"><b>653</b></span>
+                <span class="h6">Followers</span>
             </div>
             <div class="col-xs-6 text-right">
                 {% if event_list.user_can_edit_group %}
@@ -42,18 +42,27 @@
 {% block main %}
 
     <section>
-        <h4 class="section-heading">Profile</h4>
         <div class="contribution block item">
-            <h5>Description</h5>
+            <h4 class="section-heading">Description</h4>
             <div>{{group.description}}</div>
         </div>
         <div class="contribution block item">
-            <h5>Contact</h5>
-            <div>{{group.contact_name}} <a href="mailto:{{group.contact_email}}">Email</a></div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <h5>{{group.contact_name}}</h5>
+                    <div class="h6">Group Contact</div>
+                </div>
+                <div class="col-xs-6 text-right"><a href="mailto:{{group.contact_email}}" class="btn btn-default">Email</a></div>
+            </div>
         </div>
         <div class="contribution block item">
-            <h5>Website</h5>
-            <div><a href="{{group.contact_url}}">{{group.contact_url}}</a></div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <h5>Website</h5>
+                    <div class="h6">{{group.contact_url}}</div>
+                </div>
+                <div class="col-xs-6 text-right"><a href="{{group.contact_url}}" class="btn btn-default">Visit</a></div>
+            </div>
         </div>
     </section>
     <section class="contributions">

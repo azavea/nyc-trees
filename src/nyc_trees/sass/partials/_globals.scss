@@ -43,7 +43,11 @@ body {
 }
 
 section {
-  padding: 3rem 0;
+  margin: 0 0 4rem;
+  border-bottom: solid 1px $gray-lightest;
+  &:last-child {
+    border-bottom: 0;
+  }
 }
 
 // Reset fonts for relevant elements
@@ -132,11 +136,11 @@ main {
   margin-top: 2rem;
 }
 
-.section-heading {
-  border-bottom: solid 1px $gray-lighter;
-  @include blockpadding();
+.section-heading, .secondary-heading {
+  font-weight: normal;
+  color: $brand-primary;
   a {
-    color: $headings-color;
+    color: $brand-primary;
     text-decoration: none;
   }
 }
