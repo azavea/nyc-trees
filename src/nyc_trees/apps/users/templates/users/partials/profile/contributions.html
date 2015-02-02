@@ -2,23 +2,33 @@
 
 {% block section_content %}
 
-<div class="contribution block item">
-    <div class="row">
-        <div class="contribution-label col-xs-6"><i class="icon-globe"></i>Trees</div>
-        <div class="contribution-number col-xs-6">{{ counts.tree }}</div>
+<section class="your-contributions clearfix">
+    <div class="progress-circles">
+        <div class="col-xs-4 col-circle">
+            <div class="progress-circle color--primary">
+                <div class="progress-circle-content">
+                    <div class="progress-circle-number">{{ counts.tree }}</div>
+                    <div class="progress-circle-label">Trees</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-4 col-circle">
+            <div class="progress-circle color--quaternary">
+                <div class="progress-circle-content">
+                    <div class="progress-circle-number">{{ counts.block }}</div>
+                    <div class="progress-circle-label">Blocks</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-4 col-circle">
+            <div class="progress-circle color--secondary">
+                <div class="progress-circle-content">
+                    <div class="progress-circle-number">{{ counts.species }}</div>
+                    <div class="progress-circle-label">Species</div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-<div class="contribution block item">
-    <div class="row">
-        <div class="contribution-label col-xs-6"><i class="icon-flow-tree"></i>Blocks</div>
-        <div class="contribution-number col-xs-6">{{ counts.block }}</div>
-    </div>
-</div>
-<div class="contribution block item">
-    <div class="row">
-        <div class="contribution-label col-xs-6"><i class="icon-tag"></i>Species</div>
-        <div class="contribution-number col-xs-6">{{ counts.species }}</div>
-    </div>
-</div>
+</section>
 
 {% endblock section_content %}

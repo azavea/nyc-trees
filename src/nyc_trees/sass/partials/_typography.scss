@@ -61,6 +61,30 @@ p {
 .text-capitalize     { text-transform: capitalize; }
 
 
+.nobold {
+  font-weight: normal;
+}
+
+.color--white {
+  color: #fff !important;
+}
+
+.color--primary {
+  color: $brand-primary !important;
+}
+
+.color--secondary {
+  color: $brand-secondary !important;
+}
+
+.color--tertiary {
+  color: $brand-tertiary !important;
+}
+
+.color--quaternary {
+  color: $brand-quaternary !important;
+}
+
 // Lists
 // -------------------------
 

@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% load utils %}
+
+{% block content %}
+
+<div class="page-dashboard">
+
+    <div class="hero">
+        <div class="hero-background" style="background-image: url({{ "img/background-aerial.jpg"|static_url }})">
+        </div>
+        <div class="hero-box">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6 col-sm-push-6">
+                        <div class="hero-content">
+                            <h1 class="hero-heading">Welcome back, volun<span class="color--primary">treer!</span></h1>
+                            <p class="h4">In the past week, <span class="color--primary">405 trees</span> in <span class="color--primary">12 blocks</span> have been added. We're <span class="color--primary">43%</span> of the way to our goal!</p>
+                            <div class="text-right">
+                                <a class="hero-link text-center color--secondary h4" href="{% url 'progress_page' %}">Show me the map →</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            {% if user.is_authenticated and not user.online_training_complete %}
+            <main class="col-sm-12">
+                <section class="your-contributions clearfix">
+                    <h4 class="section-heading">Your Contributions</h4>
+                    <div class="progress-circles">
+                        <div class="col-xs-4 col-circle">
+                            <div class="progress-circle color--primary">
+                                <div class="progress-circle-content">
+                                    <div class="progress-circle-number">4,225</div>
+                                    <div class="progress-circle-label">Trees</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-4 col-circle">
+                            <div class="progress-circle color--quaternary">
+                                <div class="progress-circle-content">
+                                    <div class="progress-circle-number">108</div>
+                                    <div class="progress-circle-label">Blocks</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-4 col-circle">
+                            <div class="progress-circle color--secondary">
+                                <div class="progress-circle-content">
+                                    <div class="progress-circle-number">17</div>
+                                    <div class="progress-circle-label">Species</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="trainings">
+                    {% include "home/partials/training.html" %}
+                </section>
+                <section class="events">
+                    <h4 class="section-heading">This week's events</h4>
+                    <!-- TODO: Insert events (My Events and Recommended) -->
+                </section>
+                <section class="events">
+                    <h4 class="section-heading">Groups</h4>
+                    <!-- TODO: Insert the user's groups-->
+                </section>
+            </main>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

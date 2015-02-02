@@ -61,9 +61,10 @@ $gray-light:             lighten(#000, 46.7%); // #777
 $gray-lighter:           lighten(#000, 70%); // #777
 $gray-lightest:          lighten(#000, 93.5%); // #eee
 
-$brand-primary:         #69a639;
-$brand-secondary:       #049ddc;
+$brand-primary:         #7ac143;
+$brand-secondary:       #36b5db;
 $brand-tertiary:        #198d5e;
+$brand-quaternary:      #455560;
 $brand-success:         #5cb85c;
 $brand-info:            #5bc0de;
 $brand-warning:         #f0ad4e;
@@ -119,7 +120,7 @@ $line-height-computed:    floor(($font-size-base * $line-height-base)); // ~20px
 $headings-font-family:    $font-family-serif;
 $headings-special-font-family:    "Gotham Rounded A", "Gotham Rounded B", "Helvetica Neue", helvetica, arial, sans-serif;
 $headings-font-weight:    800;
-$headings-line-height:    1.1;
+$headings-line-height:    1.2;
 $headings-color:          #333;
 
 
@@ -385,7 +386,7 @@ $container-md:                 $container-desktop;
 // Large screen / wide desktop
 $container-large-desktop:      (((1140px + strip_units($grid-gutter-width))));
 //** For `$screen-lg-min` and up.
-$container-lg:                 $container-large-desktop;
+$container-lg:                 $container-desktop;
 
 
 //== Navbar
