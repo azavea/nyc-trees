@@ -4,8 +4,9 @@ from __future__ import unicode_literals
 from __future__ import division
 
 from django.core.urlresolvers import reverse
+from django_tinsel.utils import decorate as do
 from apps.home.training.routes import make_flatpage_route
-from apps.home.training.decorators import mark_user
+from apps.home.training.decorators import mark_user, require_visitability
 
 _PURE_URL_NAME_TEMPLATE = '%s_pure'
 _MARK_PROGRESS_URL_NAME_TEMPLATE = '%s_mark_progress'
@@ -15,7 +16,7 @@ _TRAINING_FINISHED_BOOLEAN_FIELD_TEMPLATE = 'training_finished_%s'
 class AbstractTrainingNode(object):
     def pure_kwargs(self):
         return {'name': _PURE_URL_NAME_TEMPLATE % self.name,
-                'view': self.view}
+                'view': require_visitability(self)(self.view)}
 
     def mark_kwargs(self):
         """
@@ -26,6 +27,9 @@ class AbstractTrainingNode(object):
         raise NotImplementedError()
 
     def is_complete(self):
+        raise NotImplementedError()
+
+    def is_visitable(self, user):
         raise NotImplementedError()
 
 
@@ -77,6 +81,9 @@ class TrainingGateway(AbstractTrainingNode):
     def is_complete(self, user):
         return all([step.is_complete(user) for step in self.steps])
 
+    def is_visitable(self, user):
+        return True
+
     def get_context(self, user):
         last_was_complete = True
         next_step = None
@@ -116,9 +123,23 @@ class AbstractTrainingStep(AbstractTrainingNode):
         return reverse(_MARK_PROGRESS_URL_NAME_TEMPLATE % self.name)
 
     def mark_kwargs(self):
-        user_bool = _TRAINING_FINISHED_BOOLEAN_FIELD_TEMPLATE % self.name
-        return {'name': _MARK_PROGRESS_URL_NAME_TEMPLATE % self.name,
-                'view': mark_user(user_bool)(self.next_step.view)}
+        name = _MARK_PROGRESS_URL_NAME_TEMPLATE % self.name
+        view = do(
+            require_visitability(self),
+            mark_user(_TRAINING_FINISHED_BOOLEAN_FIELD_TEMPLATE % self.name),
+            require_visitability(self.next_step),
+            self.next_step.view)
+        return {'name': name, 'view': view}
+
+    def is_visitable(self, user):
+        if self.is_complete(user):
+            return True
+        step = self.previous_step
+        while isinstance(step, AbstractTrainingStep):
+            if not step.is_complete(user):
+                return False
+            step = step.previous_step
+        return True
 
     def is_complete(self, user):
         return getattr(user,
