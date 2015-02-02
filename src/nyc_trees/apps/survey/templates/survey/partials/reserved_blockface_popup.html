@@ -14,7 +14,7 @@
             <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="reserved-blockface-popup-submenu">
                 <li>
                     <a role="menuitem" tabindex="-1"
-                      href="{% url 'choose_blockface_survey_page' %}?blockface_id={{ blockface.id }}">
+                      href="{% url 'survey' blockface_id=blockface.id %}">
                         Start Mapping
                     </a>
                 </li>
