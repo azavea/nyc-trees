@@ -5,10 +5,9 @@ from __future__ import division
 
 from django.http import Http404
 
-from apps.quiz.models import quizzes
-
 
 def get_quiz_or_404(quiz_slug):
+    from apps.home.training import quizzes
     try:
         return quizzes[quiz_slug]
     except KeyError:

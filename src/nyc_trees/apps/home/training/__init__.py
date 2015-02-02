@@ -4,7 +4,8 @@ from __future__ import unicode_literals
 from __future__ import division
 
 from apps.home.training.types import (FlatPageTrainingStep,
-                                      ViewTrainingStep, TrainingGateway)
+                                      ViewTrainingStep, TrainingGateway,
+                                      Quiz, Question)
 from apps.home.training import routes as r
 
 # This package attempts to keep all the particulars of training encapsulated,
@@ -41,3 +42,29 @@ training_summary = TrainingGateway('training_summary',
                                     tree_surroundings,
                                     intro_quiz,
                                     groups_to_follow])
+
+
+# The keys represent the quiz_slug part of urls.
+quizzes = {
+    'intro_quiz': Quiz(
+        title='Introduction Quiz',
+        passing_score=2,
+        questions=(
+            Question(
+                text='Lorem ipsum dolor sit amet, consectetur '
+                     'adipiscing elit?',
+                answer=0,
+                choices=('Answer A', 'Answer B', 'Answer C')),
+            Question(
+                text='Lorem ipsum dolor sit amet, consectetur '
+                     'adipiscing elit?',
+                answer=1,
+                choices=('Answer A', 'Answer B', 'Answer C')),
+            Question(
+                text='Lorem ipsum dolor sit amet, consectetur '
+                     'adipiscing elit?',
+                answer=2,
+                choices=('Answer A', 'Answer B', 'Answer C')),
+        )
+    )
+}

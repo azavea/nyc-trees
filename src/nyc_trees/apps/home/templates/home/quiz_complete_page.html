@@ -30,7 +30,7 @@
 <h3>Better luck next time...</h3>
 <p>You answered {{ score }}/{{ quiz.questions|length }}
     question{{ quiz.questions|length|pluralize }} correctly.</p>
-<p><a href="{% url 'quiz' quiz_slug=quiz_slug %}"
+<p><a href="{% url 'intro_quiz_pure' %}"
       class="btn btn-primary">Try Again</a></p>
 
 {% endif %}
