@@ -24,7 +24,7 @@
 
     <div class="container">
         <div class="row">
-            {% if user.is_authenticated and not user.online_training_complete %}
+            {% if not user.online_training_complete %}
             <main class="col-sm-12">
                 <section class="your-contributions clearfix">
                     <h4 class="section-heading">Your Contributions</h4>

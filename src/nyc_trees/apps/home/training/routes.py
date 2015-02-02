@@ -15,8 +15,7 @@ groups_to_follow = route(GET=do(login_required,
                                 render_template('home/groups_to_follow.html'),
                                 v.groups_to_follow))
 
-training_list_page = route(GET=do(login_required,
-                                  render_template('home/training.html'),
+training_list_page = route(GET=do(render_template('home/training.html'),
                                   v.training_list_page))
 
 intro_quiz = do(login_required,
