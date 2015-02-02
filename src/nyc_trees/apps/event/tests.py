@@ -13,6 +13,7 @@ from django.http import HttpResponseForbidden
 
 from apps.core.test_utils import make_request, make_event
 
+from apps.users.models import User
 from apps.users.tests import UsersTestCase
 
 from apps.event.models import Event, EventRegistration
@@ -156,6 +157,30 @@ class CheckinEventTest(EventTestCase):
         # hour=13, minute=0
         dt = dt + timedelta(minutes=1)
         self.assertFalse(event.starting_soon(dt))
+
+    def test_field_training_complete(self):
+        request = make_request(user=self.user, group=self.group, method='POST')
+
+        user = self.user
+        user.field_training_complete = False
+        user.clean_and_save()
+
+        # RSVP
+        register_for_event(request, self.event.slug)
+
+        # Check-in user to normal event
+        self.event.includes_training = False
+        self.event.clean_and_save()
+        check_in_user_to_event(request, self.event.slug, self.user.username)
+        user = User.objects.get(id=user.id)
+        self.assertEqual(False, user.field_training_complete)
+
+        # Check-in user to training event
+        self.event.includes_training = True
+        self.event.clean_and_save()
+        check_in_user_to_event(request, self.event.slug, self.user.username)
+        user = User.objects.get(id=user.id)
+        self.assertEqual(True, user.field_training_complete)
 
 
 class MyEventsNowTestCase(UsersTestCase):

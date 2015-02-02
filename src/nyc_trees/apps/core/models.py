@@ -57,6 +57,7 @@ class User(NycModel, AbstractUser):
     referrer_311 = models.BooleanField(default=False)
     referrer_other = models.CharField(max_length=255, default='', blank=True)
 
+    field_training_complete = models.BooleanField(default=False)
     training_finished_getting_started = models.BooleanField(default=False)
     training_finished_the_mapping_method = models.BooleanField(default=False)
     training_finished_tree_data = models.BooleanField(default=False)
