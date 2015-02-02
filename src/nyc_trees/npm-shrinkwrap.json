@@ -6627,6 +6627,11 @@
           }
         }
       }
+    },
+    "toastr": {
+      "version": "2.0.4",
+      "from": "toastr@*",
+      "resolved": "https://registry.npmjs.org/toastr/-/toastr-2.0.4.tgz"
     }
   }
 }
