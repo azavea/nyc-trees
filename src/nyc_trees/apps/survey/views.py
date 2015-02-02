@@ -5,13 +5,11 @@ from __future__ import division
 
 from django_tinsel.decorators import render_template
 
+from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.utils.timezone import now
 
 from apps.survey.models import BlockfaceReservation, Blockface
-
-
-RESERVATIONS_LIMIT = 20
 
 
 def cancel_reservation(request, blockface_id):
@@ -35,7 +33,7 @@ def reserve_blockfaces_page(request):
     return {
         'reservations': {
             'current': 0,
-            'total': RESERVATIONS_LIMIT - current_reservations_amount
+            'total': settings.RESERVATIONS_LIMIT - current_reservations_amount
         },
         'legend_entries': [
             {'css_class': 'available', 'label': 'Available'},

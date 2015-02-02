@@ -295,6 +295,9 @@ NYC_BOUNDS = (-74.259088, 40.495996, -73.700272, 40.915256)
 # appended for a second attempt.
 GEOCODE_FALLBACK_SUFFIX = ', New York, NY'
 
+# The maximum number of blockface reservations per user
+RESERVATIONS_LIMIT = 20
+
 TILER_URL = '//%s' % environ.get('TILER_HOST', 'localhost')
 
 MAX_GROUP_IMAGE_SIZE_IN_BYTES = 102400  # 100 KB
