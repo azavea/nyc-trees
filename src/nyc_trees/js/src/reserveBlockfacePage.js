@@ -77,6 +77,9 @@ var selectedLayer = new SelectableBlockfaceLayer(reservationMap, grid, {
 });
 
 grid.on('click', function(e) {
+    if (!e.data) {
+        return;
+    }
     if (selectedBlockfacesCount >= blockfaceLimit) {
         toastr.error('You have reached your reservation limit');
     } else if (e.data.restriction !== 'none') {
@@ -89,10 +92,14 @@ reservationMap.addLayer(selectedLayer);
 
 // Load any existing data.
 var state = progress.load();
-if (state && state.selections.length > 0) {
+if (state) {
     $.each(state.selections, function(id, data) {
         selectedLayer.addBlockface(data);
     });
-    // Zoom to extent of selected blockface reservations.
-    reservationMap.fitBounds(selectedLayer.getBounds());
+    try {
+        // Zoom to extent of selected blockface reservations.
+        reservationMap.fitBounds(selectedLayer.getBounds());
+    } catch (ex) {
+        // Ignore Leaflet fitBounds error when there are no selections.
+    }
 }
