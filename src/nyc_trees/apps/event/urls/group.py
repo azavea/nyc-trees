@@ -5,7 +5,7 @@ from __future__ import division
 
 from django.conf.urls import patterns, url
 
-from apps.event.routes import (events, add_event, event_detail,
+from apps.event.routes import (events_dashboard, add_event, event_detail,
                                event_edit, event_popup_partial,
                                event_registration, start_event_map_print_job,
                                event_admin_check_in_page,
@@ -17,7 +17,7 @@ from apps.event.routes import (events, add_event, event_detail,
 urlpatterns = patterns(
     '',
     url(r'^(?P<group_slug>[\w-]+)/event/$',
-        events, name='events'),
+        events_dashboard, name='events_dashboard'),
 
     url(r'^(?P<group_slug>[\w-]+)/add-event/$',
         add_event, name='add_event'),

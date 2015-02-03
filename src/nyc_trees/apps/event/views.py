@@ -23,8 +23,9 @@ from apps.event.helpers import user_is_rsvped_for_event
 
 
 def event_dashboard(request):
-    # TODO: implement
-    pass
+    base_url = reverse('group_detail',
+                       kwargs={'group_slug': request.group.slug})
+    return HttpResponseRedirect(base_url + '#group-events')
 
 
 def add_event(request):
@@ -75,7 +76,7 @@ def event_detail(request, event_slug):
         'can_rsvp': rsvp_count < event.max_attendees,
         'is_rsvped': user_is_rsvped_for_event(user, event),
         'rsvp_count': rsvp_count,
-        'group_events_url': reverse('events', kwargs={
+        'group_events_url': reverse('events_dashboard', kwargs={
             'group_slug': request.group.slug
         }),
         'event_edit_url': reverse('event_edit', kwargs={

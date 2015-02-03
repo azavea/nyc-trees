@@ -33,7 +33,7 @@ future_events_geojson = route(GET=do(json_api_call, v.future_events_geojson))
 # GROUP ROUTES
 #####################################
 
-events = group_admin_do(route(GET=v.event_dashboard))
+events_dashboard = group_admin_do(route(GET=v.event_dashboard))
 
 add_event = group_admin_do(render_template('event/add_event.html'),
                            route(GET=v.add_event_page,
