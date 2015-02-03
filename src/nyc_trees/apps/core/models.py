@@ -101,6 +101,10 @@ class User(NycModel, AbstractUser):
         from apps.home.training import training_summary
         return training_summary.is_complete(self)
 
+    @property
+    def training_complete(self):
+        return self.online_training_complete and self.field_training_complete
+
 
 class Group(NycModel, models.Model):
     name = models.CharField(max_length=255, unique=True)

@@ -1,5 +1,3 @@
-from apps.event.models import EventRegistration
-
 
 def user_is_census_admin(user):
     return user.is_authenticated() and user.is_census_admin
@@ -15,8 +13,7 @@ def user_has_online_training(user):
 
 
 def user_has_field_training(user):
-    return user.is_authenticated() and EventRegistration.objects.filter(
-        user=user, did_attend=True, event__includes_training=True)
+    return user.is_authenticated() and user.field_training_complete
 
 
 def user_is_individual_mapper(user):

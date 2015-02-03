@@ -25,6 +25,10 @@ intro_quiz = do(login_required,
                       POST=do(render_template('home/quiz_complete_page.html'),
                               v.complete_quiz)))
 
+training_instructions = route(GET=do(
+    render_template('home/training_instructions.html'),
+    v.training_instructions))
+
 
 def make_flatpage_route(name):
     return route(GET=do(
