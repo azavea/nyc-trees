@@ -2,6 +2,7 @@
 
 var $ = require('jquery'),
     L = require('leaflet'),
+    toastr = require('toastr'),
     mapModule = require('./map'),
     zoom = require('./mapUtil').zoom,
     SelectableBlockfaceLayer = require('./lib/SelectableBlockfaceLayer'),
@@ -51,7 +52,8 @@ var progress = new Storage({
 
 var selectedLayer = new SelectableBlockfaceLayer(reservationMap, grid, {
     onAdd: function(gridData) {
-        if (selectedBlockfacesCount < blockfaceLimit && gridData.restriction === 'none') {
+        if (selectedBlockfacesCount < blockfaceLimit &&
+                gridData.restriction === 'none') {
             selectedBlockfaces[gridData.id] = gridData;
             selectedBlockfacesCount++;
             $current.text(selectedBlockfacesCount);
@@ -74,12 +76,20 @@ var selectedLayer = new SelectableBlockfaceLayer(reservationMap, grid, {
     }
 });
 
+grid.on('click', function(e) {
+    if (selectedBlockfacesCount >= blockfaceLimit) {
+        toastr.error('You have reached your reservation limit');
+    } else if (e.data.restriction !== 'none') {
+        toastr.error('The blockface you selected is not available');
+    }
+});
+
 reservationMap.addLayer(grid);
 reservationMap.addLayer(selectedLayer);
 
 // Load any existing data.
 var state = progress.load();
-if (state) {
+if (state && state.selections.length > 0) {
     $.each(state.selections, function(id, data) {
         selectedLayer.addBlockface(data);
     });
