@@ -14,7 +14,7 @@ var $ = require('jquery'),
 //
 // Example usage:
 //
-//     var cache = new Storage({
+//     var cache = new SavedState({
 //         key: 'cart',
 //         getState: function() {
 //             return { items: [...] };
@@ -30,7 +30,7 @@ var $ = require('jquery'),
 //         .doAction(addToCart)
 //         .onValue(cache, 'save');
 //
-function Storage(options) {
+function SavedState(options) {
     var opts = $.extend({}, {
         key: '',
         getState: $.noop,
@@ -89,4 +89,8 @@ function Storage(options) {
     };
 }
 
-module.exports = Storage;
+SavedState.clear = function(key) {
+    delete storage[key];
+};
+
+module.exports = SavedState;

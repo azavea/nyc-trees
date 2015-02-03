@@ -4,15 +4,15 @@
 /* global beforeEach */
 
 var assert = require('chai').assert,
-    Storage = require('../src/lib/Storage');
+    SavedState = require('../src/lib/SavedState');
 
-suite('Storage', function() {
+suite('SavedState', function() {
     beforeEach(function() {
         localStorage.clear();
     });
 
     test('Loading/Saving', function() {
-        var cache = new Storage({
+        var cache = new SavedState({
             key: 'test',
             getState: function() {
                 return {foo: 'bar'};
@@ -28,7 +28,7 @@ suite('Storage', function() {
 
     test('Invalid state gets cleared', function() {
         function makeCache(n, enableValidation) {
-            return new Storage({
+            return new SavedState({
                 key: 'test',
                 getState: function() {
                     return n;

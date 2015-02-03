@@ -4,6 +4,7 @@ from os import environ
 from os.path import abspath, basename, dirname, join, normpath, exists
 from sys import path
 import json
+from datetime import timedelta
 
 
 # PATH CONFIGURATION
@@ -294,6 +295,12 @@ NYC_BOUNDS = (-74.259088, 40.495996, -73.700272, 40.915256)
 # If geocoding a string produces no results, this string will be
 # appended for a second attempt.
 GEOCODE_FALLBACK_SUFFIX = ', New York, NY'
+
+# The maximum number of blockface reservations per user
+RESERVATIONS_LIMIT = 20
+
+# How long blockface reservations will last
+RESERVATION_TIME_PERIOD = timedelta(days=14)
 
 TILER_URL = '//%s' % environ.get('TILER_HOST', 'localhost')
 

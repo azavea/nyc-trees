@@ -18,7 +18,11 @@
          /
          <span id="total-reservations">{{ reservations.total }}</span>
        </div>
-       <a href="javascript:">Finish Reservation</a>
+       <form method="post" action="{% url 'reserve_blockfaces' %}">
+           {% csrf_token %}
+           <input type="hidden" id="reservation-ids" name="ids" />
+           <input type="submit" id="finish-reservations" disabled="disabled" value="Finish Reservation" class="btn btn-primary" />
+       </form>
     </div>
   </div>
 
