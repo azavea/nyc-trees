@@ -109,12 +109,13 @@ class Group(NycModel, models.Model):
     description = models.TextField(default='', blank=True)
     contact_name = models.CharField(max_length=255, default='', blank=True)
     contact_email = models.EmailField(null=True)
-    contact_url = models.URLField(null=True)
+    contact_url = models.URLField(null=True, blank=True)
     # Deleting a user should not cascade delete the group of which
     # they are an admin. A new admin should be set before a user
     # delete is allowed.
-    admin = models.ForeignKey(User, on_delete=models.PROTECT)
-    image = models.ImageField(null=True)
+    admin = models.ForeignKey(User, null=True, blank=True,
+                              on_delete=models.PROTECT)
+    image = models.ImageField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
     allows_individual_mappers = models.BooleanField(default=False)
 
