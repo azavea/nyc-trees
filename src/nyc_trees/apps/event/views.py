@@ -22,11 +22,6 @@ from apps.event.event_list import (EventList, immediate_events, all_events)
 from apps.event.helpers import user_is_rsvped_for_event
 
 
-def event_dashboard(request):
-    # TODO: implement
-    pass
-
-
 def add_event(request):
     form = EventForm(request.POST.copy())
     is_valid = _process_event_form(form, request)
