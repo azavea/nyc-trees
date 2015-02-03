@@ -1,17 +1,22 @@
+$hero-box-top-padding: 4rem;
+$hero-box-side-padding: 3rem;
+
 .hero {
   position: relative;
+  height: 45rem;
 }
 
 .hero-content {
-  width: 50rem;
-  max-width: 90%;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
   padding: 4rem 3rem;
   margin-top: 4rem;
-  color: white;
-  background-color: $brand-primary;
+  background-color: #fff;
+}
+
+.hero-link {
+  border-top: 1px solid $gray-lighter;
+  padding: 1rem 0;
+  display: block;
+  margin: $hero-box-top-padding -1*$hero-box-side-padding -1*$hero-box-top-padding;
 }
 
 .hero-box {
@@ -19,4 +24,147 @@
   top: 0;
   height: 100%;
   width: 100%;
+}
+
+.hero-background {
+  height: 100%;
+  background-size: cover;
+}
+
+.ticker-digit {
+  position: relative;
+  display: inline-block;
+  font-family: $headings-special-font-family;
+  max-width: 12.5%;
+  font-size: 180%;
+  height: 5.7rem;
+  width: 3.4rem;
+  @media (min-width: $screen-sm) {
+    height: 8rem;
+    width: 5rem;
+    font-size: $font-size-h1;
+  }
+}
+
+.ticker-box, .ticker-box.ticker-box-bg, .ticker-box.ticker-box-bg:after, .ticker-box.ticker-box-bg:before {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 20% .2rem;
+  text-align: center;
+  content: "";
+  background-color: #fff;
+}
+
+.ticker-box.ticker-box-bg:after {
+  top: 3px;
+  background-color: #fff;
+  z-index: 90;
+}
+
+.ticker-box.ticker-box-bg:before {
+  top: 5px;
+  background-color: #ccc;
+  z-index: 80;
+}
+
+.ticker-box-top {
+  background-color: #eee;
+  z-index: 100;
+  &:after {
+    z-index: 200;
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 2px;
+    margin-left: -.025em;
+    background-color: #000;
+    border-bottom: solid $gray-lighter 1px;
+  }
+}
+
+.main-home, .main-dashboard {
+  margin-top: -3rem;
+}
+
+.section-home {
+  margin: 3rem $grid-gutter-width/-2;
+}
+
+.section-about-logo {
+  float: left;
+  margin: 0 3rem 1rem 0;
+}
+
+.home-container {
+  padding: 3% 1.5rem 7%;
+  max-width: 70rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section-appeal-text {
+  padding: 2rem 4rem;
+}
+
+.progress-circle {
+  border: 4px solid;
+  border-radius: 50%;
+  height: 0;
+  padding-bottom: 92%;
+  width: 100%;
+}
+
+.progress-circle-container {
+  text-align: center;
+  padding: 0;
+}
+
+.progress-circle-number {
+  font-size: $font-size-h3;
+  font-weight: 800;
+  color: inherit;
+}
+
+.progress-circle-label {
+  text-transform: uppercase;
+  font-size: $font-size-h6;
+}
+
+.progress-circles {
+  margin-left: $grid-gutter-width/-2;
+  margin-right: $grid-gutter-width/-2;
+}
+
+.progress-circle-content {
+  color: inherit;
+  float: left;
+  line-height: 1.2;
+  margin-top: -0.5em;
+  padding-top: 36%;
+  text-align: center;
+  width: 100%;
+}
+
+.col-circle {
+  padding: 1rem;
+  max-width: 17rem;
+}
+
+@media (min-width: $screen-sm) {
+  .hero-content {
+    margin-left: $grid-gutter-width/-2;
+    margin-right: $grid-gutter-width/-2;
+  }
+  .progress-circle-number {
+    font-size: $font-size-h2;
+  }
+  .progress-circle-label {
+    font-size: $font-size-h5;
+  }
 }

@@ -24,6 +24,11 @@
   box-shadow: none;
 }
 
+.btn-secondary {
+  background-color: $brand-secondary;
+  color: #fff;
+}
+
 .btn-unfollow, .btn-follow {
   width: 9rem;
 }
