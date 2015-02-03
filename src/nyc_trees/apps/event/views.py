@@ -22,8 +22,9 @@ from apps.event.helpers import user_is_rsvped_for_event
 
 
 def event_dashboard(request):
-    # TODO: implement
-    pass
+    base_url = reverse('group_detail',
+                       kwargs={'group_slug': request.group.slug})
+    return HttpResponseRedirect(base_url + '#group-events')
 
 
 def add_event(request):
