@@ -89,4 +89,8 @@ function SavedState(options) {
     };
 }
 
+SavedState.clear = function(key) {
+    delete storage[key];
+};
+
 module.exports = SavedState;

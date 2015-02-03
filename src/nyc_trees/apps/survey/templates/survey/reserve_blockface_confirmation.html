@@ -1,5 +1,7 @@
 {% extends "base_two_frames.html" %}
 
+{% load utils %}
+
 {% block aside %}
     <h2>New Reservation</h2>
 {% endblock aside %}
@@ -22,3 +24,7 @@
     <a class="btn btn-primary" href="{% url 'choose_blockface_survey_page' %}">Start Mapping</a>
 
 {% endblock main %}
+
+{% block page_js %}
+    <script type="text/javascript" src="{{ "js/reservationConfirmationPage.js"|static_url }}"></script>
+{% endblock page_js %}
