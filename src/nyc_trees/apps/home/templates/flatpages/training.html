@@ -1,8 +1,19 @@
 {% extends "base.html" %}
 {% load training %}
+{% load utils %}
 
 {% block content %}
-<a href="/training/">training</a>
-    {{ flatpage.content }}
-    <p><a href="{{ flatpage|flatpage_next_url }}">Next</a></p>
+<h3>{{ flatpage.title }}</h3>
+
+<div data-class="training-flatpage-container" style="display: none;">{{ flatpage.content }}</div>
+
+<hr/>
+<a data-class="training-flatpage-subpage-next" data-href="{{ flatpage|flatpage_next_url }}">Next</a>
+<br/>
+<a href="/training/">Back to Training</a>
+
 {% endblock content %}
+
+{% block page_js %}
+<script type="text/javascript" src="{{ "js/trainingFlatpage.js"|static_url }}"></script>
+{% endblock page_js %}

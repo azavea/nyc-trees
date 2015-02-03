@@ -3,7 +3,8 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
-from apps.home.training.types import TrainingStep, TrainingGateway
+from apps.home.training.types import (FlatPageTrainingStep,
+                                      ViewTrainingStep, TrainingGateway)
 from apps.home.training import routes as r
 
 # This package attempts to keep all the particulars of training encapsulated,
@@ -15,17 +16,22 @@ from apps.home.training import routes as r
 #   - the user class has carefully named booleans corresponding
 #     to training steps. modify with care.
 
-getting_started = TrainingStep('getting_started',
-                               'Getting Started', '20 minutes')
-the_mapping_method = TrainingStep('the_mapping_method',
-                                  'The Mapping Method', '20 minutes')
-tree_data = TrainingStep('tree_data',
-                         'Tree Data', '20 minutes')
-tree_surroundings = TrainingStep('tree_surroundings',
-                                 'Tree Surroundings', '40 minutes')
-groups_to_follow = TrainingStep('groups_to_follow',
-                                'Groups To Follow', '5 minutes',
-                                r.groups_to_follow)
+getting_started = FlatPageTrainingStep('getting_started',
+                                       'Getting Started', '20 minutes')
+the_mapping_method = FlatPageTrainingStep('the_mapping_method',
+                                          'The Mapping Method', '20 minutes')
+tree_data = FlatPageTrainingStep('tree_data',
+                                 'Tree Data', '20 minutes')
+tree_surroundings = FlatPageTrainingStep('tree_surroundings',
+                                         'Tree Surroundings', '40 minutes')
+
+intro_quiz = ViewTrainingStep(r.intro_quiz,
+                              'intro_quiz',
+                              'Intro Quiz', '30 minutes')
+
+groups_to_follow = ViewTrainingStep(r.groups_to_follow,
+                                    'groups_to_follow',
+                                    'Groups To Follow', '5 minutes')
 
 training_summary = TrainingGateway('training_summary',
                                    r.training_list_page,
@@ -33,4 +39,5 @@ training_summary = TrainingGateway('training_summary',
                                     the_mapping_method,
                                     tree_data,
                                     tree_surroundings,
+                                    intro_quiz,
                                     groups_to_follow])

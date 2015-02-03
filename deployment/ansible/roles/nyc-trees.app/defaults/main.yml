@@ -16,7 +16,7 @@ app_config:
   - { file: "DJANGO_MEDIA_ROOT", content: "{{ app_media_root }}" }
   - { file: "DJANGO_POSTGIS_VERSION", content: "{{ app_postgis_version }}" }
   - { file: "DJANGO_SECRET_KEY", content: "{{ app_secret_key }}" }
-  - { file: "TILER_HOST", content: "//{{ tiler_host }}" }
+  - { file: "TILER_HOST", content: "{{ tiler_host }}" }
 
 app_sauce_labs_config:
   - { file: "SELENIUM_HOST", content: "{{ lookup('env', 'SELENIUM_HOST') }}" }

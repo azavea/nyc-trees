@@ -6,18 +6,18 @@ import troposphere.route53 as r53
 t = Template()
 
 t.add_version('2010-09-09')
-t.add_description('Hosted zone records stack for the nyc-trees project.')
+t.add_description('Application hosted zone records for the nyc-trees project.')
 
 #
 # Parameters
 #
 hosted_zone_name_param = t.add_parameter(Parameter(
-    'AppServerHostedZone', Type='String',
+    'PublicHostedZone', Type='String',
     Default='treescount.azavea.com',
-    Description='Hosted zone name for application server endpoint'
+    Description='Hosted zone name for public DNS'
 ))
 
-hosted_zone_alias_target_param = t.add_parameter(Parameter(
+app_server_hosted_zone_alias_target_param = t.add_parameter(Parameter(
     'AppServerAliasTarget', Type='String',
     Description='Alias target for the hosted zone record set'
 ))
@@ -32,15 +32,18 @@ app_server_load_balancer_hosted_zone_id_param = t.add_parameter(
 #
 # Route53 Resources
 #
-private_dns_records_sets = t.add_resource(r53.RecordSetGroup(
-    'dnsAppServerRecords',
+public_dns_records_sets = t.add_resource(r53.RecordSetGroup(
+    'dnsPublicRecords',
     HostedZoneName=Join('', [Ref(hosted_zone_name_param), '.']),
     RecordSets=[
         r53.RecordSet(
             'dnsAppServers',
             AliasTarget=r53.AliasTarget(
                 Ref(app_server_load_balancer_hosted_zone_id_param),
-                Join('', [Ref(hosted_zone_alias_target_param), '.'])
+                Join(
+                    '',
+                    [Ref(app_server_hosted_zone_alias_target_param), '.']
+                )
             ),
             Name=Ref(hosted_zone_name_param),
             Type='A'

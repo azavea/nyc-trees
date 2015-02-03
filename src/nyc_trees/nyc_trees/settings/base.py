@@ -38,6 +38,9 @@ STATSD_CLIENT = 'django_statsd.clients.normal'
 STATSD_HOST = environ.get('NYC_TREES_STATSD_HOST', 'localhost')
 # END STATSD CONFIGURATION
 
+# EMAIL CONFIGURATION
+DEFAULT_FROM_EMAIL = 'azaveadev@azavea.com'
+# END EMAIL CONFIGURATION
 
 # DATABASE CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
@@ -293,7 +296,7 @@ NYC_BOUNDS = (-74.259088, 40.495996, -73.700272, 40.915256)
 # appended for a second attempt.
 GEOCODE_FALLBACK_SUFFIX = ', New York, NY'
 
-TILER_URL = environ.get('TILER_HOST', 'localhost')
+TILER_URL = '//%s' % environ.get('TILER_HOST', 'localhost')
 
 MAX_GROUP_IMAGE_SIZE_IN_BYTES = 102400  # 100 KB
 

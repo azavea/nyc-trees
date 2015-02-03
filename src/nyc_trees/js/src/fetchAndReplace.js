@@ -2,38 +2,26 @@
 
 var $ = require('jquery');
 
-/*
-options is an Object with two required properties:
-  target: A selector for the element that will trigger
-          the AJAX request
-  container: A selector for the element whose content will
-             be replaced and also contains ``target``.
-
-The element selected by ``target`` must have a ``data-url``
-attribute and supports an optional ``data-verb`` attribute
-that can be any of the acceptible values for the $.ajax
-``type`` option.
-
-Returns a function that, when called, will remove the event
-handling.
-
-*/
-
-module.exports = function(options) {
-    var handlers = $(options.target).map(function(i, el) {
-        var $el = $(el);
-        return fetchAndReplace($.extend({}, options, {
-            target: $el,
-            container: $el.parents(options.container)
-        }));
-    });
-    return function() {
-        $.each(handlers, function(i, remove) {
-            remove();
-        });
-    };
-};
-
+// Replaces the contents of `container` with the AJAX response content
+// triggered by clicking on `target`.
+//
+// Options:
+//
+// target     Selector for the element that will trigger
+//            the AJAX request.
+//
+// container  Selector for the element whose content will
+//            be replaced and also contains `target`.
+//
+// onError    (Optional) AJAX error handler.
+//
+// The element selected by `target` must have a `data-url`
+// attribute and supports an optional `data-verb` attribute
+// that can be any of the acceptible values for the $.ajax
+// `type` option.
+//
+// Returns a function that, when called, will remove the event
+// handling.
 function fetchAndReplace(options) {
     var domEventName = options.domEventName || 'click',
         handler = function(event) {
@@ -41,9 +29,13 @@ function fetchAndReplace(options) {
                 verb = $(event.target).data('verb') || 'GET';
             if (url) {
                 event.preventDefault();
-                $.ajax(url, { type: verb }).done(function(content) {
-                    $(options.container).html(content);
-                }).fail(options.onError);
+                $.ajax(url, {
+                        type: verb
+                    })
+                    .done(function(content) {
+                        $(options.container).html(content);
+                    })
+                    .fail(options.onError);
             }
         };
 
@@ -52,3 +44,21 @@ function fetchAndReplace(options) {
         $(options.container).off(domEventName, options.target, handler);
     };
 }
+
+// Expands `fetchAndReplace` by supporting multiple targets.
+function fetchAndReplaceMany(options) {
+    var targets = $(options.container).find(options.target),
+        handlers = targets.map(function(i, el) {
+            return fetchAndReplace($.extend({}, options, {
+                target: options.target,
+                container: $(el).parents(options.container)
+            }));
+    });
+    return function() {
+        $.each(handlers, function(i, remove) {
+            remove();
+        });
+    };
+}
+
+module.exports = fetchAndReplaceMany;

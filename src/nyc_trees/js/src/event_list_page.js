@@ -63,3 +63,13 @@ $(dom.mapToggle).one('shown.bs.tab', function() {
         });
     });
 });
+
+// TODO: Rewrite this code
+
+$('.nav-tabs a').on('click', function () {
+    var selectedTab = $(this).attr('href').substring(1);
+    $(".page-map").removeClass(function (index, css) {
+        return (css.match (/(^|\s)tab-status-\S+/g) || []).join(' ');
+    });
+    $('.page-map').addClass('tab-status-'+selectedTab);
+});

@@ -1,0 +1,25 @@
+<div class="row">
+    <div class="col-xs-9">
+        Blockface {{ blockface.id }}
+    </div>
+    <div class="col-xs-3">
+        <div class="dropup text-right">
+            <button class="btn btn-default dropdown-toggle"
+                    type="button"
+                    id="reserved-blockface-popup-submenu"
+                    data-toggle="dropdown"
+                    aria-expanded="true">
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="reserved-blockface-popup-submenu">
+                <li>
+                    <a role="menuitem" tabindex="-1"
+                      href="{% url 'choose_blockface_survey_page' %}?blockface_id={{ blockface.id }}">
+                        Start Mapping
+                    </a>
+                </li>
+                <li><a role="menuitem" tabindex="-1" href="#">Cancel Reservation</a></li>
+            </ul>
+        </div>
+    </div>
+</div>

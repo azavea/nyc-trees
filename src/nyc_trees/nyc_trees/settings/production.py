@@ -3,6 +3,7 @@
 
 from os import environ
 from urllib2 import urlopen, URLError
+from dns import resolver, exception
 
 from base import *  # NOQA
 
@@ -61,4 +62,25 @@ CACHES = {
 SECRET_KEY = get_env_setting('DJANGO_SECRET_KEY')
 # END SECRET CONFIGURATION
 
-SOFT_LAUNCH_ENABLED = True
+# TILER CONFIGURATION
+try:
+    import logging
+
+    logger = logging.getLogger(__name__)
+
+    # Lookup the CNAME record for TILER_HOST. Should be
+    # tile.service.nyc-trees.internal and resolve to the CloudFront
+    # distribution FQDN.
+    answers = resolver.query(environ.get('TILER_HOST'), 'CNAME')
+
+    if answers:
+        # Remove trailing period because that's part of the DNS specification.
+        TILER_URL = '//%s' % (str(answers[0]).rstrip('.'))
+    else:
+        logger.debug('TILER_HOST DNS query returned no answers')
+except exception.DNSException:
+    logger.exception('Failed to resolve TILER_HOST, %s' %
+                     environ.get('TILER_HOST'))
+# END TILER CONFIGURATION
+
+SOFT_LAUNCH_ENABLED = False

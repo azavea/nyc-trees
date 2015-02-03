@@ -56,8 +56,11 @@ function create($controlsContainer, map) {
 
         $searchControlContainer = $($('#template-map-search').html()),
 
+        $itemTemplate = $($('#template-map-search-result').html()),
+
         $textbox = $searchControlContainer.find('.location-search-box'),
         $doSearchButton = $searchControlContainer.find('.location-search-button'),
+        $results = $searchControlContainer.find('.location-search-results'),
         $status = $searchControlContainer.find('.location-search-status'),
         $closeSearchButton = $searchControlContainer.find('.location-search-close'),
 
@@ -69,36 +72,44 @@ function create($controlsContainer, map) {
             }
         },
 
-        updateStatus = function(message, isSearching) {
+        updateStatus = function(message, options) {
+            options = $.extend({ isSearching: false }, options);
             if (message) {
                 $status.text(message).show();
             } else {
+                removeResults();
                 $status.hide();
             }
-            searchInProgress = !!isSearching;
+            searchInProgress = options.isSearching;
+
+            $status.removeClass('results-found');
+            $status.removeClass('results-not-found');
+
+            if (options.resultsFound) {
+                $status.addClass('results-found');
+            } else if (options.resultsNotFound) {
+                $status.addClass('results-not-found');
+            }
         },
 
         addCandidateToList = function($list, $newItem, candidate) {
             $newItem.find('.location-address').text(candidate.address);
             $newItem.on('click', 'a',  function() {
                 $list.find('a').off('click');
-                $list.remove();
                 zoomToCandidate(candidate);
             });
             $list.append($newItem);
         },
 
-        showCandidates = function(candidates) {
-            var $list = $($('#template-map-search-result-list').html()),
-                $itemTemplate;
-            updateStatus('Choose an address or search again');
-            $searchControlContainer.find('.location-search-results').remove();
-            $searchControlContainer.append($list);
-            $itemTemplate = $searchControlContainer.find('.location-search-result');
+        removeResults = function(){
             $searchControlContainer.find('.location-search-result').remove();
+        },
 
+        showCandidates = function(candidates) {
+            updateStatus('Choose an address or search again', {resultsFound: true});
+            removeResults();
             for(var i = 0, count = candidates.length; i < count; i++) {
-                addCandidateToList($list, $itemTemplate.clone(), candidates[i]);
+                addCandidateToList($results, $itemTemplate.clone(), candidates[i]);
             }
         },
 
@@ -109,7 +120,7 @@ function create($controlsContainer, map) {
         },
 
         searching = function() {
-            updateStatus('Searching...', true);
+            updateStatus('Searching...', {isSearching: true});
         },
 
         found = function(result) {
@@ -121,11 +132,11 @@ function create($controlsContainer, map) {
         },
 
         notFound = function() {
-            updateStatus('Sorry, we could not find a location for that address.');
+            updateStatus('Sorry, we could not find a location for that address.', {resultsNotFound: true});
         },
 
         failure = function(jqXHR, textStatus, error) {
-            updateStatus('Sorry, there was a problem finding that location.');
+            updateStatus('Sorry, there was a problem finding that location.', {resultsNotFound: true});
             console.log('Unexpected geocode error: ' + textStatus + ' ' + error);
         };
 

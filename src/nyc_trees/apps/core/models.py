@@ -61,6 +61,7 @@ class User(NycModel, AbstractUser):
     training_finished_the_mapping_method = models.BooleanField(default=False)
     training_finished_tree_data = models.BooleanField(default=False)
     training_finished_tree_surroundings = models.BooleanField(default=False)
+    training_finished_intro_quiz = models.BooleanField(default=False)
     training_finished_groups_to_follow = models.BooleanField(default=False)
 
     opt_in_stewardship_info = models.BooleanField(default=False)

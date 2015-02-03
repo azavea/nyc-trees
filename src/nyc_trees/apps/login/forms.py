@@ -19,7 +19,7 @@ from apps.core.models import User, Group
 
 
 class ForgotUsernameForm(forms.Form):
-    email = forms.EmailField(label='Your email address')
+    email = forms.EmailField(label='Email address')
 
 
 class NycRegistrationForm(RegistrationFormUniqueEmail):

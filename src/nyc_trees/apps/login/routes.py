@@ -31,10 +31,10 @@ register = NycRegistrationView.as_view()
 # LOGIN ROUTES
 #####################################
 
-forgot_username = route(
-    GET=do(
-        render_template('login/forgot_username.html'),
-        v.forgot_username_page),
-    POST=do(
-        render_template('login/forgot_username_complete.html'),
-        v.forgot_username))
+forgot_username = do(
+    render_template('login/forgot_username.html'),
+    route(GET=v.forgot_username_page, POST=v.forgot_username))
+
+forgot_username_sent = do(
+    render_template('login/forgot_username_complete.html'),
+    v.forgot_username_sent)

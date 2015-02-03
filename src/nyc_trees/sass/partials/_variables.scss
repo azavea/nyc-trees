@@ -61,8 +61,8 @@ $gray-light:             lighten(#000, 46.7%); // #777
 $gray-lighter:           lighten(#000, 70%); // #777
 $gray-lightest:          lighten(#000, 93.5%); // #eee
 
-$brand-primary:         #198d5e;
-$brand-secondary:       #000;
+$brand-primary:         #69a639;
+$brand-secondary:       #049ddc;
 $brand-tertiary:        #198d5e;
 $brand-success:         #5cb85c;
 $brand-info:            #5bc0de;
@@ -70,6 +70,8 @@ $brand-warning:         #f0ad4e;
 $brand-danger:          #d9534f;
 $primary-light:         #F0FCEC;
 
+$nav-color:             #1d1d1d;
+$nav-side-color:        #4b4b4b;
 
 //== Scaffolding
 //
@@ -90,8 +92,8 @@ $link-hover-color:      darken($link-color, 15%);
 //
 //## Font, line-height, and color for body text, headings, and more.
 
-$font-family-sans-serif:  Colfax, "Helvetica Neue", helvetica, arial, sans-serif;
-$font-family-serif:       Colfax, "Helvetica Neue", helvetica, arial, sans-serif;
+$font-family-sans-serif:  "Helvetica Neue", helvetica, arial, sans-serif;
+$font-family-serif:       "Helvetica Neue", helvetica, arial, sans-serif;
 //** Default monospace fonts for `<code>`, `<kbd>`, and `<pre>`.
 $font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace;
 $font-family-base:        $font-family-sans-serif;
@@ -114,8 +116,9 @@ $line-height-base:        1.6; // 20/14
 $line-height-computed:    floor(($font-size-base * $line-height-base)); // ~20px
 
 //** By default, this inherits from the `<body>`.
-$headings-font-family:    inherit;
-$headings-font-weight:    500;
+$headings-font-family:    $font-family-serif;
+$headings-special-font-family:    "Gotham Rounded A", "Gotham Rounded B", "Helvetica Neue", helvetica, arial, sans-serif;
+$headings-font-weight:    800;
 $headings-line-height:    1.1;
 $headings-color:          #333;
 
@@ -154,7 +157,7 @@ $padding-xs-horizontal:     5px;
 $line-height-large:         1.33;
 $line-height-small:         1.5;
 
-$border-radius-base:        0;
+$border-radius-base:        1.4rem;
 $border-radius-large:       6px;
 $border-radius-small:       3px;
 
@@ -196,9 +199,9 @@ $table-border-color:            #ddd;
 
 $btn-font-weight:                normal;
 
-$btn-default-color:              #333;
-$btn-default-bg:                 #fff;
-$btn-default-border:             #ccc;
+$btn-default-color:              #fff;
+$btn-default-bg:                 $brand-secondary;
+$btn-default-border:             $brand-secondary;
 
 $btn-primary-color:              #fff;
 $btn-primary-bg:                 $brand-primary;
@@ -390,7 +393,7 @@ $container-lg:                 $container-large-desktop;
 //##
 
 // Basics of a navbar
-$navbar-height:                    3.6rem;
+$navbar-height:                    5.6rem;
 $navbar-margin-bottom:             0;
 $navbar-border-radius:             $border-radius-base;
 $navbar-padding-horizontal:        floor(($grid-gutter-width / 2));
@@ -398,7 +401,7 @@ $navbar-padding-vertical:          (($navbar-height - rem($line-height-computed)
 $navbar-collapse-max-height:       340px;
 
 $navbar-default-color:             #777;
-$navbar-default-bg:                #f8f8f8;
+$navbar-default-bg:                $nav-color;
 $navbar-default-border:            transparent;
 
 // Navbar links

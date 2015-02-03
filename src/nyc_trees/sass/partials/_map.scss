@@ -1,14 +1,47 @@
+.map-action-sidebar {
+  padding-bottom: 0;
+  .tab-status-map-tab &, .page-new-reservation & {
+    position: static;
+  }
+  .action-bar .dropdown-menu {
+    z-index: 1100;
+  }
+}
+
 .map-container {
-  position: relative;
+  .tab-status-map-tab & {
+    position: fixed;
+    bottom: 8rem;
+    top: 15.9rem;
+    right: 0;
+    left: 0;
+  }
+  .page-new-reservation & {
+    position: fixed;
+    bottom: 8rem;
+    top: 12.6rem;
+    right: 0;
+    left: 0;
+    @media (min-width: $screen-sm) {
+      top: $navbar-height;
+      bottom: 0;
+    }
+  }
+  .nav-tabs {
+    position: relative;
+    z-index: 3000;
+  }
+}
+
+.action-bar {
+  position: fixed;
+  left: 0;
+  bottom: 0;
   width: 100%;
-  height: 440px;
-
-  .action-bar {
-    position: absolute;
-    bottom: 0;
-
-    width: 100%;
-    height: 40px;
+  height: 8rem;
+  padding: 0 $grid-gutter-width/2;
+  .tab-status-list & {
+    display: none;
   }
 }
 
@@ -17,16 +50,25 @@
   height: 400px;
 }
 
+.map-event {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
 .map-small {
   padding-top: 40%; // Makes height 40% of width
 }
 
 .map-full {
   position: absolute;
-  top: 10.7rem;
+  top: 12.6rem;
   bottom: 0;
   right: 0;
   left: 0;
+  z-index: 1200;
 }
 
 .map-sidebar-context {
@@ -37,6 +79,7 @@
 }
 
 .location-search-container {
+  z-index: 2000;
   position: relative;
   font-size: $font-size-h6;
   background-color: #fff;
@@ -52,7 +95,14 @@
   background-color: $gray-lightest;
 }
 
-.location-search-result {
+.location-search-status {
+  font-style: italic;
+  &.results-found {
+    display: none;
+  }
+}
+
+.location-search-result, .location-search-status {
   padding: 1rem 1rem;
   border-bottom: 1px solid $gray-lighter;
   &:last-child {
@@ -61,6 +111,42 @@
 }
 
 @media (min-width: $screen-sm) {
+  .toggle-tab-button {
+    border: 0 !important;
+    background-color: transparent !important;
+    .active & {
+      background-color: $brand-primary !important;
+      color: #fff !important;
+    }
+  }
+  .nav-tabs-event {
+    top: 1rem;
+    right: 1rem;
+    position: absolute;
+    border: 0;
+    background-color: transparent;
+  }
+  .tab-status-list {
+    .map-sidebar {
+      top: auto;
+      left: auto;
+      width: auto;
+      background-color: transparent;
+    }
+  }
+  .tab-status-map-tab {
+    .map-container {
+      bottom: 0;
+      top: $navbar-height;
+    }
+  }
+  .action-bar {
+    position: static;
+    height: auto;
+    border-top: 1px solid #eee;
+    padding: 1rem 0 0 0;
+    margin-top: 1rem;
+  }
   .map-full {
     top: $navbar-height;
   }
@@ -72,7 +158,7 @@
   .map-sidebar {
     position: absolute;
     z-index: 2000;
-    top: 6rem;
+    top: 8rem;
     left: 2rem;
     width: 32rem;
     background-color: #fff;

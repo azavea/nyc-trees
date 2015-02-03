@@ -13,7 +13,7 @@ from django.core.mail.backends.base import BaseEmailBackend
 
 from django_statsd.clients import statsd
 
-from nyc_trees.libs.boto_mailer import BotoMailer
+from libs.boto_mailer import BotoMailer
 
 logger = logging.getLogger(__name__)
 
@@ -50,7 +50,7 @@ class EmailBackend(BaseEmailBackend):
     def _send_message(self, email_message):
         message = email_message.message()
         try:
-            response = self.mailer.send_message(
+            response = self.mailer.send_message_bytes(
                 message.as_bytes(linesep='\r\n'),
                 email_message.from_email,
                 email_message.to)

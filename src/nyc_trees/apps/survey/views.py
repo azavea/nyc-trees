@@ -5,9 +5,10 @@ from __future__ import division
 
 from django_tinsel.decorators import render_template
 
+from django.shortcuts import get_object_or_404
 from django.utils.timezone import now
 
-from apps.survey.models import BlockfaceReservation
+from apps.survey.models import BlockfaceReservation, Blockface
 
 
 RESERVATIONS_LIMIT = 20
@@ -43,13 +44,20 @@ def reserve_blockfaces_page(request):
 
     return {
         'reservations': {
-            'current': current_reservations_amount,
+            'current': 0,
             'total': RESERVATIONS_LIMIT - current_reservations_amount
         },
         'legend_entries': [
             {'css_class': 'available', 'label': 'Available'},
             {'css_class': 'unavailable', 'label': 'Unavailable'},
         ]
+    }
+
+
+def reserved_blockface_popup(request, blockface_id):
+    blockface = get_object_or_404(Blockface, id=blockface_id)
+    return {
+        'blockface': blockface
     }
 
 

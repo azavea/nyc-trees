@@ -75,7 +75,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Wire up the proxy if:
   #
   #   - The vagrant-proxyconf Vagrant plugin is installed
-  #   - The user set the VAGRANT_PROXYCONF_ENDPOINT environmental variable
+  #   - The user set the VAGRANT_PROXYCONF_ENDPOINT environment variable
   #
   if Vagrant.has_plugin?("vagrant-proxyconf") &&
      !VAGRANT_PROXYCONF_ENDPOINT.nil?

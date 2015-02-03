@@ -198,8 +198,7 @@ database_server_instance = t.add_resource(rds.DBInstance(
     EngineVersion='9.3.5',
     MasterUsername=Ref(database_server_master_username_param),
     MasterUserPassword=Ref(database_server_master_password_param),
-    # TODO Toggle this to True in production
-    MultiAZ=False,
+    MultiAZ=True,
     PreferredBackupWindow='01:00-01:30',  # 9:00-9:30PM ET
     PreferredMaintenanceWindow='mon:01:30-mon:02:30',  # 9:30PM-10:30PM ET
     VPCSecurityGroups=[Ref(database_server_security_group)],

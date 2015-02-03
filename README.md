@@ -71,26 +71,10 @@ The main tool used is [gulp](http://gulpjs.com/), which is exposed through `npm 
 
 ### Caching
 
-In order to speed up things up, you may want to consider using a local caching proxy. The `VAGRANT_PROXYCONF_ENDPOINT` environmental variable provides a way to supply a caching proxy endpoint for the virtual machines to use:
+In order to speed up things up, you may want to consider using a local caching proxy. The `VAGRANT_PROXYCONF_ENDPOINT` environment variable provides a way to supply a caching proxy endpoint for the virtual machines to use:
 
 ```bash
 $ VAGRANT_PROXYCONF_ENDPOINT="http://192.168.96.10:8123/" vagrant up
-```
-
-### Log Aggregation
-
-In order to view the Kibana web UI, navigate to the following URL from a browser on the virtual machine host:
-
-```
-http://localhost:5601/
-```
-
-### Statistics Aggregation
-
-In order to view the Graphite Web UI, navigate to the following URL from a browser on the virtual machine host:
-
-```
-http://localhost:8080/
 ```
 
 ## Testing
@@ -117,85 +101,4 @@ In addition, other [scripts](scripts/) exist if you want to test just one of the
 
 ## Deployment
 
-Deployment is driven by [Packer](https://www.packer.io), [Troposphere](https://github.com/cloudtools/troposphere), and the [Amazon Web Services CLI](http://aws.amazon.com/cli/).
-
-### Dependencies
-
-The deployment process expects the following resources to exist in the target AWS account:
-
-- An EC2 key pair exported as `AWS_KEY_NAME`
-- Access keys to sign API requests exported as `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
-- An SNS topic for global notifications exported as `AWS_SNS_TOPIC`
-- The name of a Route 53 hosted zone to connect to the application load balancers exported as `AWS_APP_HOSTED_ZONE`
-
-In addition, export the following environmental variables for the AWS CLI:
-
-```bash
-$ export AWS_DEFAULT_OUTPUT=text
-$ export AWS_DEFAULT_REGION=us-east-1
-```
-
-Lastly, install the AWS CLI, Boto, and Troposphere:
-
-```bash
-$ cd deployment
-$ pip install -r deployment/requirements.txt
-```
-
-### Amazon Machine Images (AMIs)
-
-In order to generate AMIs for the application, tile, and monitoring servers, use the following `make` targets:
-
-```bash
-$ make app-ami
-$ make tiler-ami
-$ make monitoring-ami
-```
-
-### CloudFormation (via Troposphere)
-
-After at least one AMI of each type exists, use the following command to generate all of the CloudFormation templates:
-
-```bash
-$ make build
-```
-
-#### Launch the AWS Virtual Private Cloud (VPC)
-
-Use the following command to create the VPC stack:
-
-```
-$ make vpc-stack
-```
-
-#### Create Route 53 Private Hosted Zones
-
-Next, create the internal to the VPC private hosted zones:
-
-```bash
-$ make private-hosted-zones
-```
-
-#### Launch the Data Stores
-
-After the private hosted zones exist, create the data store stack:
-
-```
-$ make data-store-stack
-```
-
-#### Launch the Application Servers
-
-Now that the VPC and data store stacks are setup, we can launch the application server stack, which will make use of the most recent AMIs available:
-
-```
-$ make app-stack
-```
-
-#### Activate Application Servers
-
-Depending on which color stack you just deployed (Blue or Green), activate DNS for the hosted zone:
-
-```
-$ make app-stack-[green,blue]
-```
+For more details around the Amazon Web Services deployment process, please see the deployment [README](deployment/README.md).

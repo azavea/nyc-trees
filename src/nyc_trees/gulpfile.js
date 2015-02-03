@@ -44,6 +44,7 @@ var args = minimist(process.argv.slice(2),
         'registrationBase.js',
         'reservationPage.js',
         'reserveBlockfacePage.js',
+        'trainingFlatpage.js',
         'userProfile.js',
         'userSettings.js',
         'quiz.js'

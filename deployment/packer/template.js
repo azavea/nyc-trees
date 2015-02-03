@@ -4,54 +4,55 @@
     "aws_region": "us-east-1",
     "aws_instance_type": "m3.large",
     "aws_ssh_username": "ubuntu",
-    "aws_access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
-    "aws_secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}",
     "aws_ubuntu_ami": ""
   },
   "builders": [
     {
       "name": "nyc-trees-monitoring",
       "type": "amazon-ebs",
-      "access_key": "{{user `aws_access_key`}}",
-      "secret_key": "{{user `aws_secret_key` }}",
       "region": "{{user `aws_region`}}",
       "source_ami": "{{user `aws_ubuntu_ami`}}",
       "instance_type": "{{user `aws_instance_type`}}",
       "ssh_username": "{{user `aws_ssh_username`}}",
       "ami_name": "nyc-trees-monitoring-{{timestamp}}-{{user `version`}}",
+      "run_tags": {
+        "PackerBuilder": "amazon-ebs"
+      },
       "tags": {
-        "name": "nyc-trees-monitoring",
-        "version": "{{user `version`}}"
+        "Name": "nyc-trees-monitoring",
+        "Version": "{{user `version`}}"
       }
     },
     {
       "name": "nyc-trees-tiler",
       "type": "amazon-ebs",
-      "access_key": "{{user `aws_access_key`}}",
-      "secret_key": "{{user `aws_secret_key` }}",
       "region": "{{user `aws_region`}}",
       "source_ami": "{{user `aws_ubuntu_ami`}}",
       "instance_type": "{{user `aws_instance_type`}}",
       "ssh_username": "{{user `aws_ssh_username`}}",
       "ami_name": "nyc-trees-tiler-{{timestamp}}-{{user `version`}}",
+      "run_tags": {
+        "PackerBuilder": "amazon-ebs"
+      },
       "tags": {
-        "name": "nyc-trees-tiler",
-        "version": "{{user `version`}}"
+        "Name": "nyc-trees-tiler",
+        "Version": "{{user `version`}}"
       }
     },
     {
       "name": "nyc-trees-app",
       "type": "amazon-ebs",
-      "access_key": "{{user `aws_access_key`}}",
-      "secret_key": "{{user `aws_secret_key` }}",
       "region": "{{user `aws_region`}}",
       "source_ami": "{{user `aws_ubuntu_ami`}}",
       "instance_type": "{{user `aws_instance_type`}}",
       "ssh_username": "{{user `aws_ssh_username`}}",
       "ami_name": "nyc-trees-app-{{timestamp}}-{{user `version`}}",
+      "run_tags": {
+        "PackerBuilder": "amazon-ebs"
+      },
       "tags": {
-        "name": "nyc-trees-app",
-        "version": "{{user `version`}}"
+        "Name": "nyc-trees-app",
+        "Version": "{{user `version`}}"
       }
     }
   ],
@@ -79,6 +80,9 @@
       "playbook_file": "ansible/tile-servers.yml",
       "playbook_dir": "ansible",
       "inventory_file": "ansible/inventory/packer-tile-server",
+      "extra_arguments": [
+        "--extra-vars 'tiler_deploy_branch={{user `version`}}'"
+      ],
       "only": [
         "nyc-trees-tiler"
       ]

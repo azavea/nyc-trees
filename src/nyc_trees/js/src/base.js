@@ -10,5 +10,9 @@ $.ajaxSetup(csrf.jqueryAjaxSetupOptions);
 
 // Enable the sliding menu
 $('.nav-menubutton').on('click', function (a) {
-    $('body').toggleClass('menu-active');
+    $('body').addClass('menu-active');
+});
+
+$('.overlay-menued').on('click', function (a) {
+    $('body').removeClass('menu-active');
 });

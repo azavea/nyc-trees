@@ -10,13 +10,12 @@
                 <button class="location-search-button btn btn-default" href="javascript:;" type="button"><i class="icon-search"></i></button>
             </span>
         </div>
-        <div class="location-search-status" style="display: none;">Searching...</div>
-        <!-- location-search-results is appended to location-search-container -->
+        <ul class="location-search-results">
+          <div class="location-search-status" style="display: none;">Searching...</div>
+        </ul>
     </div>
 </script>
 
-<script type="text/template" id="template-map-search-result-list">
-    <ul class="location-search-results">
-        <li class="location-search-result"><a href="javascript:;"><span class="location-address"></span></a></li>
-    </ul>
+<script type="text/template" id="template-map-search-result">
+  <li class="location-search-result"><a href="javascript:;"><span class="location-address"></span></a></li>
 </script>

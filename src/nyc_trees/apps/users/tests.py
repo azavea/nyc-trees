@@ -98,7 +98,8 @@ class ProfileTemplateTests(UsersTestCase):
         self._assert_visible_to_all('Tree Mapper')
 
     def test_privacy_link_visible_only_to_me(self):
-        self._assert_visible_only_to_me('Privacy</a>', count=1)
+        self._assert_profile_contains('Privacy</a>', count=2)
+        self._assert_profile_contains('Privacy</a>', count=1, its_me=False)
 
     def test_groups_section_visibility(self):
         self._assert_visible_only_to_me('<section class="groups">', count=1)

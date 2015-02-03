@@ -42,8 +42,12 @@ def add_event(request):
 
 def _process_event_form(form, request):
     form.data['group'] = request.group.pk
-    form.data['location'] = Point(float(request.POST['lng']),
-                                  float(request.POST['lat']))
+    try:
+        form.data['location'] = Point(float(request.POST['lng']),
+                                      float(request.POST['lat']))
+    except ValueError:
+        # Lat/lng were not submitted or could not be converted to floats.
+        pass
     is_valid = form.is_valid()
     if is_valid:
         form.save()
