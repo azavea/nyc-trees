@@ -12,6 +12,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.timezone import get_current_timezone, now
 
 from apps.core.forms import EmailForm
+from apps.core.models import User
 
 from apps.event.forms import EventForm
 from apps.event.models import Event, EventRegistration
@@ -273,6 +274,7 @@ def check_in_user_to_event(request, event_slug, username):
         return HttpResponseNotAllowed()
 
     event = get_object_or_404(Event, group=request.group, slug=event_slug)
+
     try:
         rsvp = EventRegistration.objects.get(event=event,
                                              user__username=username)
@@ -280,6 +282,10 @@ def check_in_user_to_event(request, event_slug, username):
         rsvp.save()
     except EventRegistration.DoesNotExist:
         return HttpResponseForbidden()
+
+    if event.includes_training:
+        User.objects.filter(username=username) \
+            .update(field_training_complete=True)
 
     return {
         'group': request.group,
