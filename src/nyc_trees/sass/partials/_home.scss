@@ -31,19 +31,51 @@ $hero-box-side-padding: 3rem;
   background-size: cover;
 }
 
-.progress-ticker-digit {
+.ticker-digit {
+  position: relative;
   display: inline-block;
+  font-family: $headings-special-font-family;
+  max-width: 12.5%;
+  font-size: 180%;
+  height: 5.7rem;
+  width: 3.4rem;
+  @media (min-width: $screen-sm) {
+    height: 8rem;
+    width: 5rem;
+    font-size: $font-size-h1;
+  }
+}
+
+.ticker-box, .ticker-box.ticker-box-bg, .ticker-box.ticker-box-bg:after, .ticker-box.ticker-box-bg:before {
   border: 1px solid #ddd;
   border-radius: 5px;
-  height: 8rem;
-  position: relative;
-  width: 5rem;
-  padding: 1rem;
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 20% .2rem;
   text-align: center;
-  font-size: $font-size-h1;
-  font-family: $headings-special-font-family;
+  content: "";
+  background-color: #fff;
+}
+
+.ticker-box.ticker-box-bg:after {
+  top: 3px;
+  background-color: #fff;
+  z-index: 90;
+}
+
+.ticker-box.ticker-box-bg:before {
+  top: 5px;
+  background-color: #ccc;
+  z-index: 80;
+}
+
+.ticker-box-top {
+  background-color: #eee;
+  z-index: 100;
   &:after {
-    z-index: 1;
+    z-index: 200;
     content: "";
     position: absolute;
     left: 0;
