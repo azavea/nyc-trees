@@ -14,6 +14,8 @@ from django.utils.timezone import get_current_timezone, now
 from apps.core.forms import EmailForm
 from apps.core.models import User
 
+from apps.users.views.group import GROUP_EVENTS_ID
+
 from apps.event.forms import EventForm
 from apps.event.models import Event, EventRegistration
 
@@ -63,6 +65,10 @@ def event_detail(request, event_slug):
     user = request.user
     event = get_object_or_404(Event, group=request.group, slug=event_slug)
     rsvp_count = event.eventregistration_set.count()
+    group_events_url = ('%s#%s' %
+                        (reverse('group_detail',
+                                 kwargs={'group_slug': request.group.slug}),
+                         GROUP_EVENTS_ID))
     return {
         'group': request.group,
         'event': event,
@@ -70,9 +76,7 @@ def event_detail(request, event_slug):
         'can_rsvp': rsvp_count < event.max_attendees,
         'is_rsvped': user_is_rsvped_for_event(user, event),
         'rsvp_count': rsvp_count,
-        'group_events_url': reverse('events', kwargs={
-            'group_slug': request.group.slug
-        }),
+        'group_events_url': group_events_url,
         'event_edit_url': reverse('event_edit', kwargs={
             'group_slug': request.group.slug,
             'event_slug': event.slug
