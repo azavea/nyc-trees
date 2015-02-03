@@ -2,6 +2,7 @@ from troposphere import Template, Parameter, Ref, Tags, Output, GetAtt, ec2
 
 import template_utils as utils
 import troposphere.autoscaling as asg
+import troposphere.cloudwatch as cw
 import troposphere.elasticloadbalancing as elb
 
 t = Template()
@@ -154,6 +155,46 @@ app_server_load_balancer = t.add_resource(elb.LoadBalancer(
         Name='elbAppServer',
         Color=Ref(color_param)
     )
+))
+
+t.add_resource(cw.Alarm(
+    'alarmAppServerBackend4XX',
+    AlarmDescription='Application server backend 4XXs',
+    AlarmActions=[Ref(notification_arn_param)],
+    Statistic='Sum',
+    Period=300,
+    Threshold=5,
+    EvaluationPeriods=1,
+    ComparisonOperator='GreaterThanThreshold',
+    MetricName='HTTPCode_Backend_4XX',
+    Namespace='AWS/ELB',
+    Dimensions=[
+        cw.MetricDimension(
+            'metricLoadBalancerName',
+            Name='LoadBalancerName',
+            Value=Ref(app_server_load_balancer)
+        )
+    ],
+))
+
+t.add_resource(cw.Alarm(
+    'alarmAppServerBackend5XX',
+    AlarmDescription='Application server backend 5XXs',
+    AlarmActions=[Ref(notification_arn_param)],
+    Statistic='Sum',
+    Period=60,
+    Threshold=0,
+    EvaluationPeriods=1,
+    ComparisonOperator='GreaterThanThreshold',
+    MetricName='HTTPCode_Backend_5XX',
+    Namespace='AWS/ELB',
+    Dimensions=[
+        cw.MetricDimension(
+            'metricLoadBalancerName',
+            Name='LoadBalancerName',
+            Value=Ref(app_server_load_balancer)
+        )
+    ],
 ))
 
 #
