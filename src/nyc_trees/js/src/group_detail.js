@@ -8,3 +8,4 @@ fetchAndReplace({
 });
 
 require('./event_list');
+require('./copyEventUrl');

@@ -85,7 +85,7 @@ def event_detail(request, event_slug):
             'group_slug': request.group.slug,
             'event_slug': event.slug
         }),
-        'share_url': ''
+        'share_url': event.get_shareable_url(request)
     }
 
 

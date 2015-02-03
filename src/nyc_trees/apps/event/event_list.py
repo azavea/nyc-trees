@@ -69,6 +69,7 @@ class EventList(object):
                                         .values_list('event_id', flat=True))
 
         return [{'event': event,
+                 'event_share_url': event.get_shareable_url(request),
                  'user_is_registered': event.pk in user_registered_event_ids}
                 for event in qs]
 
