@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from __future__ import division
 
 from django.contrib.gis.db import models
+from django.utils.timezone import now
 
 from apps.core.models import User, Group
 
@@ -52,6 +53,13 @@ class Tree(NycModel, models.Model):
     species = models.ForeignKey(Species, null=True, on_delete=models.PROTECT)
 
 
+class ReservationsQuerySet(models.QuerySet):
+    def current(self):
+        return self \
+            .filter(canceled_at__isnull=True) \
+            .filter(expires_at__gt=now())
+
+
 class BlockfaceReservation(NycModel, models.Model):
     user = models.ForeignKey(User)
     # We do not plan on Blockface records being deleted, but we should
@@ -61,6 +69,8 @@ class BlockfaceReservation(NycModel, models.Model):
     is_mapping_with_paper = models.BooleanField(default=False)
     expires_at = models.DateTimeField()
     canceled_at = models.DateTimeField(null=True, blank=True)
+
+    objects = ReservationsQuerySet.as_manager()
 
     def __unicode__(self):
         return '%s -> %s' % (self.user, self.blockface_id)

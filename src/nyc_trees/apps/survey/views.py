@@ -28,8 +28,7 @@ def blockface_cart_page(request):
 def reserve_blockfaces_page(request):
     current_reservations_amount = BlockfaceReservation.objects \
         .filter(user=request.user) \
-        .filter(canceled_at__isnull=True) \
-        .filter(expires_at__gt=now()) \
+        .current() \
         .count()
 
     return {
@@ -68,8 +67,7 @@ def confirm_blockface_reservations(request):
 
     already_reserved_blockface_ids = BlockfaceReservation.objects \
         .filter(blockface__id__in=ids) \
-        .filter(canceled_at__isnull=True) \
-        .filter(expires_at__gt=now()) \
+        .current() \
         .values_list('blockface_id', flat=True)
 
     expiration_date = now() + settings.RESERVATION_TIME_PERIOD
