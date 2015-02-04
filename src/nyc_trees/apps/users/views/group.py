@@ -23,6 +23,8 @@ from apps.survey.models import Territory, Survey, Blockface
 from apps.event.models import Event, EventRegistration
 from apps.event.event_list import EventList
 
+GROUP_EVENTS_ID = 'group-events'
+
 
 def group_list_page(request):
     # TODO: pagination
@@ -109,7 +111,8 @@ def group_detail(request):
             'block': block_percent,
             'event': num_events_held,
             'attendees': num_event_attendees
-        }
+        },
+        'group_events_id': GROUP_EVENTS_ID,
     }
 
 
