@@ -18,3 +18,6 @@ psql -c "CREATE EXTENSION IF NOT EXISTS postgis;"
 envdir /etc/nyc-trees.d/env /opt/app/manage.py migrate
 # Load block face data
 envdir /etc/nyc-trees.d/env /opt/app/manage.py loaddata $DIR/../src/nyc_trees/apps/survey/fixtures/blockface.json
+
+# Create training flatpages
+envdir /etc/nyc-trees.d/env /opt/app/manage.py make_training_flatpages || true
