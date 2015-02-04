@@ -1,4 +1,8 @@
+{% if user.online_training_complete %}
+<h3>Training Complete!</h3>
+{% else %}
 <h3>You're almost there! Continue your training.</h3>
+{% endif %}
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu congue lorem, id feugiat tortor. Aliquam ante elit, sodales eget porttitor vel, commodo et felis.</p>
 
 {% for step_info in training_steps %}
