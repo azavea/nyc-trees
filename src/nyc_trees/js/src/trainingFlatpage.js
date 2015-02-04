@@ -4,16 +4,25 @@ var $ = require('jquery'),
     dom = {container: '[data-class="training-flatpage-container"]',
            nextButton: '[data-class="training-flatpage-subpage-next"]',
            previousButton: '[data-class="training-flatpage-subpage-previous"]',
+           acceptFeedbackButton: '[data-class="training-flatpage-subpage-accept-feedback"]',
+           question: '[data-class="question"]',
            answer: '[data-class="answer"]'},
     $container = $(dom.container),
     $nextButton = $(dom.nextButton),
     $previousButton = $(dom.previousButton),
+    $acceptFeedbackButton = $(dom.acceptFeedbackButton),
     $subpages = $container.children('div'),
     pageCount = $subpages.length,
     currentPage = 0;
 
 function showSubpage($subpage, index) {
     var $exercise = $subpage.children('form');
+
+    // fully initialize the subpage for viewing, including cleaning up
+    // elements that may have been put out of order by previous actions
+    // on this subpage.
+
+    $acceptFeedbackButton.hide();
 
     if ($exercise.length === 0) {
         $nextButton.show();
@@ -27,12 +36,18 @@ function showSubpage($subpage, index) {
         $previousButton.hide();
     }
 
+    $exercise.children(dom.question).show();
+    $exercise.siblings().show();
+
     $exercise.children(dom.answer).each(function (__, member) {
         var $member = $(member),
-            $input = $member.children('input'),
-            $failureEl = $member.children('div');
+            $feedbackEl = $member.children('div'),
+            $label = $member.children('label'),
+            $input = $label.children('input');
 
-        $failureEl.hide();
+        $member.show();
+        $label.show();
+        $feedbackEl.hide();
 
         // for brevity, these get set to radio, rather than forcing
         // the flatpage author to have set them for each one
@@ -49,12 +64,24 @@ function showSubpage($subpage, index) {
 
 
 function evaluateExerciseInput (event) {
-    var $el = $(event.target),
-        $exercise = $el.parent('div'),
-        correctValue = $exercise.parent('form').attr('data-correct-value');
-    window.alert($exercise.children('div').html());
-    if ($el.attr('value') === correctValue) {
+    var $label = $(event.currentTarget),
+        $input = $label.children('input'),
+        $feedbackEl = $label.siblings('div'),
+        $member = $label.parent(dom.answer),
+        $exercise = $member.parent('form'),
+
+        correctValue = $exercise.attr('data-correct-value');
+
+    $exercise.children(dom.question).hide();
+    $exercise.siblings().hide();
+
+    $label.hide();
+    $feedbackEl.show();
+    $member.siblings().hide();
+    if ($input.attr('value') === correctValue) {
         $nextButton.show();
+    } else {
+        $acceptFeedbackButton.show();
     }
 }
 
@@ -72,7 +99,7 @@ function showPageOrStep() {
 $subpages.hide();
 $container.show();
 
-$container.on('click', 'input', evaluateExerciseInput);
+$container.on('click', 'label', evaluateExerciseInput);
 
 $nextButton.on('click', function () {
     currentPage++;
@@ -82,6 +109,7 @@ $previousButton.on('click', function () {
     currentPage--;
     showPageOrStep();
 });
+$acceptFeedbackButton.on('click', showPageOrStep);
 
 if (pageCount > 0) {
     showPageOrStep();
