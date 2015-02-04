@@ -35,7 +35,7 @@ body {
   background-color: $body-bg;
   overflow-x: hidden;
   width: 100%;
-  transition: all 500ms ease-in-out;
+  transition: all 500ms $transition;
   position: relative;
   height: 100%;
   font-feature-settings: "kern" 1;
