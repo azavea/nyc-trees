@@ -1,4 +1,5 @@
-from troposphere import Template, Parameter, Ref, Tags, GetAtt, Select, ec2
+from troposphere import Template, Parameter, Ref, Tags, GetAtt, Select, Join, \
+    ec2
 
 import template_utils as utils
 import troposphere.rds as rds
@@ -13,6 +14,12 @@ t.add_description('A data store stack for the nyc-trees project.')
 #
 # Parameters
 #
+hosted_zone_name_param = t.add_parameter(Parameter(
+    'PublicHostedZone', Type='String',
+    Default='treescount.azavea.com',
+    Description='Hosted zone name for public DNS'
+))
+
 vpc_param = t.add_parameter(Parameter(
     'VpcId', Type='String', Description='Name of an existing VPC'
 ))
@@ -241,6 +248,20 @@ cache_cluster = t.add_resource(ec.CacheCluster(
 #
 # Route53 Resources
 #
+public_dns_records_sets = t.add_resource(r53.RecordSetGroup(
+    'dnsPublicRecords',
+    HostedZoneName=Join('', [Ref(hosted_zone_name_param), '.']),
+    RecordSets=[
+        r53.RecordSet(
+            'dnsMonitoringServer',
+            Name=Join('', ['monitoring.', Ref(hosted_zone_name_param), '.']),
+            Type='A',
+            TTL='300',
+            ResourceRecords=[GetAtt(bastion_host, 'PublicIp')]
+        )
+    ]
+))
+
 private_dns_records_sets = t.add_resource(r53.RecordSetGroup(
     'dnsPrivateRecords',
     HostedZoneName='nyc-trees.internal.',
