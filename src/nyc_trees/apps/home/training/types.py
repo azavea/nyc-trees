@@ -151,6 +151,8 @@ class AbstractTrainingStep(AbstractTrainingNode):
 
 
 class FlatPageTrainingStep(AbstractTrainingStep):
+    flatpage_template_name = 'flatpages/training.html'
+
     def __init__(self, *args, **kwargs):
         super(FlatPageTrainingStep, self).__init__(*args, **kwargs)
         self.view = make_flatpage_route(self.name)

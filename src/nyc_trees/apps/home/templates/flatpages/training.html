@@ -8,7 +8,16 @@
 <div data-class="training-flatpage-container" style="display: none;">{{ flatpage.content }}</div>
 
 <hr/>
-<a data-class="training-flatpage-subpage-next" data-href="{{ flatpage|flatpage_next_url }}">Next</a>
+<a class="btn btn-primary"
+   data-class="training-flatpage-subpage-accept-feedback"
+   style="display: none;">Try Again</a>
+<a class="btn btn-primary"
+   data-class="training-flatpage-subpage-previous"
+   style="display: none;">Previous</a>
+<br>
+<a class="btn btn-primary"
+   data-class="training-flatpage-subpage-next"
+   data-href="{{ flatpage|flatpage_next_url }}">Next</a>
 <br/>
 <a href="/training/">Back to Training</a>
 
