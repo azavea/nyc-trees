@@ -60,3 +60,7 @@ def complete_quiz(request):
         'score': score,
         'passed_quiz': passed_quiz,
     }
+
+
+def training_instructions(request):
+    return {}
