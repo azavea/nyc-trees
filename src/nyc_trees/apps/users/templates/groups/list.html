@@ -1,6 +1,9 @@
 {% extends "base_two_frames.html" %}
 {% load utils %}
 
+{% block nav %}
+{% include "core/partials/nav.html" with active_page="groups" %}
+{% endblock %}
 
 {% block aside %}
 <div class="pageheading-description block">

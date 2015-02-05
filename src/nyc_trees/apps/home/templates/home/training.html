@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block nav %}
+{% include "core/partials/nav.html" with active_page="training" %}
+{% endblock %}
+
 {% block content %}
 {% include "home/partials/training.html" %}
 {% endblock %}
