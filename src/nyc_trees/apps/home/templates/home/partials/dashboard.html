@@ -24,50 +24,21 @@
 
     <div class="container">
         <div class="row">
-            {% if not user.online_training_complete %}
             <main class="col-sm-12">
-                <section class="your-contributions clearfix">
-                    <h4 class="section-heading">Your Contributions</h4>
-                    <div class="progress-circles">
-                        <div class="col-xs-4 col-circle">
-                            <div class="progress-circle color--primary">
-                                <div class="progress-circle-content">
-                                    <div class="progress-circle-number">4,225</div>
-                                    <div class="progress-circle-label">Trees</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xs-4 col-circle">
-                            <div class="progress-circle color--quaternary">
-                                <div class="progress-circle-content">
-                                    <div class="progress-circle-number">108</div>
-                                    <div class="progress-circle-label">Blocks</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xs-4 col-circle">
-                            <div class="progress-circle color--secondary">
-                                <div class="progress-circle-content">
-                                    <div class="progress-circle-number">17</div>
-                                    <div class="progress-circle-label">Species</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                <section class="trainings">
-                    {% include "home/partials/training.html" %}
-                </section>
+                {% if user.online_training_complete %}
                 <section class="events">
                     <h4 class="section-heading">This week's events</h4>
                     <!-- TODO: Insert events (My Events and Recommended) -->
                 </section>
-                <section class="events">
-                    <h4 class="section-heading">Groups</h4>
-                    <!-- TODO: Insert the user's groups-->
+                {% include "users/partials/activity.html" %}
+
+                {% else %}
+                <section class="trainings">
+                    {% include "home/partials/training.html" %}
                 </section>
+
+                {% endif %}
             </main>
-            {% endif %}
         </div>
     </div>
 

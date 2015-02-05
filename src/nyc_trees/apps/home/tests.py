@@ -7,6 +7,7 @@ from django.test import TestCase
 from django.http import Http404
 from django.conf import settings
 
+from django.contrib.auth.models import AnonymousUser
 from django.contrib.flatpages.models import FlatPage
 
 from django_tinsel.utils import decorate as do
@@ -15,6 +16,8 @@ from apps.core.models import User
 from apps.core.test_utils import make_request
 from apps.home.training.decorators import mark_user, render_flatpage
 from apps.home.training.types import Quiz, Question
+from apps.home.routes import home_page
+from apps.users.tests import UsersTestCase
 
 
 class TrainingTrackingTest(TestCase):
@@ -149,3 +152,61 @@ class QuizTestCase(TestCase):
         }
         self.assertEqual({0: 1, 99: 2},
                          Quiz.extract_answers(post_fields))
+
+
+class HomeTestCase(UsersTestCase):
+
+    class HomePageTestResponse(object):
+        def __init__(self, test, response):
+            self.test = test
+            self.response = response
+
+        def _assertContains(self, text, it_is):
+            count = 1 if it_is else 0
+            self.test.assertContains(self.response, text, count=count)
+
+        def assert_training_visible(self, it_is):
+            self._assertContains('Continue your training', it_is)
+
+        def assert_about_visible(self, it_is):
+            self._assertContains(
+                '<section class="section-about section-home">', it_is)
+
+        def assert_your_contributions_visible(self, it_is):
+            self._assertContains(
+                '<section class="your-contributions', it_is)
+
+    def _render_homepage(self, user=None):
+        if not user:
+            user = AnonymousUser()
+        request = make_request(user=user)
+        return self.HomePageTestResponse(self, home_page(request))
+
+    def _complete_user_online_training(self):
+        for f in ['training_finished_getting_started',
+                  'training_finished_the_mapping_method',
+                  'training_finished_tree_data',
+                  'training_finished_tree_surroundings',
+                  'training_finished_intro_quiz',
+                  'training_finished_groups_to_follow']:
+            setattr(self.user, f, True)
+        self.user.save()
+
+    def test_public_homepage_content(self):
+        response = self._render_homepage()
+        response.assert_about_visible(True)
+        response.assert_training_visible(False)
+        response.assert_your_contributions_visible(False)
+
+    def test_untrained_user_content(self):
+        response = self._render_homepage(self.user)
+        response.assert_about_visible(False)
+        response.assert_training_visible(True)
+        response.assert_your_contributions_visible(False)
+
+    def test_online_trained_user_content(self):
+        self._complete_user_online_training()
+        response = self._render_homepage(self.user)
+        response.assert_about_visible(False)
+        response.assert_training_visible(False)
+        response.assert_your_contributions_visible(True)

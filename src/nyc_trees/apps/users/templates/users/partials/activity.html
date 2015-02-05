@@ -1,0 +1,31 @@
+{% if soft_launch %}
+    <section class="soft-launch">
+        {% with title="Your Profile" section_id="soft-launch" public=False %}
+            {% include "users/partials/profile/soft_launch.html"%}
+        {% endwith %}
+    </section>
+{% else %}
+    {% if show_contributions %}
+    <section class="contributions">
+        {% with title=contributions_title section_id="contributions" public=user.contributions_are_public %}
+            {% include "users/partials/profile/contributions.html"%}
+        {% endwith %}
+    </section>
+    {% endif %}
+
+    {% if show_groups and follows.follows %}
+    <section class="groups">
+        {% with title="Groups" section_id="groups" public=user.group_follows_are_public %}
+            {% include "users/partials/profile/groups.html" %}
+        {% endwith %}
+    </section>
+    {% endif %}
+
+    {% if show_achievements %}
+    <section class="achievements">
+        {% with title="Achievements" section_id="achievements" public=user.achievements_are_public %}
+            {% include "users/partials/profile/achievements.html" with section_id="achievements" %}
+        {% endwith %}
+    </section>
+    {% endif %}
+{% endif %}

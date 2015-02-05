@@ -10,16 +10,11 @@ from django.http import Http404, HttpResponseRedirect, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 
-from libs.sql import get_user_tree_count, get_user_species_count
-
 from apps.core.models import User
 from apps.event.models import EventRegistration
-from apps.users.models import achievements
+from apps.users import user_profile_context, get_privacy_categories
 from apps.users.forms import ProfileSettingsForm, EventRegistrationFormSet, \
     PrivacySettingsForm
-
-
-_FOLLOWED_GROUP_CHUNK_SIZE = 2
 
 
 # TODO: make a route?
@@ -36,54 +31,7 @@ def user_detail(request, username):
         # Private profile acts like a missing page to others
         raise Http404()
 
-    return _user_profile_context(user, its_me)
-
-
-def _get_follows_context(user):
-    follows = user.follow_set.select_related('group').order_by('created_at')
-    follows_count = follows.count()
-    hidden_count = follows_count - _FOLLOWED_GROUP_CHUNK_SIZE
-
-    return {
-        'count': follows_count,
-        'chunk_size': _FOLLOWED_GROUP_CHUNK_SIZE,
-        'hidden_count': hidden_count,
-        'follows': follows
-    }
-
-
-def _user_profile_context(user, its_me):
-    user_achievements = set(user.achievement_set
-                            .order_by('created_at')
-                            .values_list('achievement_id', flat=True))
-
-    block_count = user.survey_set.distinct('blockface').count()
-    tree_count = get_user_tree_count(user)
-    species_count = get_user_species_count(user)
-
-    privacy_form = PrivacySettingsForm(instance=user)
-
-    context = {
-        'user': user,
-        'viewing_own_profile': its_me,
-        'show_username': ((its_me or user.real_name_is_public) and
-                          (user.first_name or user.last_name)),
-        'show_achievements': its_me or user.achievements_are_public,
-        'show_contributions': its_me or user.contributions_are_public,
-        'show_groups': its_me or user.group_follows_are_public,
-        'show_individual_mapper': (user.individual_mapper and
-                                   (its_me or user.profile_is_public)),
-        'follows': _get_follows_context(user),
-        'privacy_categories': _get_privacy_categories(privacy_form),
-        'counts': {
-            'block': block_count,
-            'tree': tree_count,
-            'species': species_count
-        },
-        'achievements': [achievements[key]
-                         for key in user_achievements if key in achievements]
-    }
-    return context
+    return user_profile_context(user, its_me)
 
 
 def profile_settings(request):
@@ -103,30 +51,10 @@ def profile_settings(request):
         'profile_form': profile_form,
         'privacy_form': privacy_form,
         'event_formset': event_formset,
-        'privacy_categories': _get_privacy_categories(privacy_form),
+        'privacy_categories': get_privacy_categories(privacy_form),
         'username': request.user.username,
     }
     return context
-
-
-def _get_privacy_categories(form):
-    user = form.instance
-
-    def make_category(title, field_name):
-        return {
-            'title': title,
-            'field_name': field_name,
-            'is_public': getattr(user, field_name),
-            'form_field': form[field_name]
-        }
-
-    return [
-        make_category('Profile', 'profile_is_public'),
-        make_category('Name', 'real_name_is_public'),
-        make_category('Groups', 'group_follows_are_public'),
-        make_category('Contributions', 'contributions_are_public'),
-        make_category('Achievements', 'achievements_are_public'),
-    ]
 
 
 def update_profile_settings(request):
