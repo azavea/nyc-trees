@@ -1,30 +1,26 @@
-<div data-class="event-list-container">
-
-    <ul class="nav nav-tabs nav-tabs--filter">
+<ul class="nav nav-tabs nav-tabs--filter">
     {% for filter in event_list.filters %}
-    {% if filter.active %}
-    <li class="active"><a>{{ filter.name }}</a></li>
-    {% else %}
-    <li>
-        <a href="#" data-class="event-list-action" data-url="{{ filter.url }}">{{ filter.name }}</a>
-    </li>
-    {% endif %}
-    {% endfor %}
+        {% if filter.active %}
+            <li class="active"><a>{{ filter.name }}</a></li>
+        {% else %}
+            <li>
+                <a href="#" data-class="event-list-action" data-url="{{ filter.url }}">{{ filter.name }}</a>
+            </li>
+        {% endif %}
+      {% endfor %}
 
     {% block filter_ul_extra_controls %}
     {% endblock filter_ul_extra_controls %}
-    </ul>
+</ul>
 
-    {% block event_list_loop %}
+{% block event_list_loop %}
     {% for info in event_list.event_infos %}
         {% include "event/partials/event_section.html" %}
     {% endfor %}
-    {% endblock event_list_loop %}
+{% endblock event_list_loop %}
 
-    {% if event_list.event_infos and event_list.load_more_url %}
-        <a href="#"
-           data-class="event-list-action"
-           data-url="{{ event_list.load_more_url }}">Load more events...</a>
-    {% endif %}
-</div>
-
+{% if event_list.event_infos and event_list.load_more_url %}
+    <a href="#"
+       data-class="event-list-action"
+       data-url="{{ event_list.load_more_url }}">Load more events...</a>
+{% endif %}
