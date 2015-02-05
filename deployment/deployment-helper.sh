@@ -175,7 +175,8 @@ case "$1" in
     AWS_PRIVATE_SUBNETS=$(echo "${AWS_VPC_STACK_OUTPUTS}" | grep "PrivateSubnets" | cut -f2)
 
     # Build parameters argument
-    AWS_STACK_PARAMS="ParameterKey=KeyName,ParameterValue=${AWS_KEY_NAME}"
+    AWS_STACK_PARAMS="ParameterKey=PublicHostedZone,ParameterValue=${AWS_PUBLIC_HOSTED_ZONE}"
+    AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=KeyName,ParameterValue=${AWS_KEY_NAME}"
     AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=GlobalNotificationsARN,ParameterValue=${AWS_SNS_TOPIC}"
     AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=VpcId,ParameterValue=${AWS_VPC_ID}"
     AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=BastionHostAMI,ParameterValue=${AWS_BASTION_HOST_AMI}"
