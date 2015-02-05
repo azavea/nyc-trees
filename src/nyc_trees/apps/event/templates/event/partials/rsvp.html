@@ -20,9 +20,6 @@ The following variables must be in scope:
             <a id="rsvp"
                href="{% url "login" %}?next={{ event.get_absolute_url }}"
                class="btn btn-switch">RSVP</a>
-        {% elif is_admin %}
-            <a href="{{ event_edit_url }}"
-               class="btn btn-switch"><i class="icon-cog"></i>Admin</a>
         {% elif not event.includes_training and not user.training_complete %}
             <a id="rsvp"
                href="{% url "training_instructions" %}"
@@ -42,5 +39,9 @@ The following variables must be in scope:
         {% endif %}
     {% else %}
         <a id="rsvp" href="#" class="btn btn-switch disabled">At Capacity</a>
+    {% endif %}
+    {% if is_admin %}
+        <a href="{{ event_edit_url }}"
+           class="btn btn-switch"><i class="icon-cog"></i>Admin</a>
     {% endif %}
 </div>
