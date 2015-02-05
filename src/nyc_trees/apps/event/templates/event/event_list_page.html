@@ -1,6 +1,9 @@
 {% extends "base_event.html" %}
-
 {% load utils %}
+
+{% block nav %}
+{% include "core/partials/nav.html" with active_page="events" %}
+{% endblock %}
 
 {% block aside %}
 

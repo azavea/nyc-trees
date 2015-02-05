@@ -11,40 +11,9 @@
     </head>
     <body>
         <header class="left-content">
-            <nav class="nav-side">
-                <div class="nav-side-user clearfix">
-                    <div class="nav-side-achievement"></div>
-                    <span>
-                        <h2><a href="{% url 'user_detail_redirect' %}" class="nav-side-user-name">{{ user.username }}</a></h2>
-                        <div class="nav-side-options">
-                            <a href="{% url 'user_profile_settings' %}" class="btn btn-primary">Settings</a> <a href="#" class="btn btn-primary">Privacy</a>
-                        </div>
-                    </span>
-                </div>
-                <ul class="nav-side-list">
-                    {% if not soft_launch %}
-                    {% if my_events_now|length == 1 %}
-                        {% with event=my_events_now.0 %}
-                            <li><a href="{{ event.get_user_checkin_url }}">Start Mapping</a></li>
-                        {% endwith %}
-                    {% endif %}
-                    <li><a href="{% url 'home_page' %}">Dashboard</a></li>
-                    <li><a href="{% url 'training_summary_pure' %}">Training</a></li>
-                    <li><a href="{% url 'group_list_page' %}">Groups</a></li>
-                    <li><a href="{% url 'events_list_page' %}">Events</a></li>
-                    <li><a href="{% url 'reservations' %}">Reservations</a></li>
-                    <li><a href="#">Achievements</a></li>
-                    {% endif %}
-                    <li><a href="#">About &amp; FAQ</a></li>
-                </ul>
-                <div class="nav-side-sub">
-                    <h3>NYC</h3>
-                    <h6>Copyright 2014, The City of New York</h6>
-                    <a href="#">Contact Us</a>
-                    <a href="#">Privacy Policy</a>
-                    <a href="http://www1.nyc.gov/home/terms-of-use.page" target="new">Terms of Use</a>
-                </div>
-            </nav>
+        {% block nav %}
+            {% include "core/partials/nav.html" %}
+        {% endblock nav %}
         </header>
         <div class="right-content">
             <div class="overlay-menued"></div>

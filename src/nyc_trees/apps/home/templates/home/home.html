@@ -1,6 +1,9 @@
 {% extends "base.html" %}
-
 {% load utils %}
+
+{% block nav %}
+{% include "core/partials/nav.html" with active_page="dashboard" %}
+{% endblock %}
 
 {% block content %}
 
