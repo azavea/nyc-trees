@@ -36,7 +36,7 @@ def user_detail(request, username):
         # Private profile acts like a missing page to others
         raise Http404()
 
-    return _user_profile_context(request, user, its_me)
+    return _user_profile_context(user, its_me)
 
 
 def _get_follows_context(user):
@@ -52,7 +52,7 @@ def _get_follows_context(user):
     }
 
 
-def _user_profile_context(request, user, its_me):
+def _user_profile_context(user, its_me):
     user_achievements = set(user.achievement_set
                             .order_by('created_at')
                             .values_list('achievement_id', flat=True))
