@@ -4,11 +4,16 @@ from __future__ import unicode_literals
 from __future__ import division
 
 from apps.home.training import training_summary
+from apps.users import user_profile_context
 
 
 def home_page(request):
-    training_steps = training_summary.get_context(request.user)
-    return {'user': request.user, 'training_steps': training_steps}
+    if request.user.is_authenticated():
+        context = user_profile_context(request.user, True)
+        context['training_steps'] = training_summary.get_context(request.user)
+        return context
+    else:
+        return {'user': request.user}
 
 
 def retrieve_job_status(request):
