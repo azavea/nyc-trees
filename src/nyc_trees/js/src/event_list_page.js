@@ -9,7 +9,9 @@ var $ = require('jquery'),
 
     dom = {
         mapToggle: '[data-toggle="tab"][href="#map-tab"]',
-        actionBar: '#action-bar'
+        actionBar: '#action-bar',
+        mainTabs: '#nav-tabs-event a',
+        mapContainer: '.page-map'
     },
     geojsonPromise = $.getJSON(config.urls.geojson.events);
 
@@ -64,12 +66,15 @@ $(dom.mapToggle).one('shown.bs.tab', function() {
     });
 });
 
-// TODO: Rewrite this code
+$(dom.mainTabs).on('click', function (e) {
+    e.preventDefault();
 
-$('.nav-tabs a').on('click', function () {
-    var selectedTab = $(this).attr('href').substring(1);
-    $(".page-map").removeClass(function (index, css) {
-        return (css.match (/(^|\s)tab-status-\S+/g) || []).join(' ');
-    });
-    $('.page-map').addClass('tab-status-'+selectedTab);
+    var selectedTab = $(e.currentTarget).attr('href');
+    $(dom.mapContainer).removeClass('tab-status-list tab-status-map-tab');
+
+    if (selectedTab === '#map-tab') {
+        $(dom.mapContainer).addClass('tab-status-map-tab');
+    } else if (selectedTab === '#list') {
+        $(dom.mapContainer).addClass('tab-status-list');
+    }
 });
