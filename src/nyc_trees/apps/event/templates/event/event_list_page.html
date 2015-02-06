@@ -16,7 +16,7 @@
       Select an event to view details
     </div>
     <div class="row">
-      <ul class="nav nav-tabs nav-tabs-event">
+      <ul class="nav nav-tabs nav-tabs-event" id="nav-tabs-event">
         <li class="active">
           <a class="toggle-tab-button" data-toggle="tab" href="#list">List</a>
         </li>
@@ -37,13 +37,17 @@
         {# TODO: make event_list return a totally empty context to avoid introspection #}
         {% if immediate_events.event_infos %}
           <h4>Your Events this week</h4>
-          {% include "event/partials/event_list.html" with event_list=immediate_events %}
+          <div data-class="event-list-container">
+              {% include "event/partials/event_list.html" with event_list=immediate_events %}
+          </div>
         {% endif %}
 
         {# TODO: make event_list return a totally empty context to avoid introspection #}
         {% if all_events.event_infos %}
           <h4>Browse events</h4>
-          {% include "event/partials/event_list.html" with event_list=all_events %}
+          <div data-class="event-list-container">
+              {% include "event/partials/event_list.html" with event_list=all_events %}
+          </div>
         {% endif %}
       </section>
     </div>

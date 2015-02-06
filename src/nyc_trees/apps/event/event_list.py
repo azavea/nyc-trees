@@ -59,18 +59,6 @@ class EventList(object):
         return filtersets.get(name, {})
 
     @staticmethod
-    def simple_context(request, qs):
-        """
-        Render an Event queryset as an event_list context.
-
-        Useful for cases where you don't need post-back controls and
-        don't want to bother creating an EventList instance.
-        """
-        return {'event_infos': EventList.make_event_infos(request, qs),
-                'filters': None,
-                'load_more_url': None}
-
-    @staticmethod
     def make_event_infos(request, qs):
         """
         Wrap an event object with user-aware data necessary for
