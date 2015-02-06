@@ -315,6 +315,14 @@ $zindex-modal-background:  1040;
 $zindex-modal:             1050;
 
 
+// Custom z-index variables
+// Try to keep these below the bootstrap z-index values above, especially the modal ones
+
+$zindex-base-ticker: 10;
+$zindex-above-ticker: 100;
+$zindex-overlaymenu: 6000;
+
+
 //== Media queries breakpoints
 //
 //## Define the breakpoints at which your layout will change, adapting to different screen sizes.

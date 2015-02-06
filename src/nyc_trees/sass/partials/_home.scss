@@ -63,20 +63,20 @@ $hero-box-side-padding: 3rem;
 .ticker-box.ticker-box-bg:after {
   top: 3px;
   background-color: #fff;
-  z-index: 90;
+  z-index: $zindex-base-ticker + 1;
 }
 
 .ticker-box.ticker-box-bg:before {
   top: 5px;
   background-color: #ccc;
-  z-index: 80;
+  z-index: $zindex-base-ticker;
 }
 
 .ticker-box-top {
   background-color: #eee;
-  z-index: 100;
+  z-index: $zindex-above-ticker;
   &:after {
-    z-index: 200;
+    z-index: $zindex-above-ticker + 1;
     content: "";
     position: absolute;
     left: 0;

@@ -78,7 +78,6 @@
   border: 0;
   padding: 1.0rem 1.0rem;
   width: auto;
-  z-index: 6200;
 }
 
 .icon-bar {
@@ -106,7 +105,7 @@
   background-color: $nav-side-color;
   width: 30rem;
   left: -30rem;
-  z-index: 1000;
+  z-index: 1;
   transition: all 400ms $transition;
   .menu-active & {
     left: 0;
@@ -125,7 +124,6 @@
 }
 
 .main-header {
-  z-index: 1000;
   position: relative;
 }
 
@@ -188,7 +186,7 @@
   position: fixed;
   height: 100%;
   width: 100%;
-  z-index: 6000;
+  z-index: $zindex-overlaymenu;
   display: none;
   opacity: .2;
   .menu-active & {
