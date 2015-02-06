@@ -180,18 +180,18 @@ class Quiz(object):
     @classmethod
     def extract_answers(cls, post_fields):
         """
-        Return dict of {question_index => answer_index, ...} from post fields.
+        Return dict of {question_index => answer_indexes, ...} from post fields
         post_fields - QueryDict; Probably from request.POST
         """
         result = []
-        for field_name, values in post_fields.iteritems():
+        for field_name, values in post_fields.iterlists():
             # Parse field name format like "question.1", "question.2", etc.
             parts = field_name.split('.')
             if len(parts) == 2 and parts[0] == 'question':
                 try:
-                    value = int(values[0])
+                    answers = map(int, values)
                     question_index = int(parts[1])
-                    result.append((question_index, value))
+                    result.append((question_index, answers))
                 except ValueError:
                     pass
         return dict(result)
@@ -199,25 +199,48 @@ class Quiz(object):
     def score(self, answers):
         """
         How many correct answers are selected?
-        answers - dict of {question_index => answer_index, ...}
+        answers - dict of {question_index => answer_indexes, ...}
         """
         result = 0
         for i, question in enumerate(self.questions):
-            if answers.get(i, -1) == question.answer:
+            answer = answers.get(i, None)
+            if question.is_correct(answer):
                 result += 1
         return result
 
 
-class Question(object):
+class MultiChoiceQuestion(object):
     """
+    Represents a question with multiple correct answers.
     text - string
-    answer - int; Index of the correct answer in choices iterable
     choices - iterable<string>
+    answer - iterable<int>; Indexes of the correct answers in choices iterable
     """
-    def __init__(self, text, answer, choices):
+    def __init__(self, text, choices, answer):
         assert len(choices) > 0
-        assert answer >= 0
-        assert answer < len(choices)
+        for ans in answer:
+            assert ans >= 0
+            assert ans < len(choices)
         self.text = unicode(text)
-        self.answer = int(answer)
         self.choices = list(choices)
+        self.answer = list(answer)
+
+    def is_correct(self, candidate):
+        return candidate and set(candidate) == set(self.answer)
+
+    def is_multiple_choice(self):
+        return True
+
+
+class Question(MultiChoiceQuestion):
+    """
+    Represents a question with only one correct answer.
+    text - string
+    choices - iterable<string>
+    answer - int; Index of the correct answer in choices iterable
+    """
+    def __init__(self, text, choices, answer):
+        super(Question, self).__init__(text, choices, [answer])
+
+    def is_multiple_choice(self):
+        return False
