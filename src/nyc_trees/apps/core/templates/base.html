@@ -67,6 +67,9 @@
             {% block content %}
             {% endblock content %}
         </div>
+        {# This block exists for placing elements that need to be children of the body, like bootstrap modals #}
+        {% block extra_content %}
+        {% endblock extra_content %}
     </body>
     <script type="text/javascript">
       {% include 'core/partials/config.js' %}

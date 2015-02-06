@@ -48,7 +48,7 @@ def config(request):
         return {}
 
     return {
-        'layers_json': json.dumps(_make_layers_context(request)),
+        'layers_json': json.dumps(make_layers_context(request)),
         'nyc_bounds': {
             'xmin': float(settings.NYC_BOUNDS[0]),
             'ymin': float(settings.NYC_BOUNDS[1]),
@@ -58,7 +58,7 @@ def config(request):
     }
 
 
-def _make_layers_context(request):
+def make_layers_context(request):
     tiler_url_format = \
         "%(tiler_url)s/%(cache_buster)s/%(db)s/%(type)s/{z}/{x}/{y}"
 
@@ -67,23 +67,23 @@ def _make_layers_context(request):
     else:
         params = ''
 
+    cache_busters = _tiler_cache_busters(request)
+
     context = {}
     for layer in ['progress', 'reservable', 'reservations']:
-        tile_url = tiler_url_format % _make_tiler_url_kwargs(request, layer)
+        tile_url = tiler_url_format % {
+            'tiler_url': settings.TILER_URL,
+            'cache_buster': cache_busters[layer],
+            'db': settings.DATABASES['default']['NAME'],
+            'type': layer
+        }
+
         context[layer] = {
             'tiles': tile_url + '.png' + params,
             'grids': tile_url + '.grid.json' + params,
         }
 
     return context
-
-
-def _make_tiler_url_kwargs(request, layer):
-    cache_busters = _tiler_cache_busters(request)
-    return {'tiler_url': settings.TILER_URL,
-            'cache_buster': cache_busters[layer],
-            'db': settings.DATABASES['default']['NAME'],
-            'type': layer}
 
 
 def _tiler_cache_busters(request):
@@ -95,7 +95,7 @@ def _tiler_cache_busters(request):
     max_timestamp = lambda *datetimes: timegm(max(*datetimes).utctimetuple())
 
     reservations_cache_buster = max_timestamp(blockface_updated_at,
-        reservation_updated_at)
+                                              reservation_updated_at)
 
     if request.user.is_authenticated():
         mapper_updated_at = _get_last_updated_datetime(TrustedMapper)
@@ -110,7 +110,7 @@ def _tiler_cache_busters(request):
 
     return {
         "progress": progress_cache_buster,
-        "reservable": progress_cache_buster, # uses the same tables as progress
+        "reservable": progress_cache_buster,  # has the same tables as progress
         "reservations": reservations_cache_buster
     }
 

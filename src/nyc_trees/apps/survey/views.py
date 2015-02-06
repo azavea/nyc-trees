@@ -9,14 +9,22 @@ from django.shortcuts import get_object_or_404
 from django.utils.timezone import now
 
 
+from nyc_trees.context_processors import make_layers_context
+
 from apps.users.models import TrustedMapper
 
 from apps.survey.models import BlockfaceReservation, Blockface, Territory
 
 
 def cancel_reservation(request, blockface_id):
-    # TODO: implement
-    pass
+    update_time = now()
+    BlockfaceReservation.objects \
+        .filter(blockface_id=blockface_id) \
+        .filter(user=request.user) \
+        .current() \
+        .update(canceled_at=update_time, updated_at=update_time)
+
+    return make_layers_context(request)
 
 
 def blockface_cart_page(request):
@@ -28,8 +36,7 @@ def blockface_cart_page(request):
 def reserve_blockfaces_page(request):
     current_reservations_amount = BlockfaceReservation.objects \
         .filter(user=request.user) \
-        .filter(canceled_at__isnull=True) \
-        .filter(expires_at__gt=now()) \
+        .current() \
         .count()
 
     return {
@@ -46,8 +53,14 @@ def reserve_blockfaces_page(request):
 
 def reserved_blockface_popup(request, blockface_id):
     blockface = get_object_or_404(Blockface, id=blockface_id)
+    reservation = BlockfaceReservation.objects \
+        .filter(blockface=blockface) \
+        .filter(user=request.user) \
+        .current()[0]
+
     return {
-        'blockface': blockface
+        'blockface': blockface,
+        'reservation': reservation
     }
 
 
@@ -68,8 +81,7 @@ def confirm_blockface_reservations(request):
 
     already_reserved_blockface_ids = BlockfaceReservation.objects \
         .filter(blockface__id__in=ids) \
-        .filter(canceled_at__isnull=True) \
-        .filter(expires_at__gt=now()) \
+        .current() \
         .values_list('blockface_id', flat=True)
 
     expiration_date = now() + settings.RESERVATION_TIME_PERIOD
