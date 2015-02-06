@@ -5,17 +5,7 @@ from __future__ import division
 
 from django.conf import settings
 
-from calendar import timegm
-from datetime import datetime
-
-import json
-
-from django.utils.timezone import make_aware, utc
-
 from apps.event.models import EventRegistration
-from apps.survey.models import (Blockface, Survey, Territory,
-                                BlockfaceReservation)
-from apps.users.models import TrustedMapper
 
 
 def soft_launch(request):
@@ -48,7 +38,6 @@ def config(request):
         return {}
 
     return {
-        'layers_json': json.dumps(make_layers_context(request)),
         'nyc_bounds': {
             'xmin': float(settings.NYC_BOUNDS[0]),
             'ymin': float(settings.NYC_BOUNDS[1]),
@@ -56,67 +45,3 @@ def config(request):
             'ymax': float(settings.NYC_BOUNDS[3])
         }
     }
-
-
-def make_layers_context(request):
-    tiler_url_format = \
-        "%(tiler_url)s/%(cache_buster)s/%(db)s/%(type)s/{z}/{x}/{y}"
-
-    if request.user.is_authenticated():
-        params = '?user=%s' % request.user.pk
-    else:
-        params = ''
-
-    cache_busters = _tiler_cache_busters(request)
-
-    context = {}
-    for layer in ['progress', 'reservable', 'reservations']:
-        tile_url = tiler_url_format % {
-            'tiler_url': settings.TILER_URL,
-            'cache_buster': cache_busters[layer],
-            'db': settings.DATABASES['default']['NAME'],
-            'type': layer
-        }
-
-        context[layer] = {
-            'tiles': tile_url + '.png' + params,
-            'grids': tile_url + '.grid.json' + params,
-        }
-
-    return context
-
-
-def _tiler_cache_busters(request):
-    blockface_updated_at = _get_last_updated_datetime(Blockface)
-    survey_updated_at = _get_last_updated_datetime(Survey)
-    territory_updated_at = _get_last_updated_datetime(Territory)
-    reservation_updated_at = _get_last_updated_datetime(BlockfaceReservation)
-
-    max_timestamp = lambda *datetimes: timegm(max(*datetimes).utctimetuple())
-
-    reservations_cache_buster = max_timestamp(blockface_updated_at,
-                                              reservation_updated_at)
-
-    if request.user.is_authenticated():
-        mapper_updated_at = _get_last_updated_datetime(TrustedMapper)
-
-        progress_cache_buster = max_timestamp(
-            blockface_updated_at, survey_updated_at, territory_updated_at,
-            reservation_updated_at, mapper_updated_at)
-    else:
-        progress_cache_buster = max_timestamp(
-            blockface_updated_at, survey_updated_at, territory_updated_at,
-            reservation_updated_at)
-
-    return {
-        "progress": progress_cache_buster,
-        "reservable": progress_cache_buster,  # has the same tables as progress
-        "reservations": reservations_cache_buster
-    }
-
-
-def _get_last_updated_datetime(Model):
-    try:
-        return Model.objects.latest('updated_at').updated_at
-    except Model.DoesNotExist:
-        return make_aware(datetime.min, utc)

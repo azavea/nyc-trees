@@ -1,3 +1,4 @@
+
 "use strict";
 
 var $ = require('jquery'),
@@ -7,7 +8,9 @@ var zoom = require('./mapUtil').zoom,
     searchController = require('./searchController');
 
 module.exports = {
-    create: create
+    create: create,
+    addTileLayer: addTileLayer,
+    addGridLayer: addGridLayer
 };
 
 function create(options) {
@@ -98,4 +101,29 @@ function initCrosshairs(domId) {
         $hHair = $('<div style="position:absolute; left:0; right:0; bottom:50%; height:1px; background:black"></div>'),
         $vHair = $('<div style="position:absolute; right:50%; width:1px; top:0; bottom:0; background:black"></div>');
     $map.append([$hHair, $vHair]);
+}
+
+function addTileLayer(map, domId) {
+    var tileUrl = getLayerUrl('tile-url', domId),
+        layer = L.tileLayer(tileUrl, {
+            maxZoom: zoom.MAX
+        }).addTo(map);
+    return layer;
+}
+
+function addGridLayer(map, domId) {
+    var gridUrl = getLayerUrl('grid-url', domId),
+        layer = L.utfGrid(gridUrl, {
+            maxZoom: zoom.MAX,
+            useJsonP: false
+        });
+    map.addLayer(layer);
+    return layer;
+}
+
+function getLayerUrl(dataAttName, domId) {
+    var domId = domId || 'map',
+        $map = $('#' + domId),
+        url = $map.data(dataAttName);
+    return url;
 }

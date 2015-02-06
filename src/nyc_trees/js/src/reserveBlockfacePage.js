@@ -24,9 +24,7 @@ var reservationMap = mapModule.create({
     search: true
 });
 
-L.tileLayer(config.urls.layers.reservable.tiles, {
-    maxZoom: zoom.MAX
-}).addTo(reservationMap);
+mapModule.addTileLayer(reservationMap);
 
 var $current = $(dom.currentReservations),
     $hiddenInput = $(dom.hiddenInput),
@@ -36,10 +34,7 @@ var $current = $(dom.currentReservations),
     blockfaceLimit = +($(dom.totalReservations).text()),
     selectedBlockfaces = {},
 
-    grid = L.utfGrid(config.urls.layers.reservable.grids, {
-        maxZoom: zoom.MAX,
-        useJsonP: false
-    });
+    grid = mapModule.addGridLayer(reservationMap);
 
 var progress = new SavedState({
     key: 'reserve-blockfaces',

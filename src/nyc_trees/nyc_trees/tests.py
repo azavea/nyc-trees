@@ -29,11 +29,9 @@ class ContextProcessorTest(TestCase):
 
     def test_full_request(self):
         context = config(make_request())
-        self.assertTrue('layers_json' in context,
-                        'Expected the context dict to have a "layers_json" '
+        self.assertTrue('nyc_bounds' in context,
+                        'Expected the context dict to have a "nyc_bounds" '
                         'key.')
-        self.assertTrue(json.loads(context['layers_json']),
-                        'Expected "layers_json" to be parsable as JSON')
 
     def test_ajax_request(self):
         context = config(make_request(

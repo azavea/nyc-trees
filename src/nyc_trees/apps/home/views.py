@@ -3,7 +3,9 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
+from apps.core.views import map_legend
 from apps.home.training import training_summary
+from apps.survey.layer_context import get_context_for_progress_layer
 from apps.users import user_profile_context
 
 
@@ -14,6 +16,12 @@ def home_page(request):
         return context
     else:
         return {'user': request.user}
+
+
+def progress_page(request):
+    context = map_legend(request)
+    context['layer'] = get_context_for_progress_layer(request)
+    return context
 
 
 def retrieve_job_status(request):
