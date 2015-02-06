@@ -9,6 +9,7 @@ from apps.users.models import achievements
 
 
 _FOLLOWED_GROUP_CHUNK_SIZE = 2
+_RESERVATION_CHUNK_SIZE = 2
 
 
 def user_profile_context(user, its_me):
@@ -35,7 +36,9 @@ def user_profile_context(user, its_me):
         'show_groups': its_me or user.group_follows_are_public,
         'show_individual_mapper': (user.individual_mapper and
                                    (its_me or user.profile_is_public)),
+        'show_reservations': (user.individual_mapper and its_me),
         'follows': _get_follows_context(user),
+        'reservations': _get_reservations_context(user),
         'privacy_categories': get_privacy_categories(privacy_form),
         'counts': {
             'block': block_count,
@@ -68,14 +71,28 @@ def get_privacy_categories(form):
     ]
 
 
-def _get_follows_context(user):
-    follows = user.follow_set.select_related('group').order_by('created_at')
-    follows_count = follows.count()
-    hidden_count = follows_count - _FOLLOWED_GROUP_CHUNK_SIZE
+def _get_list_section_context(key, qs, chunk_size):
+    count = qs.count()
+    hidden_count = count - chunk_size
 
     return {
-        'count': follows_count,
-        'chunk_size': _FOLLOWED_GROUP_CHUNK_SIZE,
+        'count': count,
+        'chunk_size': chunk_size,
         'hidden_count': hidden_count,
-        'follows': follows
+        key: qs
     }
+
+
+def _get_follows_context(user):
+    follows = user.follow_set.select_related('group').order_by('created_at')
+    return _get_list_section_context('follows', follows,
+                                     _FOLLOWED_GROUP_CHUNK_SIZE)
+
+
+def _get_reservations_context(user):
+    reservations = user.blockfacereservation_set\
+                       .current()\
+                       .select_related('blockface')\
+                       .order_by('expires_at')
+    return _get_list_section_context('reservations', reservations,
+                                     _RESERVATION_CHUNK_SIZE)
