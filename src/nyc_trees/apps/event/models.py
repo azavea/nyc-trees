@@ -65,6 +65,9 @@ class Event(NycModel, models.Model):
         return "%s - group '%s'" % (self.title, self.group)
 
     def clean(self):
+        if self.begins_at > self.ends_at:
+            self.raise_invalid_bounds('begins_at')
+
         if not self.slug and not self.is_private:
             self.slug = slugify(self.title)
         elif not self.slug:
