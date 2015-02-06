@@ -53,6 +53,14 @@ class Event(NycModel, models.Model):
 
     objects = models.GeoManager()
 
+    @staticmethod
+    def raise_date_past(field_name):
+        raise ValidationError({field_name: ['Event must not begin in past']})
+
+    @staticmethod
+    def raise_invalid_bounds(field_name):
+        raise ValidationError({field_name: ["Must occur before end time"]})
+
     def __unicode__(self):
         return "%s - group '%s'" % (self.title, self.group)
 
