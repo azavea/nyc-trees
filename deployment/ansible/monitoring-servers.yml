@@ -11,4 +11,5 @@
 
     - { role: "nyc-trees.graphite", when: "['test'] | is_not_in(group_names)" }
     - { role: "nyc-trees.logstash", when: "['test'] | is_not_in(group_names)" }
+    - { role: "nyc-trees.tasseo", when: "['test'] | is_not_in(group_names)" }
     - { role: "azavea.kibana", when: "['test'] | is_not_in(group_names)" }

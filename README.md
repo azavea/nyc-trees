@@ -51,6 +51,7 @@ Service                | Port  | URL
 Django Web Application | 8000  | [http://localhost:8000](http://localhost:8000)
 Graphite Dashboard     | 8080  | [http://localhost:8080](http://localhost:8080)
 Kibana Dashboard       | 15601 | [http://localhost:15601](http://localhost:15601)
+Tasseo                 | 15000 | [http://localhost:15000](http://localhost:15000)
 PostgreSQL             | 15432 |
 pgweb                  | 15433 | [http://localhost:15433](http://localhost:15433)
 Redis                  | 16379 | `redis-cli -h localhost 16379`

@@ -95,6 +95,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       guest: 8080,
       host: 8080
     }.merge(VAGRANT_NETWORK_OPTIONS)
+    # Tasseo
+    services.vm.network "forwarded_port", {
+      guest: 5000,
+      host: 15000
+    }.merge(VAGRANT_NETWORK_OPTIONS)
     # Kibana
     services.vm.network "forwarded_port", {
       guest: 5601,

@@ -1,0 +1,50 @@
+var period = 10;
+var metrics = [
+    {
+        "alias": "django.percent-error",
+        "target": "scale(divideSeries(transformNull(sumSeries(statsite.counts.django.response.{4,5}*),0),transformNull(sumSeries(statsite.counts.django.response.{1,2,3}*),0)),100)",
+        "unit": "%",
+        "warning": 10,
+        "critical": 15
+    },
+    {
+        "alias": "django.1-3XX",
+        "target": "transformNull(sumSeries(statsite.counts.django.response.{1,2,3}*),0)"
+    },
+    {
+        "alias": "django.4-5XX",
+        "target": "transformNull(sumSeries(statsite.counts.django.response.{4,5}*),0)"
+    },
+    {% if ['packer'] | is_in(group_names) -%}
+    {
+        "alias": "email.percent-error",
+        "target": "scale(divideSeries(transformNull(sumSeries(statsite.counts.email.message.failure),0),transformNull(sumSeries(statsite.counts.email.message.success),0)),100)",
+        "unit": "%",
+        "warning": 10,
+        "critical": 15
+    },
+    {
+        "alias": "email.success",
+        "target": "transformNull(statsite.counts.email.message.success,0)"
+    },
+    {
+        "alias": "email.failure",
+        "target": "transformNull(statsite.counts.email.message.failure,0)"
+    },
+    {% endif %}
+    {
+        "alias": "windshaft.percent-error",
+        "target": "scale(divideSeries(transformNull(sumSeries(statsite.counts.windshaft.tiles.{error,failure}),0),transformNull(statsite.counts.windshaft.tiles.success,0)),100)",
+	"unit": "%",
+        "warning": 10,
+        "critical": 15
+    },
+    {
+        "alias": "windshaft.success",
+        "target": "transformNull(statsite.counts.windshaft.tiles.success,0)"
+    },
+    {
+        "alias": "windshaft.failure",
+        "target": "transformNull(sumSeries(statsite.counts.windshaft.tiles.{error,failure}),0)"
+    }
+];

@@ -19,3 +19,5 @@ graphite_host: "{{ services_ip }}"
 statsite_host: "{{ services_ip }}"
 
 tiler_host: "{{ lookup('env', 'NYC_TREES_TILER_IP') | default('33.33.33.20', true) }}"
+
+tasseo_graphite_url: "http://{{ graphite_host }}:{{ graphite_web_port }}"

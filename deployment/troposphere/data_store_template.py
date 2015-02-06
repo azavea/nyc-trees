@@ -93,7 +93,7 @@ bastion_security_group = t.add_resource(ec2.SecurityGroup(
     SecurityGroupIngress=[
         ec2.SecurityGroupRule(IpProtocol='tcp', CidrIp=utils.OFFICE_CIDR,
                               FromPort=p, ToPort=p)
-        for p in [22, 5601, 8080]
+        for p in [22, 5000, 5601, 8080]
     ] + [
         ec2.SecurityGroupRule(IpProtocol='tcp', CidrIp=utils.VPC_CIDR,
                               FromPort=p, ToPort=p)

@@ -1,0 +1,6 @@
+---
+- name: Configure Tasseo
+  template: src=nyc-trees.js.j2
+            dest="{{ tasseo_dir }}/tasseo-{{ tasseo_version }}/dashboards/nyc-trees.js"
+  notify:
+    - Restart Tasseo

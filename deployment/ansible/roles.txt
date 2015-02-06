@@ -12,8 +12,8 @@ azavea.logstash,0.1.0
 azavea.relp,0.1.1
 azavea.kibana,0.2.1
 azavea.unzip,0.1.0
-azavea.graphite,0.2.0
-azavea.statsite,0.1.0
+azavea.graphite,0.4.0
+azavea.statsite,0.1.1
 azavea.daemontools,0.1.0
 azavea.collectd,0.2.0
 azavea.git,0.1.0
@@ -26,3 +26,4 @@ azavea.sauce-connect,0.2.0
 azavea.beaver,0.1.2
 azavea.swapfile,0.1.0
 azavea.build-essential,0.1.0
+azavea.tasseo,0.1.1

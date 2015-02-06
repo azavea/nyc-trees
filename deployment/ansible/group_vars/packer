@@ -17,3 +17,5 @@ tiler_host: "tile.service.nyc-trees.internal"
 postgresql_username: nyctrees
 postgresql_password: nyctrees
 postgresql_database: nyc_trees
+
+tasseo_graphite_url: "http://$(curl -s http://instance-data.ec2.internal/latest/meta-data/public-hostname):{{ graphite_web_port }}"
