@@ -5,6 +5,8 @@ from __future__ import division
 
 from cStringIO import StringIO
 
+from datetime import timedelta
+
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.gis.geos import Point
 from django.test import RequestFactory
@@ -41,6 +43,7 @@ def make_request(params={}, user=None, method='GET', body=None, file=None,
 
 
 def make_event(group, **kwargs):
+    right_now = now()
     defaults = {
         'group': group,
         'title': "The event",
@@ -48,8 +51,8 @@ def make_event(group, **kwargs):
         'address': "123 Main St",
         'location': Point(-73.9679007, 40.7764977),
         'max_attendees': 100,
-        'begins_at': now(),
-        'ends_at': now()
+        'begins_at': right_now,
+        'ends_at': right_now + timedelta(hours=1),
     }
     defaults.update(kwargs)
 
