@@ -28,6 +28,11 @@
 
 {% endblock main %}
 
+{% block extra_content %}
+<div class="modal fade" id="reservation-modal" tabindex="-1" role="dialog" aria-labelledby="reservation-modal-label" aria-hidden="true" id="modal">
+</div>
+{% endblock extra_content %}
+
 {% block page_js %}
     <script type="text/javascript" src="{{ "js/reservationPage.js"|static_url }}"></script>
 {% endblock page_js %}

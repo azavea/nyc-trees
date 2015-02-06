@@ -3,7 +3,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
-from django_tinsel.decorators import route, render_template
+from django_tinsel.decorators import route, render_template, json_api_call
 
 from apps.core.decorators import individual_mapper_do
 
@@ -31,6 +31,7 @@ reserved_blockface_popup = route(
 
 cancel_reservation = route(
     GET=individual_mapper_do(
+        json_api_call,
         v.cancel_reservation))
 
 reserve_blockfaces = individual_mapper_do(
