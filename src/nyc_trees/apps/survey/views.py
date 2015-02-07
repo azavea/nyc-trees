@@ -122,6 +122,10 @@ def confirm_blockface_reservations(request):
     }
 
 
+def blockface(request, blockface_id):
+    return {'extent': Blockface.objects.get(pk=blockface_id).geom.extent}
+
+
 def start_survey(request, blockface_id):
     # TODO: implement
     pass
