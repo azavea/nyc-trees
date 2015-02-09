@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 from django.utils import timezone
 
 from django.core import mail
+from django.core.exceptions import ValidationError
 from django.http import HttpResponseForbidden
 
 from apps.core.test_utils import make_request, make_event
@@ -29,6 +30,15 @@ class EventTestCase(UsersTestCase):
     def setUp(self):
         super(EventTestCase, self).setUp()
         self.event = make_event(self.group)
+
+
+class EventTest(UsersTestCase):
+    def test_cant_save_date_with_invalid_bounds(self):
+        with self.assertRaises(ValidationError):
+            right_now = timezone.now()
+            make_event(self.group,
+                       begins_at=right_now,
+                       ends_at=right_now - timedelta(hours=1))
 
 
 class EventListTest(EventTestCase):
@@ -215,8 +225,11 @@ class MyEventsNowTestCase(UsersTestCase):
     def test_included_if_starting_now(self):
         self.assert_included(+0, +1)
 
+    def test_excluded_if_ended_3_hours_ago(self):
+        self.assert_excluded(-4, -3)
+
     def test_excluded_if_ended_6_hours_ago(self):
-        self.assert_excluded(-5, -6)
+        self.assert_excluded(-7, -6)
 
     def test_excluded_if_starting_in_6_hours(self):
         self.assert_excluded(+6, +7)
