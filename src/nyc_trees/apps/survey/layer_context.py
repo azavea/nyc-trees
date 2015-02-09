@@ -30,7 +30,13 @@ def get_context_for_reservations_layer(request):
     return _get_context_for_layer("reservations", models, request)
 
 
-def _get_context_for_layer(layer_name, models, request):
+def get_context_for_territory_layer(request, group_id):
+    models = [Blockface, Territory]
+    params = '?group=%s' % group_id
+    return _get_context_for_layer("territory", models, request, params)
+
+
+def _get_context_for_layer(layer_name, models, request, params=''):
     tiler_url_format = \
         "%(tiler_url)s/%(cache_buster)s/%(db)s/%(type)s/{z}/{x}/{y}"
 
@@ -41,10 +47,8 @@ def _get_context_for_layer(layer_name, models, request):
         'type': layer_name
     }
 
-    if request.user.is_authenticated():
+    if params == '' and request.user.is_authenticated():
         params = '?user=%s' % request.user.pk
-    else:
-        params = ''
 
     context = {
         'tile_url': tile_url + '.png' + params,

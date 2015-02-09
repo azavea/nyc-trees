@@ -31,9 +31,12 @@ function create(options) {
 
     var map = L.map(options.domId, mapOptions),
         zoomControl = L.control.zoom({position: 'bottomleft'}).addTo(map),
-        $controlsContainer = $(zoomControl.getContainer());
+        $controlsContainer = $(zoomControl.getContainer()),
+        bounds = getDomMapAttribute('bounds');
 
-    if (options.location && options.location.lat !== 0) {
+    if (bounds) {
+        fitBounds(map, bounds);
+    } else if (options.location && options.location.lat !== 0) {
         map.setView(options.location, zoom.NEIGHBORHOOD);
     } else {
         map.fitBounds(config.bounds);
@@ -59,6 +62,13 @@ function create(options) {
     }
 
     return map;
+}
+
+function fitBounds(map, bounds) {
+    // GeoDjango bounds are [xmin, ymin, xmax, ymax]
+    // Leaflet wants [ [ymin, xmin], [ymax, xmax] ]
+    var b = [[bounds[1], bounds[0]], [bounds[3], bounds[2]]];
+    map.fitBounds(b);
 }
 
 function initBaseMap(map) {
@@ -104,7 +114,7 @@ function initCrosshairs(domId) {
 }
 
 function addTileLayer(map, domId) {
-    var tileUrl = getLayerUrl('tile-url', domId),
+    var tileUrl = getDomMapAttribute('tile-url', domId),
         layer = L.tileLayer(tileUrl, {
             maxZoom: zoom.MAX
         }).addTo(map);
@@ -112,7 +122,7 @@ function addTileLayer(map, domId) {
 }
 
 function addGridLayer(map, domId) {
-    var gridUrl = getLayerUrl('grid-url', domId),
+    var gridUrl = getDomMapAttribute('grid-url', domId),
         layer = L.utfGrid(gridUrl, {
             maxZoom: zoom.MAX,
             useJsonP: false
@@ -121,9 +131,9 @@ function addGridLayer(map, domId) {
     return layer;
 }
 
-function getLayerUrl(dataAttName, domId) {
-    var domId = domId || 'map',
-        $map = $('#' + domId),
-        url = $map.data(dataAttName);
-    return url;
+function getDomMapAttribute(dataAttName, domId) {
+    domId = domId || 'map';
+    var $map = $('#' + domId),
+        value = $map.data(dataAttName);
+    return value;
 }

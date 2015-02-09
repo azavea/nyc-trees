@@ -100,7 +100,6 @@ grid.on('click', function(e) {
     }
 });
 
-reservationMap.addLayer(grid);
 reservationMap.addLayer(selectedLayer);
 
 // Load any existing data.
