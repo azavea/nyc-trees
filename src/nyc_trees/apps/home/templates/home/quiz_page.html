@@ -38,12 +38,14 @@
 </div>
 
 <ul>
-    {% with question_no=forloop.counter0 %}
-        {% for choice in question.choices %}
-        <li><label><input type="radio" name="question.{{ question_no }}"
-                value="{{ forloop.counter0 }}" />{{ choice }}</label></li>
-        {% endfor %}
-    {% endwith %}
+{% with question_no=forloop.counter0 %}
+    {% for choice in question.choices %}
+    <li><label>
+        <input type="{% if question.is_multiple_choice %}checkbox{% else %}radio{% endif %}"
+            name="question.{{ question_no }}"
+            value="{{ forloop.counter0 }}" />{{ choice }}</label></li>
+    {% endfor %}
+{% endwith %}
 </ul>
 <hr />
 

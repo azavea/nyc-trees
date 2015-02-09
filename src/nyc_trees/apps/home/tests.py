@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from __future__ import division
 
 from django.test import TestCase
-from django.http import Http404
+from django.http import Http404, QueryDict
 from django.conf import settings
 
 from django.contrib.auth.models import AnonymousUser
@@ -15,7 +15,7 @@ from django_tinsel.utils import decorate as do
 from apps.core.models import User
 from apps.core.test_utils import make_request
 from apps.home.training.decorators import mark_user, render_flatpage
-from apps.home.training.types import Quiz, Question
+from apps.home.training.types import Quiz, Question, MultiChoiceQuestion
 from apps.home.routes import home_page
 from apps.users.tests import UsersTestCase
 
@@ -111,6 +111,7 @@ class QuizTestCase(TestCase):
         with self.assertRaises(AssertionError):
             Quiz(title='Test quiz', passing_score=2, questions=['A'])
 
+    def test_question_assertions(self):
         # Must be at least one choice
         with self.assertRaises(AssertionError):
             Question(text='A', answer=0, choices=[])
@@ -123,6 +124,19 @@ class QuizTestCase(TestCase):
         with self.assertRaises(AssertionError):
             Question(text='A', answer=2, choices=['A'])
 
+    def test_multichoice_assertions(self):
+        # Must be at least one choice
+        with self.assertRaises(AssertionError):
+            MultiChoiceQuestion(text='A', answer=(), choices=[])
+
+        # Answer must be > 0
+        with self.assertRaises(AssertionError):
+            MultiChoiceQuestion(text='A', answer=(0, -1), choices=['A'])
+
+        # Answer must be <= number of choices
+        with self.assertRaises(AssertionError):
+            MultiChoiceQuestion(text='A', answer=(0, 2), choices=['A'])
+
     def test_quiz_score(self):
         quiz = Quiz(
             title='Test quiz',
@@ -132,25 +146,28 @@ class QuizTestCase(TestCase):
                     text='Which one?',
                     answer=0,
                     choices=('A', 'B')),
-                Question(
+                MultiChoiceQuestion(
                     text='Which one?',
-                    answer=1,
+                    answer=(0, 1),
                     choices=('A', 'B'))))
 
         self.assertEqual(0, quiz.score({}))
-        self.assertEqual(0, quiz.score({98: 0, 99: 1}))
-        self.assertEqual(0, quiz.score({0:  1, 1: 0}))
-        self.assertEqual(1, quiz.score({0:  0, 1: 0}))
-        self.assertEqual(2, quiz.score({0:  0, 1: 1}))
+        self.assertEqual(0, quiz.score({98: [0],
+                                        99: [1]}))
+        self.assertEqual(0, quiz.score({0: [1],
+                                        1: [0]}))
+        self.assertEqual(1, quiz.score({0: [0],
+                                        1: [0]}))
+        self.assertEqual(2, quiz.score({0: [0],
+                                        1: [0, 1]}))
 
     def test_quiz_extract_answers(self):
-        post_fields = {
-            'foo': ['bar'],
-            'foo.bar': 'baz',
-            'question.0': [1],
-            'question.99': [2]
-        }
-        self.assertEqual({0: 1, 99: 2},
+        post_fields = QueryDict('foo=bar'
+                                '&foo.bar=baz'
+                                '&question.0=1'
+                                '&question.0=2'
+                                '&question.99=2')
+        self.assertEqual({0: [1, 2], 99: [2]},
                          Quiz.extract_answers(post_fields))
 
 

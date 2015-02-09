@@ -21,7 +21,11 @@ var slug = $(dom.quizSlug).data('quiz-slug'),
         getState: function() {
             var formData = {};
             $(dom.selections).each(function() {
-                formData[$(this).attr('name')] = $(this).val();
+                var key = $(this).attr('name');
+                if (!formData[key]) {
+                    formData[key] = [];
+                }
+                formData[key].push($(this).val());
             });
             return {
                 form: formData,
@@ -72,7 +76,7 @@ function submit(e) {
 // Return true if there is 1 checked answer for given question.
 function validate(id) {
     var selectedAnswer = $('[name="question.' + id + '"]:checked');
-    if (selectedAnswer.size() === 1) {
+    if (selectedAnswer.size() >= 1) {
         $(dom.warning).addClass('hidden');
         return true;
     }
@@ -94,10 +98,11 @@ function restore() {
     var state = progress.load();
     if (state && state.form) {
         // Restore radio button selections.
-        $.each(state.form, function(fieldName, value) {
-            // Assumes that only checked values are serialized.
-            var radio = $('input[name="' + fieldName + '"][value="' + value + '"]');
-            radio.prop('checked', true);
+        $.each(state.form, function(fieldName, values) {
+            $.each(values, function(__, value) {
+                var field = $('input[name="' + fieldName + '"][value="' + value + '"]');
+                field.prop('checked', true);
+            });
         });
     }
     if (state && state.question > 0) {
