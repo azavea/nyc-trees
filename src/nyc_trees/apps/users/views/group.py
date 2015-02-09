@@ -25,6 +25,7 @@ from apps.event.models import Event, EventRegistration
 from apps.event.event_list import EventList
 
 GROUP_EVENTS_ID = 'group-events'
+GROUP_EDIT_EVENTS_TAB_ID = 'events'
 
 
 def group_list_page(request):
@@ -159,6 +160,7 @@ def edit_group(request, form=None):
             settings.MAX_GROUP_IMAGE_SIZE_IN_BYTES, 0),
         'pending_mappers': pending_mappers,
         'all_mappers': all_mappers,
+        'group_edit_events_tab_id': GROUP_EDIT_EVENTS_TAB_ID,
     }
 
 

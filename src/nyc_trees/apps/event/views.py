@@ -14,7 +14,7 @@ from django.utils.timezone import get_current_timezone, now
 from apps.core.forms import EmailForm
 from apps.core.models import User
 
-from apps.users.views.group import GROUP_EVENTS_ID
+from apps.users.views.group import GROUP_EVENTS_ID, GROUP_EDIT_EVENTS_TAB_ID
 
 from apps.event.forms import EventForm
 from apps.event.models import Event, EventRegistration
@@ -29,8 +29,10 @@ def add_event(request):
     is_valid = _process_event_form(form, request)
 
     if is_valid:
+        base_url = reverse(
+            'group_edit', kwargs={'group_slug': request.group.slug})
         return HttpResponseRedirect(
-            reverse('group_edit', kwargs={'group_slug': request.group.slug}))
+            '%s#%s' % (base_url, GROUP_EDIT_EVENTS_TAB_ID))
     else:
         return {
             'form': form,
