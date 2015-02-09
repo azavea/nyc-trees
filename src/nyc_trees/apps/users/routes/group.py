@@ -47,5 +47,6 @@ unfollow_group = do(
 start_group_map_print_job = route(POST=v.start_group_map_print_job)
 
 edit_user_mapping_priveleges = group_admin_do(
+    render_template('groups/partials/grant_access_button.html'),
     route(PUT=v.give_user_mapping_priveleges,
           DELETE=v.remove_user_mapping_priveleges))

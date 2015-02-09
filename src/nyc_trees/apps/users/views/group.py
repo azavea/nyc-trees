@@ -15,7 +15,7 @@ from apps.core.helpers import user_is_group_admin
 from apps.core.decorators import group_request
 from apps.core.models import Group
 
-from apps.users.models import Follow
+from apps.users.models import Follow, TrustedMapper
 from apps.users.forms import GroupSettingsForm
 
 from apps.survey.models import Territory, Survey, Blockface
@@ -143,13 +143,19 @@ def edit_group(request, form=None):
                              active_filter=EventList.Filters.CURRENT,
                              filterset_name=EventList.chronoFilters)
                   .as_context(request, group_slug=group.slug))
+    pending_mappers = TrustedMapper.objects.filter(group=request.group,
+                                                   is_approved__isnull=True)
+    all_mappers = TrustedMapper.objects.filter(group=request.group,
+                                               is_approved__isnull=False)
     return {
         'group': group,
         'event_list': event_list,
         'form': form,
         'group_slug': group.slug,
         'max_image_size': humanize_bytes(
-            settings.MAX_GROUP_IMAGE_SIZE_IN_BYTES, 0)
+            settings.MAX_GROUP_IMAGE_SIZE_IN_BYTES, 0),
+        'pending_mappers': pending_mappers,
+        'all_mappers': all_mappers,
     }
 
 
@@ -180,10 +186,18 @@ def start_group_map_print_job(request):
 
 
 def give_user_mapping_priveleges(request, username):
-    # TODO: implement
-    pass
+    return _grant_mapping_access(request.group, username, is_approved=True)
 
 
 def remove_user_mapping_priveleges(request, username):
-    # TODO: implement
-    pass
+    return _grant_mapping_access(request.group, username, is_approved=False)
+
+
+def _grant_mapping_access(group, username, is_approved):
+    mapper, created = TrustedMapper.objects.update_or_create(
+        group=group,
+        user__username=username,
+        defaults=dict(is_approved=is_approved))
+    return {
+        'mapper': mapper
+    }
