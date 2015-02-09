@@ -259,8 +259,24 @@ def event_user_check_in_page(request, event_slug):
     event = get_object_or_404(Event, group=request.group, slug=event_slug)
     return {
         'event': event,
-        'user': request.user
+        'group': request.group,
+        'user': request.user,
+        'checked_in': _user_is_checked_in(request.user, event)
     }
+
+
+def event_user_check_in_poll(request, event_slug):
+    event = get_object_or_404(Event, group=request.group, slug=event_slug)
+    return {
+        'checked_in': _user_is_checked_in(request.user, event)
+    }
+
+
+def _user_is_checked_in(user, event):
+    """Return True if user is checked-in to event"""
+    return EventRegistration.objects.filter(user=user,
+                                            event=event,
+                                            did_attend=True).exists()
 
 
 @transaction.atomic

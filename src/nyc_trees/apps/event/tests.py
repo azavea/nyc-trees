@@ -22,6 +22,7 @@ from apps.event.views import (events_list_page,
                               event_email,
                               register_for_event,
                               event_admin_check_in_page,
+                              event_user_check_in_poll,
                               check_in_user_to_event,
                               increase_rsvp_limit)
 
@@ -191,6 +192,24 @@ class CheckinEventTest(EventTestCase):
         check_in_user_to_event(request, self.event.slug, self.user.username)
         user = User.objects.get(id=user.id)
         self.assertEqual(True, user.field_training_complete)
+
+    def test_user_checkin_poll(self):
+        partial_request = partial(make_request, user=self.user,
+                                  group=self.group, event=self.event)
+
+        # RSVP
+        register_for_event(partial_request(method='POST'), self.event.slug)
+
+        response = event_user_check_in_poll(partial_request(), self.event.slug)
+        self.assertFalse(response['checked_in'])
+
+        # Check-in to event
+        check_in_user_to_event(partial_request(method='POST'),
+                               self.event.slug,
+                               self.user.username)
+
+        response = event_user_check_in_poll(partial_request(), self.event.slug)
+        self.assertTrue(response['checked_in'])
 
 
 class MyEventsNowTestCase(UsersTestCase):
