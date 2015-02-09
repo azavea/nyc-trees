@@ -23,6 +23,7 @@
         AND reservation.expires_at > now() at time zone 'utc')
   LEFT OUTER JOIN users_trustedmapper AS trustedmapper
     ON (turf.group_id = trustedmapper.group_id
-        AND trustedmapper.user_id = <%= user_id %>)
+        AND trustedmapper.user_id = <%= user_id %>
+        AND trustedmapper.is_approved)
   ORDER BY block.id, survey.created_at DESC NULLS LAST
 ) AS query

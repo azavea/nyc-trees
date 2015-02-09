@@ -65,6 +65,7 @@ class Follow(NycModel, models.Model):
 class TrustedMapper(NycModel, models.Model):
     user = models.ForeignKey(User)
     group = models.ForeignKey(Group)
+    is_approved = models.NullBooleanField()
 
     class Meta:
         unique_together = ("user", "group")

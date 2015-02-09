@@ -79,6 +79,7 @@ class ConfirmBlockfaceReservationTests(TestCase):
 
         self.assert_blocks_reserved(0, self.block1)
 
-        TrustedMapper.objects.create(group=group, user=self.user)
+        TrustedMapper.objects.create(group=group, user=self.user,
+                                     is_approved=True)
 
         self.assert_blocks_reserved(01, self.block1)

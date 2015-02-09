@@ -76,7 +76,7 @@ def confirm_blockface_reservations(request):
         .select_related('territory')
 
     user_trusted_group_ids = TrustedMapper.objects \
-        .filter(user=request.user) \
+        .filter(user=request.user, is_approved=True) \
         .values_list('group_id', flat=True)
 
     already_reserved_blockface_ids = BlockfaceReservation.objects \
