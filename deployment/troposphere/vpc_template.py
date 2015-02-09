@@ -17,7 +17,7 @@ keyname_param = t.add_parameter(Parameter(
 ))
 
 nat_instance_type_param = t.add_parameter(Parameter(
-    'NATInstanceType', Type='String', Default='t1.micro',
+    'NATInstanceType', Type='String', Default='t2.micro',
     Description='NAT EC2 instance type',
     AllowedValues=utils.EC2_INSTANCE_TYPES,
     ConstraintDescription='must be a valid EC2 instance type.'

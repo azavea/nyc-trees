@@ -72,7 +72,7 @@ def get_nat_ami_mapping():
     def get_image_id(region):
         c = boto.connect_ec2()
         all_images = c.get_all_images(owners='amazon', filters={
-            'name': '*ami-vpc-nat*'
+            'name': '*ami-vpc-nat-hvm*'
         })
 
         images = [i for i in all_images if 'beta' not in i.name]
