@@ -162,7 +162,10 @@ bastion_host = t.add_resource(ec2.Instance(
     BlockDeviceMappings=[
         {
             "DeviceName": "/dev/sda1",
-            "Ebs": {"VolumeSize": "256"}
+            "Ebs": {
+                "VolumeType": "gp2",
+                "VolumeSize": "256"
+            }
         }
     ],
     InstanceType=Ref(bastion_instance_type_param),
