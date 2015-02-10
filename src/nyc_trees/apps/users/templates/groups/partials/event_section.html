@@ -33,11 +33,11 @@
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="group-detail-event-info-submenu">
                     <li><a role="menuitem" tabindex="-1" href="{{ event.get_absolute_url }}">View event</a></li>
-                    <li><a role="menuitem" tabindex="-1" href="#">RSVP to event</a></li>
-                    <li><a role="menuitem" tabindex="-1" href="#">Edit details</a></li>
-                    <li><a role="menuitem" tabindex="-1" href="#">Email attendees</a></li>
-                    <li><a role="menuitem" tabindex="-1" href="#">Event check-in</a></li>
-                    <li><a role="menuitem" tabindex="-1" href="#">Get shareable link</a></li>
+                    <li><a role="menuitem" tabindex="-1" href="{% url 'event_edit' group_slug=event.group.slug event_slug=event.slug %}">Edit details</a></li>
+                    <li><a role="menuitem" tabindex="-1" href="{% url 'event_email' group_slug=event.group.slug event_slug=event.slug %}">Email attendees</a></li>
+                    <li><a role="menuitem" tabindex="-1" href="{% url 'event_admin_check_in_page' group_slug=event.group.slug event_slug=event.slug %}">Event check-in</a></li>
+                    <li><a role="menuitem" tabindex="-1" href="javascript:;" class="js-copy-event-url"
+                            data-event-url="{{ info.event_share_url }}">Get shareable link</a></li>
                 </ul>
             </div>
             {% endif %}

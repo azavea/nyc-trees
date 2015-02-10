@@ -3,6 +3,7 @@
 var fetchAndReplace = require('./fetchAndReplace');
 
 require('./event_list');
+require('./copyEventUrl');
 
 // Because onclick events are triggered for each defined target in the
 // fetchAndReplace container, a target such as ".btn-approve, .btn-deny" will

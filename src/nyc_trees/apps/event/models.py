@@ -118,6 +118,9 @@ class Event(NycModel, models.Model):
         return reverse('event_detail', kwargs={'group_slug': self.group.slug,
                                                'event_slug': self.slug})
 
+    def get_shareable_url(self, request):
+        return request.build_absolute_uri(self.get_absolute_url())
+
     class Meta:
         unique_together = (("group", "slug"), ("group", "title"))
 

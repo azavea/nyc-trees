@@ -15,3 +15,5 @@ fetchAndReplace({
     container: '#rsvp-section',
     target: '#rsvp'
 });
+
+require('./copyEventUrl');
