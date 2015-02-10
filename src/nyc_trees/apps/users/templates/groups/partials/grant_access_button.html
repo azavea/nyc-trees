@@ -1,0 +1,17 @@
+{% comment %}
+
+The following variables must be in scope:
+===
+  - mapper (object)  TrustedMapper model
+
+{% endcomment %}
+
+<a href="javascript:void(0)"
+   class="btn btn-approve {% if mapper.is_approved %}btn-default{% else %}btn-switch{% endif %}"
+    data-url="{% url 'edit_user_mapping_priveleges' group_slug=mapper.group.slug username=mapper.user.username %}"
+    data-verb="PUT">Approve</a>
+
+<a href="javascript:void(0)"
+   class="btn btn-deny {% if mapper.is_approved == False %}btn-default{% else %}btn-switch{% endif %}"
+    data-url="{% url 'edit_user_mapping_priveleges' group_slug=mapper.group.slug username=mapper.user.username %}"
+    data-verb="DELETE">Deny</a>

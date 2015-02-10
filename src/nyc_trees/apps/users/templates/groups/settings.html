@@ -135,7 +135,7 @@
                     </div>
                     <hr>
                 </div>
-                <div class="mappers-view content--disabled">
+                <div class="mappers-view">
                     <ul class="nav nav-tabs nav-tabs--filter">
                         <li class="active">
                             <a data-toggle="tab" href="#pending">Pending</a>
@@ -148,51 +148,46 @@
                         <div class="tab-content">
                             <div class="tab-pane active" id="pending">
                                 <div class="mapper block item">
+                                    {% for mapper in pending_mappers %}
                                     <div class="row">
                                         <div class="col-xs-6">
                                             <h4>
-                                                rreading
+                                                {{ mapper.user.username }}
                                             </h4>
                                             <h5 class="nobold">
-                                                Rachel Reading
+                                                {{ mapper.user.first_name }}
+                                                {{ mapper.user.last_name }}
                                             </h5>
                                         </div>
                                         <div class="col-xs-6 text-right">
-                                            <a href="{{edit_url}}" class="btn btn-switch">Access Granted</a>
+                                            <div class="btn-grant-access-container">
+                                            {% include 'groups/partials/grant_access_button.html' %}
+                                            </div>
                                         </div>
                                     </div>
+                                    {% endfor %}
                                 </div>
                             </div>
                             <div class="tab-pane" id="all">
                                 <div class="mapper block item">
+                                    {% for mapper in all_mappers %}
                                     <div class="row">
                                         <div class="col-xs-6">
                                             <h4>
-                                                rreading
+                                                {{ mapper.user.username }}
                                             </h4>
                                             <h5 class="nobold">
-                                                Rachel Reading
+                                                {{ mapper.user.first_name }}
+                                                {{ mapper.user.last_name }}
                                             </h5>
                                         </div>
                                         <div class="col-xs-6 text-right">
-                                            <a href="{{edit_url}}" class="btn btn-switch">Access Granted</a>
+                                            <div class="btn-grant-access-container">
+                                            {% include 'groups/partials/grant_access_button.html' %}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="mapper block item">
-                                    <div class="row">
-                                        <div class="col-xs-6">
-                                            <h4>
-                                                rreading
-                                            </h4>
-                                            <h5 class="nobold">
-                                                Rachel Reading
-                                            </h5>
-                                        </div>
-                                        <div class="col-xs-6 text-right">
-                                            <a href="{{edit_url}}" class="btn btn-switch">Access Granted</a>
-                                        </div>
-                                    </div>
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
