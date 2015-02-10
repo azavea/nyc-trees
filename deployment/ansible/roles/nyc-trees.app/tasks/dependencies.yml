@@ -2,9 +2,9 @@
 - name: Install Geospatial libraries
   apt: pkg={{ item }} state=present
   with_items:
-    - binutils=2.24-5ubuntu3
-    - libproj-dev=4.8.0-2ubuntu2
-    - gdal-bin=1.10.1+dfsg-5ubuntu1
+    - "binutils=2.24*"
+    - "libproj-dev=4.8.0*"
+    - "gdal-bin=1.10.1*"
 
 - name: Configure the main PostgreSQL APT repository
   apt_repository: repo="deb http://apt.postgresql.org/pub/repos/apt/ {{ ansible_distribution_release}}-pgdg main"
