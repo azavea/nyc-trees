@@ -8,14 +8,14 @@ fi
 
 function get_latest_ubuntu_ami() {
   # 1. Get list of daily Ubuntu AMIs
-  # 2. Filter AMIs with EBS instance store, amd64 architecture, and in
+  # 2. Filter AMIs with EBS SSD instance store, amd64 architecture, and in
   #    AWS_DEFAULT_REGION
   # 3. Filter again by HVM AMIs
   # 4. Sort by date in reverse
   # 5. Take the top row
   # 6. Take the 8th column
   curl -s "http://cloud-images.ubuntu.com/query/trusty/server/daily.txt" \
-    | egrep "ebs\s+amd64\s+${AWS_DEFAULT_REGION}" \
+    | egrep "ebs-ssd\s+amd64\s+${AWS_DEFAULT_REGION}" \
     | grep "hvm" \
     | sort -k4 -r \
     | head -n1 \
