@@ -45,7 +45,7 @@ $ ssh 10.0.1.191
 After successfully connecting to an application server, run `setupdb.sh`:
 
 ```bash
-$ /opt/nyc-trees/scripts/setupdb.sh
+$ /opt/nyc-trees/scripts/aws/setupdb.sh
 ```
 
 This script will:
