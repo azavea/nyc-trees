@@ -206,3 +206,12 @@ def _grant_mapping_access(group, username, is_approved):
     return {
         'mapper': mapper
     }
+
+
+def request_mapper_status(request):
+    mapper, created = TrustedMapper.objects.update_or_create(
+        group=request.group,
+        user=request.user)
+    return {
+        'success': True
+    }

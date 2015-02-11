@@ -22,7 +22,7 @@ var Windshaft = require('windshaft'),
 
     interactivity = {
         progress: 'id,group_id,survey_type',
-        reservable: 'id,group_id,survey_type,restriction,geojson',
+        reservable: 'id,group_id,group_slug,survey_type,restriction,geojson',
         reservations: 'id,geojson'
     },
 
