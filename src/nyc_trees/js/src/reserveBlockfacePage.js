@@ -59,8 +59,9 @@ var progress = new SavedState({
 
 var selectedLayer = new SelectableBlockfaceLayer(reservationMap, grid, {
     onAdd: function(gridData) {
-        if (selectedBlockfacesCount < blockfaceLimit &&
-                gridData.restriction === 'none') {
+        if (selectedBlockfacesCount >= blockfaceLimit) {
+            $(dom.limitReachedModal).modal('show');
+        } else if (gridData.restriction === 'none') {
             selectedBlockfaces[gridData.id] = gridData;
             selectedBlockfacesCount++;
             $current.text(selectedBlockfacesCount);
