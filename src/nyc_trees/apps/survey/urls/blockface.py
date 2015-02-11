@@ -8,7 +8,8 @@ from django.conf.urls import patterns, url
 from apps.survey.routes import (reserve_blockface_page, cancel_reservation,
                                 reserve_blockfaces, survey, reservations,
                                 reserved_blockface_popup,
-                                blockface_reservations_confirmation_page)
+                                blockface_reservations_confirmation_page,
+                                blockface)
 
 
 # These URLs have the prefix 'blockface/'
@@ -32,4 +33,9 @@ urlpatterns = patterns(
         name='blockface_reservations_confirmation_page'),
 
     url(r'^(?P<blockface_id>\d+)/survey/$', survey, name='survey'),
+
+    # Note: this must be kept in sync with the hardcoded url in
+    # js/src/reservationPage.js
+    url(r'^(?P<blockface_id>\d+)/$', blockface,
+        name='blockface'),
 )

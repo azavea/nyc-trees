@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from __future__ import division
 
 from django_tinsel.decorators import route, render_template, json_api_call
+from django_tinsel.utils import decorate as do
 
 from apps.core.decorators import individual_mapper_do
 
@@ -55,6 +56,8 @@ choose_blockface_survey_page = route(
 
 species_autocomplete_list = route(
     GET=v.species_autocomplete_list)
+
+blockface = route(GET=do(json_api_call, v.blockface))
 
 #####################################
 # ADMIN ROUTES

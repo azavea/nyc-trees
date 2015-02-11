@@ -43,6 +43,11 @@ var tileLayer = mapModule.addTileLayer(reservationMap),
         }
     });
 
+var hash = window.location.hash;
+
+reservationMap.addLayer(grid);
+reservationMap.addLayer(selectedLayer);
+
 $modalContainer.on('click', dom.cancelLink, function(e) {
     var $button = $(e.currentTarget);
     e.preventDefault();
@@ -67,3 +72,18 @@ $modalContainer.on('click', dom.cancelLink, function(e) {
         $button.prop('disabled', false);
     });
 });
+
+
+// Zoom the map to fit a blockface ID pased in the URL hash
+// Assumes that the hash contains only a blockface ID
+// NOTE: This has a hard coded url that must be kept in sync with
+// apps/survey/urls/blockface.py
+if (hash) {
+    $.getJSON('/blockface/' + hash.substring(1) + '/', function(blockface) {
+        var e = blockface.extent,
+            sw = L.latLng(e[1], e[0]),
+            ne = L.latLng(e[3], e[2]),
+            bounds = L.latLngBounds(sw, ne);
+        reservationMap.fitBounds(bounds);
+    });
+}

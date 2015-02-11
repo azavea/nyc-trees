@@ -2,6 +2,7 @@
 
 var $ = require('jquery'),
     privacySettings = require('./privacySettings.js'),
+    bindShowAllRowsHandlers = require('./bindShowAllRowsHandlers'),
 
     dom = {
         privacyForm: '#privacy-form',
@@ -18,8 +19,4 @@ $(dom.cancelButton).on('click', function () {
     privacySettings.revert();
 });
 
-$('[data-class="user-profile-groups-show-all"]').on('click', function (e) {
-    e.preventDefault();
-    $('[data-class="user-profile-group-row"]').show();
-    $(e.target).hide();
-});
+bindShowAllRowsHandlers();
