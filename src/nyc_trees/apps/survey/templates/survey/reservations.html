@@ -24,7 +24,9 @@
 
 {% block main %}
 
-<div id="map" class="map-event">
+<div id="map" class="map-event"
+     data-tile-url="{{ layer.tile_url }}"
+     data-grid-url="{{ layer.grid_url }}"></div>
 
 {% endblock main %}
 

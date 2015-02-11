@@ -7,13 +7,13 @@ from django.conf import settings
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.utils.timezone import now
-
-
-from nyc_trees.context_processors import make_layers_context
+from apps.core.views import map_legend
 
 from apps.users.models import TrustedMapper
 
 from apps.survey.models import BlockfaceReservation, Blockface, Territory
+from apps.survey.layer_context import (get_context_for_reservations_layer,
+                                       get_context_for_reservable_layer)
 
 
 def cancel_reservation(request, blockface_id):
@@ -24,13 +24,19 @@ def cancel_reservation(request, blockface_id):
         .current() \
         .update(canceled_at=update_time, updated_at=update_time)
 
-    return make_layers_context(request)
+    return get_context_for_reservations_layer(request)
 
 
 def blockface_cart_page(request):
     return {
         'blockface_ids': request.POST['ids']
     }
+
+
+def reservations_page(request):
+    context = map_legend(request)
+    context['layer'] = get_context_for_reservations_layer(request)
+    return context
 
 
 def reserve_blockfaces_page(request):
@@ -44,6 +50,7 @@ def reserve_blockfaces_page(request):
             'current': 0,
             'total': settings.RESERVATIONS_LIMIT - current_reservations_amount
         },
+        'layer': get_context_for_reservable_layer(request),
         'legend_entries': [
             {'css_class': 'available', 'label': 'Available'},
             {'css_class': 'unavailable', 'label': 'Unavailable'},

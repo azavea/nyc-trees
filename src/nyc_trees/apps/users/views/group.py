@@ -5,7 +5,7 @@ from __future__ import division
 
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect
 from django.utils.timezone import now
 
 from libs.formatters import humanize_bytes
@@ -19,6 +19,7 @@ from apps.users.models import Follow, TrustedMapper
 from apps.users.forms import GroupSettingsForm
 
 from apps.survey.models import Territory, Survey, Blockface
+from apps.survey.layer_context import get_context_for_territory_layer
 
 from apps.event.models import Event, EventRegistration
 from apps.event.event_list import EventList
@@ -113,6 +114,8 @@ def group_detail(request):
             'attendees': num_event_attendees
         },
         'group_events_id': GROUP_EVENTS_ID,
+        'layer': get_context_for_territory_layer(request, request.group.id),
+        'territory_bounds': _group_territory_bounds(request.group)
     }
 
 
@@ -123,15 +126,15 @@ def redirect_to_group_detail(request):
         }))
 
 
-def group_territory_geojson(request):
+def _group_territory_bounds(group):
     blockfaces = Blockface.objects \
-        .filter(territory__group=request.group) \
+        .filter(territory__group=group) \
         .collect()
 
     if blockfaces:
-        return blockfaces.convex_hull.json
+        return list(blockfaces.extent)
     else:
-        raise Http404()
+        return None
 
 
 def edit_group(request, form=None):

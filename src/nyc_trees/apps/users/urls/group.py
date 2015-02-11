@@ -14,9 +14,6 @@ urlpatterns = patterns(
 
     url(r'^(?P<group_slug>[\w-]+)/$', r.group_detail, name='group_detail'),
 
-    url(r'^(?P<group_slug>[\w-]+)/territory.json$', r.group_territory_geojson,
-        name='group_territory'),
-
     url(r'^(?P<group_slug>[\w-]+)/edit/$', r.group_edit, name='group_edit'),
 
     url(r'^(?P<group_slug>[\w-]+)/edit/events/$',

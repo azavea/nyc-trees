@@ -63,7 +63,6 @@ var Windshaft = require('windshaft'),
                 callback(null, req);
             } catch(err) {
                 callback(err, null);
-                return;
             }
         }
     };
@@ -71,18 +70,24 @@ var Windshaft = require('windshaft'),
 function req2context(req) {
     // constructs a context object that will be passed to
     // SQL and CartoCSS templates.
-    var context = {},
-        user_id;
-    if (req.query.user) {
-        user_id = parseInt(req.query.user, 10);
-        if (isNaN(user_id)) {
-            throw 'Could not parse "user" query string argument ' +
-                '(' + req.query.user + ') as an integer';
-        }
-        context.user_id = user_id;
-    }
-    context.is_utf_grid = req.params.format === 'grid.json';
+    var context = {
+        user_id: get_int_param('user'),
+        group_id: get_int_param('group'),
+        is_utf_grid: req.params.format === 'grid.json'
+    };
     return context;
+
+    function get_int_param(name) {
+        var value = '';
+        if (req.query[name]) {
+            value = parseInt(req.query[name], 10);
+            if (isNaN(value)) {
+                throw 'Could not parse "' + name + '" query string argument ' +
+                '(' + req.query[name] + ') as an integer';
+            }
+        }
+        return value;
+    }
 }
 
 function req2interactivity(req) {
@@ -90,17 +95,17 @@ function req2interactivity(req) {
 }
 
 function req2style(req) {
+    return styles.progress();
     // At the time this was written we have a single stylesheet
     // for all requests
-    return styles.progress();
 }
 
 function req2sql(req) {
     /*
      This function expects the SQL files loaded into the
      'queries' object to have a specific naming convention. If
-     a user= query string argument is provided, this funciton
-     prepends 'user_' to the 'type' parameter to generate the
+     a user= or group= query string argument is provided, this function
+     prepends 'user_' or 'group_' to the 'type' parameter to generate the
      SQL file name. Example:
 
      URL:  /123456/nyc_trees/foo/1/2/3.png
@@ -109,20 +114,31 @@ function req2sql(req) {
      URL:  /123456/nyc_trees/foo/1/2/3.png?user=1
      File: user_foo.sql
 
+     URL:  /123456/nyc_trees/bar/1/2/3.png?group=2
+     File: group_bar.sql
      */
-    var queryPrefix = req.query.user ? 'user_' : '',
+    var q = req.query,
+        queryPrefix = q.group ? 'group_' : q.user ? 'user_' : '',
         queryName = queryPrefix + req.params.type,
         context = req2context(req),
         additionalErr = '';
     if (queries[queryName]) {
         return queries[queryName](context);
     } else {
-        if (queries['user_' + queryName]) {
-            additionalErr = 'There is a query defined for user_' + queryName +
-                '. Did you forget the user= query string argument?';
-        }
+        additionalErr = additionalErr || getAdditionalErr('group', queryName);
+        additionalErr = additionalErr || getAdditionalErr('user', queryName);
         throw 'No query defined for ' + queryName + '. ' + additionalErr;
     }
+}
+
+function getAdditionalErr(prefix, queryName) {
+    var bar = prefix + '_' + queryName,
+        additionalErr = '';
+    if (queries[bar]) {
+        additionalErr = 'There is a tiler query defined for ' + bar +
+            '. Did you forget the ' + prefix + '= query string argument?';
+    }
+    return additionalErr;
 }
 
 Windshaft.Server(config).listen(port);

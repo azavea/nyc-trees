@@ -3,7 +3,7 @@
 var $ = require('jquery'),
     L = require('leaflet'),
     toastr = require('toastr'),
-    MapModule = require('./map'),
+    mapModule = require('./map'),
     zoom = require('./mapUtil').zoom,
     SelectableBlockfaceLayer = require('./lib/SelectableBlockfaceLayer'),
 
@@ -20,20 +20,14 @@ var $ = require('jquery'),
 // Extends the leaflet object
 require('leaflet-utfgrid');
 
-var reservationMap = MapModule.create({
+var reservationMap = mapModule.create({
     geolocation: true,
     legend: true,
     search: true
 });
 
-var tileLayer = L.tileLayer(config.urls.layers.reservations.tiles, {
-    maxZoom: zoom.MAX
-}).addTo(reservationMap);
-
-var grid = L.utfGrid(config.urls.layers.reservations.grids, {
-        maxZoom: zoom.MAX,
-        useJsonP: false
-    }),
+var tileLayer = mapModule.addTileLayer(reservationMap),
+    grid = mapModule.addGridLayer(reservationMap),
 
     selectedLayer = new SelectableBlockfaceLayer(reservationMap, grid, {
         onAdd: function(gridData) {
@@ -49,20 +43,17 @@ var grid = L.utfGrid(config.urls.layers.reservations.grids, {
         }
     });
 
-reservationMap.addLayer(grid);
-reservationMap.addLayer(selectedLayer);
-
 $modalContainer.on('click', dom.cancelLink, function(e) {
     var $button = $(e.currentTarget);
     e.preventDefault();
 
     $button.prop('disabled', true);
 
-    $.getJSON($button.attr('data-url'), function(layers) {
-        tileLayer.setUrl(layers.reservations.tiles);
+    $.getJSON($button.attr('data-url'), function(layer) {
+        tileLayer.setUrl(layer.tile_url);
 
         // utfGrid does not expose a setUrl method
-        grid._url = layers.reservations.grids;
+        grid._url = layer.grid_url;
         grid._cache = {};
         grid._update();
 

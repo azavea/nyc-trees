@@ -2,6 +2,17 @@
 
 {% load utils %}
 
+{% block top %}
+
+    {% if territory_bounds  %}
+        <div id="map" class="map-small"
+             data-tile-url="{{ layer.tile_url }}"
+             data-bounds="{{ territory_bounds }}"
+            ></div>
+    {% endif %}
+
+{% endblock top %}
+
 {% block aside %}
 
     <div class="pageheading-description block">

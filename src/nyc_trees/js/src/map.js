@@ -1,3 +1,4 @@
+
 "use strict";
 
 var $ = require('jquery'),
@@ -7,7 +8,9 @@ var zoom = require('./mapUtil').zoom,
     searchController = require('./searchController');
 
 module.exports = {
-    create: create
+    create: create,
+    addTileLayer: addTileLayer,
+    addGridLayer: addGridLayer
 };
 
 function create(options) {
@@ -28,9 +31,12 @@ function create(options) {
 
     var map = L.map(options.domId, mapOptions),
         zoomControl = L.control.zoom({position: 'bottomleft'}).addTo(map),
-        $controlsContainer = $(zoomControl.getContainer());
+        $controlsContainer = $(zoomControl.getContainer()),
+        bounds = getDomMapAttribute('bounds');
 
-    if (options.location && options.location.lat !== 0) {
+    if (bounds) {
+        fitBounds(map, bounds);
+    } else if (options.location && options.location.lat !== 0) {
         map.setView(options.location, zoom.NEIGHBORHOOD);
     } else {
         map.fitBounds(config.bounds);
@@ -56,6 +62,13 @@ function create(options) {
     }
 
     return map;
+}
+
+function fitBounds(map, bounds) {
+    // GeoDjango bounds are [xmin, ymin, xmax, ymax]
+    // Leaflet wants [ [ymin, xmin], [ymax, xmax] ]
+    var b = [[bounds[1], bounds[0]], [bounds[3], bounds[2]]];
+    map.fitBounds(b);
 }
 
 function initBaseMap(map) {
@@ -98,4 +111,29 @@ function initCrosshairs(domId) {
         $hHair = $('<div style="position:absolute; left:0; right:0; bottom:50%; height:1px; background:black"></div>'),
         $vHair = $('<div style="position:absolute; right:50%; width:1px; top:0; bottom:0; background:black"></div>');
     $map.append([$hHair, $vHair]);
+}
+
+function addTileLayer(map, domId) {
+    var tileUrl = getDomMapAttribute('tile-url', domId),
+        layer = L.tileLayer(tileUrl, {
+            maxZoom: zoom.MAX
+        }).addTo(map);
+    return layer;
+}
+
+function addGridLayer(map, domId) {
+    var gridUrl = getDomMapAttribute('grid-url', domId),
+        layer = L.utfGrid(gridUrl, {
+            maxZoom: zoom.MAX,
+            useJsonP: false
+        });
+    map.addLayer(layer);
+    return layer;
+}
+
+function getDomMapAttribute(dataAttName, domId) {
+    domId = domId || 'map';
+    var $map = $('#' + domId),
+        value = $map.data(dataAttName);
+    return value;
 }

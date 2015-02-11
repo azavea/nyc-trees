@@ -5,7 +5,7 @@ from __future__ import division
 
 from django.contrib.auth.decorators import login_required
 
-from django_tinsel.decorators import route, render_template, string_to_response
+from django_tinsel.decorators import route, render_template
 from django_tinsel.utils import decorate as do
 
 from apps.core.decorators import group_request, group_admin_do
@@ -22,10 +22,6 @@ group_list_page = route(GET=do(render_template('groups/list.html'),
 group_detail = route(GET=do(group_request,
                             render_template('groups/detail.html'),
                             v.group_detail))
-
-group_territory_geojson = route(GET=do(group_request,
-                                       string_to_response("application/json"),
-                                       v.group_territory_geojson))
 
 group_edit = group_admin_do(render_template('groups/settings.html'),
                             route(GET=v.edit_group,
