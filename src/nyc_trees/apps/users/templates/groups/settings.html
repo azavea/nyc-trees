@@ -23,12 +23,12 @@
 {% block main %}
 
     <div class="row">
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs" id="group-edit-tabs">
             <li class="active">
                 <a data-toggle="tab" href="#details">Details</a>
             </li>
             <li>
-                <a data-toggle="tab" href="#events">Events</a>
+                <a data-toggle="tab" href="#{{ group_edit_events_tab_id }}">Events</a>
             </li>
             <li>
                 <a data-toggle="tab" href="#mappers">Mappers</a>
@@ -97,7 +97,7 @@
 
             </div>
 
-            <div class="tab-pane" id="events">
+            <div class="tab-pane" id="{{ group_edit_events_tab_id }}">
                 <div class="events" data-class="event-list-container">
                   {% include "groups/partials/edit_event_list.html" %}
                 </div>

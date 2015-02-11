@@ -18,3 +18,5 @@ fetchAndReplace({
     container: '.btn-grant-access-container',
     target: '.btn-deny'
 });
+
+require('./lib/tabhash')('#group-edit-tabs');
