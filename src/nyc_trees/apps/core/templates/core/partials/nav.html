@@ -4,7 +4,9 @@
         <span>
             <h2><a href="{% url 'user_detail_redirect' %}" class="nav-side-user-name">{{ user.username }}</a></h2>
             <div class="nav-side-options">
-                <a href="{% url 'user_profile_settings' %}" class="btn btn-primary">Settings</a> <a href="#" class="btn btn-primary">Privacy</a>
+                <a href="{% url 'user_profile_settings' %}"
+                   class="btn btn-primary">Settings</a>&nbsp;<a href="{{ user_settings_privacy_url }}"
+                                                                class="btn btn-primary">Privacy</a>
             </div>
         </span>
     </div>

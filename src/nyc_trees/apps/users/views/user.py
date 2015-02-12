@@ -16,6 +16,8 @@ from apps.users import user_profile_context, get_privacy_categories
 from apps.users.forms import ProfileSettingsForm, EventRegistrationFormSet, \
     PrivacySettingsForm
 
+USER_SETTINGS_PRIVACY_TAB_ID = 'privacy-pane'
+
 
 # TODO: make a route?
 def user_detail_redirect(request):
@@ -53,6 +55,7 @@ def profile_settings(request):
         'event_formset': event_formset,
         'privacy_categories': get_privacy_categories(privacy_form),
         'username': request.user.username,
+        'user_settings_privacy_tab_id': USER_SETTINGS_PRIVACY_TAB_ID,
     }
     return context
 
