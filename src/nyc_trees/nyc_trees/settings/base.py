@@ -155,6 +155,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.tz',
     'django.contrib.messages.context_processors.messages',
     'django.core.context_processors.request',
+    'nyc_trees.context_processors.user_settings_privacy_url',
     'nyc_trees.context_processors.config',
     'nyc_trees.context_processors.my_events_now',
     'nyc_trees.context_processors.soft_launch',

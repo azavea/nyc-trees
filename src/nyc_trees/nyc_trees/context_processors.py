@@ -4,8 +4,10 @@ from __future__ import unicode_literals
 from __future__ import division
 
 from django.conf import settings
+from django.core.urlresolvers import reverse
 
 from apps.event.models import EventRegistration
+from apps.users.views.user import USER_SETTINGS_PRIVACY_TAB_ID
 
 
 def soft_launch(request):
@@ -24,6 +26,12 @@ def my_events_now(request):
         if len(events) > 0:
             return {'my_events_now': events}
     return {}
+
+
+def user_settings_privacy_url(request):
+    base_url = reverse('user_profile_settings')
+    full_url = '%s#%s' % (base_url, USER_SETTINGS_PRIVACY_TAB_ID)
+    return {'user_settings_privacy_url': full_url}
 
 
 def config(request):
