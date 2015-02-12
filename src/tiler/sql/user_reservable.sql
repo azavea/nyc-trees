@@ -10,7 +10,7 @@
       block.geom,
       block.id,
       turf.group_id,
-      grp.slug AS group_slug
+      grp.slug AS group_slug,
       CASE
         WHEN (block.is_available AND reservation.id IS NULL
               AND (turf.id IS NULL OR trustedmapper.id IS NOT NULL)) THEN 'available'
