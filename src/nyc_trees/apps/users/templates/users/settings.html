@@ -17,7 +17,7 @@
 {% block main %}
 
     <div class="row">
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs" id="user-settings-tabs">
             <li class="active">
                 <a href="#account-pane" data-toggle="tab">Account</a>
             </li>
@@ -27,7 +27,7 @@
             {# A minor's profile is always private #}
             {% if not request.user.is_minor %}
             <li>
-                <a href="#privacy-pane" data-toggle="tab">Privacy</a>
+                <a href="#{{ user_settings_privacy_tab_id }}" data-toggle="tab">Privacy</a>
             </li>
             {% endif %}
         </ul>
@@ -71,7 +71,7 @@
 
                 {# A minor's profile is always private #}
                 {% if not request.user.is_minor %}
-                <div class="tab-pane" id="privacy-pane">
+                <div class="tab-pane" id="{{ user_settings_privacy_tab_id }}">
                     {% include 'users/partials/privacy_controls.html' %}
                 </div>
                 {% endif %}
