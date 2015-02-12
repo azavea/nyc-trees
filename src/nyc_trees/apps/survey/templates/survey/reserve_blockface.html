@@ -38,6 +38,10 @@
 
 {% endblock main %}
 
+{% block extra_content %}
+{% include "survey/partials/reserve_blockface_modals.html" %}
+{% endblock extra_content %}
+
 {% block page_js %}
     <script type="text/javascript" src="{{ "js/reserveBlockfacePage.js"|static_url }}"></script>
 {% endblock page_js %}

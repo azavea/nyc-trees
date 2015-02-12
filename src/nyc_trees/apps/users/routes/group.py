@@ -5,7 +5,7 @@ from __future__ import division
 
 from django.contrib.auth.decorators import login_required
 
-from django_tinsel.decorators import route, render_template
+from django_tinsel.decorators import route, render_template, json_api_call
 from django_tinsel.utils import decorate as do
 
 from apps.core.decorators import group_request, group_admin_do
@@ -46,3 +46,9 @@ edit_user_mapping_priveleges = group_admin_do(
     render_template('groups/partials/grant_access_button.html'),
     route(PUT=v.give_user_mapping_priveleges,
           DELETE=v.remove_user_mapping_priveleges))
+
+request_mapper_status = do(
+    login_required,
+    group_request,
+    json_api_call,
+    route(POST=v.request_mapper_status))

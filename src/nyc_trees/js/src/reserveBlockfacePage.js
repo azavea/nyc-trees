@@ -2,17 +2,24 @@
 
 var $ = require('jquery'),
     L = require('leaflet'),
-    toastr = require('toastr'),
     mapModule = require('./map'),
     zoom = require('./mapUtil').zoom,
     SelectableBlockfaceLayer = require('./lib/SelectableBlockfaceLayer'),
     SavedState = require('./lib/SavedState'),
 
     dom = {
+        modals: '.modal',
         currentReservations: "#current-reservations",
         totalReservations: "#total-reservations",
         finishReservations: "#finish-reservations",
-        hiddenInput: "#reservation-ids"
+        hiddenInput: "#reservation-ids",
+        requestAccessButton: '[data-action="request-access"]',
+        limitReachedModal: '#limit-reached-modal',
+        alreadyReservedModal: '#already-reserved-modal',
+        requestAccessModal: '#request-access-modal',
+        requestAccessCompleteModal: '#request-access-complete-modal',
+        requestAccessFailModal: '#request-access-fail-modal',
+        unavailableBlockfaceModal: '#unavailable-blockface-modal'
     };
 
 // Extends the leaflet object
@@ -52,8 +59,9 @@ var progress = new SavedState({
 
 var selectedLayer = new SelectableBlockfaceLayer(reservationMap, grid, {
     onAdd: function(gridData) {
-        if (selectedBlockfacesCount < blockfaceLimit &&
-                gridData.restriction === 'none') {
+        if (selectedBlockfacesCount >= blockfaceLimit) {
+            $(dom.limitReachedModal).modal('show');
+        } else if (gridData.restriction === 'none') {
             selectedBlockfaces[gridData.id] = gridData;
             selectedBlockfacesCount++;
             $current.text(selectedBlockfacesCount);
@@ -93,14 +101,36 @@ grid.on('click', function(e) {
     if (!e.data) {
         return;
     }
-    if (selectedBlockfacesCount >= blockfaceLimit) {
-        toastr.error('You have reached your reservation limit');
+    if (e.data.restriction === 'group_territory') {
+        $(dom.requestAccessModal)
+            .find(dom.requestAccessButton)
+            .data('group-slug', e.data.group_slug);
+        $(dom.requestAccessModal).modal('show');
+    } else if (e.data.restriction === 'reserved') {
+        $(dom.alreadyReservedModal).modal('show');
     } else if (e.data.restriction !== 'none') {
-        toastr.error('The blockface you selected is not available');
+        $(dom.unavailableBlockfaceModal).modal('show');
     }
 });
 
 reservationMap.addLayer(selectedLayer);
+
+$(dom.requestAccessModal).on('click', dom.requestAccessButton, function() {
+    var groupSlug = $(dom.requestAccessButton).data('group-slug');
+    $(dom.modals).modal('hide');
+    $.ajax({
+            // Keep this URL in sync with "request_mapper_status"
+            // in src/nyc_trees/apps/users/urls/group.py
+            url: '/group/' + groupSlug + '/request-individual-mapper-status/',
+            type: 'POST'
+        })
+        .done(function() {
+            $(dom.requestAccessCompleteModal).modal('show');
+        })
+        .fail(function() {
+            $(dom.requestAccessFailModal).modal('show');
+        });
+});
 
 // Load any existing data.
 var state = progress.load();
