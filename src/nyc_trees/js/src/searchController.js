@@ -106,7 +106,7 @@ function create($controlsContainer, map) {
         },
 
         showCandidates = function(candidates) {
-            updateStatus('Choose an address or search again', {resultsFound: true});
+            updateStatus('', {resultsFound: true});
             removeResults();
             for(var i = 0, count = candidates.length; i < count; i++) {
                 addCandidateToList($results, $itemTemplate.clone(), candidates[i]);
@@ -116,7 +116,14 @@ function create($controlsContainer, map) {
         zoomToCandidate = function(candidate) {
             var point = L.latLng(candidate.y, candidate.x);
             setCenterAndZoomLL(map, zoom.NEIGHBORHOOD, point);
+            dismiss();
+        },
+
+        dismiss = function() {
             updateStatus();
+            // Ensure software keyboard is hidden on mobile
+            document.activeElement.blur();
+            toggleSearch();
         },
 
         searching = function() {
