@@ -17,7 +17,7 @@ var dom = {
 
 Modernizr.load({
     test: Modernizr.inputtypes.date && Modernizr.inputtypes.time,
-    nope: config.files["datetimepicker_polyfill.js"]
+    nope: config.files.dtpPolyfill
 });
 
 $(dom.useMyInfo).on('click', function(e) {
