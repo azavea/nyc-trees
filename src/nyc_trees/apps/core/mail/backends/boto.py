@@ -20,7 +20,8 @@ logger = logging.getLogger(__name__)
 
 class EmailBackend(BaseEmailBackend):
 
-    def __init__(self, fail_silently=False, aws_region='us-east-1'):
+    def __init__(self, fail_silently=False, aws_region='us-east-1', *args,
+                 **kwargs):
         super(EmailBackend, self).__init__(fail_silently=fail_silently)
         self.mailer = BotoMailer(aws_region)
         self.check_quota = getattr(settings, 'EMAIL_BOTO_CHECK_QUOTA', False)
