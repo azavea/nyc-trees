@@ -72,11 +72,17 @@ function fitBounds(map, bounds) {
 }
 
 function initBaseMap(map) {
-    var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-        osmAttrib = 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
-        osm = new L.TileLayer(osmUrl, {maxZoom: zoom.MAX, attribution: osmAttrib});
+    var url = 'http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png',
+        options = {
+            subdomains: 'abcd',
+            attributon: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, ' +
+                '<a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; ' +
+                'Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            minZoom: 0,
+            maxZoom: zoom.MAX
+        };
 
-    map.addLayer(osm);
+    map.addLayer(new L.TileLayer(url, options));
 }
 
 function initGeolocation($controlsContainer, map) {

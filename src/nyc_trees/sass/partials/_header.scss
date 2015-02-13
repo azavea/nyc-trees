@@ -58,16 +58,17 @@
 }
 
 .brand {
-  display: inline-block;
   vertical-align: middle;
   width: 15rem;
+  padding-top: .9rem;
   @media (min-width: $screen-sm) {
     width: auto;
+    padding-top: .5rem;
   }
 }
 
 .nav-account {
-  padding: 1rem;
+  padding: .9rem;
 }
 
 .nav-menubutton {
