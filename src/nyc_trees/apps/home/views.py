@@ -27,3 +27,7 @@ def progress_page(request):
 def retrieve_job_status(request):
     # TODO: implement
     pass
+
+
+def individual_mapper_instructions(request):
+    pass

@@ -9,6 +9,9 @@ from django_tinsel.decorators import route, render_template
 from django_tinsel.utils import decorate as do
 
 from apps.users.views import user as v
+from apps.core.decorators import (user_must_have_field_training,
+                                  user_must_have_online_training)
+
 
 render_user_template = render_template('users/profile.html')
 render_settings_template = render_template('users/settings.html')
@@ -32,6 +35,8 @@ user_detail = route(
 
 request_individual_mapper_status = do(
     login_required,
+    user_must_have_field_training,
+    user_must_have_online_training,
     route(POST=v.request_individual_mapper_status))
 
 start_form_for_reservation_job = route(POST=v.start_form_for_reservation_job)

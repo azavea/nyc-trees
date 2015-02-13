@@ -12,6 +12,7 @@ from django.shortcuts import get_object_or_404
 from django_tinsel.utils import decorate as do
 
 from apps.core.helpers import (user_is_census_admin, user_is_group_admin,
+                               user_is_individual_mapper,
                                user_has_online_training,
                                user_has_field_training)
 from apps.core.models import Group
@@ -84,10 +85,13 @@ def user_must_have_field_training(view_fn):
 
 
 def user_must_be_individual_mapper(view_fn):
-    # TODO: implement
     @wraps(view_fn)
     def wrapper(request, *args, **kwargs):
-        return view_fn(request, *args, **kwargs)
+        if user_is_individual_mapper(request.user):
+            return view_fn(request, *args, **kwargs)
+        else:
+            raise PermissionDenied('%s is not an individual mapper'
+                                   % request.user)
     return wrapper
 
 ##############################################################################

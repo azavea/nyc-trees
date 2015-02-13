@@ -105,6 +105,17 @@ class User(NycModel, AbstractUser):
     def training_complete(self):
         return self.online_training_complete and self.field_training_complete
 
+    @property
+    def eligible_to_become_individual_mapper(self):
+        """
+        Return True if user has completed online training, attended a mapping
+        event, and one other training/mapping event.
+        """
+        from apps.event.models import EventRegistration
+        return self.field_training_complete and \
+            EventRegistration.objects.filter(user=self,
+                                             did_attend=True).count() >= 2
+
 
 class Group(NycModel, models.Model):
     name = models.CharField(max_length=255, unique=True)
