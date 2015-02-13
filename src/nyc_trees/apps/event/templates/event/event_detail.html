@@ -88,7 +88,6 @@
                 </table>
             </div>
         </div>
-
     </div>
 
     <div class="pageheading-controls block">
@@ -102,65 +101,38 @@
 {% block main %}
 
     <section>
-        <div class="row">
-            <div class="col-sm-12">
-                <h4 class="section-heading">Description</h4>
+        <div class="description block item">
+            <h4 class="section-heading">Description</h4>
+            <div>{{event.description}}</div>
+        </div>
+        <div class="description block item">
+            <h4 class="section-heading">How to find us</h4>
+            <div>{{event.location_description}}</div>
+        </div>
+        <div class="description block item">
+            <div class="row">
+                <div class="col-xs-8">
+                    <h5>{{ event.contact_name }}</h5>
+                    <div class="h6">Group Contact</div>
+                </div>
+                <div class="col-xs-4 text-right"><a href="mailto:{{event.contact_email}}" class="btn btn-default">Email</a></div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-sm-12">
-                {{ event.description }}
-            </div>
-        </div>
-    </section>
-    <section>
-        <div class="row">
-            <div class="col-sm-12">
-                <h4 class="section-heading">How to find us</h4>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-                {{ event.location_description }}
-            </div>
-        </div>
-    </section>
-    <section>
-        <div class="row">
-            <div class="col-sm-12">
-                <h4 class="section-heading">Contact</h4>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-6">
-                {{ event.contact_name }}
-            </div>
-            <div class="col-xs-6 text-right">
-                <a href="mailto:{{ event.contact_email }}" class="btn btn-switch"
-                    >Email</a>
-            </div>
-        </div>
-    </section>
-    <section>
-        <div class="row">
-            <div class="col-sm-12">
-                <h4 class="section-heading">Share Link</h4>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-6">
-                {{ share_url }}
-            </div>
-            <div class="col-xs-6 text-right">
-                <a href="javascript:;" class="btn btn-switch js-copy-event-url"
-                        data-event-url="{{ share_url }}">Copy</a>
+        <div class="description block item">
+            <div class="row">
+                <div class="col-xs-8 text--break">
+                    <h5>Share Link</h5>
+                    <div class="h6">{{share_url}}</div>
+                </div>
+                <div class="col-xs-4 text-right js-copy-event-url"><a href="javascript:;" class="btn btn-default" data-event-url="{{ share_url }}">Copy</a></div>
             </div>
         </div>
     </section>
     <div class="content-nextsteps">
         <div class="row">
-            <div class="col-sm-12">
-                <div><a href="{{ group_events_url }}">Find more events by this group</a></div>
+            <div class="col-sm-12 text-center">
+                <h2><span class="color--primary">Dig</span> this event?</h2>
+                <div><a href="{{ group_events_url }}" class="color--secondary">Find more events by this group →</a></div>
             </div>
         </div>
     </div>

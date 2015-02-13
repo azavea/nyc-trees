@@ -312,3 +312,16 @@ label {
     }
   }
 }
+
+.text--break {
+  word-wrap: break-word;
+}
+
+.rsvp-count-context {
+  margin-top: 0;
+  position: relative;
+  top: .7rem;
+  left: .6rem;
+  line-height: 1;
+  color: #777;
+}

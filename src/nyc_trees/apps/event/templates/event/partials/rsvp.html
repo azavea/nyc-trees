@@ -8,13 +8,18 @@ The following variables must be in scope:
   - is_admin (bool)    Is this user a group admin?
   - is_rsvped (bool)   Is this user RSVPd to this event?
 {% endcomment %}
-<div class="col-xs-6">
-    <p>
-        {{ rsvp_count }} / {{ event.max_attendees }}
-        RSVP{{ rsvp_count|pluralize:"S" }}
-    </p>
+<div class="col-xs-4">
+    <h1 class="rsvp-count-total pull-left color--primary nomargin">{{ rsvp_count }}</h3>
+    <div class="rsvp-count-context">
+         of {{ event.max_attendees }}<br>
+        <span class="h6">RSVPS</span>
+    </div>
 </div>
-<div class="col-xs-6 text-right">
+<div class="col-xs-8 text-right">
+    {% if is_admin %}
+        <a href="{{ event_edit_url }}"
+           class="btn btn-secondary"><i class="icon-cog"></i>Edit</a>
+    {% endif %}
     {% if can_rsvp %}
         {% if not user.is_authenticated %}
             <a id="rsvp"
@@ -39,9 +44,5 @@ The following variables must be in scope:
         {% endif %}
     {% else %}
         <a id="rsvp" href="#" class="btn btn-switch disabled">At Capacity</a>
-    {% endif %}
-    {% if is_admin %}
-        <a href="{{ event_edit_url }}"
-           class="btn btn-switch"><i class="icon-cog"></i>Admin</a>
     {% endif %}
 </div>
