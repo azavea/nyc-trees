@@ -53,26 +53,26 @@
 {% block main %}
 
     <section>
-        <div class="contribution block item">
+        <div class="description block item">
             <h4 class="section-heading">Description</h4>
             <div>{{group.description}}</div>
         </div>
-        <div class="contribution block item">
+        <div class="description block item">
             <div class="row">
-                <div class="col-xs-6">
+                <div class="col-xs-8">
                     <h5>{{group.contact_name}}</h5>
                     <div class="h6">Group Contact</div>
                 </div>
-                <div class="col-xs-6 text-right"><a href="mailto:{{group.contact_email}}" class="btn btn-default">Email</a></div>
+                <div class="col-xs-4 text-right"><a href="mailto:{{group.contact_email}}" class="btn btn-default">Email</a></div>
             </div>
         </div>
-        <div class="contribution block item">
+        <div class="description block item">
             <div class="row">
-                <div class="col-xs-6">
+                <div class="col-xs-8">
                     <h5>Website</h5>
                     <div class="h6">{{group.contact_url}}</div>
                 </div>
-                <div class="col-xs-6 text-right"><a href="{{group.contact_url}}" class="btn btn-default">Visit</a></div>
+                <div class="col-xs-4 text-right"><a href="{{group.contact_url}}" class="btn btn-default">Visit</a></div>
             </div>
         </div>
     </section>
