@@ -18,6 +18,10 @@
 {% block main %}
 {% block pre_loop_section %}
 {% endblock pre_loop_section %}
+
+<span>Search: </span><input data-class="group-search"/>
+<hr>
+
 {% if groups %}
 <table class="group-table">
 {% for group, user_is_following in groups %}
