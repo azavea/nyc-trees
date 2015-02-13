@@ -129,9 +129,9 @@ class ProfileTemplateTests(UsersTestCase):
             achievements[AchievementDefinition.FINISH_TRAINING].name)
 
     def test_contributions_section_visibility(self):
-        self._assert_visible_only_to_me('Contributions', count=1)
+        self._assert_visible_only_to_me('Contributions', count=2)
         self._update_user(contributions_are_public=True)
-        self._assert_visible_to_all('Contributions', me_count=1, them_count=1)
+        self._assert_visible_to_all('Contributions', me_count=2, them_count=1)
 
     def test_contributions_section_contents(self):
         blockface = Blockface.objects.create(
