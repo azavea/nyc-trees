@@ -16,7 +16,7 @@
             </div>
         </div>
     </div>
-{% endblock aside %}
+{% endblock aside %}x
 
 {% block main %}
 
@@ -26,10 +26,9 @@
 <div class="question
     {% if forloop.first %}active{% else %}hidden{% endif %}"
     data-question="{{ forloop.counter0 }}">
-<p>
-    Question {{ forloop.counter }} --
-    {{ forloop.counter }}/{{ quiz.questions|length }}
-</p>
+<h3>
+    Question {{ forloop.counter }} of {{ quiz.questions|length }}
+</h3>
 <p>{{ question.text }}</p>
 
 <div class="hidden alert alert-danger">
@@ -40,20 +39,22 @@
 <ul>
 {% with question_no=forloop.counter0 %}
     {% for choice in question.choices %}
-    <li><label>
+    <li>
         <input type="{% if question.is_multiple_choice %}checkbox{% else %}radio{% endif %}"
-            name="question.{{ question_no }}"
-            value="{{ forloop.counter0 }}" />{{ choice }}</label></li>
+            name="question.{{ question_no }}" id="question.{{ question_no }}.answer.{{ forloop.counter0 }}"
+            value="{{ forloop.counter0 }}" />
+        <label for="question.{{ question_no }}.answer.{{ forloop.counter0 }}">{{ choice }}</label>
+    </li>
     {% endfor %}
 {% endwith %}
 </ul>
 <hr />
 
-<div class="controls">
+<div class="controls clearfix">
 {% if not forloop.last %}
     <a href="javascript:void(0)"
        data-question="{{ forloop.counter0 }}"
-       class="next btn btn-primary pull-right">Next</a>
+       class="next btn btn-primary pull-right">Next →</a>
 {% else %}
     <input type="submit" value="Submit"
         data-question="{{ forloop.counter0 }}"
@@ -63,7 +64,7 @@
 {% if not forloop.first %}
     <a href="javascript:void(0)"
        data-question="{{ forloop.counter0 }}"
-       class="prev btn">Back</a>
+       class="prev btn btn-primary">← Back</a>
 {% endif %}
 </div>
 

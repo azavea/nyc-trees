@@ -1,27 +1,52 @@
-{% extends "base.html" %}
+{% extends "base_two_frames.html" %}
+
 {% load training %}
 {% load utils %}
 
-{% block content %}
-<h3>{{ flatpage.title }}</h3>
+{% block extra_content %}
 
-<div data-class="training-flatpage-container" style="display: none;">{{ flatpage.content }}</div>
+  <div class="training-bar visible-xs">
+    <a class="btn btn-secondary btn-mobile--max"
+       data-class="training-flatpage-subpage-accept-feedback"
+       style="display: none;">Try Again</a>
+    <a class="btn btn-primary pull-left"
+       data-class="training-flatpage-subpage-previous"
+       style="display: none;">← Back</a>
+    <a class="btn btn-primary pull-right"
+       data-class="training-flatpage-subpage-next"
+       data-href="{{ flatpage|flatpage_next_url }}">Next →</a>
+  </div>
 
-<hr/>
-<a class="btn btn-primary"
-   data-class="training-flatpage-subpage-accept-feedback"
-   style="display: none;">Try Again</a>
-<a class="btn btn-primary"
-   data-class="training-flatpage-subpage-previous"
-   style="display: none;">Previous</a>
-<br>
-<a class="btn btn-primary"
-   data-class="training-flatpage-subpage-next"
-   data-href="{{ flatpage|flatpage_next_url }}">Next</a>
-<br/>
-<a href="/training/">Back to Training</a>
+{% endblock extra_content %}
 
-{% endblock content %}
+{% block aside %}
+  <a href="/training/" class="breadcrumb">
+    <i class="icon-left-open-mini"></i>
+    Training
+  </a>
+  <div>
+    <h2>{{ flatpage.title }}</h2>
+  </div>
+
+{% endblock aside %}
+
+{% block main %}
+
+  <div class="training-flatpage-container" data-class="training-flatpage-container" style="display: none;">{{ flatpage.content }}</div>
+
+  <div class="training-bar hidden-xs">
+    <a class="btn btn-secondary btn-mobile--max"
+       data-class="training-flatpage-subpage-accept-feedback"
+       style="display: none;">Try Again</a>
+    <a class="btn btn-primary pull-left"
+       data-class="training-flatpage-subpage-previous"
+       style="display: none;">← Back</a>
+    <a class="btn btn-primary pull-right"
+       data-class="training-flatpage-subpage-next"
+       data-href="{{ flatpage|flatpage_next_url }}">Next →</a>
+  </div>
+
+{% endblock main %}
 
 {% block page_js %}
 <script type="text/javascript" src="{{ "js/trainingFlatpage.js"|static_url }}"></script>

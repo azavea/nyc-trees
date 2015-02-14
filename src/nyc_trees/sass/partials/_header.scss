@@ -109,7 +109,6 @@
   -moz-transform: translateX(-30rem);
   -ms-transform: translateX(-30rem);
   transform: translateX(-30rem);
-  position: absolute;
   z-index: 1;
   transition: all 400ms $transition;
   .menu-active & {
@@ -122,23 +121,25 @@
 }
 
 .right-content {
-  -webkit-transform: translateX(0);
-  -moz-transform: translateX(0);
-  -ms-transform: translateX(0);
-  transform: translateX(0);
+  padding-top: $navbar-height;
   position: relative;
-  min-height: 100vh;
+  flex: 1;
   transition: all 400ms $transition;
-  .menu-active & {
-    -webkit-transform: translateX(30rem);
-    -moz-transform: translateX(30rem);
-    -ms-transform: translateX(30rem);
-    transform: translateX(30rem);
-  }
+}
+
+.menu-active .right-content, .menu-active footer, .menu-active .main-header, .menu-active .overlay-menued {
+  -webkit-transform: translateX(30rem);
+  -moz-transform: translateX(30rem);
+  -ms-transform: translateX(30rem);
+  transform: translateX(30rem);
 }
 
 .main-header {
-  position: relative;
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  transition: all 400ms $transition;
 }
 
 .btn-nav-user {
@@ -204,7 +205,6 @@
   display: none;
   .menu-active & {
     display: block;
-    transition: all 400ms $transition;
     cursor: pointer;
   }
 }

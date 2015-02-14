@@ -32,14 +32,19 @@ body {
   font-size: strip-units(rem($font-size-base))+em;
   line-height: $line-height-base;
   color: $text-color;
-  background-color: $body-bg;
+  background-color: #fff;
   overflow-x: hidden;
   width: 100%;
   transition: all 500ms $transition;
   position: relative;
-  min-height: 100%;
   font-feature-settings: "kern" 1;
   text-rendering: geometricPrecision;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  @media (min-width: $screen-sm) {
+    background-color: $body-bg;
+  }
 }
 
 section {

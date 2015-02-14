@@ -1,0 +1,28 @@
+.training-flatpage-container, .question {
+  label {
+    font-weight: 800;
+    border: 1px solid $brand-secondary;
+    padding: 1rem $grid-gutter-width/2;
+    margin-bottom: 1.5rem;
+    display: block !important;
+    color: $brand-secondary;
+    transition: all 100ms $transition;
+    cursor: pointer;
+  }
+  input:checked + label {
+    background-color: $brand-secondary;
+    color: #fff;
+  }
+  input[type="checkbox"], input[type="radio"] {
+    display: none;
+  }
+  ul {
+    padding: 0;
+    list-style: none;
+  }
+}
+
+.training-bar {
+  padding: $grid-gutter-width/2;
+  background-color: #fff;
+}
