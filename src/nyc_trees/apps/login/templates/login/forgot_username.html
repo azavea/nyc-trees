@@ -1,16 +1,15 @@
-{% extends "base.html" %}
+{% extends "../templates/registration/registration_base.html" %}
 {% load i18n %}
 {% load utils %}
 
-{% block page_title %} | Recover Your Username{% endblock %}
+{% block registration_title %}Recover Your Username{% endblock %}
 
-{% block content %}
+{% block registration_content %}
 <div class="content login-signup">
   <div class="well login-signup-panel">
     <form method="POST" id="forgot-username-form">
       <fieldset>
         {% csrf_token %}
-        <legend>Retrieve your Username</legend>
         <p>
             Forgot your username? Enter the Email address you used to register
             with Trees Count! and click the “Find” button below.
