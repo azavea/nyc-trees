@@ -3,8 +3,10 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
+from floppyforms.__future__ import (ModelForm, inlineformset_factory,
+                                    ValidationError)
+
 from django.conf import settings
-from django.forms import ModelForm, inlineformset_factory, ValidationError
 
 from apps.core.models import User, Group
 from apps.event.models import EventRegistration
