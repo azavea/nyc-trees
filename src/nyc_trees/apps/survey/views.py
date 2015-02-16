@@ -8,6 +8,9 @@ from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.utils.timezone import now
 
+from apps.core.models import Group
+from apps.core.views import map_legend
+
 from apps.users.models import TrustedMapper
 
 from apps.survey.models import BlockfaceReservation, Blockface, Territory
@@ -20,6 +23,16 @@ def progress_page(request):
     context = map_legend(request)
     context['layer'] = get_context_for_progress_layer(request)
     return context
+
+
+def progress_page_blockface_popup(request, blockface_id):
+    survey_type = request.GET.get('survey_type')
+    group_id = request.GET.get('group_id', None)
+    group = get_object_or_404(Group, id=group_id) if group_id else None
+    return {
+        'survey_type': survey_type,
+        'group': group
+    }
 
 
 def cancel_reservation(request, blockface_id):

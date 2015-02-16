@@ -1,0 +1,29 @@
+<div class="row">
+    <div class="col-xs-9">
+        Blockface
+        {% if survey_type == "available" %}
+            available.
+            <a href="">Reserve it</a>.
+        {% elif survey_type == "reserved" %}
+            reserved by you.
+        {% elif survey_type == "unavailable" %}
+            reserved by
+        {% elif survey_type == "surveyed-by-me" %}
+            mapped by you.
+        {% elif survey_type == "surveyed-by-others" %}
+            mapped by
+        {% else %}
+            unavailable.
+        {% endif %}
+
+        {% if survey_type == "surveyed-by-others" or survey_type == "unavailable" %}
+            {% if group.slug %}
+                <a class="btn btn-link" href="{% url 'group_detail' group_slug=group.slug %}">
+                    {{ group.name }}
+                </a>
+            {% else %}
+                an individual mapper.
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
