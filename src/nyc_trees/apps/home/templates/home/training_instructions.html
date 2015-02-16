@@ -4,19 +4,22 @@
 
 {# TODO: Design #}
 
+<h2>Training</h2>
 <p>
 Before you're able to RSVP to mapping events you'll need to do the following:
 </p>
-<ul>
-    <li>
-        {% if user.online_training_complete %}<s>{% endif %}
-        Complete your <a href="{% url "training_summary_pure" %}">online training</a>
-        {% if user.online_training_complete %}</s>{% endif %}
-    </li>
-    <li>
-        {% if user.field_training_complete %}<s>{% endif %}
-        Attend a <a href="{% url "events_list_page" %}?active_filter=training">training event</a></li>
-        {% if user.field_training_complete %}</s>{% endif %}
-    </li>
-</ul>
+
+<h3>Step #1</h3>
+<p>
+{% if user.online_training_complete %}<s>{% endif %}
+Complete your <a href="{% url "training_summary_pure" %}">online training</a>.
+{% if user.online_training_complete %}</s>{% endif %}
+</p>
+
+<h3>Step #2</h3>
+<p>
+{% if user.field_training_complete %}<s>{% endif %}
+Attend a <a href="{% url "events_list_page" %}?active_filter=training">training event</a>.
+{% if user.field_training_complete %}</s>{% endif %}
+</p>
 {% endblock %}
