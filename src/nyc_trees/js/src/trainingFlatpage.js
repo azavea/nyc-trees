@@ -78,6 +78,8 @@ function evaluateExerciseInput (event) {
     $label.hide();
     $feedbackEl.show();
     $member.siblings().hide();
+    $previousButton.hide();
+
     if ($input.attr('value') === correctValue) {
         $nextButton.show();
     } else {
