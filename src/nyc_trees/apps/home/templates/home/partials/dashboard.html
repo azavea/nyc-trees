@@ -26,10 +26,14 @@
         <div class="row">
             <main class="col-sm-12">
                 {% if user.online_training_complete %}
+                {% if immediate_events.event_infos %}
                 <section class="events">
                     <h4 class="section-heading">This week's events</h4>
-                    <!-- TODO: Insert events (My Events and Recommended) -->
+                    <div data-class="event-list-container">
+                        {% include "event/partials/event_list.html" with event_list=immediate_events %}
+                    </div>
                 </section>
+                {% endif %}
                 {% include "users/partials/activity.html" %}
 
                 {% else %}
