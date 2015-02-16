@@ -62,6 +62,14 @@
                     {% endif %}
                     <tr class="event-detail">
                         <td>
+                            <i class="icon-clock"></i>
+                        </td>
+                        <td>
+                            {{ event.begins_at|time:"g:iA" }}–{{ event.ends_at|time:"g:iA" }}
+                        </td>
+                    </tr>
+                    <tr class="event-detail">
+                        <td>
                             <i class="icon-globe"></i>
                         </td>
                         <td>
