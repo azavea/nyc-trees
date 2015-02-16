@@ -13,7 +13,8 @@ var $ = require('jquery'),
 
 fetchAndReplace({
     container: '.btn-follow-container',
-    target: '.btn-follow, .btn-unfollow'
+    target: '.btn-follow, .btn-unfollow',
+    data: { 'render_follow_button_without_count': 'True' }
 });
 
 $groups = $(dom.groups);

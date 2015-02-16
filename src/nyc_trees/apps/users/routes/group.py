@@ -13,7 +13,7 @@ from apps.core.decorators import group_request, group_admin_do
 from apps.users.views import group as v
 
 
-render_follow_button = render_template('groups/partials/follow_button.html')
+render_follow_detail = render_template('groups/partials/follow_detail.html')
 
 
 group_list_page = route(GET=do(render_template('groups/list.html'),
@@ -31,13 +31,13 @@ follow_group = do(
     login_required,
     group_request,
     route(GET=v.redirect_to_group_detail,
-          POST=do(render_follow_button, v.follow_group)))
+          POST=do(render_follow_detail, v.follow_group)))
 
 unfollow_group = do(
     login_required,
     group_request,
     route(GET=v.redirect_to_group_detail,
-          POST=do(render_follow_button, v.unfollow_group)))
+          POST=do(render_follow_detail, v.unfollow_group)))
 
 # TODO: should this have group_admin
 start_group_map_print_job = route(POST=v.start_group_map_print_job)

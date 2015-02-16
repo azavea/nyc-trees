@@ -32,18 +32,8 @@
     </div>
     <div class="pageheading-controls block">
         <div class="row">
-            <div class="col-xs-6 secondary-heading">
-                <span class="h2"><b>653</b></span>
-                <span class="h6">Followers</span>
-            </div>
-            <div class="col-xs-6 text-right">
-                {% if event_list.user_can_edit_group %}
-                <a href="{{edit_url}}" class="btn btn-switch icon-cog">Admin</a>
-                {% else %}
-                <div class="btn-follow-container">
-                    {% include 'groups/partials/follow_button.html' %}
-                </div>
-                {% endif %}
+            <div class="follow-detail">
+                {% include 'groups/partials/follow_detail.html' %}
             </div>
         </div>
     </div>
