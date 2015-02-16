@@ -37,6 +37,8 @@ def user_profile_context(user, its_me):
         'show_individual_mapper': (user.individual_mapper and
                                    (its_me or user.profile_is_public)),
         'show_reservations': (user.individual_mapper and its_me),
+        'show_request_access': (not user.individual_mapper and
+                                user.eligible_to_become_individual_mapper),
         'follows': _get_follows_context(user),
         'reservations': _get_reservations_context(user),
         'privacy_categories': get_privacy_categories(privacy_form),

@@ -121,7 +121,7 @@ $(dom.requestAccessModal).on('click', dom.requestAccessButton, function() {
     $.ajax({
             // Keep this URL in sync with "request_mapper_status"
             // in src/nyc_trees/apps/users/urls/group.py
-            url: '/group/' + groupSlug + '/request-individual-mapper-status/',
+            url: '/group/' + groupSlug + '/request-trusted-mapper-status/',
             type: 'POST'
         })
         .done(function() {

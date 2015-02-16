@@ -6,8 +6,9 @@ from __future__ import division
 from datetime import timedelta
 
 from django.core.urlresolvers import reverse
-from django.http import Http404, HttpResponseRedirect, HttpResponseBadRequest
-from django.shortcuts import get_object_or_404
+from django.http import (Http404, HttpResponseRedirect, HttpResponseBadRequest,
+                         HttpResponseForbidden)
+from django.shortcuts import get_object_or_404, redirect
 from django.utils import timezone
 
 from apps.core.models import User
@@ -101,8 +102,14 @@ def update_user(request, username):
 
 
 def request_individual_mapper_status(request, username):
-    # TODO: implement
-    pass
+    user = request.user
+    if not user.eligible_to_become_individual_mapper:
+        return HttpResponseForbidden()
+    if not user.individual_mapper:
+        user.individual_mapper = True
+        user.requested_individual_mapping_at = timezone.now()
+        user.clean_and_save()
+    return redirect('individual_mapper_instructions')
 
 
 def start_form_for_reservation_job(request, username):

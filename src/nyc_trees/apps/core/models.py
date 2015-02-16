@@ -28,7 +28,7 @@ REFERRER_AD = (
 
 
 class User(NycModel, AbstractUser):
-    individual_mapper = models.BooleanField(default=False)
+    individual_mapper = models.NullBooleanField()
     requested_individual_mapping_at = models.DateTimeField(null=True,
                                                            blank=True)
 
@@ -104,6 +104,20 @@ class User(NycModel, AbstractUser):
     @property
     def training_complete(self):
         return self.online_training_complete and self.field_training_complete
+
+    @property
+    def eligible_to_become_individual_mapper(self):
+        """
+        Return True if user has completed online training, attended a mapping
+        event, and one other training/mapping event.
+        """
+        # Has an admin rescinded mapper status?
+        if self.individual_mapper is False:
+            return False
+        from apps.event.models import EventRegistration
+        return self.field_training_complete and \
+            EventRegistration.objects.filter(user=self,
+                                             did_attend=True).count() >= 2
 
 
 class Group(NycModel, models.Model):

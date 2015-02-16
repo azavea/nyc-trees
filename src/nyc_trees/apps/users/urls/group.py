@@ -34,11 +34,10 @@ urlpatterns = patterns(
         name='edit_user_mapping_priveleges'),
 
     # Keep in sync with src/nyc_trees/js/src/reserveBlockfacePage.js
-    url(r'^(?P<group_slug>[\w-]+)/request-individual-mapper-status/$',
+    url(r'^(?P<group_slug>[\w-]+)/request-trusted-mapper-status/$',
         r.request_mapper_status,
         name='request_mapper_status'),
 
     url(r'^(?P<group_slug>[\w-]+)/events/$',
         group_detail_events.endpoint, name=group_detail_events.url_name()),
-
 )

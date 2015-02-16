@@ -21,6 +21,10 @@ urlpatterns = patterns(
 
     url(r'^progress/$', r.progress_page, name='progress_page'),
 
+    url(r'^individual-mapper-instructions/$',
+        r.individual_mapper_instructions,
+        name='individual_mapper_instructions'),
+
     url(r'^jobs/(?P<job_id>\d+)/$', r.retrieve_job_status,
         name='retrieve_job_status'),
 
