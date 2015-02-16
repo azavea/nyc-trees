@@ -15,7 +15,8 @@ from apps.survey import views as v
 #####################################
 
 reservations = route(
-    GET=individual_mapper_do(
+    GET=do(
+        login_required,
         render_template('survey/reservations.html'),
         v.reservations_page))
 

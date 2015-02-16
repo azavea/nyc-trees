@@ -34,13 +34,6 @@ def user_settings_privacy_url(request):
     return {'user_settings_privacy_url': full_url}
 
 
-def show_reservations(request):
-    return {
-        'show_reservations': (request.user.is_authenticated()
-                              and request.user.individual_mapper)
-    }
-
-
 def config(request):
     # At the time this function was written, the generated context was
     # only used in the base.html template, and our AJAX requests all
