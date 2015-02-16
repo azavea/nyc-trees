@@ -4,6 +4,7 @@ from troposphere import Template, Parameter, Ref, Tags, GetAtt, Select, Join, \
 import template_utils as utils
 import troposphere.rds as rds
 import troposphere.route53 as r53
+import troposphere.cloudwatch as cw
 import troposphere.elasticache as ec
 
 t = Template()
@@ -215,6 +216,86 @@ database_server_instance = t.add_resource(rds.DBInstance(
     Tags=Tags(Name='DatabaseServer')
 ))
 
+t.add_resource(cw.Alarm(
+    'alarmDatabaseServerCPUUtilization',
+    AlarmDescription='Database server CPU utilization',
+    AlarmActions=[Ref(notification_arn_param)],
+    Statistic='Average',
+    Period=300,
+    Threshold=75,
+    EvaluationPeriods=1,
+    ComparisonOperator='GreaterThanThreshold',
+    MetricName='CPUUtilization',
+    Namespace='AWS/RDS',
+    Dimensions=[
+        cw.MetricDimension(
+            'metricDatabaseServerName',
+            Name='DBInstanceIdentifier',
+            Value=Ref(database_server_instance)
+        )
+    ],
+))
+
+t.add_resource(cw.Alarm(
+    'alarmDatabaseServerDiskQueueDepth',
+    AlarmDescription='Database server disk queue depth',
+    AlarmActions=[Ref(notification_arn_param)],
+    Statistic='Average',
+    Period=60,
+    Threshold=1,
+    EvaluationPeriods=1,
+    ComparisonOperator='GreaterThanThreshold',
+    MetricName='DiskQueueDepth',
+    Namespace='AWS/RDS',
+    Dimensions=[
+        cw.MetricDimension(
+            'metricDatabaseServerName',
+            Name='DBInstanceIdentifier',
+            Value=Ref(database_server_instance)
+        )
+    ],
+))
+
+t.add_resource(cw.Alarm(
+    'alarmDatabaseServerFreeStorageSpace',
+    AlarmDescription='Database server free storage space',
+    AlarmActions=[Ref(notification_arn_param)],
+    Statistic='Average',
+    Period=60,
+    Threshold=int(5.0e+09),  # 5GB in bytes
+    EvaluationPeriods=1,
+    ComparisonOperator='LessThanThreshold',
+    MetricName='FreeStorageSpace',
+    Namespace='AWS/RDS',
+    Dimensions=[
+        cw.MetricDimension(
+            'metricDatabaseServerName',
+            Name='DBInstanceIdentifier',
+            Value=Ref(database_server_instance)
+        )
+    ],
+))
+
+t.add_resource(cw.Alarm(
+    'alarmDatabaseServerFreeableMemory',
+    AlarmDescription='Database server freeable memory',
+    AlarmActions=[Ref(notification_arn_param)],
+    Statistic='Average',
+    Period=60,
+    Threshold=int(1.28e+08),  # 128MB in bytes
+    EvaluationPeriods=1,
+    ComparisonOperator='LessThanThreshold',
+    MetricName='FreeableMemory',
+    Namespace='AWS/RDS',
+    Dimensions=[
+        cw.MetricDimension(
+            'metricDatabaseServerName',
+            Name='DBInstanceIdentifier',
+            Value=Ref(database_server_instance)
+        )
+    ],
+))
+
 #
 # ElastiCache Resources
 #
@@ -246,6 +327,46 @@ cache_cluster = t.add_resource(ec.CacheCluster(
     NumCacheNodes=1,
     PreferredMaintenanceWindow='mon:01:30-mon:02:30',  # 9:30PM-10:30PM ET
     VpcSecurityGroupIds=[Ref(cache_cluster_security_group)]
+))
+
+t.add_resource(cw.Alarm(
+    'alarmCacheClusterCPUUtilization',
+    AlarmDescription='Cache cluster CPU utilization',
+    AlarmActions=[Ref(notification_arn_param)],
+    Statistic='Average',
+    Period=300,
+    Threshold=75,
+    EvaluationPeriods=1,
+    ComparisonOperator='GreaterThanThreshold',
+    MetricName='CPUUtilization',
+    Namespace='AWS/ElastiCache',
+    Dimensions=[
+        cw.MetricDimension(
+            'metricCacheClusterName',
+            Name='CacheClusterId',
+            Value=Ref(cache_cluster)
+        )
+    ],
+))
+
+t.add_resource(cw.Alarm(
+    'alarmCacheClusterFreeableMemory',
+    AlarmDescription='Cache cluster freeable memory',
+    AlarmActions=[Ref(notification_arn_param)],
+    Statistic='Average',
+    Period=60,
+    Threshold=int(5e+06),  # 5MB in bytes
+    EvaluationPeriods=1,
+    ComparisonOperator='LessThanThreshold',
+    MetricName='FreeableMemory',
+    Namespace='AWS/ElastiCache',
+    Dimensions=[
+        cw.MetricDimension(
+            'metricCacheClusterName',
+            Name='CacheClusterId',
+            Value=Ref(cache_cluster)
+        )
+    ],
 ))
 
 #
