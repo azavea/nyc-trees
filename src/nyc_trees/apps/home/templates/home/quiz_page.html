@@ -31,9 +31,16 @@
 </h3>
 <p>{{ question.text }}</p>
 
+{% if question.is_multiple_choice %}
+<p>Please check all applicable answers.</p>
+{% endif %}
+
 <div class="hidden alert alert-danger">
-    <p><strong>Please select one of the choices below before moving
-        to the next question.</strong></p>
+    {% if question.is_multiple_choice %}
+    <p><strong>Please select at least one of the choices below before moving to the next question.</strong></p>
+    {% else %}
+    <p><strong>Please select one of the choices below before moving to the next question.</strong></p>
+    {% endif %}
 </div>
 
 <ul>
