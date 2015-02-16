@@ -97,6 +97,7 @@ class TrainingGateway(AbstractTrainingNode):
             else:
                 is_next = False
             training_steps.append({'step': step,
+                                   'is_visitable': is_complete or is_next,
                                    'is_complete': is_complete,
                                    'is_next': is_next})
             last_was_complete = is_complete
