@@ -90,6 +90,7 @@
   right: $grid-gutter-width/2;
   left: $grid-gutter-width/2;
   background-color: $gray-lightest;
+  z-index: $zindex-leaflet-controls + 1;
 }
 
 .location-search-status {
