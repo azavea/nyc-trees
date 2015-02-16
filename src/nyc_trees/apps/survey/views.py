@@ -172,3 +172,7 @@ def admin_extend_blockface_reservation(request, blockface_id):
 def admin_blockface_available(request, blockface_id):
     # TODO: implement
     pass
+
+
+def reservations_instructions(request):
+    pass
