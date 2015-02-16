@@ -15,7 +15,7 @@ Before you're able to RSVP to mapping events you'll need to do the following:
     </li>
     <li>
         {% if user.field_training_complete %}<s>{% endif %}
-        Attend a <a href="{% url "events_list_page" %}#training">training event</a></li>
+        Attend a <a href="{% url "events_list_page" %}?active_filter=training">training event</a></li>
         {% if user.field_training_complete %}</s>{% endif %}
     </li>
 </ul>
