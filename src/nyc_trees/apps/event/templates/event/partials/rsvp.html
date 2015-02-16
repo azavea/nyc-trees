@@ -25,6 +25,10 @@ The following variables must be in scope:
             <a id="rsvp"
                href="{% url "login" %}?next={{ event.get_absolute_url }}"
                class="btn btn-switch">RSVP</a>
+        {% elif not user.online_training_complete %}
+            <a id="rsvp"
+               href="{% url "training_instructions" %}"
+               class="btn btn-switch btn-rsvp">RSVP</a>
         {% elif not event.includes_training and not user.training_complete %}
             <a id="rsvp"
                href="{% url "training_instructions" %}"
