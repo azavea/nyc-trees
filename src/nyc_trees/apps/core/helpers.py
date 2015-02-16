@@ -4,8 +4,8 @@ def user_is_census_admin(user):
 
 
 def user_is_group_admin(user, group):
-    return user.is_authenticated() and (user.is_census_admin
-                                        or group.admin == user)
+    return user.is_authenticated() and (user.is_census_admin or
+                                        group.admin == user)
 
 
 def user_has_online_training(user):

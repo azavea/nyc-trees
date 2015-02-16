@@ -100,10 +100,10 @@ def confirm_blockface_reservations(request):
         except Territory.DoesNotExist:
             territory = None
 
-        if ((blockface.is_available
-             and blockface.id not in already_reserved_blockface_ids
-             and (territory is None
-                  or territory.group_id in user_trusted_group_ids))):
+        if ((blockface.is_available and
+             blockface.id not in already_reserved_blockface_ids and
+             (territory is None or
+              territory.group_id in user_trusted_group_ids))):
             reservations.append(BlockfaceReservation(
                 blockface=blockface,
                 user=request.user,
