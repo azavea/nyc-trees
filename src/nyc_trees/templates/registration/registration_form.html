@@ -32,12 +32,12 @@
     <p class="required">
         {{ form.tos.errors }}
         <input id="id_tos" name="tos" type="checkbox">
-        <label for="id_tos">I agree to the <a href="http://www1.nyc.gov/home/terms-of-use.page" target="new">terms of use</a>:</label>
+        <label for="id_tos">I agree to the <a href="http://www1.nyc.gov/home/terms-of-use.page" target="new">terms of use</a></label>
     </p>
     <p>
         {{ form.age_over_13.errors }}
         <input id="id_age_over_13" name="age_over_13" type="checkbox">
-        <label for="id_age_over_13">I am over 13 years old:</label>
+        <label for="id_age_over_13">I am over 13 years old</label>
     </p>
     <input type="submit" class="btn btn-primary btn-mobile--max" value="{% trans 'Submit' %}" />
 </form>
