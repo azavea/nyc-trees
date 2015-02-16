@@ -3,7 +3,8 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
-from django import forms
+import floppyforms.__future__ as forms
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
@@ -45,7 +46,7 @@ class UsernameOrEmailPasswordResetForm(forms.Form):
     that separates the filtering logic from the email sending
     logic. This is not available in 1.7, so the ``save`` method in
     this form was copied from
-    https://github.com/django/django/blob/59fec1ca9b3c426466f0c613a5ecf2badb992460/django/contrib/auth/forms.py#L230-L276
+    https://github.com/django/django/blob/59fec1ca9b3c426466f0c613a5ecf2badb992460/django/contrib/auth/forms.py#L230-L276  # NOQA
     and slighly modified.
     '''
     email_or_username = forms.CharField(label="Email or Username",
