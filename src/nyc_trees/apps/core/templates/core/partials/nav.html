@@ -1,4 +1,5 @@
 <nav class="nav-side">
+    {% if user.is_authenticated %}
     <div class="nav-side-user clearfix">
         <div class="nav-side-achievement"></div>
         <span>
@@ -10,6 +11,7 @@
             </div>
         </span>
     </div>
+    {% endif %}
     <ul class="nav-side-list">
         {% if not soft_launch %}
             {% if my_events_now|length == 1 %}
@@ -17,7 +19,9 @@
                     <li><a href="{{ event.get_user_checkin_url }}">Start Mapping</a></li>
                 {% endwith %}
             {% endif %}
-            <li{% if active_page == "dashboard" %} class="active"{% endif %}><a href="{% url 'home_page' %}">Dashboard</a></li>
+            <li{% if active_page == "dashboard" %} class="active"{% endif %}>
+                <a href="{% url 'home_page' %}">{% if user.is_authenticated %}Dashboard{% else %}Homepage{% endif %}</a>
+            </li>
             <li{% if active_page == "progress_page" %} class="active"{% endif %}><a href="{% url 'progress_page' %}">Progress Map</a></li>
             <li{% if active_page == "training" %} class="active"{% endif %}><a href="{% url 'training_summary_pure' %}">Training</a></li>
             <li{% if active_page == "groups" %} class="active"{% endif %}><a href="{% url 'group_list_page' %}">Groups</a></li>
