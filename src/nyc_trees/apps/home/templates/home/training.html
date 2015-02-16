@@ -1,9 +1,20 @@
-{% extends "base.html" %}
+{% extends "base_two_frames.html" %}
 
 {% block nav %}
 {% include "core/partials/nav.html" with active_page="training" %}
 {% endblock %}
 
-{% block content %}
-{% include "home/partials/training.html" %}
-{% endblock %}
+{% block aside %}
+
+  <h2>Training</h2>
+  <p class="pageheading-description-detail hidden-xs">
+    You're almost there! Continue your training to become a mapper.
+  </p>
+
+{% endblock aside %}
+
+{% block main %}
+
+  {% include "home/partials/training.html" %}
+
+{% endblock main %}
