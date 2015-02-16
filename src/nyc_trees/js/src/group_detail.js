@@ -4,7 +4,7 @@ var fetchAndReplace = require('./fetchAndReplace'),
     mapModule = require('./map');
 
 fetchAndReplace({
-    container: '.btn-follow-container',
+    container: '.follow-detail',
     target: '.btn-follow, .btn-unfollow'
 });
 

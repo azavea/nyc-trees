@@ -76,6 +76,8 @@ def group_detail(request):
     show_mapper_request = group.allows_individual_mappers and \
         not user_is_group_admin(request.user, group)
 
+    follow_count = Follow.objects.filter(group=group).count()
+
     tree_count = get_group_tree_count(group)
 
     group_blocks = Territory.objects \
@@ -112,11 +114,14 @@ def group_detail(request):
             'tree': tree_count,
             'block': block_percent,
             'event': num_events_held,
-            'attendees': num_event_attendees
+            'attendees': num_event_attendees,
+            'follows': follow_count
         },
         'group_events_id': GROUP_EVENTS_ID,
         'layer': get_context_for_territory_layer(request, request.group.id),
-        'territory_bounds': _group_territory_bounds(request.group)
+        'territory_bounds': _group_territory_bounds(request.group),
+        'render_follow_button_without_count': request.POST.get(
+            'render_follow_button_without_count', False)
     }
 
 

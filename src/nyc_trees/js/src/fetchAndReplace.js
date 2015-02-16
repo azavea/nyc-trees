@@ -30,7 +30,8 @@ function fetchAndReplace(options) {
             if (url) {
                 event.preventDefault();
                 $.ajax(url, {
-                        type: verb
+                        type: verb,
+                        data: options.data
                     })
                     .done(function(content) {
                         $(options.container).html(content);
