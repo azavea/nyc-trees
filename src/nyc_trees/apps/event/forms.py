@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from __future__ import division
 
 from datetime import datetime
+from pytz import timezone
 
 from floppyforms.__future__ import ModelForm, DateField, TimeField, RadioSelect
 
@@ -48,7 +49,7 @@ class EventForm(ModelForm):
 
     def clean(self):
         cleaned_data = super(EventForm, self).clean()
-        right_now = now()
+        right_now = now().astimezone(timezone('US/Eastern'))
         today = right_now.date()
 
         if 'date' in cleaned_data:
