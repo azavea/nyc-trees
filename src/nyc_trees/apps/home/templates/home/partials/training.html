@@ -6,8 +6,8 @@
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu congue lorem, id feugiat tortor. Aliquam ante elit, sodales eget porttitor vel, commodo et felis.</p>
 
 {% for step_info in training_steps %}
-<a {% if step_info.is_complete or step_info.is_next %}href="{{ step_info.step.pure_url }}"{% endif %}
-   class="training block item">
+<a {% if step_info.is_visitable %}href="{{ step_info.step.pure_url }}"{% endif %}
+   class="training block item {% if not step_info.is_visitable %}inactive{% endif %}">
     <div class="row">
         <div class="col-xs-8">
             <h5>{{ step_info.step.description }}</h5>
