@@ -31,7 +31,8 @@ class TrainingTrackingTest(TestCase):
     def test_visit_marks_boolean_true(self):
         """assert that any successful view function, when wrapped with
         the decorator, will mark the associated boolean"""
-        view = lambda request: {}
+        def view(request):
+            return {}
         wrapped_view = do(mark_user('is_banned'),
                           view)
 

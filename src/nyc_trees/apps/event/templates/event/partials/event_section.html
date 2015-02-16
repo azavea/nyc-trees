@@ -7,6 +7,7 @@
             <div class="event-detail">{{ event.begins_at|date:"f A" }} at {{ event.address }}</div>
             <div class="event-detail">{{ event.group.name }}</div>
             <div class="event-detail">{{ event.training_summary }}</div>
+            {% if info.user_is_registered %}<div class="event-detail"><b>+ RSVP</b></div>{% endif %}
         </div>
         <div class="event-action col-xs-3"></div>
     </div>
