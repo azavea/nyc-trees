@@ -12,32 +12,32 @@
     <p class="required">
         {{ form.username.errors }}
         <label for="id_username">Username:</label>
-        <input id="id_username" maxlength="30" name="username" type="text">
+        <input id="id_username" maxlength="30" name="username" type="text" class="form-control">
     </p>
     <p class="required">
         {{ form.email.errors }}
         <label for="id_email">E-mail:</label>
-        <input id="id_email" name="email" type="email">
+        <input id="id_email" name="email" type="email" class="form-control">
     </p>
     <p class="required">
         {{ form.password1.errors }}
         <label for="id_password1">Password:</label>
-        <input id="id_password1" name="password1" type="password">
+        <input id="id_password1" name="password1" type="password" class="form-control">
     </p>
     <p class="required">
         {{ form.password2.errors }}
         <label for="id_password2">Password (again):</label>
-        <input id="id_password2" name="password2" type="password">
+        <input id="id_password2" name="password2" type="password" class="form-control">
     </p>
     <p class="required">
         {{ form.tos.errors }}
-        <label for="id_tos">I agree to the <a href="http://www1.nyc.gov/home/terms-of-use.page" target="new">terms of use</a>:</label>
         <input id="id_tos" name="tos" type="checkbox">
+        <label for="id_tos">I agree to the <a href="http://www1.nyc.gov/home/terms-of-use.page" target="new">terms of use</a>:</label>
     </p>
     <p>
         {{ form.age_over_13.errors }}
-        <label for="id_age_over_13">I am over 13 years old:</label>
         <input id="id_age_over_13" name="age_over_13" type="checkbox">
+        <label for="id_age_over_13">I am over 13 years old:</label>
     </p>
     <input type="submit" class="btn btn-primary btn-mobile--max" value="{% trans 'Submit' %}" />
 </form>
