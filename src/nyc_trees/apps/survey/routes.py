@@ -21,7 +21,7 @@ progress_page = route(GET=do(render_template('survey/progress.html'),
 progress_page_blockface_popup = route(
     GET=do(
         render_template('survey/partials/progress_page_blockface_popup.html'),
-        v.progress_page_blockface_popup ))
+        v.progress_page_blockface_popup))
 
 #####################################
 # RESERVATION ROUTES

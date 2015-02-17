@@ -34,6 +34,11 @@ urlpatterns = patterns(
     url(r'^(?P<blockface_id>\d+)/reservation-popup/$',
         reserved_blockface_popup, name='reserved_blockface_popup'),
 
+    # Note: changes here must be kept in sync with
+    # src/nyc_trees/js/src/progressPage.js
+    url(r'^(?P<blockface_id>\d+)/progress-page-blockface-popup/$',
+        progress_page_blockface_popup, name='progress_blockface_popup'),
+
     url(r'^checkout/$', reserve_blockfaces, name='reserve_blockfaces'),
 
     url(r'^checkout-confirmation/$', blockface_reservations_confirmation_page,
