@@ -33,6 +33,12 @@ notification_arn_param = t.add_parameter(Parameter(
     Description='Physical resource ID of an AWS::SNS::Topic for notifications'
 ))
 
+app_ssl_certificate_arm_param = t.add_parameter(Parameter(
+    'AppSSLCertificateARN', Type='String',
+    Description='Physical resource ID on an AWS::IAM::ServerCertificate for '
+                'the application server load balancer'
+))
+
 app_server_ami_param = t.add_parameter(Parameter(
     'AppServerAMI', Type='String', Default='ami-d87dc6b0',
     Description='Application server AMI'
@@ -73,13 +79,13 @@ app_server_load_balancer_security_group = t.add_resource(ec2.SecurityGroup(
         ec2.SecurityGroupRule(
             IpProtocol='tcp', CidrIp=utils.ALLOW_ALL_CIDR, FromPort=p, ToPort=p
         )
-        for p in [80]
+        for p in [80, 443]
     ],
     SecurityGroupEgress=[
         ec2.SecurityGroupRule(
             IpProtocol='tcp', CidrIp=utils.VPC_CIDR, FromPort=p, ToPort=p
         )
-        for p in [80]
+        for p in [80, 443]
     ],
     Tags=Tags(
         Name='sgAppServerLoadBalancer',
@@ -142,9 +148,15 @@ app_server_load_balancer = t.add_resource(elb.LoadBalancer(
             InstancePort='80',
             Protocol='HTTP',
         ),
+        elb.Listener(
+            LoadBalancerPort='443',
+            InstancePort='80',
+            Protocol='HTTPS',
+            SSLCertificateId=Ref(app_ssl_certificate_arm_param)
+        )
     ],
     HealthCheck=elb.HealthCheck(
-        Target="HTTP:80/",
+        Target="HTTP:80/health-check",
         HealthyThreshold="3",
         UnhealthyThreshold="2",
         Interval="30",

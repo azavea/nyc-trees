@@ -292,6 +292,7 @@ case "$1" in
     AWS_STACK_PARAMS="ParameterKey=KeyName,ParameterValue=${AWS_KEY_NAME}"
     AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=StackColor,ParameterValue=${AWS_APP_STACK_COLOR}"
     AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=GlobalNotificationsARN,ParameterValue=${AWS_SNS_TOPIC}"
+    AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=AppSSLCertificateARN,ParameterValue=${AWS_SSL_CERTIFICATE}"
     AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=VpcId,ParameterValue=${AWS_VPC_ID}"
     AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=AppServerAMI,ParameterValue=${AWS_APP_SERVER_AMI}"
     AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=PublicSubnets,ParameterValue='${AWS_PUBLIC_SUBNETS}'"
