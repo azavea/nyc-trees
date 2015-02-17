@@ -195,6 +195,9 @@ aside {
   @include blockpadding();
   &.item {
     border-bottom: solid 1px $gray-lightest;
+    &.inactive {
+      opacity: .5;
+    }
     &:last-child {
       border-bottom: 0;
     }
