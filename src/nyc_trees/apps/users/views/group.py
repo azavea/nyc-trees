@@ -11,7 +11,8 @@ from django.utils.timezone import now
 from libs.formatters import humanize_bytes
 from libs.sql import get_group_tree_count
 
-from apps.core.helpers import user_is_group_admin
+from apps.core.helpers import (user_is_group_admin,
+                               user_is_eligible_to_become_trusted_mapper)
 from apps.core.decorators import group_request
 from apps.core.models import Group
 
@@ -65,6 +66,7 @@ group_edit_events = EventList(
 
 
 def group_detail(request):
+    user = request.user
     group = request.group
     event_list = (group_detail_events
                   .configure(chunk_size=2,
@@ -74,7 +76,8 @@ def group_detail(request):
     user_is_following = Follow.objects.filter(user_id=request.user.id,
                                               group=group).exists()
 
-    show_mapper_request = request.user.eligible_to_become_trusted_mapper(group)
+    show_mapper_request = user_is_eligible_to_become_trusted_mapper(user,
+                                                                    group)
 
     follow_count = Follow.objects.filter(group=group).count()
     tree_count = get_group_tree_count(group)
