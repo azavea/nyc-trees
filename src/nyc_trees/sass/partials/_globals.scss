@@ -88,6 +88,11 @@ a {
   &:focus {
     @include tab-focus;
   }
+
+  .item.block & {
+    color: inherit;
+  }
+
 }
 
 // Horizontal rules

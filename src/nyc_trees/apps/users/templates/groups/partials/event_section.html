@@ -7,8 +7,14 @@
 {% endif %}
     <div class="row">
         <div class="event-date col-xs-3">
-            <div class="event-month">{{ event.begins_at|date:"M" }}</div>
-            <div class="event-day h4">{{ event.begins_at|date:"d" }}</div>
+            <div class="calendar">
+                <div class="calendar-heading">
+                    {{ event.begins_at|date:"M" }}
+                </div>
+                <div class="calendar-body">
+                    {{ event.begins_at|date:"d" }}
+                </div>
+            </div>
         </div>
         <div class="event-details col-xs-6">
                 {% if event_list.user_can_edit_group %}

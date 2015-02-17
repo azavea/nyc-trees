@@ -167,7 +167,8 @@ $hero-box-side-padding: 3rem;
 
 @media (min-width: $screen-sm) {
   .section-home {
-    margin: 3rem $grid-gutter-width/-2;
+    margin: 3rem auto;
+    max-width: 62rem;
   }
   .home-description {
     font-size: $font-size-h4;
