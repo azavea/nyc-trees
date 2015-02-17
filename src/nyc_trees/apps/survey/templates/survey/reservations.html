@@ -7,7 +7,7 @@
 
 {% block aside %}
 
-  <div class="map-sidebar-context block">
+  <div class="map-sidebar">
     <h2>Reservations<a href="{% url 'reserve_blockface_page' %}" id="new-reservation" class="btn btn-primary pull-right">New</a></h2>
     <p class="pageheading-description-detail hidden-xs">
       The new reservation map shows lorem ipsum dolor sit amet, consectetur adipiscing
@@ -15,7 +15,7 @@
       porttitor vel, commodo et felis.
     </p>
     {% include 'home/partials/legend.html' %}
-    <div class="action-bar" id="reserve-blockface-action-bar"></div>
+    <div class="action-bar h4" id="reserve-blockface-action-bar"></div>
   </div>
 
   {% include 'home/partials/location_search.html' %}
