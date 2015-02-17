@@ -19,8 +19,11 @@ $hero-box-side-padding: 3rem;
   border-top: 1px solid $gray-lighter;
   padding: 1rem 0;
   display: block;
-  font-size: $font-size-h5 !important;
   margin: $hero-box-top-padding -1*$hero-box-side-padding -1*$hero-box-top-padding;
+}
+
+.hero-text {
+  font-size: $font-size-h5 !important;
 }
 
 .hero-heading {
@@ -188,11 +191,11 @@ $hero-box-side-padding: 3rem;
     margin-right: $grid-gutter-width/-2;
     margin-top: 4rem;
   }
+  .hero-text {
+    font-size: $font-size-h4 !important;
+  }
   .hero-heading {
     font-size: $font-size-h1;
-  }
-  .hero-link {
-    font-size: $font-size-h4;
   }
   .progress-circle-number {
     font-size: $font-size-h2;

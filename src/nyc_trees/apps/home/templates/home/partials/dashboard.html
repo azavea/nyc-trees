@@ -11,9 +11,9 @@
                     <div class="col-sm-6 col-sm-push-6">
                         <div class="hero-content">
                             <h1 class="hero-heading">Welcome back, volun<span class="color--primary">treer!</span></h1>
-                            <p class="h4">In the past week, <span class="color--primary">405 trees</span> in <span class="color--primary">12 blocks</span> have been added. We're <span class="color--primary">43%</span> of the way to our goal!</p>
+                            <p class="hero-text">In the past week, <span class="color--primary">405 trees</span> in <span class="color--primary">12 blocks</span> have been added. We're <span class="color--primary">43%</span> of the way to our goal!</p>
                             <div class="text-right">
-                                <a class="hero-link text-center color--secondary h4" href="{% url 'progress_page' %}">Show me the map →</a>
+                                <a class="hero-link hero-text text-center color--secondary h4" href="{% url 'progress_page' %}">Show me the map →</a>
                             </div>
                         </div>
                     </div>
@@ -24,7 +24,7 @@
 
     <div class="container">
         <div class="row">
-            <main class="col-sm-12">
+            <main class="col-sm-12 main-dashboard">
                 {% if user.online_training_complete %}
                 {% if immediate_events.event_infos %}
                 <section class="events section-home">
