@@ -7,7 +7,6 @@ from django.conf import settings
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.utils.timezone import now
-from apps.core.views import map_legend
 
 from apps.users.models import TrustedMapper
 
@@ -34,9 +33,13 @@ def blockface_cart_page(request):
 
 
 def reservations_page(request):
-    context = map_legend(request)
-    context['layer'] = get_context_for_reservations_layer(request)
-    return context
+    return {
+        'legend_entries': [
+            {'css_class': 'reserved', 'label': 'Reserved by you'},
+            {'css_class': 'unavailable', 'label': 'Not reserved by you'},
+        ],
+        'layer': get_context_for_reservations_layer(request)
+    }
 
 
 def reserve_blockfaces_page(request):
