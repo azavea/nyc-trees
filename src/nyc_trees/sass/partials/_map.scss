@@ -2,6 +2,7 @@
   padding-bottom: 0;
   .tab-status-map-tab &, .page-new-reservation & {
     position: static;
+    height: 7rem;
   }
   .action-bar .dropdown-menu {
     z-index: $zindex-modal + 1;

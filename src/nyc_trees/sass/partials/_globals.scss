@@ -39,9 +39,17 @@ body {
   position: relative;
   font-feature-settings: "kern" 1;
   text-rendering: geometricPrecision;
-  min-height: 100vh;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+  -moz-box-orient: vertical;
+  -moz-box-direction: normal;
   flex-direction: column;
+  min-height: 100vh;
   @media (min-width: $screen-sm) {
     background-color: $body-bg;
   }
@@ -80,6 +88,11 @@ a {
   &:focus {
     @include tab-focus;
   }
+
+  .item.block & {
+    color: inherit;
+  }
+
 }
 
 // Horizontal rules
@@ -182,6 +195,9 @@ aside {
   @include blockpadding();
   &.item {
     border-bottom: solid 1px $gray-lightest;
+    &.inactive {
+      opacity: .5;
+    }
     &:last-child {
       border-bottom: 0;
     }
@@ -334,4 +350,10 @@ input[type="checkbox"] + label {
   left: .6rem;
   line-height: 1;
   color: #777;
+}
+
+.privacy-item {
+  .disabled {
+      opacity: .5;
+  }
 }

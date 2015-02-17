@@ -3,7 +3,10 @@ $hero-box-side-padding: 3rem;
 
 .hero {
   position: relative;
-  height: 45rem;
+  height: 31rem;
+  .page-dashboard & {
+    height: 39rem;
+  }
 }
 
 .hero-content {
@@ -17,6 +20,14 @@ $hero-box-side-padding: 3rem;
   padding: 1rem 0;
   display: block;
   margin: $hero-box-top-padding -1*$hero-box-side-padding -1*$hero-box-top-padding;
+}
+
+.hero-text {
+  font-size: $font-size-h5 !important;
+}
+
+.hero-heading {
+  font-size: $font-size-h3;
 }
 
 .hero-box {
@@ -94,7 +105,7 @@ $hero-box-side-padding: 3rem;
 }
 
 .section-home {
-  margin: 3rem $grid-gutter-width/-2;
+  margin: 1rem $grid-gutter-width/-2;
 }
 
 .section-about-logo {
@@ -156,14 +167,35 @@ $hero-box-side-padding: 3rem;
   padding: 1rem;
 }
 
+.home-description {
+  font-size: $font-size-h5;
+}
+
 @media (min-width: $screen-sm) {
+  .section-home {
+    margin: 3rem auto;
+    max-width: 62rem;
+  }
+  .home-description {
+    font-size: $font-size-h4;
+  }
   .progress-circles {
     margin-left: auto;
     margin-right: auto;
   }
+  .hero {
+    height: 45rem !important;
+  }
   .hero-content {
     margin-left: $grid-gutter-width/-2;
     margin-right: $grid-gutter-width/-2;
+    margin-top: 4rem;
+  }
+  .hero-text {
+    font-size: $font-size-h4 !important;
+  }
+  .hero-heading {
+    font-size: $font-size-h1;
   }
   .progress-circle-number {
     font-size: $font-size-h2;

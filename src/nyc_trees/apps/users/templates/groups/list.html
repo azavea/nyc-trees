@@ -10,6 +10,9 @@
     <div class="row">
         <div class="col-xs-12">
             <h2>Groups</h2>
+            <p class="pageheading-description-detail hidden-xs">
+                Groups are the backbone of the census—they organize training and mapping events. Following a group is a great way to find out about upcoming events.
+            </p>
         </div>
     </div>
 </div>
@@ -19,8 +22,12 @@
 {% block pre_loop_section %}
 {% endblock pre_loop_section %}
 
-<span>Search: </span><input data-class="group-search"/>
-<hr>
+<div class="block">
+    <div class="input-group">
+      <span class="input-group-addon"><i class="icon-search"></i></span>
+      <input type="text" class="form-control" placeholder="Filter groups" aria-describedby="basic-addon1" data-class="group-search">
+    </div>
+</div>
 
 {% if groups %}
 <table class="group-table">

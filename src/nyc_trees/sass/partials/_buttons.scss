@@ -3,9 +3,14 @@
   color: $brand-secondary !important;
   background-color: transparent;
   white-space: normal;
+  &:hover {
+    color: $brand-secondary !important;
+    opacity: .7;
+  }
   &.active {
     border: 2px solid $brand-secondary;
     color: #fff !important;
+
     background-color: $brand-secondary;
     -webkit-box-shadow: none;
     box-shadow: none;
@@ -21,7 +26,10 @@
 .btn-plain {
   background-color: transparent;
   border: 0;
-  box-shadow: none;
+  box-shadow: none !important;
+  &:hover {
+    color: $brand-secondary !important;
+  }
 }
 
 .btn-secondary {
