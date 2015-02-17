@@ -56,7 +56,7 @@ function stripExtension(filename) {
 }
 
 function isTemplate(str) {
-    return !!str.match(/<%=/);
+    return !!str.match(/<%/);
 }
 
 function utf8FileToContentFunction(filePath) {

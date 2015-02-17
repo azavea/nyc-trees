@@ -10,12 +10,15 @@ from apps.survey.routes import (reserve_blockface_page, cancel_reservation,
                                 reserved_blockface_popup,
                                 reservations_instructions,
                                 blockface_reservations_confirmation_page,
-                                blockface)
+                                blockface, progress_page,
+                                progress_page_blockface_popup)
 
 
 # These URLs have the prefix 'blockface/'
 urlpatterns = patterns(
     '',
+    url(r'^progress/$', progress_page, name='progress_page'),
+
     url(r'^$', reservations, name='reservations'),
 
     url(r'^reserve/$', reserve_blockface_page, name='reserve_blockface_page'),
@@ -30,6 +33,11 @@ urlpatterns = patterns(
     # src/nyc_trees/js/src/reservationPage.js
     url(r'^(?P<blockface_id>\d+)/reservation-popup/$',
         reserved_blockface_popup, name='reserved_blockface_popup'),
+
+    # Note: changes here must be kept in sync with
+    # src/nyc_trees/js/src/progressPage.js
+    url(r'^(?P<blockface_id>\d+)/progress-page-blockface-popup/$',
+        progress_page_blockface_popup, name='progress_blockface_popup'),
 
     url(r'^checkout/$', reserve_blockfaces, name='reserve_blockfaces'),
 

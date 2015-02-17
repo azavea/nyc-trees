@@ -12,6 +12,18 @@ from apps.core.decorators import individual_mapper_do
 from apps.survey import views as v
 
 #####################################
+# PROGRESS PAGE ROUTES
+#####################################
+
+progress_page = route(GET=do(render_template('survey/progress.html'),
+                             v.progress_page))
+
+progress_page_blockface_popup = route(
+    GET=do(
+        render_template('survey/partials/progress_page_blockface_popup.html'),
+        v.progress_page_blockface_popup))
+
+#####################################
 # RESERVATION ROUTES
 #####################################
 

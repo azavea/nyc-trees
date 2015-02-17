@@ -2,6 +2,9 @@
 -- the latest survey for a blockface
 (SELECT
   DISTINCT ON (block.id)
+  <% if (is_utf_grid) { %>
+  ST_AsGeoJSON(block.geom) AS geojson,
+  <% } %>
   block.geom, block.id, turf.group_id,
   CASE
     WHEN survey.id IS NOT NULL THEN 'surveyed-by-others'
