@@ -5,7 +5,7 @@ require('./event_list');
 var $ = require('jquery'),
     mapModule = require('./map'),
     L = require('leaflet'),
-    zoom = require('./mapUtil').zoom,
+    zoom = require('./mapUtil').ZOOM,
 
     dom = {
         mapToggle: '[data-toggle="tab"][href="#map-tab"]',
