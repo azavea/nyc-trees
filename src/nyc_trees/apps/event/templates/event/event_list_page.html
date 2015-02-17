@@ -83,6 +83,10 @@
 </div>
 
 
+{% block footer %}
+{# Map pages hide the footer to maximize viewable area #}
+{% endblock footer%}
+
 {% block page_js %}
 <script type="text/javascript" src="{{ "js/event_list_page.js"|static_url }}"></script>
 {% endblock page_js %}
