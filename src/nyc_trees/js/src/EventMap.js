@@ -7,7 +7,7 @@
 var $ = require('jquery'),
     L = require('leaflet'),
     mapModule = require('./map'),
-    zoom = require('./mapUtil').zoom;
+    zoom = require('./mapUtil').ZOOM;
 
 var EventMap = function (options) {
     var map = mapModule.create(options),

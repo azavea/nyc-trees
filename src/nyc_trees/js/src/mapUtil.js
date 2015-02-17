@@ -1,12 +1,12 @@
 "use strict";
 
-var zoom = {
+var _ZOOM = {
     NEIGHBORHOOD: 16,
     MAX: 19
 };
 
 module.exports = {
-    zoom: Object.freeze ? Object.freeze(zoom) : zoom,
+    ZOOM: Object.freeze ? Object.freeze(_ZOOM) : _ZOOM,
 
     setCenterAndZoomLL: function(map, zoom, location) {
         // Never zoom out, or try to zoom farther than allowed.

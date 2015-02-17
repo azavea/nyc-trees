@@ -1,7 +1,7 @@
 "use strict";
 
 var mapModule = require('./map'),
-    zoom = require('./mapUtil').zoom,
+    zoom = require('./mapUtil').ZOOM,
     L = require('leaflet');
 
 var progressMap = mapModule.create({
