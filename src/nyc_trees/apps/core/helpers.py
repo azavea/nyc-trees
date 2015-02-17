@@ -32,3 +32,8 @@ def user_is_trusted_mapper(user, group):
         TrustedMapper.objects.filter(group=group,
                                      user=user,
                                      is_approved=True).exists()
+
+
+def user_is_eligible_to_become_trusted_mapper(user, group):
+    return user.is_authenticated() and \
+        user.eligible_to_become_trusted_mapper(group)
