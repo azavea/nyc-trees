@@ -346,3 +346,9 @@ label {
   line-height: 1;
   color: #777;
 }
+
+.privacy-item {
+  .disabled {
+      opacity: .5;
+  }
+}
