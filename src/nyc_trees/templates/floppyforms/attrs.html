@@ -33,4 +33,8 @@ SOFTWARE.
       {{ name }}{% if value != True %}="{{ value }}"{% endif %}
     {% endfor %} class="form-control"
   {% endif %}
+{% else %}
+  {% for name, value in attrs.iteritems %}
+    {{ name }}{% if value != True %}="{{ value }}"{% endif %}
+  {% endfor %}
 {% endif %}
