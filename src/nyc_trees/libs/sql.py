@@ -46,6 +46,16 @@ def get_group_tree_count(group):
     return _get_count(sql, [group.pk])
 
 
+def get_total_tree_count():
+    sql = _survey_sql + """
+        SELECT COUNT(*)
+        FROM survey_tree AS tree
+        JOIN most_recent_survey
+          ON tree.survey_id = most_recent_survey.id"""
+
+    return _get_count(sql)
+
+
 def get_user_species_count(user):
     sql = _survey_sql + """
         SELECT COUNT(*) FROM (
@@ -58,3 +68,16 @@ def get_user_species_count(user):
         ) subquery"""
 
     return _get_count(sql, [user.pk])
+
+
+def get_total_species_count():
+    sql = _survey_sql + """
+        SELECT COUNT(*) FROM (
+          SELECT DISTINCT ON (tree.species_id) tree.species_id
+          FROM survey_tree AS tree
+          JOIN most_recent_survey
+            ON tree.survey_id = most_recent_survey.id
+          WHERE tree.species_id IS NOT NULL
+        ) subquery"""
+
+    return _get_count(sql)
