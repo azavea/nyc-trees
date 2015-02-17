@@ -105,6 +105,11 @@ class User(NycModel, AbstractUser):
     def training_complete(self):
         return self.online_training_complete and self.field_training_complete
 
+    def attended_at_least_two_events(self):
+        from apps.event.models import EventRegistration
+        return EventRegistration.objects.filter(user=self,
+                                                did_attend=True).count() >= 2
+
     def eligible_to_become_individual_mapper(self):
         """
         Return True if user has completed online training, attended a mapping
@@ -113,10 +118,8 @@ class User(NycModel, AbstractUser):
         # Has an admin rescinded mapper status?
         if self.individual_mapper is False:
             return False
-        from apps.event.models import EventRegistration
-        return self.field_training_complete and \
-            EventRegistration.objects.filter(user=self,
-                                             did_attend=True).count() >= 2
+        return (self.field_training_complete and
+                self.attended_at_least_two_events())
 
     def eligible_to_become_trusted_mapper(self, group):
         from apps.core.helpers import (user_is_group_admin,

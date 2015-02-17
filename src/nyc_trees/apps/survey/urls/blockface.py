@@ -8,6 +8,7 @@ from django.conf.urls import patterns, url
 from apps.survey.routes import (reserve_blockface_page, cancel_reservation,
                                 reserve_blockfaces, survey, reservations,
                                 reserved_blockface_popup,
+                                reservations_instructions,
                                 blockface_reservations_confirmation_page,
                                 blockface)
 
@@ -18,6 +19,9 @@ urlpatterns = patterns(
     url(r'^$', reservations, name='reservations'),
 
     url(r'^reserve/$', reserve_blockface_page, name='reserve_blockface_page'),
+
+    url(r'^reservations-instructions/$', reservations_instructions,
+        name='reservations_instructions'),
 
     url(r'^(?P<blockface_id>\d+)/cancel-reservation/$', cancel_reservation,
         name='cancel_reservation'),

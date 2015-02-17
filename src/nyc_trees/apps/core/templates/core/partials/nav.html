@@ -26,9 +26,7 @@
             <li{% if active_page == "training" %} class="active"{% endif %}><a href="{% url 'training_summary_pure' %}">Training</a></li>
             <li{% if active_page == "groups" %} class="active"{% endif %}><a href="{% url 'group_list_page' %}">Groups</a></li>
             <li{% if active_page == "events" %} class="active"{% endif %}><a href="{% url 'events_list_page' %}">Events</a></li>
-            {% if show_reservations %}
             <li{% if active_page == "reservations" %} class="active"{% endif %}><a href="{% url 'reservations' %}">Reservations</a></li>
-            {% endif %}
             <li{% if active_page == "achievements" %} class="active"{% endif %}><a href="#">Achievements</a></li>
         {% endif %}
         <li{% if active_page == "about" %} class="active"{% endif %}><a href="#">About &amp; FAQ</a></li>

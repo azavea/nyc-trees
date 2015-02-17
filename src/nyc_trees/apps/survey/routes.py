@@ -3,11 +3,12 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
+from django.contrib.auth.decorators import login_required
+
 from django_tinsel.decorators import route, render_template, json_api_call
 from django_tinsel.utils import decorate as do
 
 from apps.core.decorators import individual_mapper_do
-
 from apps.survey import views as v
 
 #####################################
@@ -15,7 +16,8 @@ from apps.survey import views as v
 #####################################
 
 reservations = route(
-    GET=individual_mapper_do(
+    GET=do(
+        login_required,
         render_template('survey/reservations.html'),
         v.reservations_page))
 
@@ -41,6 +43,11 @@ reserve_blockfaces = individual_mapper_do(
 blockface_reservations_confirmation_page = individual_mapper_do(
     render_template('survey/reserve_blockface_confirmation.html'),
     route(POST=v.confirm_blockface_reservations))
+
+reservations_instructions = do(
+    login_required,
+    render_template('survey/reservations_instructions.html'),
+    v.reservations_instructions)
 
 #####################################
 # SURVEY ROUTES

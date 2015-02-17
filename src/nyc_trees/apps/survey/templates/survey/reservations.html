@@ -8,7 +8,11 @@
 {% block aside %}
 
   <div class="map-sidebar">
-    <h2>Reservations<a href="{% url 'reserve_blockface_page' %}" id="new-reservation" class="btn btn-primary pull-right">New</a></h2>
+    <h2>Reservations
+        <a id="new-reservation" class="btn btn-primary pull-right"
+        {% if user.individual_mapper %}href="{% url 'reserve_blockface_page' %}"
+        {% else %}href="{% url 'reservations_instructions' %}"
+        {% endif %}>New</a></h2>
     <p class="pageheading-description-detail hidden-xs">
       The new reservation map shows lorem ipsum dolor sit amet, consectetur adipiscing
       elit. Sed eu congue lorem, id feugiat tortor. Aliquam ante elit, sodales eget
