@@ -169,7 +169,7 @@ class Quiz(object):
     """
     title - string
     questions - iterable<Question>
-    passing_score - int; How many correct answers are needed to pass the quiz
+    passing_score - int; Number of correct answers needed to pass the quiz
     """
     def __init__(self, title, questions, passing_score):
         assert len(questions) > 0
@@ -199,7 +199,7 @@ class Quiz(object):
 
     def score(self, answers):
         """
-        How many correct answers are selected?
+        Return number of correctly answered questions.
         answers - dict of {question_index => answer_indexes, ...}
         """
         result = 0
@@ -210,38 +210,40 @@ class Quiz(object):
         return result
 
 
-class MultiChoiceQuestion(object):
+class Question(object):
     """
     Represents a question with multiple correct answers.
     text - string
     choices - iterable<string>
-    answer - iterable<int>; Indexes of the correct answers in choices iterable
+    answer - SingleAnswer or MultipleAnswer object
     """
     def __init__(self, text, choices, answer):
         assert len(choices) > 0
-        for ans in answer:
+        for ans in answer.answers:
             assert ans >= 0
             assert ans < len(choices)
         self.text = unicode(text)
         self.choices = list(choices)
-        self.answer = list(answer)
+        self.answer = answer
 
     def is_correct(self, candidate):
-        return candidate and set(candidate) == set(self.answer)
+        return candidate and set(candidate) == set(self.answer.answers)
 
-    def is_multiple_choice(self):
-        return True
+    def allow_multiple_selections(self):
+        return type(self.answer) is MultipleAnswer
 
 
-class Question(MultiChoiceQuestion):
+class MultipleAnswer(object):
     """
-    Represents a question with only one correct answer.
-    text - string
-    choices - iterable<string>
-    answer - int; Index of the correct answer in choices iterable
+    answer - iterable<int>; Indexes of correct answers in `choices` iterable
     """
-    def __init__(self, text, choices, answer):
-        super(Question, self).__init__(text, choices, [answer])
+    def __init__(self, *answers):
+        self.answers = list(answers)
 
-    def is_multiple_choice(self):
-        return False
+
+class SingleAnswer(MultipleAnswer):
+    """
+    answer - int; Index of correct answer in `choices` iterable
+    """
+    def __init__(self, answer):
+        super(SingleAnswer, self).__init__(answer)

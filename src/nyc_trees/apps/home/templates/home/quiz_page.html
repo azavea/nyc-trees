@@ -31,12 +31,12 @@
 </h3>
 <p>{{ question.text }}</p>
 
-{% if question.is_multiple_choice %}
+{% if question.allow_multiple_selections %}
 <p>Please check all applicable answers.</p>
 {% endif %}
 
 <div class="hidden alert alert-danger">
-    {% if question.is_multiple_choice %}
+    {% if question.allow_multiple_selections %}
     <p><strong>Please select at least one of the choices below before moving to the next question.</strong></p>
     {% else %}
     <p><strong>Please select one of the choices below before moving to the next question.</strong></p>
@@ -47,7 +47,7 @@
 {% with question_no=forloop.counter0 %}
     {% for choice in question.choices %}
     <li>
-        <input type="{% if question.is_multiple_choice %}checkbox{% else %}radio{% endif %}"
+        <input type="{% if question.allow_multiple_selections %}checkbox{% else %}radio{% endif %}"
             name="question.{{ question_no }}" id="question.{{ question_no }}.answer.{{ forloop.counter0 }}"
             value="{{ forloop.counter0 }}" />
         <label for="question.{{ question_no }}.answer.{{ forloop.counter0 }}">{{ choice }}</label>
