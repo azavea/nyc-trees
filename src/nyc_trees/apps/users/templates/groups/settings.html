@@ -111,8 +111,12 @@
 
                             <div class="block-item">
                                 {{ form.allows_individual_mappers.errors }}
-                                {{ form.allows_individual_mappers.label_tag }}
-                                {{ form.allows_individual_mappers }}
+                                <!-- Because we use a hidden 'allows_individual_mappers' field above, this field
+                                     does not get an 'id'.  So wrap the input, because the 'for' attribute won't work -->
+                                <label>
+                                    {{ form.allows_individual_mappers }}
+                                    {{ form.allows_individual_mappers.label }}
+                                </label>
                             </div>
 
                             {% comment %}
