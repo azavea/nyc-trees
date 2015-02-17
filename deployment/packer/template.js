@@ -20,7 +20,10 @@
       },
       "tags": {
         "Name": "nyc-trees-monitoring",
-        "Version": "{{user `version`}}"
+        "Version": "{{user `version`}}",
+        "Created": "{{ isotime }}",
+        "Service": "Monitoring",
+        "Environment": "Staging"
       }
     },
     {
@@ -36,7 +39,10 @@
       },
       "tags": {
         "Name": "nyc-trees-tiler",
-        "Version": "{{user `version`}}"
+        "Version": "{{user `version`}}",
+        "Created": "{{ isotime }}",
+        "Service": "Tiler",
+        "Environment": "Staging"
       }
     },
     {
@@ -52,7 +58,10 @@
       },
       "tags": {
         "Name": "nyc-trees-app",
-        "Version": "{{user `version`}}"
+        "Version": "{{user `version`}}",
+        "Created": "{{ isotime }}",
+        "Service": "Application",
+        "Environment": "Staging"
       }
     }
   ],
