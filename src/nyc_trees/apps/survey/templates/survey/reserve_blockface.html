@@ -13,16 +13,22 @@
     </p>
     {% include 'home/partials/legend.html' %}
     <div class="action-bar">
-       <div>
-         <span id="current-reservations">{{ reservations.current }}</span>
-         /
-         <span id="total-reservations">{{ reservations.total }}</span>
-       </div>
-       <form method="post" action="{% url 'reserve_blockfaces' %}">
-           {% csrf_token %}
-           <input type="hidden" id="reservation-ids" name="ids" />
-           <input type="submit" id="finish-reservations" disabled="disabled" value="Finish Reservation" class="btn btn-primary" />
-       </form>
+      <div class="row">
+        <div class="col-xs-6">
+            <h1 class="rsvp-count-total pull-left color--primary nomargin" id="current-reservations">{{ reservations.current }}</h1>
+            <div class="rsvp-count-context">
+                 of <span id="total-reservations">{{ reservations.total }}</span><br>
+                <span class="h6 text-uppercase">Reserved</span>
+            </div>
+        </div>
+        <div class="col-xs-6 text-right">
+            <form method="post" action="{% url 'reserve_blockfaces' %}">
+                {% csrf_token %}
+                <input type="hidden" id="reservation-ids" name="ids" />
+                <input type="submit" id="finish-reservations" disabled="disabled" value="Reserve Blocks" class="btn btn-primary" />
+            </form>
+        </div>
+      </div>
     </div>
   </div>
 
