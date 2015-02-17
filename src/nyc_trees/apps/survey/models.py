@@ -41,6 +41,10 @@ class Survey(NycModel, models.Model):
                                  blank=True)
     is_flagged = models.BooleanField(default=False)
 
+    def __unicode__(self):
+        return 'block %s on %s by %s' % (self.blockface_id, self.created_at,
+                                         self.user)
+
 
 class Species(NycModel, models.Model):
     name = models.CharField(max_length=200, unique=True)
