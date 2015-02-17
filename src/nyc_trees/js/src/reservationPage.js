@@ -4,7 +4,7 @@ var $ = require('jquery'),
     L = require('leaflet'),
     toastr = require('toastr'),
     mapModule = require('./map'),
-    zoom = require('./mapUtil').zoom,
+    zoom = require('./mapUtil').ZOOM,
     SelectableBlockfaceLayer = require('./lib/SelectableBlockfaceLayer'),
 
     dom = {

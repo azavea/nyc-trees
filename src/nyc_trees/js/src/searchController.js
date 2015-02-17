@@ -3,7 +3,7 @@
 var $ = require('jquery'),
     L = require('leaflet'),
     geocoder = require('./geocoder'),
-    zoom = require('./mapUtil').zoom,
+    zoom = require('./mapUtil').ZOOM,
     setCenterAndZoomLL = require('./mapUtil').setCenterAndZoomLL;
 
 module.exports = {create: create};
