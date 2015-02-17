@@ -73,11 +73,10 @@ def group_detail(request):
                   .as_context(request, group_slug=group.slug))
     user_is_following = Follow.objects.filter(user_id=request.user.id,
                                               group=group).exists()
-    show_mapper_request = group.allows_individual_mappers and \
-        not user_is_group_admin(request.user, group)
+
+    show_mapper_request = request.user.eligible_to_become_trusted_mapper(group)
 
     follow_count = Follow.objects.filter(group=group).count()
-
     tree_count = get_group_tree_count(group)
 
     group_blocks = Territory.objects \

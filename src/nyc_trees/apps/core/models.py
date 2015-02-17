@@ -105,7 +105,6 @@ class User(NycModel, AbstractUser):
     def training_complete(self):
         return self.online_training_complete and self.field_training_complete
 
-    @property
     def eligible_to_become_individual_mapper(self):
         """
         Return True if user has completed online training, attended a mapping
@@ -118,6 +117,13 @@ class User(NycModel, AbstractUser):
         return self.field_training_complete and \
             EventRegistration.objects.filter(user=self,
                                              did_attend=True).count() >= 2
+
+    def eligible_to_become_trusted_mapper(self, group):
+        from apps.core.helpers import (user_is_group_admin,
+                                       user_is_trusted_mapper)
+        return group.allows_individual_mappers and \
+            not user_is_group_admin(self, group) and \
+            not user_is_trusted_mapper(self, group)
 
 
 class Group(NycModel, models.Model):

@@ -105,11 +105,47 @@
     <section>
         <h4 class="section-heading">Individual Mapping</h4>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu congue lorem, id feugiat tortor. Aliquam ante elit, sodales eget porttitor vel, commodo et felis.</p>
-        <button class="btn btn-primary btn-mobile--max">Request Individual Mapper Status</button>
+        <button class="btn btn-primary btn-mobile--max"
+                data-action="request-access"
+                data-group-slug="{{ group.slug }}">Request Individual Mapper Status</button>
     </section>
     {% endif %}
 
 {% endblock main %}
+
+{% block extra_content %}
+<div class="modal fade" id="request-access-complete-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Request Sent</h4>
+            </div>
+            <div class="modal-body">
+                <p>Your request has been sent.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="request-access-fail-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Error Sending Request</h4>
+            </div>
+            <div class="modal-body">
+                <p>There was a problem submitting your request. Please try again.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock extra_content %}
 
 {% block page_js %}
 <script type="text/javascript" src="{{ "js/group_detail.js"|static_url }}"></script>
