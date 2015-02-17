@@ -122,6 +122,7 @@ function initCrosshairs(domId) {
 function addTileLayer(map, domId) {
     var tileUrl = getDomMapAttribute('tile-url', domId),
         layer = L.tileLayer(tileUrl, {
+            minZoom: zoom.MIN,
             maxZoom: zoom.MAX
         }).addTo(map);
     return layer;
@@ -130,6 +131,7 @@ function addTileLayer(map, domId) {
 function addGridLayer(map, domId) {
     var gridUrl = getDomMapAttribute('grid-url', domId),
         layer = L.utfGrid(gridUrl, {
+            minZoom: zoom.MIN,
             maxZoom: zoom.MAX,
             useJsonP: false
         });
