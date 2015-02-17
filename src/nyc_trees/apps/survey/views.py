@@ -12,7 +12,14 @@ from apps.users.models import TrustedMapper
 
 from apps.survey.models import BlockfaceReservation, Blockface, Territory
 from apps.survey.layer_context import (get_context_for_reservations_layer,
-                                       get_context_for_reservable_layer)
+                                       get_context_for_reservable_layer,
+                                       get_context_for_progress_layer)
+
+
+def progress_page(request):
+    context = map_legend(request)
+    context['layer'] = get_context_for_progress_layer(request)
+    return context
 
 
 def cancel_reservation(request, blockface_id):

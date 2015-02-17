@@ -19,8 +19,6 @@ urlpatterns = patterns(
     '',
     url(r'^$', r.home_page, name='home_page'),
 
-    url(r'^progress/$', r.progress_page, name='progress_page'),
-
     url(r'^individual-mapper-instructions/$',
         r.individual_mapper_instructions,
         name='individual_mapper_instructions'),
