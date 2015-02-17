@@ -39,6 +39,7 @@
   width: 100%;
   height: 8rem;
   padding: 0 $grid-gutter-width/2;
+  z-index: 1;
   .tab-status-list & {
     display: none;
   }
