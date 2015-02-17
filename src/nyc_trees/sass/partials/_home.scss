@@ -4,6 +4,9 @@ $hero-box-side-padding: 3rem;
 .hero {
   position: relative;
   height: 31rem;
+  .page-dashboard & {
+    height: 39rem;
+  }
 }
 
 .hero-content {
@@ -178,7 +181,7 @@ $hero-box-side-padding: 3rem;
     margin-right: auto;
   }
   .hero {
-    height: 45rem;
+    height: 45rem !important;
   }
   .hero-content {
     margin-left: $grid-gutter-width/-2;
