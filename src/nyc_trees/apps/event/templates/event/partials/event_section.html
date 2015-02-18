@@ -1,4 +1,6 @@
 {% with event=info.event %}
+{% block extra_markup %}
+{% endblock extra_markup %}
 <a href="{{ event.get_absolute_url }}" class="event block item rightarrow">
     <div class="row">
         {% include 'event/partials/event_calendar.html' %}
