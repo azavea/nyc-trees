@@ -11,4 +11,4 @@ respawn
 setuid nyc-trees
 chdir {{ app_home }}
 
-exec envdir /etc/nyc-trees.d/env gunicorn --config /etc/nyc-trees.d/gunicorn.py nyc_trees.wsgi
+exec envdir /etc/nyc-trees.d/env gunicorn --config /etc/nyc-trees.d/gunicorn.py nyc_trees.wsgi >> {{ app_log }} 2>&1

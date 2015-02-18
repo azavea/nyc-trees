@@ -1,10 +1,29 @@
 ---
-- name: Touch log file if it does not exist
+- name: Touch application log file if it does not exist
   command: touch {{ app_log }}
            creates={{ app_log }}
 
-- name: Set log file permissions
-  file: path={{ app_log }} owner=nyc-trees group=nyc-trees mode=0664
+- name: Set application log file permissions
+  file: path={{ app_log }}
+        owner=nyc-trees
+        group=nyc-trees
+        mode=0664
+
+- name: Configure application log rotation
+  template: src=logrotate-nyc-trees-app.j2
+            dest=/etc/logrotate.d/nyc-trees-app
+
+- name: Touch Gunicorn log file if it does not exist
+  command: touch {{ app_gunicorn_log }}
+           creates={{ app_gunicorn_log }}
+
+- name: Set Gunicorn log file permissions
+  file: path={{ app_gunicorn_log }}
+        owner=nyc-trees
+        group=nyc-trees
+        mode=0664
 
 - name: Configure Gunicorn log rotation
-  template: src=logrotate-nyc-trees-app.j2 dest=/etc/logrotate.d/nyc-trees-app
+  template: src=logrotate-nyc-trees-gunicorn.j2
+            dest=/etc/logrotate.d/nyc-trees-gunicorn
+
