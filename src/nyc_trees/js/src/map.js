@@ -37,6 +37,8 @@ function create(options) {
 
     if (bounds) {
         fitBounds(map, bounds);
+    } else if (options.bounds) {
+        map.fitBounds(options.bounds, {maxZoom: zoom.NEIGHBORHOOD});
     } else if (options.location && options.location.lat !== 0) {
         map.setView(options.location, zoom.NEIGHBORHOOD);
     } else {
