@@ -36,6 +36,12 @@ def get_context_for_territory_layer(request, group_id):
     return _get_context_for_layer("territory", models, request, params)
 
 
+def get_context_for_territory_survey_layer(request, group_id):
+    models = [Blockface, Territory]
+    params = '?group=%s' % group_id
+    return _get_context_for_layer("territory_survey", models, request, params)
+
+
 def _get_context_for_layer(layer_name, models, request, params=''):
     tiler_url_format = \
         "%(tiler_url)s/%(cache_buster)s/%(db)s/%(type)s/{z}/{x}/{y}"

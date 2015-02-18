@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django_tinsel.decorators import route, render_template, json_api_call
 from django_tinsel.utils import decorate as do
 
-from apps.core.decorators import individual_mapper_do
+from apps.core.decorators import individual_mapper_do, group_request
 from apps.survey import views as v
 
 #####################################
@@ -66,12 +66,15 @@ reservations_instructions = do(
 #####################################
 
 survey = individual_mapper_do(
+    render_template('survey/survey.html'),
     route(GET=v.start_survey,
           POST=v.submit_survey))
 
-choose_blockface_survey_page = route(
-    GET=individual_mapper_do(
-        v.choose_blockface_survey_page))
+survey_from_event = do(login_required,
+                       group_request,
+                       render_template('survey/survey.html'),
+                       route(GET=v.start_survey_from_event,
+                             POST=v.submit_survey))
 
 species_autocomplete_list = route(
     GET=v.species_autocomplete_list)

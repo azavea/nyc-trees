@@ -5,18 +5,23 @@ from __future__ import division
 
 from django.conf import settings
 from django.db import transaction
+from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.utils.timezone import now
 
 from apps.core.models import Group
 from apps.core.views import map_legend
 
+from apps.event.models import Event
+from apps.event.helpers import user_is_checked_in_to_event
+
 from apps.users.models import TrustedMapper
 
 from apps.survey.models import BlockfaceReservation, Blockface, Territory
 from apps.survey.layer_context import (get_context_for_reservations_layer,
                                        get_context_for_reservable_layer,
-                                       get_context_for_progress_layer)
+                                       get_context_for_progress_layer,
+                                       get_context_for_territory_survey_layer)
 
 
 def progress_page(request):
@@ -149,17 +154,32 @@ def blockface(request, blockface_id):
     return {'extent': Blockface.objects.get(pk=blockface_id).geom.extent}
 
 
-def start_survey(request, blockface_id):
-    # TODO: implement
-    pass
+def start_survey(request):
+    # TODO: Set bounds to reservations extent
+    return {
+        'layer': get_context_for_reservations_layer(request),
+        'legend_entries': [
+        ]
+    }
+
+
+def start_survey_from_event(request, event_slug):
+    # TODO pull blockface from querystring/hash
+    # Set bounds to event location
+    group = request.group
+    event = get_object_or_404(Event, group=request.group, slug=event_slug)
+    if not event.in_progress():
+        return HttpResponseForbidden('Event not currently in-progress')
+    if not user_is_checked_in_to_event(request.user, event):
+        return HttpResponseForbidden('User not checked-in to this event')
+    return {
+        'layer': get_context_for_territory_survey_layer(request, group.id),
+        'legend_entries': [
+        ]
+    }
 
 
 def submit_survey(request, blockface_id):
-    # TODO: implement
-    pass
-
-
-def choose_blockface_survey_page(request):
     # TODO: implement
     pass
 

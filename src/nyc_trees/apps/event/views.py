@@ -18,11 +18,11 @@ from apps.users.views.group import GROUP_EVENTS_ID, GROUP_EDIT_EVENTS_TAB_ID
 
 from apps.event.forms import EventForm
 from apps.event.models import Event, EventRegistration
-
 from apps.event.event_list import (EventList, immediate_events, all_events)
 
 from apps.core.helpers import user_is_group_admin
-from apps.event.helpers import user_is_rsvped_for_event
+from apps.event.helpers import (user_is_rsvped_for_event,
+                                user_is_checked_in_to_event)
 
 
 def add_event(request):
@@ -268,22 +268,15 @@ def event_user_check_in_page(request, event_slug):
         'event': event,
         'group': request.group,
         'user': request.user,
-        'checked_in': _user_is_checked_in(request.user, event)
+        'checked_in': user_is_checked_in_to_event(request.user, event)
     }
 
 
 def event_user_check_in_poll(request, event_slug):
     event = get_object_or_404(Event, group=request.group, slug=event_slug)
     return {
-        'checked_in': _user_is_checked_in(request.user, event)
+        'checked_in': user_is_checked_in_to_event(request.user, event)
     }
-
-
-def _user_is_checked_in(user, event):
-    """Return True if user is checked-in to event"""
-    return EventRegistration.objects.filter(user=user,
-                                            event=event,
-                                            did_attend=True).exists()
 
 
 @transaction.atomic
