@@ -2,7 +2,7 @@
 
 var _ZOOM = {
     NEIGHBORHOOD: 16,
-    MIN: 0,
+    MIN: 8,
     MAX: 19
 };
 
