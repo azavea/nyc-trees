@@ -19,7 +19,8 @@ function create(options) {
     }, options);
 
     var mapOptions = {
-        zoomControl: false
+        zoomControl: false,
+        maxBounds: L.latLngBounds(config.bounds[0], config.bounds[1]).pad(4)
     };
     if (options.static) {
         mapOptions.dragging = false;
