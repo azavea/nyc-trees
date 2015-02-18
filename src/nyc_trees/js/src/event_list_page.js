@@ -59,9 +59,13 @@ $(dom.mapToggle).one('shown.bs.tab', function() {
             $(dom.actionBar).load(event.layer.feature.properties.url);
         })
         .addTo(eventMap);
-
-        eventMap.fitBounds(eventLayer.getBounds(), {
-            maxZoom: zoom.NEIGHBORHOOD
+        eventMap.whenReady(function () {
+            // see https://github.com/Leaflet/Leaflet/issues/2021
+            window.setTimeout(function () {
+                eventMap.fitBounds(eventLayer.getBounds(), {
+                    maxZoom: zoom.NEIGHBORHOOD
+                });
+            }, 200);
         });
     });
 });
