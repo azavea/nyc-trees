@@ -18,12 +18,6 @@ var $ = require('jquery'),
 // We can't initialize the map until we switch to the map tab, or it will be
 // sized incorrectly
 $(dom.mapToggle).one('shown.bs.tab', function() {
-    var eventMap = mapModule.create({
-            geolocation: true,
-            search: true
-        }),
-        currentMarker;
-
     geojsonPromise.done(function(geojson) {
         if (geojson.length === 0) {
             return;
@@ -39,8 +33,16 @@ $(dom.mapToggle).one('shown.bs.tab', function() {
                     fillOpacity: 1
                 });
             }
-        })
-        .on('click', function(event) {
+        });
+
+        var eventMap = mapModule.create({
+            geolocation: true,
+            search: true,
+            bounds: eventLayer.getBounds()
+        }),
+        currentMarker;
+
+        eventLayer.on('click', function(event) {
             var eventLatLng = L.GeoJSON.coordsToLatLng(
                 event.layer.feature.geometry.coordinates, true);
 
@@ -59,10 +61,6 @@ $(dom.mapToggle).one('shown.bs.tab', function() {
             $(dom.actionBar).load(event.layer.feature.properties.url);
         })
         .addTo(eventMap);
-
-        eventMap.fitBounds(eventLayer.getBounds(), {
-            maxZoom: zoom.NEIGHBORHOOD
-        });
     });
 });
 
