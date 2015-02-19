@@ -5,6 +5,7 @@
   with_items:
     - nginx
     - django
+    - gunicorn
     - windshaft
   notify:
     - Restart Beaver

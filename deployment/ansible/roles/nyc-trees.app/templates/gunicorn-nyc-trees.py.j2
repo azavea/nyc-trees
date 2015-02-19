@@ -10,7 +10,7 @@ timeout = 1800
 workers = 1
 {% else %}
 accesslog = None
-errorlog = "{{ app_log }}"
+errorlog = "{{ app_gunicorn_log }}"
 loglevel = 'info'
 preload_app = True
 reload = False
