@@ -5,7 +5,9 @@ from __future__ import division
 
 from datetime import timedelta
 
+from django.contrib.auth.models import AnonymousUser
 from django.contrib.gis.geos import LineString, MultiLineString
+
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.test import TestCase
@@ -359,3 +361,22 @@ class FollowGroupTests(UsersTestCase):
 
         unfollow_group(request, self.group.slug)
         self.assertFalse(self._is_following())
+
+
+class AnonUserTests(UsersTestCase):
+    """Test that public facing pages are viewable to logged out users"""
+
+    def setUp(self):
+        super(AnonUserTests, self).setUp()
+        self.anon_user = AnonymousUser()
+
+    def _test_does_not_throw(self, view_fn, *args):
+        try:
+            request = make_request(user=self.anon_user)
+            response = view_fn(request, *args)
+            return response
+        except Exception as ex:
+            self.fail(ex)
+
+    def test_group_detail_visible(self):
+        self._test_does_not_throw(group_detail, self.group.slug)
