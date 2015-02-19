@@ -5,32 +5,32 @@
         {{ form.non_field_errors }}
 
         <div class="field">
-            {{ form.title.errors }}
             {{ form.title.label_tag }}
+            {{ form.title.errors }}
             {{ form.title }}
         </div>
 
         <div class="field">
-            {{ form.date.errors }}
             {{ form.date.label_tag }}
+            {{ form.date.errors }}
             {{ form.date }}
         </div>
 
         <div class="field">
             <label>Time</label>
+            {{ form.begins_at_time.errors }}
+            {{ form.ends_at_time.errors }}
             <div style="display: inline-block;">
-                {{ form.begins_at_time.errors }}
                 {{ form.begins_at_time }}
             </div><span>  to  </span>
             <div style="display: inline-block;">
-                {{ form.ends_at_time.errors }}
                 {{ form.ends_at_time }}
             </div>
         </div>
 
         <div class="field">
-            {{ form.address.errors }}
             {{ form.address.label_tag }}
+            {{ form.address.errors }}
             {{ form.address }}
         </div>
 
@@ -45,44 +45,44 @@
         </div>
 
         <div class="field">
-            {{ form.location_description.errors }}
             {{ form.location_description.label_tag }}
+            {{ form.location_description.errors }}
             {{ form.location_description }}
         </div>
 
         <div class="field">
-            {{ form.description.errors }}
             {{ form.description.label_tag }}
+            {{ form.description.errors }}
             {{ form.description }}
         </div>
 
         <div class="field">
-            {{ form.is_private.errors }}
             {{ form.is_private.label_tag }}
+            {{ form.is_private.errors }}
             {{ form.is_private }}
         </div>
 
         <div class="field">
-            {{ form.includes_training.errors }}
             {{ form.includes_training.label_tag }}
+            {{ form.includes_training.errors }}
             {{ form.includes_training }}
         </div>
 
         <div class="field">
-            {{ form.max_attendees.errors }}
             {{ form.max_attendees.label_tag }}
+            {{ form.max_attendees.errors }}
             {{ form.max_attendees }}
         </div>
 
         <div class="field">
-            {{ form.contact_email.errors }}
             {{ form.contact_email.label_tag }}
+            {{ form.contact_email.errors }}
             {{ form.contact_email }}
         </div>
 
         <div class="field">
-            {{ form.contact_name.errors }}
             {{ form.contact_name.label_tag }}
+            {{ form.contact_name.errors }}
             {{ form.contact_name }}
         </div>
 
