@@ -15,7 +15,8 @@ from django_tinsel.utils import decorate as do
 from apps.core.models import User
 from apps.core.test_utils import make_request
 from apps.home.training.decorators import mark_user, render_flatpage
-from apps.home.training.types import Quiz, Question, MultiChoiceQuestion
+from apps.home.training.types import (Quiz, Question, SingleAnswer,
+                                      MultipleAnswer)
 from apps.home.routes import home_page
 from apps.users.tests import UsersTestCase
 
@@ -115,28 +116,28 @@ class QuizTestCase(TestCase):
     def test_question_assertions(self):
         # Must be at least one choice
         with self.assertRaises(AssertionError):
-            Question(text='A', answer=0, choices=[])
+            Question(text='A', answer=SingleAnswer(0), choices=[])
 
         # Answer must be > 0
         with self.assertRaises(AssertionError):
-            Question(text='A', answer=-1, choices=['A'])
+            Question(text='A', answer=SingleAnswer(-1), choices=['A'])
 
         # Answer must be <= number of choices
         with self.assertRaises(AssertionError):
-            Question(text='A', answer=2, choices=['A'])
+            Question(text='A', answer=SingleAnswer(2), choices=['A'])
 
     def test_multichoice_assertions(self):
         # Must be at least one choice
         with self.assertRaises(AssertionError):
-            MultiChoiceQuestion(text='A', answer=(), choices=[])
+            Question(text='A', answer=MultipleAnswer(), choices=[])
 
         # Answer must be > 0
         with self.assertRaises(AssertionError):
-            MultiChoiceQuestion(text='A', answer=(0, -1), choices=['A'])
+            Question(text='A', answer=MultipleAnswer(0, -1), choices=['A'])
 
         # Answer must be <= number of choices
         with self.assertRaises(AssertionError):
-            MultiChoiceQuestion(text='A', answer=(0, 2), choices=['A'])
+            Question(text='A', answer=MultipleAnswer(0, 2), choices=['A'])
 
     def test_quiz_score(self):
         quiz = Quiz(
@@ -145,11 +146,11 @@ class QuizTestCase(TestCase):
             questions=(
                 Question(
                     text='Which one?',
-                    answer=0,
+                    answer=SingleAnswer(0),
                     choices=('A', 'B')),
-                MultiChoiceQuestion(
+                Question(
                     text='Which one?',
-                    answer=(0, 1),
+                    answer=MultipleAnswer(0, 1),
                     choices=('A', 'B'))))
 
         self.assertEqual(0, quiz.score({}))

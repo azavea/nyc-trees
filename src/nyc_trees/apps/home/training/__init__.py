@@ -5,7 +5,8 @@ from __future__ import division
 
 from apps.home.training.types import (FlatPageTrainingStep,
                                       ViewTrainingStep, TrainingGateway,
-                                      Quiz, Question, MultiChoiceQuestion)
+                                      Quiz, Question, SingleAnswer,
+                                      MultipleAnswer)
 from apps.home.training import routes as r
 
 # This package attempts to keep all the particulars of training encapsulated,
@@ -50,20 +51,20 @@ quizzes = {
         title='Introduction Quiz',
         passing_score=2,
         questions=(
-            MultiChoiceQuestion(
+            Question(
                 text='Lorem ipsum dolor sit amet, consectetur '
                      'adipiscing elit?',
-                answer=(0, 2),
+                answer=MultipleAnswer(0, 2),
                 choices=('Answer A', 'Answer B', 'Answer C')),
             Question(
                 text='Lorem ipsum dolor sit amet, consectetur '
                      'adipiscing elit?',
-                answer=1,
+                answer=SingleAnswer(1),
                 choices=('Answer A', 'Answer B', 'Answer C')),
             Question(
                 text='Lorem ipsum dolor sit amet, consectetur '
                      'adipiscing elit?',
-                answer=2,
+                answer=SingleAnswer(2),
                 choices=('Answer A', 'Answer B', 'Answer C')),
         )
     )
