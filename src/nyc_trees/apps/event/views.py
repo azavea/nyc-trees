@@ -8,7 +8,7 @@ from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.http import (HttpResponseRedirect, HttpResponseForbidden,
                          HttpResponseNotAllowed)
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.utils.timezone import get_current_timezone, now
 
 from apps.core.forms import EmailForm
@@ -21,6 +21,7 @@ from apps.event.models import Event, EventRegistration
 
 from apps.event.event_list import (EventList, immediate_events, all_events)
 
+from apps.core.helpers import user_is_group_admin
 from apps.event.helpers import user_is_rsvped_for_event
 
 
@@ -259,6 +260,10 @@ def event_admin_check_in_page(request, event_slug):
 
 def event_user_check_in_page(request, event_slug):
     event = get_object_or_404(Event, group=request.group, slug=event_slug)
+    if user_is_group_admin(request.user, request.group):
+        return redirect('event_admin_check_in_page',
+                        group_slug=request.group.slug,
+                        event_slug=event.slug)
     return {
         'event': event,
         'group': request.group,
