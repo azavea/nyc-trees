@@ -124,7 +124,8 @@ class User(NycModel, AbstractUser):
     def eligible_to_become_trusted_mapper(self, group):
         from apps.core.helpers import (user_is_group_admin,
                                        user_is_trusted_mapper)
-        return group.allows_individual_mappers and \
+        return self.individual_mapper is True and \
+            group.allows_individual_mappers and \
             not user_is_group_admin(self, group) and \
             not user_is_trusted_mapper(self, group)
 

@@ -17,17 +17,20 @@ from apps.core.models import User, Group
 from apps.core.test_utils import make_request, make_event
 
 from apps.event.models import EventRegistration
+from apps.event.routes import event_registration, check_in_user_to_event
 
 from apps.survey.models import Tree, Species, Blockface, Survey, Territory
 
 from apps.users.models import (Follow, Achievement, achievements,
-                               AchievementDefinition)
+                               AchievementDefinition, TrustedMapper)
 from apps.users.views.user import user_detail as user_detail_view
 from apps.users.views.group import group_detail as group_detail_view
 
 from apps.users.routes.user import user_detail as user_detail_route
 from apps.users.routes.group import (group_detail, group_edit,
-                                     follow_group, unfollow_group)
+                                     follow_group, unfollow_group,
+                                     request_mapper_status,
+                                     edit_user_mapping_priveleges)
 
 
 class UsersTestCase(TestCase):
@@ -361,6 +364,71 @@ class FollowGroupTests(UsersTestCase):
 
         unfollow_group(request, self.group.slug)
         self.assertFalse(self._is_following())
+
+
+class TrustedMapperTests(UsersTestCase):
+    """Test that users can become trusted mappers"""
+
+    def _become_trusted_mapper(self):
+        user, group = self.user, self.group
+
+        # Does the grant access button appear on the group detail page?
+        request = make_request(user=user)
+        response = group_detail(request, group_slug=group.slug)
+        self.assertTrue('Request Individual Mapper Status' in response.content)
+
+        # User request mapper status
+        request = make_request(user=user, method='POST')
+        response = request_mapper_status(request, group_slug=group.slug)
+        self.assertEqual(response.content, '{"success": true}')
+
+        # Group admin approve mapper status
+        request = make_request(user=group.admin, method='PUT')
+        response = edit_user_mapping_priveleges(request,
+                                                group_slug=group.slug,
+                                                username=user.username)
+        self.assertTrue('btn-approve' in response.content)
+
+    def _is_eligible(self):
+        return self.user.eligible_to_become_trusted_mapper(self.group)
+
+    def test_trusted_mapper_workflow(self):
+        """
+        First, disqualify user from becoming a trusted mapper.
+        Then enable each qualification, one by one, to ensure that all
+        conditions must be met before becoming eligible.
+        Finally, after successfully becoming an individual mapper, ensure
+        that the user is no longer eligible.
+        """
+        self.group.allows_individual_mappers = False
+        self.group.admin = self.user
+        self.group.clean_and_save()
+        self.user.individual_mapper = False
+        self.user.clean_and_save()
+        TrustedMapper.objects.create(group=self.group, user=self.user,
+                                     is_approved=True)
+        self.assertFalse(self._is_eligible())
+
+        self.group.allows_individual_mappers = True
+        self.group.clean_and_save()
+        self.assertFalse(self._is_eligible())
+        self.assertRaises(AssertionError, self._become_trusted_mapper)
+
+        self.group.admin = self.other_user
+        self.group.clean_and_save()
+        self.assertFalse(self._is_eligible())
+        self.assertRaises(AssertionError, self._become_trusted_mapper)
+
+        TrustedMapper.objects.all().delete()
+        self.assertFalse(self._is_eligible())
+
+        self.user.individual_mapper = True
+        self.assertTrue(self._is_eligible())
+
+        self._become_trusted_mapper()
+
+        self.assertFalse(self._is_eligible())
+        self.assertRaises(AssertionError, self._become_trusted_mapper)
 
 
 class AnonUserTests(UsersTestCase):

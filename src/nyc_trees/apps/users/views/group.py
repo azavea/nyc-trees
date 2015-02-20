@@ -5,7 +5,7 @@ from __future__ import division
 
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.utils.timezone import now
 
 from libs.formatters import humanize_bytes
@@ -209,16 +209,18 @@ def _grant_mapping_access(group, username, is_approved):
     mapper, created = TrustedMapper.objects.update_or_create(
         group=group,
         user__username=username,
-        defaults=dict(is_approved=is_approved))
+        defaults={'is_approved': is_approved})
     return {
         'mapper': mapper
     }
 
 
 def request_mapper_status(request):
+    user, group = request.user, request.group
+    if not user_is_eligible_to_become_trusted_mapper(user, group):
+        return HttpResponseForbidden()
     mapper, created = TrustedMapper.objects.update_or_create(
-        group=request.group,
-        user=request.user)
+        group=group, user=user)
     return {
         'success': True
     }
