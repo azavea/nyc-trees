@@ -4,15 +4,41 @@ from __future__ import unicode_literals
 from __future__ import division
 
 from django.contrib.gis.geos import LineString, MultiLineString
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from apps.core.models import User, Group
-from apps.core.test_utils import make_request
+from apps.core.test_utils import make_request, make_tree
 
 from apps.users.models import TrustedMapper
 
-from apps.survey.models import Blockface, BlockfaceReservation, Territory
+from apps.survey.models import (Blockface, BlockfaceReservation, Territory,
+                                Survey)
 from apps.survey.views import confirm_blockface_reservations
+
+
+class TreeValidationTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create(
+            username='pat',
+            password='password',
+            email='pat@rat.com',
+            first_name='Pat',
+            last_name='Smith',
+            profile_is_public=True,
+        )
+        block = Blockface.objects.create(
+            geom=MultiLineString(LineString(((0, 0), (1, 1))))
+        )
+        self.survey = Survey.objects.create(blockface=block, user=self.user)
+
+    def test_bad_problem(self):
+        with self.assertRaises(ValidationError):
+            make_tree(self.survey, problems='foo,bar')
+
+    def test_duplicate_problem(self):
+        with self.assertRaises(ValidationError):
+            make_tree(self.survey, problems='Sneakers,Sneakers')
 
 
 class ConfirmBlockfaceReservationTests(TestCase):
