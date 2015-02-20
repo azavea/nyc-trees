@@ -114,17 +114,19 @@ class User(NycModel, AbstractUser):
         """
         Return True if user has completed online training, attended a mapping
         event, and one other training/mapping event.
+        Return False if user is *already* an individual mapper or their mapper
+        status was rescinded.
         """
-        # Has an admin rescinded mapper status?
-        if self.individual_mapper is False:
-            return False
-        return (self.field_training_complete and
-                self.attended_at_least_two_events())
+        if self.individual_mapper is None:
+            return (self.field_training_complete and
+                    self.attended_at_least_two_events())
+        return False
 
     def eligible_to_become_trusted_mapper(self, group):
         from apps.core.helpers import (user_is_group_admin,
                                        user_is_trusted_mapper)
-        return group.allows_individual_mappers and \
+        return self.individual_mapper is True and \
+            group.allows_individual_mappers and \
             not user_is_group_admin(self, group) and \
             not user_is_trusted_mapper(self, group)
 
