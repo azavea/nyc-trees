@@ -18,18 +18,18 @@ var metrics = [
     {% if ['packer'] | is_in(group_names) -%}
     {
         "alias": "email.percent-error",
-        "target": "scale(divideSeries(transformNull(sumSeries(statsite.counts.email.message.failure),0),transformNull(sumSeries(statsite.counts.email.message.success),0)),100)",
+        "target": "scale(divideSeries(transformNull(sumSeries(statsite.counts.django.email.message.failure),0),transformNull(sumSeries(statsite.counts.django.email.message.success),0)),100)",
         "unit": "%",
         "warning": 10,
         "critical": 15
     },
     {
         "alias": "email.success",
-        "target": "transformNull(statsite.counts.email.message.success,0)"
+        "target": "transformNull(statsite.counts.django.email.message.success,0)"
     },
     {
         "alias": "email.failure",
-        "target": "transformNull(statsite.counts.email.message.failure,0)"
+        "target": "transformNull(statsite.counts.django.email.message.failure,0)"
     },
     {% endif %}
     {
