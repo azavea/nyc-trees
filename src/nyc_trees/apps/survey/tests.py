@@ -4,25 +4,21 @@ from __future__ import unicode_literals
 from __future__ import division
 
 from django.contrib.gis.geos import LineString, MultiLineString
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from apps.core.models import User, Group
-from apps.core.test_utils import make_request
+from apps.core.test_utils import make_request, make_tree, tree_defaults
 
 from apps.users.models import TrustedMapper
 
-from apps.survey.models import Blockface, BlockfaceReservation, Territory
+from apps.survey.models import (Blockface, BlockfaceReservation, Territory,
+                                Survey)
 from apps.survey.views import confirm_blockface_reservations
 
 
-class ConfirmBlockfaceReservationTests(TestCase):
+class SurveyTestCase(TestCase):
     def setUp(self):
-        self.block1 = Blockface.objects.create(
-            geom=MultiLineString(LineString(((0, 0), (1, 1))))
-        )
-        self.block2 = Blockface.objects.create(
-            geom=MultiLineString(LineString(((2, 2), (3, 3))))
-        )
         self.user = User.objects.create(
             username='pat',
             password='password',
@@ -30,6 +26,31 @@ class ConfirmBlockfaceReservationTests(TestCase):
             first_name='Pat',
             last_name='Smith',
             profile_is_public=True,
+        )
+        self.block = Blockface.objects.create(
+            geom=MultiLineString(LineString(((0, 0), (1, 1))))
+        )
+
+class TreeValidationTests(SurveyTestCase):
+    def setUp(self):
+        super(TreeValidationTests, self).setUp()
+        self.survey = Survey.objects.create(blockface=self.block,
+                                            user=self.user)
+
+    def test_bad_problem(self):
+        with self.assertRaises(ValidationError):
+            make_tree(self.survey, problems='foo,bar')
+
+    def test_duplicate_problem(self):
+        with self.assertRaises(ValidationError):
+            make_tree(self.survey, problems='Sneakers,Sneakers')
+
+
+class ConfirmBlockfaceReservationTests(TestCase):
+    def setUp(self):
+        super(ConfirmBlockfaceReservationTests, self).setUp()
+        self.block2 = Blockface.objects.create(
+            geom=MultiLineString(LineString(((2, 2), (3, 3))))
         )
         self.other_user = User.objects.create(username='other', password='a')
 
@@ -45,21 +66,21 @@ class ConfirmBlockfaceReservationTests(TestCase):
         self.assertEqual(num, context['blockfaces_reserved'])
 
     def test_can_reserve_available_block(self):
-        self.assert_blocks_reserved(1, self.block1)
+        self.assert_blocks_reserved(1, self.block)
 
-        reservation = BlockfaceReservation.objects.get(blockface=self.block1)
+        reservation = BlockfaceReservation.objects.get(blockface=self.block)
         self.assertEqual(self.user.pk, reservation.user_id)
 
     def test_already_reserved(self):
-        self.assert_blocks_reserved(1, self.block1)
+        self.assert_blocks_reserved(1, self.block)
 
-        reservation = BlockfaceReservation.objects.get(blockface=self.block1)
+        reservation = BlockfaceReservation.objects.get(blockface=self.block)
         self.assertEqual(self.user.pk, reservation.user_id)
 
-        self.assert_blocks_reserved(1, self.block1, self.block2)
+        self.assert_blocks_reserved(1, self.block, self.block2)
 
         self.assertEqual(1, BlockfaceReservation.objects
-                         .filter(blockface=self.block1).count())
+                         .filter(blockface=self.block).count())
         self.assertEqual(self.user.pk, reservation.user_id)
 
         reservation = BlockfaceReservation.objects.get(blockface=self.block2)
@@ -75,11 +96,11 @@ class ConfirmBlockfaceReservationTests(TestCase):
             contact_url='https://thebest.nyc',
             admin=self.other_user
         )
-        Territory.objects.create(group=group, blockface=self.block1)
+        Territory.objects.create(group=group, blockface=self.block)
 
-        self.assert_blocks_reserved(0, self.block1)
+        self.assert_blocks_reserved(0, self.block)
 
         TrustedMapper.objects.create(group=group, user=self.user,
                                      is_approved=True)
 
-        self.assert_blocks_reserved(01, self.block1)
+        self.assert_blocks_reserved(01, self.block)

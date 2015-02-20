@@ -13,6 +13,7 @@ from django.test import RequestFactory
 from django.utils.timezone import now
 
 from apps.event.models import Event
+from apps.survey.models import Tree
 
 
 def make_request(params={}, user=None, method='GET', body=None, file=None,
@@ -60,3 +61,28 @@ def make_event(group, **kwargs):
     e.clean_and_save()
 
     return e
+
+
+def tree_defaults():
+    return {
+        'circumference': 1,
+        'distance_to_tree': 1,
+        'curb_location': 'OnCurb',
+        'status': 'Alive',
+        'species_certainty': 'Yes',
+        'health': 'Good',
+        'stewardship': 'None',
+        'guards': 'None',
+        'sidewalk_damage': 'NoDamage',
+        'problems': 'Stones,Sneakers',
+    }
+
+def make_tree(survey, **kwargs):
+    defaults = tree_defaults()
+    defaults['survey'] = survey
+    defaults.update(kwargs)
+
+    t = Tree(**defaults)
+    t.clean_and_save()
+
+    return t

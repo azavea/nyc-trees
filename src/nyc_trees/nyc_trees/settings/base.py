@@ -82,7 +82,7 @@ USE_TZ = True
 
 # This generates false positives and is being removed
 # (https://code.djangoproject.com/ticket/23469)
-SILENCED_SYSTEM_CHECKS = ['1_6.W001']
+SILENCED_SYSTEM_CHECKS = ['1_6.W001', '1_6.W002']
 # END GENERAL CONFIGURATION
 
 
