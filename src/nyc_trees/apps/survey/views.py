@@ -58,8 +58,18 @@ def reservations_page(request):
             {'css_class': 'reserved', 'label': 'Reserved by you'},
             {'css_class': 'unavailable', 'label': 'Not reserved by you'},
         ],
-        'layer': get_context_for_reservations_layer(request)
+        'layer': get_context_for_reservations_layer(request),
+        'bounds': _user_reservation_bounds(request.user)
     }
+
+
+def _user_reservation_bounds(user):
+    reservations = BlockfaceReservation.objects \
+        .filter(user=user) \
+        .current() \
+        .values_list('blockface_id', flat=True)
+    blockfaces = Blockface.objects.filter(id__in=reservations).collect()
+    return list(blockfaces.extent) if blockfaces else None
 
 
 def reserve_blockfaces_page(request):
