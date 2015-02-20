@@ -224,10 +224,10 @@ def event_popup_partial(request, event_slug):
 
 @transaction.atomic
 def register_for_event(request, event_slug):
+    user = request.user
     event = get_object_or_404(Event, group=request.group, slug=event_slug)
-    if event.has_space_available and not user_is_rsvped_for_event(request.user,
-                                                                  event):
-        EventRegistration.objects.create(user=request.user, event=event)
+    if event.has_space_available and not user_is_rsvped_for_event(user, event):
+        EventRegistration.objects.create(user=user, event=event)
     return event_detail(request, event_slug)
 
 
@@ -295,24 +295,24 @@ def check_in_user_to_event(request, event_slug, username):
     else:
         return HttpResponseNotAllowed()
 
+    user = get_object_or_404(User, username=username)
     event = get_object_or_404(Event, group=request.group, slug=event_slug)
 
     try:
-        rsvp = EventRegistration.objects.get(event=event,
-                                             user__username=username)
+        rsvp = EventRegistration.objects.get(event=event, user=user)
         rsvp.did_attend = did_attend
         rsvp.save()
     except EventRegistration.DoesNotExist:
         return HttpResponseForbidden()
 
     if event.includes_training:
-        User.objects.filter(username=username) \
-            .update(field_training_complete=True)
+        user.field_training_complete = True
+        user.clean_and_save()
 
     return {
         'group': request.group,
         'event': event,
-        'user': rsvp.user,
+        'user': user,
         'did_attend': did_attend
     }
 

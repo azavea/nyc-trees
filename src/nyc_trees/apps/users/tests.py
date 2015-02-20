@@ -9,7 +9,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.contrib.gis.geos import LineString, MultiLineString
 
 from django.core.exceptions import PermissionDenied
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 from django.test import TestCase
 from django.utils.timezone import now
 
@@ -26,7 +26,9 @@ from apps.users.models import (Follow, Achievement, achievements,
 from apps.users.views.user import user_detail as user_detail_view
 from apps.users.views.group import group_detail as group_detail_view
 
-from apps.users.routes.user import user_detail as user_detail_route
+from apps.home.routes import home_page
+from apps.users.routes.user import (user_detail as user_detail_route,
+                                    request_individual_mapper_status)
 from apps.users.routes.group import (group_detail, group_edit,
                                      follow_group, unfollow_group,
                                      request_mapper_status,
@@ -51,7 +53,8 @@ class UsersTestCase(TestCase):
             contact_name='Jane Best',
             contact_email='best@group.com',
             contact_url='https://thebest.nyc',
-            admin=self.other_user
+            admin=self.other_user,
+            allows_individual_mappers=True
         )
         Follow.objects.create(group=self.group, user=self.user)
         self.achievement = Achievement.objects.create(
@@ -364,6 +367,98 @@ class FollowGroupTests(UsersTestCase):
 
         unfollow_group(request, self.group.slug)
         self.assertFalse(self._is_following())
+
+
+class IndividualMapperTests(UsersTestCase):
+    """Test that users can become individual mappers"""
+
+    def setUp(self):
+        super(IndividualMapperTests, self).setUp()
+        self.mapping_event = make_event(self.group,
+                                        title='Mapping event',
+                                        slug='mapping-event',
+                                        includes_training=False)
+        self.training_event = make_event(self.group,
+                                         title='Training event',
+                                         slug='training-event',
+                                         includes_training=True)
+
+    def _become_individual_mapper(self):
+        # Is the button visible on the user profile page?
+        request = make_request(user=self.user)
+        response = user_detail_route(request, username=self.user.username)
+        self.assertTrue('Request Individual Mapper Status' in response.content)
+
+        # Is the button visible on the dashboard?
+        request = make_request(user=self.user)
+        response = home_page(request)
+        content = response.content.decode('utf8')
+        self.assertTrue('Request Individual Mapper Status' in content)
+
+        # Press the button.
+        request = make_request(user=self.user, method='POST')
+        response = request_individual_mapper_status(
+            request,
+            username=self.user.username)
+        # This request should redirect to the instructions page upon success.
+        self.assertIs(type(response), HttpResponseRedirect)
+
+    def _rsvp_to_event(self, event):
+        request = make_request(user=self.user, method='POST')
+        response = event_registration(request, group_slug=self.group.slug,
+                                      event_slug=event.slug)
+        self.assertTrue('data-verb="DELETE"' in response.content)
+
+    def _checkin_to_event(self, event):
+        request = make_request(user=self.other_user, method='POST')
+        response = check_in_user_to_event(request, group_slug=self.group.slug,
+                                          event_slug=event.slug,
+                                          username=self.user.username)
+        self.assertTrue('data-verb="DELETE"' in response.content)
+
+    def _complete_online_training(self):
+        self.user.training_finished_getting_started = True
+        self.user.training_finished_the_mapping_method = True
+        self.user.training_finished_tree_data = True
+        self.user.training_finished_tree_surroundings = True
+        self.user.training_finished_intro_quiz = True
+        self.user.training_finished_groups_to_follow = True
+        self.user.clean_and_save()
+
+    def test_individual_mapper_workflow(self):
+        self.assertFalse(self.user.individual_mapper)
+        self.assertFalse(self.user.field_training_complete)
+        self.assertFalse(self.user.online_training_complete)
+        self.assertFalse(self.user.eligible_to_become_individual_mapper())
+        self.assertRaises(AssertionError, self._become_individual_mapper)
+        self.assertRaises(PermissionDenied,
+                          self._rsvp_to_event, self.training_event)
+
+        self._complete_online_training()
+
+        self.user = User.objects.get(id=self.user.id)
+        self.assertTrue(self.user.online_training_complete)
+        self.assertFalse(self.user.eligible_to_become_individual_mapper())
+
+        self._rsvp_to_event(self.training_event)
+        self._checkin_to_event(self.training_event)
+
+        self.user = User.objects.get(id=self.user.id)
+        self.assertTrue(self.user.field_training_complete)
+        self.assertTrue(self.user.training_complete)
+        self.assertFalse(self.user.eligible_to_become_individual_mapper())
+
+        self._rsvp_to_event(self.mapping_event)
+        self._checkin_to_event(self.mapping_event)
+
+        self.user = User.objects.get(id=self.user.id)
+        self.assertTrue(self.user.eligible_to_become_individual_mapper())
+
+        self._become_individual_mapper()
+
+        self.user = User.objects.get(id=self.user.id)
+        self.assertTrue(self.user.individual_mapper)
+        self.assertFalse(self.user.eligible_to_become_individual_mapper())
 
 
 class TrustedMapperTests(UsersTestCase):
