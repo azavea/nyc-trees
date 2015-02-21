@@ -33,12 +33,15 @@ function create(options) {
     var map = L.map(options.domId, mapOptions),
         zoomControl = L.control.zoom({position: 'bottomleft'}).addTo(map),
         $controlsContainer = $(zoomControl.getContainer()),
-        bounds = getDomMapAttribute('bounds');
+        bounds = getDomMapAttribute('bounds'),
+        mapLocation = getDomMapAttribute('location');
 
     if (bounds) {
         fitBounds(map, bounds);
     } else if (options.bounds) {
         map.fitBounds(options.bounds, {maxZoom: zoom.NEIGHBORHOOD});
+    } else if (mapLocation) {
+        map.setView(mapLocation, zoom.NEIGHBORHOOD);
     } else if (options.location && options.location.lat !== 0) {
         map.setView(options.location, zoom.NEIGHBORHOOD);
     } else {

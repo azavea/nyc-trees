@@ -17,7 +17,9 @@
 <div id="map" class="map-event"
      data-tile-url="{{ layer.tile_url }}"
      data-grid-url="{{ layer.grid_url }}"
-     {% if bounds %}data-bounds="{{ bounds }}"{% endif %}></div>
+     {% if map_bounds %}data-bounds="{{ map_bounds }}"
+     {% elif map_location %}data-location="{{ map_location }}"
+     {% endif %}></div>
 {% endblock map %}
 
 {% block page_js %}

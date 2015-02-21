@@ -173,6 +173,7 @@ def start_survey_from_event(request, event_slug):
     if not user_is_checked_in_to_event(request.user, event):
         return HttpResponseForbidden('User not checked-in to this event')
     return {
+        'map_location': [event.location.y, event.location.x],
         'layer': get_context_for_territory_survey_layer(request, group.id),
         'legend_entries': [
         ]
