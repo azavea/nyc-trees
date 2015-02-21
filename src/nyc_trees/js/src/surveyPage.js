@@ -3,6 +3,7 @@
 var $ = require('jquery'),
     L = require('leaflet'),
     mapModule = require('./map'),
+    mapUtil = require('./mapUtil'),
     SelectableBlockfaceLayer = require('./lib/SelectableBlockfaceLayer');
 
 // Extends the leaflet object
@@ -25,3 +26,8 @@ var tileLayer = mapModule.addTileLayer(blockfaceMap),
 
 blockfaceMap.addLayer(grid);
 blockfaceMap.addLayer(selectedLayer);
+
+var blockfaceId = mapUtil.getBlockfaceIdFromUrl();
+mapUtil.getBlockfaceBounds(blockfaceId).done(function(bounds) {
+    blockfaceMap.fitBounds(bounds);
+});
