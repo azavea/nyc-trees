@@ -2,6 +2,7 @@
 
 var $ = require('jquery'),
     L = require('leaflet'),
+    mapUtil = require('./mapUtil'),
     zoom = require('./mapUtil').ZOOM,
 
     color = '#FFEB3B';
@@ -54,10 +55,11 @@ module.exports = L.GeoJSON.extend({
 
     addBlockface: function(data) {
         if (data && data.geojson) {
-            if (this.options.onAdd(data)) {
+            var geom = mapUtil.parseGeoJSON(data.geojson);
+            if (this.options.onAdd(data, geom)) {
                 this.addData({
                     "type": "Feature",
-                    "geometry": JSON.parse(data.geojson),
+                    "geometry": geom,
                     "properties": data
                 });
             }

@@ -9,6 +9,23 @@ var _ZOOM = {
     MAX: 19
 };
 
+function parseGeoJSON(geojson) {
+    try {
+        return JSON.parse(geojson);
+    } catch (ex) {
+        return false;
+    }
+}
+
+function getLatLngs(geom) {
+    // Reference: https://github.com/treekit/treekit/blob/master/app/scripts/main.js#L59
+    if (geom.type.indexOf('Multi') === 0) {
+        return L.GeoJSON.coordsToLatLngs(geom.coordinates, 1)[0];
+    } else {
+        return L.GeoJSON.coordsToLatLngs(geom.coordinates, 0);
+    }
+}
+
 module.exports = {
     ZOOM: Object.freeze ? Object.freeze(_ZOOM) : _ZOOM,
 
@@ -46,5 +63,8 @@ module.exports = {
             });
         }
         return defer.promise();
-    }
+    },
+
+    parseGeoJSON: parseGeoJSON,
+    getLatLngs: getLatLngs
 };
