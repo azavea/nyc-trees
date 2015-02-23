@@ -2,7 +2,7 @@
 
 var $ = require('jquery'),
     L = require('leaflet'),
-    zoom = require('../mapUtil').ZOOM,
+    zoom = require('./mapUtil').ZOOM,
 
     color = '#FFEB3B';
 

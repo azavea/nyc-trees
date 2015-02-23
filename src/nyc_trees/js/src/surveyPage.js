@@ -3,7 +3,7 @@
 var $ = require('jquery'),
     L = require('leaflet'),
     mapModule = require('./map'),
-    mapUtil = require('./mapUtil'),
+    mapUtil = require('./lib/mapUtil'),
     SelectableBlockfaceLayer = require('./lib/SelectableBlockfaceLayer');
 
 // Extends the leaflet object
