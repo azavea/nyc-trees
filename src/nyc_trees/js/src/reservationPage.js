@@ -4,6 +4,7 @@ var $ = require('jquery'),
     L = require('leaflet'),
     toastr = require('toastr'),
     mapModule = require('./map'),
+    mapUtil = require('./mapUtil'),
     zoom = require('./mapUtil').ZOOM,
     SelectableBlockfaceLayer = require('./lib/SelectableBlockfaceLayer'),
 
@@ -43,8 +44,6 @@ var tileLayer = mapModule.addTileLayer(reservationMap),
         }
     });
 
-var hash = window.location.hash;
-
 reservationMap.addLayer(grid);
 reservationMap.addLayer(selectedLayer);
 
@@ -73,17 +72,8 @@ $modalContainer.on('click', dom.cancelLink, function(e) {
     });
 });
 
-
 // Zoom the map to fit a blockface ID pased in the URL hash
-// Assumes that the hash contains only a blockface ID
-// NOTE: This has a hard coded url that must be kept in sync with
-// apps/survey/urls/blockface.py
-if (hash) {
-    $.getJSON('/blockface/' + hash.substring(1) + '/', function(blockface) {
-        var e = blockface.extent,
-            sw = L.latLng(e[1], e[0]),
-            ne = L.latLng(e[3], e[2]),
-            bounds = L.latLngBounds(sw, ne);
-        reservationMap.fitBounds(bounds);
-    });
-}
+var blockfaceId = mapUtil.getBlockfaceIdFromUrl();
+mapUtil.getBlockfaceBounds(blockfaceId).done(function(bounds) {
+    reservationMap.fitBounds(bounds);
+});

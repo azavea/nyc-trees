@@ -1,0 +1,27 @@
+{% extends "base_map.html" %}
+{% load utils %}
+
+{% block aside %}
+  <div class="map-sidebar map-action-sidebar">
+    <h2>Start Mapping</h2>
+    <p class="pageheading-description-detail hidden-xs">
+      Select a blockface to lorem ipsum dolor sit amet, consectetur adipiscing
+      elit. Sed eu congue lorem, id feugiat tortor. Aliquam ante elit, sodales eget
+      porttitor vel, commodo et felis.
+    </p>
+    {% include 'home/partials/legend.html' %}
+  </div>
+{% endblock aside %}
+
+{% block map %}
+<div id="map" class="map-event"
+     data-tile-url="{{ layer.tile_url }}"
+     data-grid-url="{{ layer.grid_url }}"
+     {% if map_bounds %}data-bounds="{{ map_bounds }}"
+     {% elif map_location %}data-location="{{ map_location }}"
+     {% endif %}></div>
+{% endblock map %}
+
+{% block page_js %}
+<script type="text/javascript" src="{{ "js/surveyPage.js"|static_url }}"></script>
+{% endblock page_js %}

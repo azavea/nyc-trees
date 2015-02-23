@@ -8,3 +8,11 @@ def user_is_rsvped_for_event(user, event):
     return EventRegistration.objects\
                             .filter(user=user.id, event=event)\
                             .count() > 0
+
+
+def user_is_checked_in_to_event(user, event):
+    """Return True if user is checked-in to event"""
+    return (user.is_authenticated() and
+            EventRegistration.objects.filter(user=user,
+                                             event=event,
+                                             did_attend=True).exists())

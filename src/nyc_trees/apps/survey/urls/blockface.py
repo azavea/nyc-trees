@@ -6,7 +6,7 @@ from __future__ import division
 from django.conf.urls import patterns, url
 
 from apps.survey.routes import (reserve_blockface_page, cancel_reservation,
-                                reserve_blockfaces, survey, reservations,
+                                reserve_blockfaces, reservations,
                                 reserved_blockface_popup,
                                 reservations_instructions,
                                 blockface_reservations_confirmation_page,
@@ -43,8 +43,6 @@ urlpatterns = patterns(
 
     url(r'^checkout-confirmation/$', blockface_reservations_confirmation_page,
         name='blockface_reservations_confirmation_page'),
-
-    url(r'^(?P<blockface_id>\d+)/survey/$', survey, name='survey'),
 
     # Note: this must be kept in sync with the hardcoded url in
     # js/src/reservationPage.js

@@ -169,6 +169,24 @@ class CheckinEventTest(EventTestCase):
         dt = dt + timedelta(minutes=1)
         self.assertFalse(event.starting_soon(dt))
 
+    def test_in_progress(self):
+        tz = timezone.get_current_timezone()
+        event = Event(begins_at=datetime(2015, 1, 13, hour=12, tzinfo=tz),
+                      ends_at=datetime(2015, 1, 13, hour=13, tzinfo=tz))
+
+        dt = datetime(2015, 1, 13, hour=11, minute=59, tzinfo=tz)
+        self.assertFalse(event.in_progress(dt))
+
+        # From hour=11, minute=59
+        #   to hour=12, minute=59
+        for i in xrange(60):
+            dt = dt + timedelta(minutes=1)
+            self.assertTrue(event.in_progress(dt))
+
+        # hour=13, minute=0
+        dt = dt + timedelta(minutes=1)
+        self.assertFalse(event.in_progress(dt))
+
     def test_field_training_complete(self):
         request = make_request(user=self.user, group=self.group, method='POST')
 

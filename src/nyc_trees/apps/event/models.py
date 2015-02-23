@@ -100,6 +100,13 @@ class Event(NycModel, models.Model):
         return target_dt >= self.begins_at - STARTING_SOON_WINDOW \
             and target_dt < self.ends_at
 
+    def in_progress(self, target_dt=None):
+        """
+        Return True if event is in-progress in the context of `target_dt`.
+        """
+        target_dt = target_dt or timezone.now()
+        return target_dt >= self.begins_at and target_dt < self.ends_at
+
     @property
     def has_started(self):
         return self.begins_at <= timezone.now()

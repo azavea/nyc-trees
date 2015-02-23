@@ -25,7 +25,7 @@
         <h3>You are checked in!</h3>
         <p>Great, you have been checked in for this event. You can start
            mapping whenever you are ready.</p>
-        <p><a href="{% url "choose_blockface_survey_page" %}" class="btn btn-primary">Start Mapping</a></p>
+        <p><a href="{% url "survey_from_event" group_slug=group.slug event_slug=event.slug %}" class="btn btn-primary">Start Mapping</a></p>
     </div>
 
     <p>Actually, I need to <a href="{{ event.get_absolute_url }}">change my RSVP</a>.</p>

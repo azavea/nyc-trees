@@ -21,6 +21,7 @@ var Windshaft = require('windshaft'),
     styles = files('./style'),
 
     interactivity = {
+        territory_survey: 'id,survey_type,restriction,geojson',
         progress: 'id,group_id,survey_type,geojson',
         reservable: 'id,group_id,group_slug,survey_type,restriction,geojson',
         reservations: 'id,geojson'
