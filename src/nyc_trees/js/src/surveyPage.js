@@ -28,6 +28,7 @@ blockfaceMap.addLayer(grid);
 blockfaceMap.addLayer(selectedLayer);
 
 var blockfaceId = mapUtil.getBlockfaceIdFromUrl();
-mapUtil.getBlockfaceBounds(blockfaceId).done(function(bounds) {
-    blockfaceMap.fitBounds(bounds);
+mapUtil.fetchBlockface(blockfaceId).done(function(blockface) {
+    blockfaceMap.fitBounds(blockface.bounds);
+    selectedLayer.addBlockface(blockface);
 });
