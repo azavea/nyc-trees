@@ -26,6 +26,34 @@ function getLatLngs(geom) {
     }
 }
 
+function fetchBlockface(blockfaceId) {
+   var defer = $.Deferred();
+    if (!blockfaceId) {
+        defer.reject();
+    } else {
+        // NOTE: This has a hard coded url that must be kept in sync with
+        // apps/survey/urls/blockface.py
+        $.getJSON('/blockface/' + blockfaceId + '/', function(blockface) {
+            var e = blockface.extent,
+                sw = L.latLng(e[1], e[0]),
+                ne = L.latLng(e[3], e[2]),
+                bounds = L.latLngBounds(sw, ne);
+            defer.resolve({
+                id: blockface.id,
+                bounds: bounds,
+                geojson: blockface.geojson
+            });
+        });
+    }
+    return defer.promise();
+}
+
+function zoomToBlockface(map, blockfaceId) {
+    fetchBlockface(blockfaceId).done(function(blockface) {
+        map.fitBounds(blockface.bounds);
+    });
+}
+
 module.exports = {
     ZOOM: Object.freeze ? Object.freeze(_ZOOM) : _ZOOM,
 
@@ -43,28 +71,8 @@ module.exports = {
         return window.location.hash.substring(1);
     },
 
-    fetchBlockface: function(blockfaceId) {
-        var defer = $.Deferred();
-        if (!blockfaceId) {
-            defer.reject();
-        } else {
-            // NOTE: This has a hard coded url that must be kept in sync with
-            // apps/survey/urls/blockface.py
-            $.getJSON('/blockface/' + blockfaceId + '/', function(blockface) {
-                var e = blockface.extent,
-                    sw = L.latLng(e[1], e[0]),
-                    ne = L.latLng(e[3], e[2]),
-                    bounds = L.latLngBounds(sw, ne);
-                defer.resolve({
-                    id: blockface.id,
-                    bounds: bounds,
-                    geojson: blockface.geojson
-                });
-            });
-        }
-        return defer.promise();
-    },
-
     parseGeoJSON: parseGeoJSON,
-    getLatLngs: getLatLngs
+    getLatLngs: getLatLngs,
+    fetchBlockface: fetchBlockface,
+    zoomToBlockface: zoomToBlockface
 };

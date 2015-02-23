@@ -40,6 +40,8 @@ var tileLayer = mapModule.addTileLayer(reservationMap),
                 var modalContent = $actionBar.find(dom.modalTemplate).html();
                 $modalContainer.html(modalContent);
             });
+
+            mapUtil.zoomToBlockface(reservationMap, gridData.id);
             return true;
         }
     });
@@ -75,6 +77,5 @@ $modalContainer.on('click', dom.cancelLink, function(e) {
 // Zoom the map to fit a blockface ID pased in the URL hash
 var blockfaceId = mapUtil.getBlockfaceIdFromUrl();
 mapUtil.fetchBlockface(blockfaceId).done(function(blockface) {
-    reservationMap.fitBounds(blockface.bounds);
     selectedLayer.addBlockface(blockface);
 });
