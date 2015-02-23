@@ -12,6 +12,7 @@ $ export AWS_PROFILE=nyc-trees-stg
 $ export AWS_DEFAULT_OUTPUT=text
 $ export AWS_DEFAULT_REGION=us-east-1
 $ export AWS_SNS_TOPIC=arn:aws:sns:us-east-1...
+$ export AWS_SSL_CERTIFICATE=arn:aws:iam...
 $ export AWS_PUBLIC_HOSTED_ZONE=treescount.nycgovparks.org
 ```
 
