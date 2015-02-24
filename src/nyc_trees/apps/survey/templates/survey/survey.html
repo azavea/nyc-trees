@@ -2,15 +2,29 @@
 {% load utils %}
 
 {% block aside %}
-  <div class="map-sidebar map-action-sidebar">
-    <h2>Start Mapping</h2>
-    <p class="pageheading-description-detail hidden-xs">
-      Select a blockface to lorem ipsum dolor sit amet, consectetur adipiscing
-      elit. Sed eu congue lorem, id feugiat tortor. Aliquam ante elit, sodales eget
-      porttitor vel, commodo et felis.
-    </p>
-    {% include 'home/partials/legend.html' %}
-  </div>
+<div class="map-sidebar">
+    <div id="select-starting-point" class="hidden">
+        <p>Tap your starting point</p>
+    </div>
+    <div id="select-side" class="hidden">
+        <p>What side of the street are you on?</p>
+        <div class="btn-group btn-group-justified" role="group">
+            <div class="btn-group" role="group">
+                <button id="btn-left" data-direction="left"
+                    class="btn btn-default">Left</button>
+            </div>
+            <div class="btn-group" role="group">
+                <button id="btn-right" data-direction="right"
+                    class="btn btn-default">Right</button>
+            </div>
+        </div>
+        <div id="btn-group-next" class="btn-group btn-group-justified hidden" role="group">
+            <div class="btn-group" role="group">
+                <button id="btn-next" class="btn btn-default">Next</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock aside %}
 
 {% block map %}
