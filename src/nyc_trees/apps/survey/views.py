@@ -124,6 +124,10 @@ def confirm_blockface_reservations(request):
         .filter(user=request.user, is_approved=True) \
         .values_list('group_id', flat=True)
 
+    user_admin_group_ids = Group.objects \
+        .filter(admin=request.user) \
+        .values_list('id', flat=True)
+
     already_reserved_blockface_ids = BlockfaceReservation.objects \
         .filter(blockface__id__in=ids) \
         .current() \
@@ -141,7 +145,8 @@ def confirm_blockface_reservations(request):
         if ((blockface.is_available and
              blockface.id not in already_reserved_blockface_ids and
              (territory is None or
-              territory.group_id in user_trusted_group_ids))):
+              territory.group_id in user_trusted_group_ids or
+              territory.group_id in user_admin_group_ids))):
             reservations.append(BlockfaceReservation(
                 blockface=blockface,
                 user=request.user,

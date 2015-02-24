@@ -9,7 +9,7 @@ from datetime import datetime
 from django.conf import settings
 from django.utils.timezone import make_aware, utc
 
-from models import (Blockface, Survey, Territory, BlockfaceReservation)
+from models import (Group, Blockface, Survey, Territory, BlockfaceReservation)
 from apps.users.models import TrustedMapper
 
 
@@ -21,7 +21,7 @@ def get_context_for_progress_layer(request):
 
 
 def get_context_for_reservable_layer(request):
-    models = [Blockface, Territory, BlockfaceReservation, TrustedMapper]
+    models = [Group, Blockface, Territory, BlockfaceReservation, TrustedMapper]
     return _get_context_for_layer("reservable", models, request)
 
 
