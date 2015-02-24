@@ -3,18 +3,24 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
+import json
+from datetime import timedelta
+
 from django.contrib.gis.geos import LineString, MultiLineString
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
+from django.http import HttpResponseBadRequest
 from django.test import TestCase
+from django.utils.timezone import now
 
 from apps.core.models import User, Group
-from apps.core.test_utils import make_request, make_tree, tree_defaults
+from apps.core.test_utils import (make_request, make_tree, tree_defaults,
+                                  make_survey, survey_defaults)
 
 from apps.users.models import TrustedMapper
 
 from apps.survey.models import (Blockface, BlockfaceReservation, Territory,
-                                Survey)
-from apps.survey.views import confirm_blockface_reservations
+                                Survey, Tree)
+from apps.survey.views import confirm_blockface_reservations, submit_survey
 
 
 class SurveyTestCase(TestCase):
@@ -30,12 +36,14 @@ class SurveyTestCase(TestCase):
         self.block = Blockface.objects.create(
             geom=MultiLineString(LineString(((0, 0), (1, 1))))
         )
+        self.survey_data = survey_defaults()
+        self.survey_data['blockface_id'] = self.block.id
+
 
 class TreeValidationTests(SurveyTestCase):
     def setUp(self):
         super(TreeValidationTests, self).setUp()
-        self.survey = Survey.objects.create(blockface=self.block,
-                                            user=self.user)
+        self.survey = make_survey(self.user, self.block)
 
     def test_bad_problem(self):
         with self.assertRaises(ValidationError):
@@ -46,7 +54,65 @@ class TreeValidationTests(SurveyTestCase):
             make_tree(self.survey, problems='Sneakers,Sneakers')
 
 
-class ConfirmBlockfaceReservationTests(TestCase):
+class SurveySubmitTests(SurveyTestCase):
+    def setUp(self):
+        super(SurveySubmitTests, self).setUp()
+        next_week = now() + timedelta(days=7)
+        BlockfaceReservation(user=self.user,
+                             blockface=self.block,
+                             is_mapping_with_paper=False,
+                             expires_at=next_week
+                             ).save()
+
+    def submit_survey(self, survey_data, tree_data):
+        body = json.dumps({
+            'survey': survey_data,
+            'trees': tree_data
+        })
+        req = make_request(user=self.user, body=body, method="POST")
+        return submit_survey(req)
+
+    def test_submit_success(self):
+        tree_data = tree_defaults()
+        tree_data['problems'] = ['Stones', 'Sneakers']
+
+        self.submit_survey(self.survey_data, [tree_data, tree_data])
+
+        survey = Survey.objects.all()[0]
+        self.assertEqual(survey.blockface_id, self.block.id)
+        self.assertEqual(survey.user_id, self.user.id)
+        self.assertEqual(survey.is_left_side, False)
+
+        trees = Tree.objects.all()
+        self.assertEqual(len(trees), 2)
+        tree = trees[0]
+        self.assertEqual(tree.circumference, tree_data['circumference'])
+        self.assertEqual(tree.health, tree_data['health'])
+        self.assertEqual(tree.survey, survey)
+        self.assertEqual(tree.problems, 'Stones,Sneakers')
+
+    def test_missing_trees(self):
+        error = self.submit_survey({'has_trees': True}, [])
+        self.assertTrue(isinstance(error, HttpResponseBadRequest))
+
+    def test_extra_trees(self):
+        error = self.submit_survey({'has_trees': False}, [tree_defaults()])
+        self.assertTrue(isinstance(error, HttpResponseBadRequest))
+
+    def test_missing_blockface(self):
+        with self.assertRaises(ObjectDoesNotExist):
+            self.submit_survey({'has_trees': False}, [])
+
+    def test_bad_survey_field(self):
+        with self.assertRaises(TypeError):
+            self.submit_survey({'has_trees': False, 'foo': 1}, [])
+
+    def test_bad_tree_field(self):
+        with self.assertRaises(TypeError):
+            self.submit_survey(self.survey_data, [{'bar': 2}])
+
+
+class ConfirmBlockfaceReservationTests(SurveyTestCase):
     def setUp(self):
         super(ConfirmBlockfaceReservationTests, self).setUp()
         self.block2 = Blockface.objects.create(

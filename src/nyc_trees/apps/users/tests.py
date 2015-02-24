@@ -14,12 +14,13 @@ from django.test import TestCase
 from django.utils.timezone import now
 
 from apps.core.models import User, Group
-from apps.core.test_utils import make_request, make_event, make_tree
+from apps.core.test_utils import (make_request, make_event, make_tree,
+                                  make_survey)
 
 from apps.event.models import EventRegistration
 from apps.event.routes import event_registration, check_in_user_to_event
 
-from apps.survey.models import Species, Blockface, Survey, Territory
+from apps.survey.models import Species, Blockface, Territory
 
 from apps.users.models import (Follow, Achievement, achievements,
                                AchievementDefinition, TrustedMapper)
@@ -147,19 +148,13 @@ class ProfileTemplateTests(UsersTestCase):
         )
         elm = Species.objects.create(name='Elm')
         maple = Species.objects.create(name='Maple')
-        survey = Survey.objects.create(
-            blockface=blockface,
-            user=self.user
-        )
+        survey = make_survey(self.user, blockface)
         make_tree(survey, species=maple)
         make_tree(survey, species=elm)
 
         # Only the most recent survey for each block should be counted,
         # so all of the above data should *not* be reflected in the results
-        other_survey = Survey.objects.create(
-            blockface=blockface,
-            user=self.user
-        )
+        other_survey = make_survey(self.user, blockface)
         make_tree(other_survey, species=elm)
         make_tree(other_survey)
         make_tree(other_survey)
@@ -218,7 +213,7 @@ class GroupDetailViewTests(UsersTestCase):
         Territory.objects.create(blockface=block1, group=self.group)
         Territory.objects.create(blockface=block2, group=self.group)
 
-        Survey.objects.create(blockface=block1, user=self.user)
+        make_survey(self.user, block1)
 
         self._assert_count_equals('block', '50.0%')
 
@@ -231,21 +226,14 @@ class GroupDetailViewTests(UsersTestCase):
         )
         Territory.objects.create(blockface=block1, group=self.group)
 
-        survey = Survey.objects.create(
-            blockface=block1,
-            user=self.user
-        )
-
+        survey = make_survey(self.user, block1)
         make_tree(survey)
         make_tree(survey)
 
         # Once we add a survey, we should see some tree counts
         self._assert_count_equals('tree', 2)
 
-        other_survey = Survey.objects.create(
-            blockface=block1,
-            user=self.user
-        )
+        other_survey = make_survey(self.user, block1)
         make_tree(other_survey)
         make_tree(other_survey)
         make_tree(other_survey)

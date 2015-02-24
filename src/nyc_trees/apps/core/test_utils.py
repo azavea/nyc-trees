@@ -13,7 +13,7 @@ from django.test import RequestFactory
 from django.utils.timezone import now
 
 from apps.event.models import Event
-from apps.survey.models import Tree
+from apps.survey.models import Tree, Survey
 
 
 def make_request(params={}, user=None, method='GET', body=None, file=None,
@@ -63,6 +63,26 @@ def make_event(group, **kwargs):
     return e
 
 
+def survey_defaults():
+    return {
+        'has_trees': True,
+        'is_left_side': False,
+        'is_mapped_in_blockface_polyline_direction': True,
+        }
+
+
+def make_survey(user, blockface, **kwargs):
+    defaults = survey_defaults()
+    defaults['user_id'] = user.id
+    defaults['blockface_id'] = blockface.id
+    defaults.update(kwargs)
+
+    s = Survey(**defaults)
+    s.clean_and_save()
+
+    return s
+
+
 def tree_defaults():
     return {
         'circumference': 1,
@@ -76,6 +96,7 @@ def tree_defaults():
         'sidewalk_damage': 'NoDamage',
         'problems': 'Stones,Sneakers',
     }
+
 
 def make_tree(survey, **kwargs):
     defaults = tree_defaults()

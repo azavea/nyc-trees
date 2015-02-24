@@ -86,3 +86,42 @@ var blockfaceId = mapUtil.getBlockfaceIdFromUrl();
 mapUtil.fetchBlockface(blockfaceId).done(function(blockface) {
     selectedLayer.addBlockface(blockface);
 });
+
+// Temporary code to test submitting survey data.
+// Assumes user has reserved the blockface (not mapping at event)
+$(dom.btnNext).click(function(e) {
+    var data = {
+        survey: {
+            blockface_id: blockfaceId,
+            is_flagged: false,
+            has_trees: true,
+            is_mapped_in_blockface_polyline_direction: true,
+            is_left_side: true
+        },
+        trees: [
+            {
+                circumference: 10,
+                distance_to_tree: 100,
+                curb_location: 'OnCurb',
+                status: 'Alive',
+                species_certainty: 'Yes',
+                health: 'Good',
+                stewardship: 'None',
+                guards: 'None',
+                sidewalk_damage: 'NoDamage',
+                problems: ['Stones', 'Sneakers']
+            }
+        ]
+    };
+    $.ajax('/survey/', {
+            type: 'POST',
+            dataType: 'json',
+            data: JSON.stringify(data)
+        })
+        .done(function(content) {
+            window.alert('Successfully saved a test survey');
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            window.alert(errorThrown);
+        });
+});
