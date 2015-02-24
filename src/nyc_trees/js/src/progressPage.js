@@ -1,7 +1,7 @@
 "use strict";
 
 var $ = require('jquery'),
-    zoom = require('./mapUtil').ZOOM,
+    zoom = require('./lib/mapUtil').ZOOM,
     L = require('leaflet'),
     mapModule = require('./map'),
     SelectableBlockfaceLayer = require('./lib/SelectableBlockfaceLayer');

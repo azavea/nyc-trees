@@ -161,7 +161,12 @@ def confirm_blockface_reservations(request):
 
 
 def blockface(request, blockface_id):
-    return {'extent': Blockface.objects.get(pk=blockface_id).geom.extent}
+    blockface = get_object_or_404(Blockface, id=blockface_id)
+    return {
+        'id': blockface.id,
+        'extent': blockface.geom.extent,
+        'geojson': blockface.geom.geojson
+    }
 
 
 def start_survey(request):

@@ -3,7 +3,7 @@
 var $ = require('jquery'),
     L = require('leaflet'),
     mapModule = require('./map'),
-    zoom = require('./mapUtil').ZOOM,
+    zoom = require('./lib/mapUtil').ZOOM,
     SelectableBlockfaceLayer = require('./lib/SelectableBlockfaceLayer'),
     SavedState = require('./lib/SavedState'),
 

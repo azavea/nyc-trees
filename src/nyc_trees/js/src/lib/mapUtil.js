@@ -26,7 +26,7 @@ module.exports = {
         return window.location.hash.substring(1);
     },
 
-    getBlockfaceBounds: function(blockfaceId) {
+    fetchBlockface: function(blockfaceId) {
         var defer = $.Deferred();
         if (!blockfaceId) {
             defer.reject();
@@ -38,7 +38,11 @@ module.exports = {
                     sw = L.latLng(e[1], e[0]),
                     ne = L.latLng(e[3], e[2]),
                     bounds = L.latLngBounds(sw, ne);
-                defer.resolve(bounds);
+                defer.resolve({
+                    id: blockface.id,
+                    bounds: bounds,
+                    geojson: blockface.geojson
+                });
             });
         }
         return defer.promise();

@@ -4,8 +4,8 @@ var $ = require('jquery'),
     L = require('leaflet'),
     toastr = require('toastr'),
     mapModule = require('./map'),
-    mapUtil = require('./mapUtil'),
-    zoom = require('./mapUtil').ZOOM,
+    mapUtil = require('./lib/mapUtil'),
+    zoom = require('./lib/mapUtil').ZOOM,
     SelectableBlockfaceLayer = require('./lib/SelectableBlockfaceLayer'),
 
     dom = {
@@ -74,6 +74,7 @@ $modalContainer.on('click', dom.cancelLink, function(e) {
 
 // Zoom the map to fit a blockface ID pased in the URL hash
 var blockfaceId = mapUtil.getBlockfaceIdFromUrl();
-mapUtil.getBlockfaceBounds(blockfaceId).done(function(bounds) {
-    reservationMap.fitBounds(bounds);
+mapUtil.fetchBlockface(blockfaceId).done(function(blockface) {
+    reservationMap.fitBounds(blockface.bounds);
+    selectedLayer.addBlockface(blockface);
 });

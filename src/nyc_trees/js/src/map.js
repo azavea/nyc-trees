@@ -4,7 +4,7 @@
 var $ = require('jquery'),
     L = require('leaflet');
 
-var zoom = require('./mapUtil').ZOOM,
+var zoom = require('./lib/mapUtil').ZOOM,
     searchController = require('./searchController');
 
 module.exports = {
