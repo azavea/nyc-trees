@@ -170,17 +170,13 @@ def blockface(request, blockface_id):
 
 
 def start_survey(request):
-    # TODO: Set bounds to reservations extent
     return {
         'layer': get_context_for_reservations_layer(request),
-        'legend_entries': [
-        ]
+        'bounds': _user_reservation_bounds(request.user)
     }
 
 
 def start_survey_from_event(request, event_slug):
-    # TODO pull blockface from querystring/hash
-    # Set bounds to event location
     group = request.group
     event = get_object_or_404(Event, group=request.group, slug=event_slug)
     if not event.in_progress():
@@ -188,10 +184,8 @@ def start_survey_from_event(request, event_slug):
     if not user_is_checked_in_to_event(request.user, event):
         return HttpResponseForbidden('User not checked-in to this event')
     return {
-        'map_location': [event.location.y, event.location.x],
         'layer': get_context_for_territory_survey_layer(request, group.id),
-        'legend_entries': [
-        ]
+        'location': [event.location.y, event.location.x]
     }
 
 
