@@ -14,12 +14,12 @@ from django.test import TestCase
 from django.utils.timezone import now
 
 from apps.core.models import User, Group
-from apps.core.test_utils import make_request, make_event
+from apps.core.test_utils import make_request, make_event, make_tree
 
 from apps.event.models import EventRegistration
 from apps.event.routes import event_registration, check_in_user_to_event
 
-from apps.survey.models import Tree, Species, Blockface, Survey, Territory
+from apps.survey.models import Species, Blockface, Survey, Territory
 
 from apps.users.models import (Follow, Achievement, achievements,
                                AchievementDefinition, TrustedMapper)
@@ -151,8 +151,8 @@ class ProfileTemplateTests(UsersTestCase):
             blockface=blockface,
             user=self.user
         )
-        Tree.objects.create(survey=survey, species=maple)
-        Tree.objects.create(survey=survey, species=elm)
+        make_tree(survey, species=maple)
+        make_tree(survey, species=elm)
 
         # Only the most recent survey for each block should be counted,
         # so all of the above data should *not* be reflected in the results
@@ -160,9 +160,9 @@ class ProfileTemplateTests(UsersTestCase):
             blockface=blockface,
             user=self.user
         )
-        Tree.objects.create(survey=other_survey, species=elm)
-        Tree.objects.create(survey=other_survey)
-        Tree.objects.create(survey=other_survey)
+        make_tree(other_survey, species=elm)
+        make_tree(other_survey)
+        make_tree(other_survey)
 
         request = make_request(user=self.user)
         context = user_detail_view(request, self.user.username)
@@ -236,8 +236,8 @@ class GroupDetailViewTests(UsersTestCase):
             user=self.user
         )
 
-        Tree.objects.create(survey=survey)
-        Tree.objects.create(survey=survey)
+        make_tree(survey)
+        make_tree(survey)
 
         # Once we add a survey, we should see some tree counts
         self._assert_count_equals('tree', 2)
@@ -246,9 +246,9 @@ class GroupDetailViewTests(UsersTestCase):
             blockface=block1,
             user=self.user
         )
-        Tree.objects.create(survey=other_survey)
-        Tree.objects.create(survey=other_survey)
-        Tree.objects.create(survey=other_survey)
+        make_tree(other_survey)
+        make_tree(other_survey)
+        make_tree(other_survey)
 
         # Only the most recent survey for each block should be counted,
         # so the count should go to 3, not 5
