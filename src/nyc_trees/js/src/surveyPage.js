@@ -57,6 +57,8 @@ var tileLayer = mapModule.addTileLayer(blockfaceMap),
             $(dom.selectStartingPoint).removeClass('hidden');
             $(dom.selectSide).addClass('hidden');
             $(dom.btnNextGroup).addClass('hidden');
+
+            mapUtil.zoomToBlockface(blockfaceMap, gridData.id);
             return true;
         }
     });
@@ -82,6 +84,5 @@ $(dom.leftRightButtons).click(function(e) {
 
 var blockfaceId = mapUtil.getBlockfaceIdFromUrl();
 mapUtil.fetchBlockface(blockfaceId).done(function(blockface) {
-    blockfaceMap.fitBounds(blockface.bounds);
     selectedLayer.addBlockface(blockface);
 });
