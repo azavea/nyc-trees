@@ -11,16 +11,25 @@ The following instructions can be used to apply migrations to an AWS stack of th
 
 ### Add Private Key to SSH Authentication Agent
 
-Adding your key to the SSH Authentication Agent allows you to connect to servers *from* the host you're connecting to with the same credentials.
+First, verify that the SSH Authentication Agent is running:
+
+```bash
+$ echo "$SSH_AUTH_SOCK"
+```
+
+On most UNIX based systems, the operating system automatically launches `ssh-agent` for you. On Windows, you may need to launch it manually with:
+
+```bash
+$ eval `ssh-agent`
+```
+
+If you want `ssh-agent` to start automatically, consider the [GitHub guide for Git Bash](https://help.github.com/articles/working-with-ssh-key-passphrases/#auto-launching-ssh-agent-on-msysgit).
+
+Once `ssh-agent` is running, add your key:
 
 ```bash
 $ ssh-add ~/.ssh/ec2.pem
 Identity added: /home/username/.ssh/ec2.pem (/home/username/.ssh/ec2.pem)
-```
-
-... If that didn't work you may need to start your ssh agent and try again:
-```bash
-$ eval `ssh-agent`
 ```
 
 After the key is added, confirm with:
