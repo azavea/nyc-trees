@@ -23,19 +23,48 @@
 <input type="hidden" name="quiz-slug" value="{{ quiz_slug }}" />
 <input type="hidden" name="correct-answers" value="{{ correct_answers|join:"," }}" />
 
+<h3>
 {% if passed_quiz %}
-<h3>Great job!</h3>
-<p>You answered {{ score }}/{{ quiz.questions|length }}
-    question{{ quiz.questions|length|pluralize }} correctly.</p>
-<p><a href="{% url 'groups_to_follow_pure' %}" class="btn btn-primary">Finish</a></p>
-
+    Great job
 {% else %}
-<h3>Better luck next time...</h3>
+    Better luck next time...
+{% endif %}
+</h3>
+
 <p>You answered {{ score }}/{{ quiz.questions|length }}
     question{{ quiz.questions|length|pluralize }} correctly.</p>
-<p><a href="{% url 'intro_quiz_pure' %}"
-      class="btn btn-secondary btn-mobile--max">Try Again</a></p>
 
+<p>Your best score so far was {{ best_score }}/{{ quiz.questions|length }}.</p>
+
+{% for item in quiz_summary %}
+<hr />
+
+<p>{{ forloop.counter }}. {{ item.question.text }}</p>
+
+<p>
+<strong>
+{% if item.is_correct %}
+    Correct.
+{% else %}
+    Not Correct.
+{% endif %}
+</strong>
+You answered:
+<ul>
+{% for ans in item.submitted_answers %}
+    <li>{{ ans }}</li>
+{% endfor %}
+</ul>
+</p>
+{% endfor %}
+
+<hr/>
+
+{% if passed_quiz %}
+    <p><a href="{% url 'groups_to_follow_pure' %}" class="btn btn-primary">Finish</a></p>
+{% else %}
+    <p><a href="{% url 'intro_quiz_pure' %}"
+          class="btn btn-secondary btn-mobile--max">Try Again</a></p>
 {% endif %}
 
 {% endblock main %}
