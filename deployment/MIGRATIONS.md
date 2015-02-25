@@ -18,6 +18,11 @@ $ ssh-add ~/.ssh/ec2.pem
 Identity added: /home/username/.ssh/ec2.pem (/home/username/.ssh/ec2.pem)
 ```
 
+... If that didn't work you may need to start your ssh agent and try again:
+```bash
+$ eval `ssh-agent`
+```
+
 After the key is added, confirm with:
 
 ```bash
