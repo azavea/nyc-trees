@@ -49,10 +49,10 @@ class EventList(object):
             ]),
             EventList.chronoFilters: OrderedDict([
                 (_CURRENT, lambda qs: (qs
-                                       .filter(begins_at__gte=right_now)
+                                       .filter(ends_at__gte=right_now)
                                        .order_by('begins_at'))),
                 (_PAST, lambda qs: (qs
-                                    .filter(begins_at__lt=right_now)
+                                    .filter(ends_at__lt=right_now)
                                     .order_by('-begins_at'))),
             ]),
         }
