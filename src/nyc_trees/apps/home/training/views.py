@@ -39,12 +39,15 @@ def complete_quiz(request):
 
     answers = Quiz.extract_answers(request.POST)
     score = quiz.score(answers)
+    correct_answers = list(quiz.correct_answers(answers))
+    quiz_summary = list(_quiz_summary(quiz, answers))
 
     result, created = TrainingResult.objects.get_or_create(
         user_id=user.id,
         module_name=quiz_slug)
 
-    result.score = max(result.score, score)
+    best_score = max(result.score, score)
+    result.score = best_score
     result.save()
 
     passed_quiz = (score >= quiz.passing_score)
@@ -57,10 +60,23 @@ def complete_quiz(request):
     return {
         'quiz': quiz,
         'quiz_slug': quiz_slug,
+        'quiz_summary': quiz_summary,
         'score': score,
+        'best_score': best_score,
         'passed_quiz': passed_quiz,
-        'correct_answers': list(quiz.correct_answers(answers))
+        'correct_answers': correct_answers
     }
+
+
+def _quiz_summary(quiz, submitted_answers):
+    for i, question in enumerate(quiz.questions):
+        candidate = submitted_answers[i]
+        yield {
+            'question': question,
+            'submitted_answers': [ans for i, ans in enumerate(question.choices)
+                                  if i in candidate],
+            'is_correct': question.is_correct(candidate)
+        }
 
 
 def training_instructions(request):
