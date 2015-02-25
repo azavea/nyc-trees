@@ -59,7 +59,7 @@ var tileLayer = mapModule.addTileLayer(blockfaceMap),
 
             $(dom.selectStartingPoint).removeClass('hidden');
             $(dom.selectSide).addClass('hidden');
-            $(dom.btnNextGroup).addClass('hidden');
+            $(dom.btnGroupNext).addClass('hidden');
 
             mapUtil.zoomToBlockface(blockfaceMap, blockfaceId);
             return true;

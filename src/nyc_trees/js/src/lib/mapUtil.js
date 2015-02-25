@@ -27,7 +27,7 @@ function getLatLngs(geom) {
 }
 
 function fetchBlockface(blockfaceId) {
-   var defer = $.Deferred();
+    var defer = $.Deferred();
     if (!blockfaceId) {
         defer.reject();
     } else {
