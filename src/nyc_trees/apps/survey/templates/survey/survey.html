@@ -28,12 +28,33 @@
 {% endblock aside %}
 
 {% block map %}
-<div id="map" class="map-event"
-     data-tile-url="{{ layer.tile_url }}"
-     data-grid-url="{{ layer.grid_url }}"
-     {% if bounds %}data-bounds="{{ bounds }}"
-     {% elif location %}data-location="{{ location }}"
-     {% endif %}></div>
+<div id="pages">
+    <div id="map" class="map-event"
+        data-tile-url="{{ layer.tile_url }}"
+        data-grid-url="{{ layer.grid_url }}"
+        {% if bounds %}data-bounds="{{ bounds }}"
+        {% elif location %}data-location="{{ location }}"
+        {% endif %}>
+    </div>
+    <div id="survey" class="hidden">
+        <a class="btn btn-warning pull-right" href="javascript:" id="no-trees">No Trees</a>
+        <div id="tree-form-container">
+            {% include "survey/partials/tree_form.html" with tree_number=1 %}
+        </div>
+
+        <button class="btn btn-primary" id="another-tree">+ Another Tree</button>
+        <button class="btn btn-secondary" id="cant-map">I cannot map this block</button>
+
+        <div class="field">
+            <label>
+                Distance to End
+                <input id="distance_to_end" class="form-control" required type="number" min="0" step="any" placeholder="ft">
+            </label>
+        </div>
+
+        <button class="btn btn-primary" id="submit-survey">Submit</button>
+    </div>
+</div>
 {% endblock map %}
 
 {% block page_js %}
