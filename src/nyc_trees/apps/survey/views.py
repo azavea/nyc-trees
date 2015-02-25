@@ -3,9 +3,11 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
+import json
+
 from django.conf import settings
 from django.db import transaction
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404
 from django.utils.timezone import now
 
@@ -17,7 +19,8 @@ from apps.event.helpers import user_is_checked_in_to_event
 
 from apps.users.models import TrustedMapper
 
-from apps.survey.models import BlockfaceReservation, Blockface, Territory
+from apps.survey.models import (BlockfaceReservation, Blockface, Territory,
+                                Survey, Tree)
 from apps.survey.layer_context import (get_context_for_reservations_layer,
                                        get_context_for_reservable_layer,
                                        get_context_for_progress_layer,
@@ -42,13 +45,16 @@ def progress_page_blockface_popup(request, blockface_id):
 
 def cancel_reservation(request, blockface_id):
     update_time = now()
-    BlockfaceReservation.objects \
-        .filter(blockface_id=blockface_id) \
-        .filter(user=request.user) \
-        .current() \
+    _query_reservation(request.user, blockface_id) \
         .update(canceled_at=update_time, updated_at=update_time)
 
     return get_context_for_reservations_layer(request)
+
+
+def _query_reservation(user, blockface_id):
+    return BlockfaceReservation.objects \
+        .filter(blockface_id=blockface_id, user=user) \
+        .current()
 
 
 def blockface_cart_page(request):
@@ -98,11 +104,7 @@ def reserve_blockfaces_page(request):
 
 def reserved_blockface_popup(request, blockface_id):
     blockface = get_object_or_404(Blockface, id=blockface_id)
-    reservation = BlockfaceReservation.objects \
-        .filter(blockface=blockface) \
-        .filter(user=request.user) \
-        .current()[0]
-
+    reservation = _query_reservation(request.user, blockface_id)[0]
     return {
         'blockface': blockface,
         'reservation': reservation
@@ -133,10 +135,7 @@ def confirm_blockface_reservations(request):
     reservations = []
 
     for blockface in blockfaces:
-        try:
-            territory = blockface.territory
-        except Territory.DoesNotExist:
-            territory = None
+        territory = _get_territory(blockface)
 
         if ((blockface.is_available and
              blockface.id not in already_reserved_blockface_ids and
@@ -160,6 +159,13 @@ def confirm_blockface_reservations(request):
     }
 
 
+def _get_territory(blockface):
+    try:
+        return blockface.territory
+    except Territory.DoesNotExist:
+        return None
+
+
 def blockface(request, blockface_id):
     blockface = get_object_or_404(Blockface, id=blockface_id)
     return {
@@ -178,7 +184,7 @@ def start_survey(request):
 
 def start_survey_from_event(request, event_slug):
     group = request.group
-    event = get_object_or_404(Event, group=request.group, slug=event_slug)
+    event = get_object_or_404(Event, group=group, slug=event_slug)
     if not event.in_progress():
         return HttpResponseForbidden('Event not currently in-progress')
     if not user_is_checked_in_to_event(request.user, event):
@@ -189,9 +195,66 @@ def start_survey_from_event(request, event_slug):
     }
 
 
-def submit_survey(request, blockface_id):
-    # TODO: implement
-    pass
+def submit_survey(request):
+    return _create_survey_and_trees(request)
+
+
+def submit_survey_from_event(request, event_slug):
+    event = get_object_or_404(Event, group=request.group, slug=event_slug)
+    if not user_is_checked_in_to_event(request.user, event):
+        return HttpResponseForbidden('User not checked-in to this event')
+
+    return _create_survey_and_trees(request, event)
+
+
+@transaction.atomic
+def _create_survey_and_trees(request, event=None):
+    """
+    Creates survey and trees from JSON body, where k1... are model attrs: {
+        survey: { k1:v1, ... },
+        trees: [
+            { k1:v1, ...},
+            ...
+        ]
+    }
+    trees.problems should be a list of problem codes -- ["Stones", "Sneakers"]
+    """
+    data = json.loads(request.body)
+    survey_data = data['survey']
+    tree_list = data.get('trees', [])
+
+    survey = Survey(user=request.user, **survey_data)
+
+    if survey.has_trees and len(tree_list) == 0:
+        return HttpResponseBadRequest('Trees expected but absent')
+    if not survey.has_trees and len(tree_list) > 0:
+        return HttpResponseBadRequest('Trees not expected but present')
+
+    blockface = survey.blockface
+
+    if event:
+        territory = _get_territory(blockface)
+        if territory is None or territory.group_id != event.group_id:
+            return HttpResponseForbidden(
+                "Blockface is not in group's territory.")
+    else:
+        if not _query_reservation(request.user, blockface.id).exists():
+            return HttpResponseForbidden(
+                'You have not reserved this blockface.')
+
+    survey.clean_and_save()
+
+    if survey.quit_reason == '':
+        blockface.is_available = False
+        blockface.clean_and_save()
+
+    for tree_data in tree_list:
+        if 'problems' in tree_data:
+            tree_data['problems'] = ','.join(tree_data['problems'])
+        tree = Tree(survey=survey, **tree_data)
+        tree.clean_and_save()
+
+    return {'success': True}
 
 
 def species_autocomplete_list(request):

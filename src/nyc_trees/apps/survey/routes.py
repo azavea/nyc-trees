@@ -66,15 +66,16 @@ reservations_instructions = do(
 #####################################
 
 survey = individual_mapper_do(
-    render_template('survey/survey.html'),
-    route(GET=v.start_survey,
-          POST=v.submit_survey))
+    route(GET=do(render_template('survey/survey.html'),
+                 v.start_survey),
+          POST=do(json_api_call, v.submit_survey)))
 
-survey_from_event = do(login_required,
-                       group_request,
-                       render_template('survey/survey.html'),
-                       route(GET=v.start_survey_from_event,
-                             POST=v.submit_survey))
+survey_from_event = do(
+    login_required,
+    group_request,
+    route(GET=do(render_template('survey/survey.html'),
+                 v.start_survey_from_event),
+          POST=do(json_api_call, v.submit_survey_from_event)))
 
 species_autocomplete_list = route(
     GET=v.species_autocomplete_list)
