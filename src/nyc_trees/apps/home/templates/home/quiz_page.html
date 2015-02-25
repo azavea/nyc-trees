@@ -35,6 +35,10 @@
 <p>Please check all applicable answers.</p>
 {% endif %}
 
+<div class="marked-correct hidden">
+    <p>You answered this question correctly!</p>
+</div>
+
 <div class="hidden alert alert-danger">
     {% if question.allow_multiple_selections %}
     <p><strong>Please select at least one of the choices below before moving to the next question.</strong></p>
@@ -82,5 +86,5 @@
 {% endblock main %}
 
 {% block page_js %}
-<script type="text/javascript" src="{{ "js/quiz.js"|static_url }}"></script>
+<script type="text/javascript" src="{{ "js/quizPage.js"|static_url }}"></script>
 {% endblock page_js %}

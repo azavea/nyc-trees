@@ -45,11 +45,6 @@ var $current = $(dom.currentReservations),
 
 var progress = new SavedState({
     key: 'reserve-blockfaces',
-    getState: function() {
-        return {
-            selections: selectedBlockfaces
-        };
-    },
     validate: function(state) {
         if (!$.isPlainObject(state.selections)) {
             throw new Error('Expected `state.selections` to contain blockfaces');
@@ -68,7 +63,7 @@ var selectedLayer = new SelectableBlockfaceLayer(reservationMap, grid, {
 
             updateForm();
 
-            progress.save();
+            progress.save(getState());
             return true;
         }
         return false;
@@ -82,10 +77,16 @@ var selectedLayer = new SelectableBlockfaceLayer(reservationMap, grid, {
         delete selectedBlockfaces[feature.properties.id];
         updateForm();
 
-        progress.save();
+        progress.save(getState());
         return true;
     }
 });
+
+function getState() {
+    return {
+        selections: selectedBlockfaces
+    };
+}
 
 function updateForm() {
     var ids = Object.keys(selectedBlockfaces);

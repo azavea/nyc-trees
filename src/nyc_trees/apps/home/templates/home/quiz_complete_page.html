@@ -20,6 +20,9 @@
 
 {% block main %}
 
+<input type="hidden" name="quiz-slug" value="{{ quiz_slug }}" />
+<input type="hidden" name="correct-answers" value="{{ correct_answers|join:"," }}" />
+
 {% if passed_quiz %}
 <h3>Great job!</h3>
 <p>You answered {{ score }}/{{ quiz.questions|length }}
@@ -36,3 +39,7 @@
 {% endif %}
 
 {% endblock main %}
+
+{% block page_js %}
+<script type="text/javascript" src="{{ "js/quizCompletePage.js"|static_url }}"></script>
+{% endblock page_js %}
