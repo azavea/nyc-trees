@@ -18,20 +18,6 @@ var dom = {
 var slug = $(dom.quizSlug).data('quiz-slug'),
     progress = new SavedState({
         key: 'quiz-progress-' + slug,
-        getState: function() {
-            var formData = {};
-            $(dom.selections).each(function() {
-                var key = $(this).attr('name');
-                if (!formData[key]) {
-                    formData[key] = [];
-                }
-                formData[key].push($(this).val());
-            });
-            return {
-                form: formData,
-                question: $(dom.activeQuestion).data('question')
-            };
-        },
         validate: function(state) {
             if (util.isNullOrUndefined(state)) {
                 throw new Error('Unable to parse serialized state');
@@ -45,13 +31,28 @@ var slug = $(dom.quizSlug).data('quiz-slug'),
         }
     });
 
+function getState() {
+    var formData = {};
+    $(dom.selections).each(function() {
+        var key = $(this).attr('name');
+        if (!formData[key]) {
+            formData[key] = [];
+        }
+        formData[key].push($(this).val());
+    });
+    return {
+        form: formData,
+        question: $(dom.activeQuestion).data('question')
+    };
+}
+
 function next(e) {
     /*jshint validthis:true */
     var id = +$(this).data('question');
     if (validate(id)) {
         hide(id);
         show(id + 1);
-        progress.save();
+        progress.save(getState());
     }
 }
 
@@ -60,7 +61,7 @@ function prev(e) {
     var id = +$(this).data('question');
     hide(id);
     show(id - 1);
-    progress.save();
+    progress.save(getState());
 }
 
 function submit(e) {
@@ -116,7 +117,7 @@ function restore() {
 // because then there will be no way to distinguish between re-taking a
 // quiz and resuming a quiz in-progress.
 $(dom.quizInputs).click(function() {
-    progress.save();
+    progress.save(getState());
 });
 
 $(dom.next).click(next);

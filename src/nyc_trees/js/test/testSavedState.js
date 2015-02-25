@@ -13,16 +13,13 @@ suite('SavedState', function() {
 
     test('Loading/Saving', function() {
         var cache = new SavedState({
-            key: 'test',
-            getState: function() {
-                return {foo: 'bar'};
-            }
+            key: 'test'
         });
 
         // Nothing was saved yet so there's nothing to load.
         assert.isFalse(cache.load());
 
-        cache.save();
+        cache.save({foo: 'bar'});
         assert.deepEqual(cache.load(), {foo: 'bar'});
     });
 
@@ -30,9 +27,6 @@ suite('SavedState', function() {
         function makeCache(n, enableValidation) {
             return new SavedState({
                 key: 'test',
-                getState: function() {
-                    return n;
-                },
                 validate: function(state) {
                     if (enableValidation && state !== n) {
                         throw new Error('Expected state to be ' + n);
@@ -53,11 +47,11 @@ suite('SavedState', function() {
         assert.isFalse(cache1.load());
         assert.isFalse(cache2.load());
 
-        cache1.save();
+        cache1.save(1);
         assert.equal(cache1.load(), 1);
         assert.equal(cache2.load(), 1);
 
-        cache2.save();
+        cache2.save(2);
         assert.equal(cache1.load(), 2);
         assert.equal(cache2.load(), 2);
 
@@ -71,11 +65,11 @@ suite('SavedState', function() {
         assert.isFalse(cache1.load());
         assert.isFalse(cache2.load());
 
-        cache1.save();
+        cache1.save(1);
         assert.equal(cache1.load(), 1);
         assert.isFalse(cache2.load());
 
-        cache2.save();
+        cache2.save(2);
         assert.equal(cache2.load(), 2);
         assert.isFalse(cache1.load());
     });

@@ -5,8 +5,8 @@ var $ = require('jquery'),
 
 // Responsible for serializing and deserializing data to `localStorage`.
 //
-// Any valid JS object returned from `getState` will be stringified and
-// saved to `localStorage` when the `save` function is invoked.
+// Any data passed to the `save` function will be stringified and saved
+// to `localStorage`.
 //
 // Calling `load` will deserialize and return the current value from
 // `localStorage`. If there is no current value, or if there was an error
@@ -15,11 +15,12 @@ var $ = require('jquery'),
 // Example usage:
 //
 //     var cache = new SavedState({
-//         key: 'cart',
-//         getState: function() {
-//             return { items: [...] };
-//         }
+//         key: 'cart'
 //     });
+//
+//     function getState() {
+//         return { items: [...] };
+//     }
 //
 //     var state = cache.load();
 //     if (state) {
@@ -28,12 +29,12 @@ var $ = require('jquery'),
 //
 //     btnAddToCart
 //         .doAction(addToCart)
+//         .map(getState)
 //         .onValue(cache, 'save');
 //
 function SavedState(options) {
     var opts = $.extend({}, {
         key: '',
-        getState: $.noop,
         validate: $.noop
     }, options);
 
@@ -41,8 +42,8 @@ function SavedState(options) {
         throw new Error('The `key` option is required');
     }
 
-    function save() {
-        storage[opts.key] = serialize();
+    function save(data) {
+        storage[opts.key] = JSON.stringify(data);
     }
 
     // Return false if there is no current value to load of if there was an
@@ -65,11 +66,6 @@ function SavedState(options) {
 
     function clear() {
         delete storage[opts.key];
-    }
-
-    function serialize() {
-        return opts.getState === $.noop ? '' :
-            JSON.stringify(opts.getState());
     }
 
     // Return false if there was an error during deserialization.
