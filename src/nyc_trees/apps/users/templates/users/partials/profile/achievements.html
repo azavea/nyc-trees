@@ -5,7 +5,7 @@
 
 {% for achievement in achievements %}
 
-<a href="#" class="achievement block item">
+<div class="achievement block item">
     <div class="row">
         <div class="col-xs-8">
             <h5>{{ achievement.name }}</h5>
@@ -15,7 +15,7 @@
             <img src="{{ achievement.badge|static_url }}" />
         </div>
     </div>
-</a>
+</div>
 
 {% endfor %}
 
