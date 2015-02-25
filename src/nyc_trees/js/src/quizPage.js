@@ -2,7 +2,7 @@
 
 var $ = require('jquery'),
     util = require('./lib/util'),
-    SavedState = require('./lib/SavedState');
+    states = require('./lib/states');
 
 var dom = {
     next: '.quiz .next',
@@ -16,20 +16,9 @@ var dom = {
 };
 
 var slug = $(dom.quizSlug).data('quiz-slug'),
-    progress = new SavedState({
-        key: 'quiz-progress-' + slug,
-        validate: function(state) {
-            if (util.isNullOrUndefined(state)) {
-                throw new Error('Unable to parse serialized state');
-            }
-            if (util.isNullOrUndefined(state.form)) {
-                throw new Error('Expected `state.form` to exist');
-            }
-            if (!$.isNumeric(state.question)) {
-                throw new Error('Expected `state.question` to be numeric');
-            }
-        }
-    });
+    progress = states.quizProgressState(slug),
+    submission = states.quizSubmissionState(slug),
+    correctAnswers = submission.load() || [];
 
 function getState() {
     var formData = {};
@@ -71,10 +60,9 @@ function submit(e) {
         e.preventDefault();
         return;
     }
-    progress.clear();
 }
 
-// Return true if there is 1 checked answer for given question.
+// Return true if there is at least 1 checked answer for given question.
 function validate(id) {
     var selectedAnswer = $('[name="question.' + id + '"]:checked');
     if (selectedAnswer.size() >= 1) {
@@ -93,12 +81,14 @@ function hide(id) {
 function show(id) {
     $('[data-question=' + id + ']').removeClass('hidden');
     $('[data-question=' + id + ']').addClass('active');
+    if ($.inArray(id, correctAnswers) !== -1) {
+        $('[data-question=' + id + '] .marked-correct').removeClass('hidden');
+    }
 }
 
 function restore() {
     var state = progress.load();
     if (state && state.form) {
-        // Restore radio button selections.
         $.each(state.form, function(fieldName, values) {
             $.each(values, function(__, value) {
                 var field = $('input[name="' + fieldName + '"][value="' + value + '"]');
@@ -112,7 +102,7 @@ function restore() {
     }
 }
 
-// Save state when radio buttons are checked.
+// Save state when selections are checked.
 // Note: Be careful not to save progress when clicking the submit button,
 // because then there will be no way to distinguish between re-taking a
 // quiz and resuming a quiz in-progress.
@@ -124,4 +114,5 @@ $(dom.next).click(next);
 $(dom.prev).click(prev);
 $(dom.submit).click(submit);
 
+show(0);
 restore();

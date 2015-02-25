@@ -197,17 +197,19 @@ class Quiz(object):
                     pass
         return dict(result)
 
+    def correct_answers(self, answers):
+        """Return indexes of correctly answered questions"""
+        for i, question in enumerate(self.questions):
+            answer = answers.get(i, None)
+            if question.is_correct(answer):
+                yield i
+
     def score(self, answers):
         """
         Return number of correctly answered questions.
         answers - dict of {question_index => answer_indexes, ...}
         """
-        result = 0
-        for i, question in enumerate(self.questions):
-            answer = answers.get(i, None)
-            if question.is_correct(answer):
-                result += 1
-        return result
+        return len(list(self.correct_answers(answers)))
 
 
 class Question(object):

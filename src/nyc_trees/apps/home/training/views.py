@@ -59,6 +59,7 @@ def complete_quiz(request):
         'quiz_slug': quiz_slug,
         'score': score,
         'passed_quiz': passed_quiz,
+        'correct_answers': list(quiz.correct_answers(answers))
     }
 
 
