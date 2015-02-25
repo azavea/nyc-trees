@@ -77,6 +77,9 @@ survey_from_event = do(
                  v.start_survey_from_event),
           POST=do(json_api_call, v.submit_survey_from_event)))
 
+flag_survey = do(login_required,
+                 route(POST=do(json_api_call, v.flag_survey)))
+
 species_autocomplete_list = route(
     GET=v.species_autocomplete_list)
 

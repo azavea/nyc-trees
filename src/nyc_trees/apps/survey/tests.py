@@ -20,7 +20,8 @@ from apps.users.models import TrustedMapper
 
 from apps.survey.models import (Blockface, BlockfaceReservation, Territory,
                                 Survey, Tree)
-from apps.survey.views import confirm_blockface_reservations, submit_survey
+from apps.survey.views import confirm_blockface_reservations, submit_survey, \
+    flag_survey
 
 
 class SurveyTestCase(TestCase):
@@ -110,6 +111,15 @@ class SurveySubmitTests(SurveyTestCase):
     def test_bad_tree_field(self):
         with self.assertRaises(TypeError):
             self.submit_survey(self.survey_data, [{'bar': 2}])
+
+    def test_flag_survey(self):
+        survey = make_survey(self.user, self.block)
+        self.assertFalse(survey.is_flagged)
+        req = make_request(user=self.user, method="POST")
+        result = flag_survey(req, survey.id)
+        self.assertTrue(result['success'])
+        survey = Survey.objects.get(id=survey.id)
+        self.assertTrue(survey.is_flagged)
 
 
 class ConfirmBlockfaceReservationTests(SurveyTestCase):

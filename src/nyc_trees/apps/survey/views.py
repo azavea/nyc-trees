@@ -259,6 +259,13 @@ def _create_survey_and_trees(request, event=None):
         tree = Tree(survey=survey, **tree_data)
         tree.clean_and_save()
 
+    return {'survey_id': survey.id}
+
+
+def flag_survey(request, survey_id):
+    survey = get_object_or_404(Survey, id=survey_id, user=request.user)
+    survey.is_flagged = True
+    survey.clean_and_save()
     return {'success': True}
 
 
