@@ -57,7 +57,6 @@ var tileLayer = mapModule.addTileLayer(blockfaceMap),
                 L.circleMarker(latLngs[latLngs.length - 1], defaultStyle)
             );
 
-            $(dom.selectStartingPoint).removeClass('hidden');
             $(dom.selectSide).addClass('hidden');
             $(dom.btnGroupNext).addClass('hidden');
 
@@ -73,6 +72,8 @@ endPointLayers.setStyle(defaultStyle);
 endPointLayers.on('click', function(e) {
     endPointLayers.setStyle(defaultStyle);
     e.layer.setStyle(selectStyle);
+
+    $(dom.selectStartingPoint).addClass('hidden');
     $(dom.leftRightButtons).removeClass('active');
     $(dom.selectSide).removeClass('hidden');
     $(dom.btnGroupNext).addClass('hidden');
