@@ -1,8 +1,20 @@
-{% extends 'event/partials/event_section.html' %}
-
-{% block extra_markup %}
-    {{ event_form.opt_in_emails }}
-    {% for hidden in event_form.hidden_fields %}
-        {{ hidden }}
-    {% endfor %}
-{% endblock extra_markup %}
+{% with event=info.event %}
+<div class="event block item">
+    <div class="row">
+        {% include 'event/partials/event_calendar.html' %}
+        <div class="event-details col-xs-6">
+            <h5 class="event-detail event-detail--title"><a href="{{ event.get_absolute_url }}">{{ event.title }}</a></h5>
+            <div class="event-detail">{{ event.begins_at|date:"f A" }} at {{ event.address }}</div>
+            <div class="event-detail">{{ event.group.name }}</div>
+            <div class="event-detail">{{ event.training_summary }}</div>
+            {% if info.user_is_registered %}<div class="event-detail"><b>+ RSVP</b></div>{% endif %}
+        </div>
+        <div class="col-xs-3 text-right">
+            {{ event_form.opt_in_emails }}
+            {% for hidden in event_form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endwith %}
