@@ -30,8 +30,8 @@ var formTemplate = Handlebars.compile($(dom.treeFormTemplate).html());
 
 var blockfaceId = mapUtil.getBlockfaceIdFromUrl(),
     blockfaceMap = mapModule.create({
-        legend: false,
-        search: false
+        legend: true,
+        search: true
     });
 
 var endPointLayers = new L.FeatureGroup(),

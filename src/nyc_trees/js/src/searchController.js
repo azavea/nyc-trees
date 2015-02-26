@@ -154,7 +154,9 @@ function create($controlsContainer, map) {
     $(map.getContainer()).find('.leaflet-control-container')
                          .prepend($searchControlContainer);
 
-    L.DomEvent.disableClickPropagation($searchControlContainer.get(0));
+    if ($searchControlContainer.size()) {
+        L.DomEvent.disableClickPropagation($searchControlContainer.get(0));
+    }
 
     locationSearch({
         url: config.urls.geocode,
