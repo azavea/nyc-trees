@@ -106,18 +106,18 @@ SIDEWALK_CHOICES = (
 
 PROBLEMS_CHOICES = (
     ('None', 'No problems'),
-    ('Root problems',
+    ('Root problems', (
      ('Stones', 'Sidewalk or stones'),
      ('MetalGrates', 'Metal grates'),
-     ('RootOther', 'Other')),
-    ('Trunk problems',
+     ('RootOther', 'Other'))),
+    ('Trunk problems', (
      ('WiresRope', 'Wires or rope'),
      ('TrunkLights', 'Lights'),
-     ('TrunkOther', 'Other')),
-    ('Branch problems',
+     ('TrunkOther', 'Other'))),
+    ('Branch problems', (
      ('BranchLights', 'Lights'),
      ('Sneakers', 'Sneakers'),
-     ('BranchOther', 'Other'))
+     ('BranchOther', 'Other')))
 )
 
 
@@ -125,7 +125,8 @@ def flatten_categorized_choices(choices):
     flat = []
     for choice in choices:
         if isinstance(choice[1], tuple):
-            flat.extend(choice[1:])
+            for group_choice in choice[1:]:
+                flat.extend(group_choice)
         else:
             flat.append(choice)
     return tuple(flat)

@@ -59,6 +59,27 @@
   right: 0;
 }
 
+.map-survey {
+  position: absolute;
+  top: 0;
+  bottom: 12rem;
+  left: 0;
+  right: 0;
+}
+
+.action-bar-survey {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 12rem;
+  padding: 0 $grid-gutter-width/2;
+  z-index: 1;
+  .tab-status-list & {
+    display: none;
+  }
+}
+
 .map-small {
   padding-top: 40%; // Makes height 40% of width
 }

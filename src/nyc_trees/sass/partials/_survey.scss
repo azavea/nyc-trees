@@ -1,0 +1,12 @@
+.tree-form {
+    // Hide checkboxes and radios, and use their checked/unchecked to style their label
+    input[type="checkbox"], input[type="radio"] {
+        opacity: 0;
+    }
+    input[type="checkbox"] + label, input[type="radio"] + label {
+        @extend .btn-secondary
+    }
+    input[type="checkbox"]:checked + label, input[type="radio"]:checked + label {
+        @extend .btn-primary
+    }
+}

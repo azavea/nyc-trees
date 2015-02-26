@@ -20,7 +20,11 @@ from apps.event.helpers import user_is_checked_in_to_event
 from apps.users.models import TrustedMapper
 
 from apps.survey.models import (BlockfaceReservation, Blockface, Territory,
-                                Survey, Tree)
+                                Survey, Tree, Species, CURB_CHOICES,
+                                STATUS_CHOICES, CERTAINTY_CHOICES,
+                                HEALTH_CHOICES, STEWARDSHIP_CHOICES,
+                                GUARD_CHOICES, SIDEWALK_CHOICES,
+                                PROBLEMS_CHOICES)
 from apps.survey.layer_context import (get_context_for_reservations_layer,
                                        get_context_for_reservable_layer,
                                        get_context_for_progress_layer,
@@ -183,7 +187,8 @@ def blockface(request, blockface_id):
 def start_survey(request):
     return {
         'layer': get_context_for_reservations_layer(request),
-        'bounds': _user_reservation_bounds(request.user)
+        'bounds': _user_reservation_bounds(request.user),
+        'choices': _get_survey_choices()
     }
 
 
@@ -194,9 +199,31 @@ def start_survey_from_event(request, event_slug):
         return HttpResponseForbidden('Event not currently in-progress')
     if not user_is_checked_in_to_event(request.user, event):
         return HttpResponseForbidden('User not checked-in to this event')
+
     return {
         'layer': get_context_for_territory_survey_layer(request, group.id),
-        'location': [event.location.y, event.location.x]
+        'location': [event.location.y, event.location.x],
+        'choices': _get_survey_choices()
+    }
+
+
+def _get_survey_choices():
+    # NOTE: "No Problems" is handled in the template
+    grouped_problem_choices = (choice for choice in PROBLEMS_CHOICES
+                               if isinstance(choice[1], tuple))
+
+    species_choices = Species.objects.all().values_list('pk', 'name')
+
+    return {
+        'curb_location': CURB_CHOICES,
+        'status': STATUS_CHOICES,
+        'species': species_choices,
+        'species_certainty': CERTAINTY_CHOICES,
+        'health': HEALTH_CHOICES,
+        'stewardship': STEWARDSHIP_CHOICES,
+        'guards': GUARD_CHOICES,
+        'sidewalk_damage': SIDEWALK_CHOICES,
+        'problem_groups': grouped_problem_choices,
     }
 
 
