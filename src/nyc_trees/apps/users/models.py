@@ -67,6 +67,9 @@ class TrustedMapper(NycModel, models.Model):
     group = models.ForeignKey(Group)
     is_approved = models.NullBooleanField()
 
+    def __unicode__(self):
+        return '%s -> %s' % (self.user, self.group)
+
     class Meta:
         unique_together = ("user", "group")
 
