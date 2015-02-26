@@ -4472,6 +4472,66 @@
         }
       }
     },
+    "handlebars": {
+      "version": "3.0.0",
+      "from": "https://registry.npmjs.org/handlebars/-/handlebars-3.0.0.tgz",
+      "resolved": "https://registry.npmjs.org/handlebars/-/handlebars-3.0.0.tgz",
+      "dependencies": {
+        "optimist": {
+          "version": "0.6.1",
+          "from": "https://registry.npmjs.org/optimist/-/optimist-0.6.1.tgz",
+          "resolved": "https://registry.npmjs.org/optimist/-/optimist-0.6.1.tgz",
+          "dependencies": {
+            "wordwrap": {
+              "version": "0.0.2",
+              "from": "https://registry.npmjs.org/wordwrap/-/wordwrap-0.0.2.tgz",
+              "resolved": "https://registry.npmjs.org/wordwrap/-/wordwrap-0.0.2.tgz"
+            },
+            "minimist": {
+              "version": "0.0.10",
+              "from": "https://registry.npmjs.org/minimist/-/minimist-0.0.10.tgz",
+              "resolved": "https://registry.npmjs.org/minimist/-/minimist-0.0.10.tgz"
+            }
+          }
+        },
+        "source-map": {
+          "version": "0.1.43",
+          "from": "https://registry.npmjs.org/source-map/-/source-map-0.1.43.tgz",
+          "resolved": "https://registry.npmjs.org/source-map/-/source-map-0.1.43.tgz",
+          "dependencies": {
+            "amdefine": {
+              "version": "0.1.0",
+              "from": "https://registry.npmjs.org/amdefine/-/amdefine-0.1.0.tgz",
+              "resolved": "https://registry.npmjs.org/amdefine/-/amdefine-0.1.0.tgz"
+            }
+          }
+        },
+        "uglify-js": {
+          "version": "2.3.6",
+          "from": "https://registry.npmjs.org/uglify-js/-/uglify-js-2.3.6.tgz",
+          "resolved": "https://registry.npmjs.org/uglify-js/-/uglify-js-2.3.6.tgz",
+          "dependencies": {
+            "async": {
+              "version": "0.2.10",
+              "from": "https://registry.npmjs.org/async/-/async-0.2.10.tgz",
+              "resolved": "https://registry.npmjs.org/async/-/async-0.2.10.tgz"
+            },
+            "optimist": {
+              "version": "0.3.7",
+              "from": "https://registry.npmjs.org/optimist/-/optimist-0.3.7.tgz",
+              "resolved": "https://registry.npmjs.org/optimist/-/optimist-0.3.7.tgz",
+              "dependencies": {
+                "wordwrap": {
+                  "version": "0.0.2",
+                  "from": "https://registry.npmjs.org/wordwrap/-/wordwrap-0.0.2.tgz",
+                  "resolved": "https://registry.npmjs.org/wordwrap/-/wordwrap-0.0.2.tgz"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "jquery": {
       "version": "2.1.2",
       "from": "https://registry.npmjs.org/jquery/-/jquery-2.1.2.tgz",
