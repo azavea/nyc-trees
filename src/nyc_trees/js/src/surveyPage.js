@@ -17,10 +17,11 @@ var dom = {
     btnNext: '#btn-next'
 };
 
-var blockfaceMap = mapModule.create({
-    legend: true,
-    search: true
-});
+var blockfaceId = mapUtil.getBlockfaceIdFromUrl(),
+    blockfaceMap = mapModule.create({
+        legend: true,
+        search: true
+    });
 
 var endPointLayers = new L.FeatureGroup(),
     defaultStyle = {
@@ -44,6 +45,8 @@ var tileLayer = mapModule.addTileLayer(blockfaceMap),
         onAdd: function(gridData, geom) {
             var latLngs = mapUtil.getLatLngs(geom);
 
+            blockfaceId = gridData.id;
+
             selectedLayer.clearLayers();
             endPointLayers.clearLayers();
 
@@ -58,12 +61,11 @@ var tileLayer = mapModule.addTileLayer(blockfaceMap),
             $(dom.selectSide).addClass('hidden');
             $(dom.btnNextGroup).addClass('hidden');
 
-            mapUtil.zoomToBlockface(blockfaceMap, gridData.id);
+            mapUtil.zoomToBlockface(blockfaceMap, blockfaceId);
             return true;
         }
     });
 
-blockfaceMap.addLayer(grid);
 blockfaceMap.addLayer(selectedLayer);
 blockfaceMap.addLayer(endPointLayers);
 
@@ -82,7 +84,6 @@ $(dom.leftRightButtons).click(function(e) {
     $(dom.btnGroupNext).removeClass('hidden');
 });
 
-var blockfaceId = mapUtil.getBlockfaceIdFromUrl();
 mapUtil.fetchBlockface(blockfaceId).done(function(blockface) {
     selectedLayer.addBlockface(blockface);
 });
