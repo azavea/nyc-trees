@@ -49,33 +49,57 @@ class EventForm(ModelForm):
 
     def clean(self):
         cleaned_data = super(EventForm, self).clean()
-        right_now = now().astimezone(timezone('US/Eastern'))
+        est_tz = timezone('US/Eastern')
+        right_now = now().astimezone(est_tz)
         today = right_now.date()
 
         if 'date' in cleaned_data:
             cleaned_date = cleaned_data['date']
 
-            # first check if the date is in the past and if so, raise on date
-            if cleaned_date < today:
-                Event.raise_date_past('date')
-            if 'begins_at_time' in cleaned_data:
-                begins_at_time = cleaned_data['begins_at_time']
+            # first check if the date was changed to be in the past and if so,
+            # raise on date
+            if self.instance.begins_at is not None:
+                prev_date = self.instance.ends_at.astimezone(est_tz).date()
+            else:
+                prev_date = None
+
+            if (((prev_date is None or cleaned_date != prev_date) and
+                 cleaned_date < today)):
+                self.add_error('date', 'Event must not be in the past.')
+
+            if 'ends_at_time' in cleaned_data:
+                ends_at_time = cleaned_data['ends_at_time']
 
                 # then, check if the date is the same as today, in which case
-                # time matters, and if so, raise on the time
-                if cleaned_date == today and begins_at_time < right_now.time():
-                    Event.raise_date_past('begins_at_time')
+                # time matters, and if so, raise on the time if it was changed
+                # to be in the past
+                if self.instance.ends_at is not None:
+                    prev_ends_at_time = \
+                        self.instance.ends_at.astimezone(est_tz).time()
+                else:
+                    prev_ends_at_time = None
 
-                if 'ends_at_time' in cleaned_data:
-                    ends_at_time = cleaned_data['ends_at_time']
+                if (((prev_ends_at_time is None or
+                      ends_at_time != prev_ends_at_time) and
+                     cleaned_date <= today and
+                     ends_at_time < right_now.time())):
+                    self.add_error('ends_at_time',
+                                   'Event must not end in the past.')
+
+                if 'begins_at_time' in cleaned_data:
+                    begins_at_time = cleaned_data['begins_at_time']
 
                     # last check, make sure the bounds are in the correct order
                     if begins_at_time > ends_at_time:
-                        Event.raise_invalid_bounds('begins_at_time')
-                    self.instance.begins_at = datetime.combine(
-                        cleaned_data['date'], cleaned_data['begins_at_time'])
+                        self.add_error('begins_at_time',
+                                       'Must occur before end time.')
 
-                    self.instance.ends_at = datetime.combine(
-                        cleaned_data['date'], cleaned_data['ends_at_time'])
+                    if not self.errors:
+                        self.instance.begins_at = datetime.combine(
+                            cleaned_data['date'],
+                            cleaned_data['begins_at_time'])
+
+                        self.instance.ends_at = datetime.combine(
+                            cleaned_data['date'], cleaned_data['ends_at_time'])
 
         return cleaned_data
