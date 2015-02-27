@@ -10,15 +10,6 @@ from apps.event.models import EventRegistration
 from apps.users.views.user import USER_SETTINGS_PRIVACY_TAB_ID
 
 
-def soft_launch(request):
-    # Convert a truthy setting to a boolean
-    if getattr(settings, 'SOFT_LAUNCH_ENABLED', True):
-        soft_launch = True
-    else:
-        soft_launch = False
-    return {'soft_launch': soft_launch}
-
-
 def my_events_now(request):
     user = request.user
     if user.is_authenticated():

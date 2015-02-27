@@ -3,6 +3,8 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
+from waffle.models import Flag
+
 from django.contrib.gis.geos import LineString, MultiLineString
 from django.test import TestCase
 
@@ -15,6 +17,8 @@ from nyc_trees.context_processors import config
 
 class ContextProcessorTest(TestCase):
     def setUp(self):
+        Flag.objects.create(name='full_access', everyone=True)
+
         self.user = User.objects.create(
             username='pat',
             email='pat@rat.com'

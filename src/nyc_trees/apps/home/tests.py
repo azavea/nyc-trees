@@ -3,6 +3,8 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
+from waffle.models import Flag
+
 from django.test import TestCase
 from django.http import Http404, QueryDict
 from django.conf import settings
@@ -23,6 +25,8 @@ from apps.users.tests import UsersTestCase
 
 class TrainingTrackingTest(TestCase):
     def setUp(self):
+        Flag.objects.create(name='full_access', everyone=True)
+
         self.user = User.objects.create(username='foo')
         self.request = make_request(user=self.user)
 
@@ -104,6 +108,9 @@ class TrainingTrackingTest(TestCase):
 
 
 class QuizTestCase(TestCase):
+    def setUp(self):
+        Flag.objects.create(name='full_access', everyone=True)
+
     def test_quiz_assertions(self):
         # Must be at least one question
         with self.assertRaises(AssertionError):

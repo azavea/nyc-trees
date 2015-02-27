@@ -1,12 +1,7 @@
 {% load utils %}
+{% load waffle_tags %}
 
-{% if soft_launch %}
-    <section class="soft-launch">
-        {% with title="Your Profile" section_id="soft-launch" public=False %}
-            {% include "users/partials/profile/soft_launch.html"%}
-        {% endwith %}
-    </section>
-{% else %}
+{% flag full_access %}
     {% if show_request_access %}
     <section class="request-mapper-status">
         <form method="POST" action="{% url "request_individual_mapper_status" username=user.username %}">
@@ -47,4 +42,10 @@
         {% endwith %}
     </section>
     {% endif %}
-{% endif %}
+{% else %}
+    <section class="soft-launch">
+        {% with title="Your Profile" section_id="soft-launch" public=False %}
+            {% include "users/partials/profile/soft_launch.html"%}
+        {% endwith %}
+    </section>
+{% endflag %}

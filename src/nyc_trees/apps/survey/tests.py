@@ -5,6 +5,7 @@ from __future__ import division
 
 import json
 from datetime import timedelta
+from waffle.models import Flag
 
 from django.contrib.gis.geos import LineString, MultiLineString
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
@@ -26,6 +27,8 @@ from apps.survey.views import confirm_blockface_reservations, submit_survey, \
 
 class SurveyTestCase(TestCase):
     def setUp(self):
+        Flag.objects.create(name='full_access', everyone=True)
+
         self.user = User.objects.create(
             username='pat',
             password='password',

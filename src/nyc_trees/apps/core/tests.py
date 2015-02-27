@@ -3,6 +3,8 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
+from waffle.models import Flag
+
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 
@@ -10,6 +12,9 @@ from apps.core.models import User, Group
 
 
 class UserModelTest(TestCase):
+    def setUp(self):
+        Flag.objects.create(name='full_access', everyone=True)
+
     def test_email_uniqueness(self):
         guy = User(username='guy', email='person@person.com')
         guy.set_password('password')
@@ -25,6 +30,9 @@ class UserModelTest(TestCase):
 
 
 class UserPrivacyTest(TestCase):
+    def setUp(self):
+        Flag.objects.create(name='full_access', everyone=True)
+
     def assert_clean_raises_validation_error(self, model, field):
         try:
             model.clean()
@@ -59,6 +67,9 @@ class UserPrivacyTest(TestCase):
 
 
 class GroupModelTest(TestCase):
+    def setUp(self):
+        Flag.objects.create(name='full_access', everyone=True)
+
     def test_slugification(self):
         user = User.objects.create(username='hfarnesworth',
                                    email='prof@planetexpress.nyc',

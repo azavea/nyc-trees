@@ -4,11 +4,16 @@ from __future__ import unicode_literals
 from __future__ import division
 
 from sbo_selenium import SeleniumTestCase
+from waffle.models import Flag
 
 from django.core.urlresolvers import reverse
 
 
 class NycTreesSeleniumTestCase(SeleniumTestCase):
+    def setUp(self):
+        super(NycTreesSeleniumTestCase, self).setUp()
+        Flag.objects.create(name='full_access', everyone=True)
+
     def wait_for_textbox_then_type(self, selector, text):
         return self.wait_for_element(selector).send_keys(text)
 

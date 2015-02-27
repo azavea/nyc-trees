@@ -1,3 +1,5 @@
+{% load waffle_tags %}
+
 <nav class="nav-side">
     {% if user.is_authenticated %}
     <div class="nav-side-user clearfix">
@@ -13,7 +15,7 @@
     </div>
     {% endif %}
     <ul class="nav-side-list">
-        {% if not soft_launch %}
+        {% flag full_access %}
             {% if my_events_now|length == 1 %}
                 {% with event=my_events_now.0 %}
                     <li><a href="{{ event.get_user_checkin_url }}">Start Mapping</a></li>
@@ -28,7 +30,7 @@
             <li{% if active_page == "events" %} class="active"{% endif %}><a href="{% url 'events_list_page' %}">Events</a></li>
             <li{% if active_page == "reservations" %} class="active"{% endif %}><a href="{% url 'reservations' %}">Reservations</a></li>
             <li{% if active_page == "achievements" %} class="active"{% endif %}><a href="#">Achievements</a></li>
-        {% endif %}
+        {% endflag %}
         <li{% if active_page == "about" %} class="active"{% endif %}><a href="#">About &amp; FAQ</a></li>
     </ul>
     <div class="nav-side-sub">

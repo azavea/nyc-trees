@@ -159,7 +159,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'nyc_trees.context_processors.user_settings_privacy_url',
     'nyc_trees.context_processors.config',
     'nyc_trees.context_processors.my_events_now',
-    'nyc_trees.context_processors.soft_launch',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#template-loaders
@@ -187,6 +186,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_statsd.middleware.GraphiteRequestTimingMiddleware',
     'django_statsd.middleware.GraphiteMiddleware',
+    'waffle.middleware.WaffleMiddleware',
     'nyc_trees.middleware.SoftLaunchMiddleware',
 )
 # END MIDDLEWARE CONFIGURATION
@@ -220,6 +220,7 @@ THIRD_PARTY_APPS = (
     'registration',
     'django_statsd',
     'floppyforms',
+    'waffle',
 )
 
 # THIRD-PARTY CONFIGURATION
@@ -309,4 +310,5 @@ SOFT_LAUNCH_REDIRECT_URL = "/"
 SOFT_LAUNCH_REGEXES = [
     r'^/user/',
     r'^/accounts/',
+    r'^/admin/',
 ]
