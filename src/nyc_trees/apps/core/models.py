@@ -27,6 +27,12 @@ REFERRER_AD = (
 )
 
 
+#######################################
+# When adding new fields to the User model, please take care to add these
+# fields to the NycUserAdmin class as well, so that we may administer these
+# fields in the Django super admin.
+# Ref: src/nyc_trees/apps/core.admin.py
+#######################################
 class User(NycModel, AbstractUser):
     individual_mapper = models.NullBooleanField()
     requested_individual_mapping_at = models.DateTimeField(null=True,
