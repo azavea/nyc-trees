@@ -8,8 +8,9 @@ from django.conf.urls import patterns, url
 from django_tinsel.decorators import route
 
 from apps.core.decorators import census_admin_do
-from apps.survey.views import (admin_blockface_page,
-                               admin_blockface_partial,
+from apps.survey import routes as r
+
+from apps.survey.views import (admin_blockface_partial,
                                admin_blockface_detail_page,
                                admin_extend_blockface_reservation,
                                admin_blockface_available)
@@ -18,9 +19,8 @@ from apps.survey.views import (admin_blockface_page,
 # These URLs have the prefix 'census_admin/'
 urlpatterns = patterns(
     '',
-    url(r'^blockface/$',
-        census_admin_do(route(GET=admin_blockface_page)),
-        name='admin_blockface_page'),
+    url(r'^territory/$', r.admin_territory_page,
+        name='admin_territory_page'),
 
     url(r'^blockface-partial/$',
         census_admin_do(route(GET=admin_blockface_partial)),

@@ -28,7 +28,8 @@ from apps.survey.models import (BlockfaceReservation, Blockface, Territory,
 from apps.survey.layer_context import (get_context_for_reservations_layer,
                                        get_context_for_reservable_layer,
                                        get_context_for_progress_layer,
-                                       get_context_for_territory_survey_layer)
+                                       get_context_for_territory_survey_layer,
+                                       get_context_for_territory_admin_layer)
 
 
 def progress_page(request):
@@ -299,6 +300,22 @@ def flag_survey(request, survey_id):
 def species_autocomplete_list(request):
     # TODO: implement
     pass
+
+
+def admin_territory_page(request):
+    context = {
+        'groups': Group.objects.all(),
+        'legend_entries': [
+            {'css_class': 'available', 'label': 'Available'},
+            {'css_class': 'reserved', 'label': "This group's territory"},
+            {'css_class': 'unavailable',
+             'label': "Others' territory/reservations"},
+            {'css_class': 'surveyed-by-me', 'label': 'Mapped by this group'},
+            {'css_class': 'surveyed-by-others', 'label': 'Mapped by others'},
+        ]
+    }
+    context['layer'] = get_context_for_territory_admin_layer(request)
+    return context
 
 
 def admin_blockface_page(request):

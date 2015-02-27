@@ -22,6 +22,7 @@ var Windshaft = require('windshaft'),
 
     interactivity = {
         territory_survey: 'id,survey_type,restriction,geojson',
+        territory_admin: 'id,survey_type,turf_group_id,geojson',
         progress: 'id,group_id,survey_type,geojson',
         reservable: 'id,group_id,group_slug,survey_type,restriction,geojson',
         reservations: 'id,geojson'
