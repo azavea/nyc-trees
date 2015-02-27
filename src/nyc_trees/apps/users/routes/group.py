@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django_tinsel.decorators import route, render_template, json_api_call
 from django_tinsel.utils import decorate as do
 
-from apps.core.decorators import group_request, group_admin_do
+from apps.core.decorators import group_request, group_admin_do, census_admin_do
 
 from apps.users.views import group as v
 
@@ -52,3 +52,7 @@ request_mapper_status = do(
     group_request,
     json_api_call,
     route(POST=v.request_mapper_status))
+
+group_unmapped_territory_geojson = route(
+    GET=census_admin_do(json_api_call,
+                        v.group_unmapped_territory_geojson))

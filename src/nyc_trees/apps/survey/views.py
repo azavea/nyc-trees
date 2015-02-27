@@ -310,12 +310,13 @@ def species_autocomplete_list(request):
 
 def admin_territory_page(request):
     context = {
-        'groups': Group.objects.all(),
+        'groups': Group.objects.all().order_by('name'),
         'legend_entries': [
             {'css_class': 'available', 'label': 'Available'},
-            {'css_class': 'reserved', 'label': "This group's territory"},
+            {'css_class': 'reserved',
+             'label': "This group's unmapped territory"},
             {'css_class': 'unavailable',
-             'label': "Others' territory/reservations"},
+             'label': "Others' unmapped territory/reservations"},
             {'css_class': 'surveyed-by-me', 'label': 'Mapped by this group'},
             {'css_class': 'surveyed-by-others', 'label': 'Mapped by others'},
         ]
