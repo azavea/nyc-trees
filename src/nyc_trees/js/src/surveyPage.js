@@ -3,6 +3,7 @@
 var $ = require('jquery'),
     L = require('leaflet'),
     Handlebars = require('handlebars'),
+    toastr = require('toastr'),
     mapModule = require('./map'),
     mapUtil = require('./lib/mapUtil'),
     SelectableBlockfaceLayer = require('./lib/SelectableBlockfaceLayer');
@@ -11,30 +12,34 @@ var $ = require('jquery'),
 require('leaflet-utfgrid');
 
 var dom = {
-    selectStartingPoint: '#select-starting-point',
-    selectSide: '#select-side',
-    leftRightButtons: '#btn-left, #btn-right',
-    btnGroupNext: '#btn-group-next',
-    btnNext: '#btn-next',
+        selectStartingPoint: '#select-starting-point',
+        selectSide: '#select-side',
 
-    pageContainer: '#pages',
-    surveyPage: '#survey',
-    treeFormTemplate: '#tree-form-template',
-    treeFormcontainer: '#tree-form-container',
+        leftButton: '#btn-left',
+        leftRightButtons: '#btn-left, #btn-right',
 
-    addTree: '#another-tree',
-    submitSurvey: '#submit-survey'
-};
+        btnGroupNext: '#btn-group-next',
+        btnNext: '#btn-next',
 
-var formTemplate = Handlebars.compile($(dom.treeFormTemplate).html());
+        pageContainer: '#pages',
+        surveyPage: '#survey',
+        treeFormTemplate: '#tree-form-template',
+        treeFormcontainer: '#tree-form-container',
+        distanceToEnd: '#distance_to_end',
 
-var blockfaceId = mapUtil.getBlockfaceIdFromUrl(),
+        addTree: '#another-tree',
+        submitSurvey: '#submit-survey'
+    },
+
+    formTemplate = Handlebars.compile($(dom.treeFormTemplate).html()),
+
+    blockfaceId = mapUtil.getBlockfaceIdFromUrl(),
     blockfaceMap = mapModule.create({
         legend: false,
         search: false
-    });
+    }),
 
-var endPointLayers = new L.FeatureGroup(),
+    endPointLayers = new L.FeatureGroup(),
     defaultStyle = {
         opacity: 0.7,
         weight: 2,
@@ -47,9 +52,9 @@ var endPointLayers = new L.FeatureGroup(),
         weight: 3,
         color: '#ff0000',
         clickable: false
-    };
+    },
 
-var tileLayer = mapModule.addTileLayer(blockfaceMap),
+    tileLayer = mapModule.addTileLayer(blockfaceMap),
     grid = mapModule.addGridLayer(blockfaceMap),
 
     selectedLayer = new SelectableBlockfaceLayer(blockfaceMap, grid, {
@@ -61,12 +66,14 @@ var tileLayer = mapModule.addTileLayer(blockfaceMap),
             selectedLayer.clearLayers();
             endPointLayers.clearLayers();
 
-            endPointLayers.addLayer(
-                L.circleMarker(latLngs[0], defaultStyle)
-            );
-            endPointLayers.addLayer(
-                L.circleMarker(latLngs[latLngs.length - 1], defaultStyle)
-            );
+            var startCircle = L.circleMarker(latLngs[0], defaultStyle),
+                endCircle = L.circleMarker(latLngs[latLngs.length - 1], defaultStyle);
+
+            startCircle.isStart = true;
+            endCircle.isStart = false;
+
+            endPointLayers.addLayer(startCircle);
+            endPointLayers.addLayer(endCircle);
 
             $(dom.selectSide).addClass('hidden');
             $(dom.btnGroupNext).addClass('hidden');
@@ -74,7 +81,9 @@ var tileLayer = mapModule.addTileLayer(blockfaceMap),
             mapUtil.zoomToBlockface(blockfaceMap, blockfaceId);
             return true;
         }
-    });
+    }),
+
+    isMappedFromStartOfLine = null;
 
 blockfaceMap.addLayer(selectedLayer);
 blockfaceMap.addLayer(endPointLayers);
@@ -83,6 +92,8 @@ endPointLayers.setStyle(defaultStyle);
 endPointLayers.on('click', function(e) {
     endPointLayers.setStyle(defaultStyle);
     e.layer.setStyle(selectStyle);
+
+    isMappedFromStartOfLine = e.layer.isStart;
 
     $(dom.selectStartingPoint).addClass('hidden');
     $(dom.leftRightButtons).removeClass('active');
@@ -106,7 +117,7 @@ function showPage(selector) {
     pages.filter(selector).removeClass('hidden');
 }
 
-// There is attribute for requiring "one or more" of a group of checkboxes to
+// There is no attribute for requiring "one or more" of a group of checkboxes to
 // be selected, so we have to handle it ourselves.
 $(dom.treeFormcontainer).on('change', 'input[name="problems"]', function () {
     var $form = $(this).closest('form');
@@ -149,15 +160,22 @@ $(dom.treeFormcontainer).on('change', 'input[name="status"]', function () {
     $sections.filter('[data-status="' + currentStatus + '"]').removeClass('hidden');
 });
 
-// Helper for checking the validity of a form
-function checkFormValidity() {
-    var $forms = $(dom.treeFormcontainer).find('form');
+// Helper for checking the validity of forms
+function checkFormValidity($forms) {
     var valid = true;
+
+    // Disable things we don't want to validate. Prevents the browser
+    // complaining about unfocusable elements
+    $forms.find('input, select, textarea')
+        .not(':visible')
+        .not('[data-class="fake-submit"]')
+        .attr('disabled', true);
 
     // For each form element
     $forms.find('input, select, textarea').each(function(i, el) {
         if ($(el).is(':visible') && !el.validity.valid) {
             valid = false;
+
             $(el).focus();
             if (el.select) {
                 el.select();
@@ -171,12 +189,15 @@ function checkFormValidity() {
         }
     });
 
+    // Reenable things now that we're done validating
+    $forms.find('input, select, textarea').attr('disabled', false);
+
     return valid;
 }
 
 // We need to submit the form to see the error bubbles, but we don't want to
 // actually send any data.
-$(dom.treeFormcontainer).on('submit', 'form', function(e) {
+$(dom.surveyPage).on('submit', 'form', function(e) {
     e.preventDefault();
 });
 
@@ -186,47 +207,84 @@ $(dom.btnNext).click(function(e) {
 });
 
 $(dom.addTree).click(function (){
-    if (checkFormValidity()) {
-        var treeNumber = $(dom.treeFormcontainer).find('[data-class="tree-form"]').length + 1;
+    var $treeForms = $(dom.treeFormcontainer).find('[data-class="tree-form"]'),
+        $lastTreeForm = $treeForms.last();
+
+    if (checkFormValidity($lastTreeForm)) {
+        var treeNumber = $treeForms.length + 1;
 
         $(dom.treeFormcontainer).append(formTemplate({tree_number: treeNumber}));
     }
 });
 
-$(dom.submitSurvey).on('click', function() {
-    // TODO: replace this with data from the form(s)
-    var data = {
-        survey: {
-            blockface_id: blockfaceId,
-            is_flagged: false,
-            has_trees: true,
-            is_mapped_in_blockface_polyline_direction: true,
-            is_left_side: true
-        },
-        trees: [
-            {
-                circumference: 10,
-                distance_to_tree: 100,
-                curb_location: 'OnCurb',
-                status: 'Alive',
-                species_certainty: 'Yes',
-                health: 'Good',
-                stewardship: 'None',
-                guards: 'None',
-                sidewalk_damage: 'NoDamage',
-                problems: ['Stones', 'Sneakers']
+function getTreeData(i, form) {
+    var formArray = $(form).find('input,select').not(':hidden').serializeArray(),
+        obj = {};
+
+    $.each(formArray, function(i, o){
+        // Diameter needs to be converted to circumference
+        if ('stump_diameter' === o.name) {
+            obj.circumference = obj.value * Math.PI;
+        // We need to explicitly serialize "problems" as a list, and append to it
+        } else if ('problems' === o.name) {
+            if (! obj.problems) {
+                obj.problems = [];
             }
-        ]
-    };
-    $.ajax('/survey/', {
+            obj.problems.push(o.value);
+        } else {
+            obj[o.name] = o.value;
+        }
+    });
+
+    return obj;
+}
+
+$(dom.submitSurvey).on('click', submitSurveyWithTrees);
+
+function submitSurveyWithTrees() {
+    var $forms = $(dom.surveyPage).find('form'),
+        $treeForms = $forms.filter('[data-class="tree-form"]');
+
+    if (checkFormValidity($forms)) {
+        // Disable submit button to prevent double POSTs
+        $(dom.submitSurvey).off('click', submitSurveyWithTrees);
+
+        var treeData = $treeForms.map(getTreeData).get();
+
+        // Only the last tree has "distance_to_end", so it gets special handling
+        treeData[treeData.length - 1].distance_to_end = $(dom.distanceToEnd).val();
+
+        var data = {
+            survey: {
+                blockface_id: blockfaceId,
+                has_trees: true,
+                is_mapped_in_blockface_polyline_direction: isMappedFromStartOfLine,
+                is_left_side: $(dom.leftButton).is('active')
+            },
+            trees: treeData
+        };
+
+        // There are two views we could POST to, 'survey' and
+        // 'survey_from_event', depending on how we got to this page.
+        //
+        // Both share the same route as the view for this page, so we should be
+        // able to POST to our current URL, whatever it may be (which is the
+        // $.ajax default).
+        $.ajax({
             type: 'POST',
             dataType: 'json',
             data: JSON.stringify(data)
         })
         .done(function(content) {
-            window.alert('Successfully saved a test survey');
+            window.alert('Successfully saved survey');
+            // TODO: Go to preview page
         })
         .fail(function(jqXHR, textStatus, errorThrown) {
-            window.alert(errorThrown);
+            toastr.warning('Double-check your survey and try resubmitting it.', 'Something went wrong...');
+        })
+        .always(function() {
+            // Re-enable the submit button
+            $(dom.submitSurvey).on('click', submitSurveyWithTrees);
         });
-});
+    }
+}
