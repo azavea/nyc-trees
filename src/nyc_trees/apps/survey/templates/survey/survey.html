@@ -36,7 +36,7 @@
         </div>
 
         <button class="btn btn-primary" id="another-tree">+ Another Tree</button>
-        <button class="btn btn-secondary" id="cant-map">I cannot map this block</button>
+        <a class="btn btn-secondary" id="cant-map" href="#quit-popup" data-toggle="modal">I cannot map this block</a>
 
         <form autocomplete="off">
             <!-- We need a clickable submit button in order to trigger browser error validation popups -->
@@ -58,6 +58,37 @@
     {% include "survey/partials/tree_form.html" with tree_number="{{ tree_number }}" %}
 </script>
 {% endblock content %}
+
+{% block extra_content %}
+
+{# popups should always be in the extra_content block so that they #}
+{# are direct children of the body tag and avoid z-order conflicts #}
+{# that may arise when there are changes to the base template #}
+
+<div class="modal fade" id="quit-popup" tabindex="-1" role="dialog" aria-labelledby="quit-popup-title" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close btn btn-plain pull-right" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="quit-popup-title">Stop Mapping This Block</h4>
+            </div>
+            <div class="modal-body">
+                <div>I can no longer map because</div>
+                <form id="quit-form" method="POST">
+                    <textarea id="quit-reason" style="width: 100%;"
+                              placeholder="Offset tree bed, bad sidewalks, etc."></textarea>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="quit" type="submit" class="btn btn-primary">Stop Mapping</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock extra_content %}
 
 {# No footer on the survey pages, they have their own footer #}
 {% block footer %}
