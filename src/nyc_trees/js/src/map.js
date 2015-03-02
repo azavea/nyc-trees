@@ -77,17 +77,20 @@ function fitBounds(map, bounds) {
     map.fitBounds(b);
 }
 
-function initBaseMap(map) {
-    var url = 'http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png',
-        options = {
-            subdomains: 'abcd',
-            attributon: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, ' +
-                '<a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; ' +
-                'Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-            minZoom: zoom.MIN,
-            maxZoom: zoom.MAX
-        };
+function isRetinaDevice() {
+    return window.devicePixelRatio && window.devicePixelRatio > 1;
+}
 
+function initBaseMap(map) {
+    var strandardResUrl = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+        retinaUrl = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png',
+        url = isRetinaDevice() ? retinaUrl : strandardResUrl,
+        options =  {
+            subdomains: 'abcd',
+            maxZoom: zoom.MAX,
+            attributon: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> ' +
+                'contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+        };
     map.addLayer(new L.TileLayer(url, options));
 }
 
