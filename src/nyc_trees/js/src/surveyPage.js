@@ -150,15 +150,22 @@ $(dom.treeFormcontainer).on('change', 'input[name="problems"]:not([value="None"]
     }
 });
 
-// When "Status" is changed, we should show/hide the appropriate sections
-$(dom.treeFormcontainer).on('change', 'input[name="status"]', function () {
-    var $form = $(this).closest('form');
-    var $sections = $form.find('[data-status]');
-    var currentStatus = $form.find('input[name="status"]:checked').val();
+function getSectionToggleHandler(fieldName) {
+    return function () {
+        var $form = $(this).closest('form');
+        var $sections = $form.find('[data-' + fieldName + ']');
+        var currentStatus = $form.find('input[name="' + fieldName + '"]:checked').val();
 
-    $sections.addClass('hidden');
-    $sections.filter('[data-status="' + currentStatus + '"]').removeClass('hidden');
-});
+        $sections.addClass('hidden');
+        $sections.filter('[data-' + fieldName + '="' + currentStatus + '"]').removeClass('hidden');
+    };
+}
+
+// When "Status" is changed, we should show/hide the appropriate sections
+$(dom.treeFormcontainer).on('change', 'input[name="status"]', getSectionToggleHandler('status'));
+
+// When "Tree Guard" is changed, we should show/hide the appropriate sections
+$(dom.treeFormcontainer).on('change', 'input[name="guard_installation"]', getSectionToggleHandler('guard_installation'));
 
 // Helper for checking the validity of forms
 function checkFormValidity($forms) {
@@ -231,6 +238,11 @@ function getTreeData(i, form) {
                 obj.problems = [];
             }
             obj.problems.push(o.value);
+        // 'guard_installation' is not a real field, but it is secretly 'guards' for one of it's options
+        } else if ('guard_installation' === o.name) {
+            if (o.value === 'No') {
+                obj.guards = 'None';
+            }
         } else {
             obj[o.name] = o.value;
         }

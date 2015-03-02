@@ -212,6 +212,11 @@ def _get_survey_choices():
     grouped_problem_choices = [choice for choice in PROBLEMS_CHOICES
                                if isinstance(choice[1], tuple)]
 
+    guard_installation_choices = (('Yes', 'Guard is installed'),
+                                  ('No', 'No guard installed'))
+    guard_helpfulness_choices = [choice for choice in GUARD_CHOICES
+                                 if choice[0] != 'None']
+
     species_choices = Species.objects.all().values_list('pk', 'name')
 
     return {
@@ -221,7 +226,8 @@ def _get_survey_choices():
         'species_certainty': CERTAINTY_CHOICES,
         'health': HEALTH_CHOICES,
         'stewardship': STEWARDSHIP_CHOICES,
-        'guards': GUARD_CHOICES,
+        'guard_installation': guard_installation_choices,
+        'guards': guard_helpfulness_choices,
         'sidewalk_damage': SIDEWALK_CHOICES,
         'problem_groups': grouped_problem_choices,
     }

@@ -63,7 +63,11 @@
 
             {% include "survey/partials/radios.html" with label="Evidence of Stewardship" field="stewardship" choices=choices.stewardship %}
 
-            {% include "survey/partials/radios.html" with label="Tree Guards" field="guards" choices=choices.guards %}
+            {% include "survey/partials/radios.html" with label="Tree Guards" field="guard_installation" choices=choices.guard_installation %}
+
+            <div data-guard_installation="Yes">
+                {% include "survey/partials/radios.html" with label="Is the tree guard:" field="guards" choices=choices.guards %}
+            </div>
 
             {% include "survey/partials/radios.html" with label="Sidewalk Damage" field="sidewalk_damage" choices=choices.sidewalk_damage %}
 
