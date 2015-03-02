@@ -18,10 +18,8 @@
             <div id="select-side" class="hidden">
                 <p>What side of the street are you on?</p>
                 <div class="btn-group" role="group">
-                    <button id="btn-left" data-direction="left"
-                        class="btn btn-default">Left</button>
-                    <button id="btn-right" data-direction="right"
-                        class="btn btn-default">Right</button>
+                    <button id="btn-left" class="btn btn-default">Left</button>
+                    <button id="btn-right" class="btn btn-default">Right</button>
                 </div>
                 <div id="btn-group-next" class="btn-group btn-group-justified hidden" role="group">
                     <div class="btn-group" role="group">
@@ -40,12 +38,17 @@
         <button class="btn btn-primary" id="another-tree">+ Another Tree</button>
         <button class="btn btn-secondary" id="cant-map">I cannot map this block</button>
 
-        <div class="field">
-            <label>
-                Distance to End
-                <input id="distance_to_end" class="form-control" required type="number" min="0" step="any" placeholder="ft">
-            </label>
-        </div>
+        <form autocomplete="off">
+            <!-- We need a clickable submit button in order to trigger browser error validation popups -->
+            <input type="submit" data-class="fake-submit" class="hidden">
+
+            <div class="field">
+                <label>
+                    Distance to End
+                    <input id="distance_to_end" class="form-control" required type="number" min="0" step="any" placeholder="ft">
+                </label>
+            </div>
+        </form>
 
         <button class="btn btn-primary" id="submit-survey">Submit</button>
     </div>

@@ -209,8 +209,8 @@ def start_survey_from_event(request, event_slug):
 
 def _get_survey_choices():
     # NOTE: "No Problems" is handled in the template
-    grouped_problem_choices = (choice for choice in PROBLEMS_CHOICES
-                               if isinstance(choice[1], tuple))
+    grouped_problem_choices = [choice for choice in PROBLEMS_CHOICES
+                               if isinstance(choice[1], tuple)]
 
     species_choices = Species.objects.all().values_list('pk', 'name')
 

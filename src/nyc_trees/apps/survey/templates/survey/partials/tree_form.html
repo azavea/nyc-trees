@@ -1,5 +1,5 @@
 <h5>Tree <span>{{ tree_number }}</span></h5>
-<form class="tree-form" data-class="tree-form">
+<form class="tree-form" data-class="tree-form" autocomplete="off">
     <!-- We need a clickable submit button in order to trigger browser error validation popups -->
     <input type="submit" data-class="fake-submit" class="hidden">
 
@@ -27,6 +27,16 @@
             </div>
         </div>
 
+        <!-- Circumference is repeated here for convenience, to avoid having to special-case showing/hiding it. -->
+        <div data-status="Dead" class="hidden">
+            <div class="field">
+                <label>
+                    Circumference
+                    <input class="form-control" name="circumference" required type="number" min="0" step="any" placeholder="in">
+                </label>
+            </div>
+        </div>
+
         <div data-status="Alive">
             <div class="field">
                 <label>
@@ -38,7 +48,7 @@
             <div class="field">
                 <label>
                     Species
-                    <select name="species" class="form-control" required>
+                    <select name="species_id" class="form-control" required>
                       <option></option>
                       {% for pk, name in choices.species %}
                         <option value="{{ pk }}">{{ name }}</option>
