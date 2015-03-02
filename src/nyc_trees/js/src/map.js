@@ -33,8 +33,8 @@ function create(options) {
     var map = L.map(options.domId, mapOptions),
         zoomControl = L.control.zoom({position: 'bottomleft'}).addTo(map),
         $controlsContainer = $(zoomControl.getContainer()),
-        bounds = getDomMapAttribute('bounds'),
-        mapLocation = getDomMapAttribute('location');
+        bounds = getDomMapAttribute('bounds', options.domId),
+        mapLocation = getDomMapAttribute('location', options.domId);
 
     if (bounds) {
         fitBounds(map, bounds);
