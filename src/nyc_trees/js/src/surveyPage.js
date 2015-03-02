@@ -36,7 +36,8 @@ var dom = {
     blockfaceId = mapUtil.getBlockfaceIdFromUrl(),
     blockfaceMap = mapModule.create({
         legend: false,
-        search: false
+        search: false,
+        geolocation: true
     }),
 
     endPointLayers = new L.FeatureGroup(),
