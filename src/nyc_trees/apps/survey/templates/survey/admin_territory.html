@@ -1,0 +1,34 @@
+{% extends "base_reservation.html" %}
+{% load utils %}
+
+{% block aside %}
+
+    <div class="map-sidebar">
+        <h2>Group Territory</h2>
+        <p class="pageheading-description-detail hidden-xs">
+            Select a group to modify its territory.
+        </p>
+        <select id="select-group">
+            {% for group in groups %}
+                <option value="{{ group.id }}">{{ group.name }}</option>
+            {% endfor %}
+        </select>
+        {% include 'home/partials/legend.html' %}
+        <div class="action-bar h4" id="action-bar"></div>
+    </div>
+
+    {% include 'home/partials/location_search.html' %}
+
+{% endblock aside %}
+
+{% block main %}
+
+<div id="map" class="map-event"
+     data-tile-url="{{ layer.tile_url }}"
+     data-grid-url="{{ layer.grid_url }}"></div>
+
+{% endblock main %}
+
+{% block page_js %}
+    <script type="text/javascript" src="{{ "js/adminTerritoryPage.js"|static_url }}"></script>
+{% endblock page_js %}

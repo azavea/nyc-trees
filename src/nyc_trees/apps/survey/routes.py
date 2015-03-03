@@ -8,7 +8,8 @@ from django.contrib.auth.decorators import login_required
 from django_tinsel.decorators import route, render_template, json_api_call
 from django_tinsel.utils import decorate as do
 
-from apps.core.decorators import individual_mapper_do, group_request
+from apps.core.decorators import (individual_mapper_do, group_request,
+                                  census_admin_do)
 from apps.survey import views as v
 
 #####################################
@@ -89,8 +90,9 @@ blockface = route(GET=do(json_api_call, v.blockface))
 # ADMIN ROUTES
 #####################################
 
-admin_blockface_page = route(
-    GET=v.admin_blockface_page)
+admin_territory_page = route(GET=census_admin_do(
+    render_template('survey/admin_territory.html'),
+    v.admin_territory_page))
 
 admin_blockface_partial = route(
     GET=v.admin_blockface_partial)
