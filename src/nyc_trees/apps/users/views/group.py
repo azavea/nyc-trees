@@ -3,8 +3,12 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
+import json
+
 from django.conf import settings
+from django.contrib.gis.geos import Polygon
 from django.core.urlresolvers import reverse
+from django.db.models import Q
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.utils.timezone import now
 
@@ -227,10 +231,34 @@ def request_mapper_status(request):
 
 
 def group_unmapped_territory_geojson(request, group_id):
-    blockfaces = Blockface.objects.filter(
-        is_available=True,
-        territory__group_id=group_id
-    )
+    # Get unmapped blockfaces
+    blockfaces = Blockface.objects.filter(is_available=True)
+
+    my_territory_q = Q(territory__group_id=group_id)
+
+    if request.body:
+        # Get potentially selectable blockfaces in polygon
+        # (those in my territory or unclaimed)
+        point_list = json.loads(request.body)
+        point_list.append(point_list[0])  # Close the polygon
+        polygon = Polygon((point_list))
+
+        no_reservations_q = \
+            Q(blockfacereservation__isnull=True) \
+            | Q(blockfacereservation__canceled_at__isnull=False) \
+            | Q(blockfacereservation__expires_at__lt=now())
+        nobodys_territory_q = Q(territory__group_id=None)
+        unclaimed_q = no_reservations_q & nobodys_territory_q
+
+        blockfaces = blockfaces \
+            .filter(geom__within=polygon) \
+            .filter(my_territory_q | unclaimed_q) \
+            .distinct()
+
+    else:
+        # Get all blockfaces in group's territory
+        blockfaces = blockfaces.filter(my_territory_q)
+
     blockfaceData = [{'id': bf.id, 'geojson': bf.geom.json}
                      for bf in blockfaces]
     return blockfaceData

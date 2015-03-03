@@ -24,8 +24,11 @@ var $ = require('jquery'),
 module.exports = L.GeoJSON.extend({
     options: {
         onAdd: $.noop,
-        onRemove: $.noop
+        onRemove: $.noop,
+        onAdded: $.noop
     },
+
+    clicksEnabled: true,
 
     initialize: function(map, grid, options) {
         L.GeoJSON.prototype.initialize.call(this, null, options);
@@ -37,15 +40,18 @@ module.exports = L.GeoJSON.extend({
         };
 
         this.options.onEachFeature = function(feature, layer) {
+            self.options.onAdded(feature, layer);
             layer.on('click', function() {
-                if (self.options.onRemove(feature)) {
+                if (self.clicksEnabled && self.options.onRemove(feature)) {
                     self.removeLayer(layer);
                 }
             });
         };
 
         grid.on('click', function(e) {
-            self.addBlockface(e.data);
+            if (self.clicksEnabled) {
+                self.addBlockface(e.data);
+            }
         });
 
         map.on('zoomend', function() {
