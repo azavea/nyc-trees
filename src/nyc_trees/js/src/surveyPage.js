@@ -12,6 +12,9 @@ var $ = require('jquery'),
 // Extends the leaflet object
 require('leaflet-utfgrid');
 
+// Extends jQuery
+require('select2');
+
 var makeMutexShow = (function() {
     /*
      Build function that will show a set of elements and hide
@@ -69,7 +72,8 @@ var dom = {
 
         btnGroupToTeammate: '#btn-group-to-teammate',
         btnToTeammate: '#btn-to-teammate',
-        selectTeammate: '#select-teammate'
+        selectTeammate: '#select-teammate',
+        teammateSelectElement: 'select.teammate'
     },
 
     showSelectStart = makeMutexShow([
@@ -322,6 +326,7 @@ function createSurveyData() {
             blockface_id: blockfaceId,
             is_left_side: $(dom.leftButton).is('active'),
             is_mapped_in_blockface_polyline_direction: isMappedFromStartOfLine,
+            teammate_id: $(dom.teammateSelectElement).select2("val"),
             has_trees: undefined,
             quit_reason: undefined
         },
@@ -421,4 +426,9 @@ $(dom.quitReason).on('change keyup paste', function() {
 
 $(dom.quitPopup).on('shown.bs.modal', function () {
     $(dom.quitReason).focus();
+});
+
+$(dom.teammateSelectElement).select2({
+    placeholder: "Username",
+    allowClear: true
 });
