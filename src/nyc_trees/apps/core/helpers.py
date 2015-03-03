@@ -7,11 +7,11 @@ from apps.users.models import TrustedMapper
 
 
 def user_is_census_admin(user):
-    return user.is_authenticated() and user.is_census_admin
+    return user.is_authenticated() and user.is_superuser
 
 
 def user_is_group_admin(user, group):
-    return user.is_authenticated() and (user.is_census_admin or
+    return user.is_authenticated() and (user.is_superuser or
                                         group.admin == user)
 
 
