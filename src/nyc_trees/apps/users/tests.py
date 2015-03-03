@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from __future__ import division
 
 from datetime import timedelta
+from waffle.models import Flag
 
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.gis.geos import LineString, MultiLineString
@@ -38,6 +39,8 @@ from apps.users.routes.group import (group_detail, group_edit,
 
 class UsersTestCase(TestCase):
     def setUp(self):
+        Flag.objects.create(name='full_access', everyone=True)
+
         self.user = User.objects.create(
             username='pat',
             password='password',

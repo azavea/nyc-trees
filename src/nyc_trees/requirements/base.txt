@@ -11,3 +11,4 @@ python-dateutil==2.2
 django-statsd-mozilla==0.3.14
 python-omgeo==1.7.1
 pytz==2014.10
+django-waffle==0.10.1

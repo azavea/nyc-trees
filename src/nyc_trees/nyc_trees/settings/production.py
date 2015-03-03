@@ -82,5 +82,3 @@ except exception.DNSException:
     logger.exception('Failed to resolve TILER_HOST, %s' %
                      environ.get('TILER_HOST'))
 # END TILER CONFIGURATION
-
-SOFT_LAUNCH_ENABLED = False
