@@ -305,7 +305,7 @@ class GroupAccessTests(UsersTestCase):
             email='ca@rat.com',
             first_name='Census',
             last_name='Admin',
-            is_census_admin=True
+            is_superuser=True
         )
 
     def test_group_admin_can_get_group_edit_form(self):

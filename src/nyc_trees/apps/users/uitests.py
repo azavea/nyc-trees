@@ -24,7 +24,7 @@ class BaseGroupUITest(NycTreesSeleniumTestCase):
         self.census_admin_user = User.objects.create(
             username='census_admin_user',
             email='census_admin_user@foo.com',
-            is_census_admin=True
+            is_superuser=True
         )
         self.census_admin_user.set_password('password')
         self.census_admin_user.clean_and_save()
