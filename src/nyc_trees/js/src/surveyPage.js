@@ -6,7 +6,8 @@ var $ = require('jquery'),
     toastr = require('toastr'),
     mapModule = require('./map'),
     mapUtil = require('./lib/mapUtil'),
-    SelectableBlockfaceLayer = require('./lib/SelectableBlockfaceLayer');
+    SelectableBlockfaceLayer = require('./lib/SelectableBlockfaceLayer'),
+    valIsEmpty = require('./lib/valIsEmpty');
 
 // Extends the leaflet object
 require('leaflet-utfgrid');
@@ -28,7 +29,12 @@ var dom = {
         distanceToEnd: '#distance_to_end',
 
         addTree: '#another-tree',
-        submitSurvey: '#submit-survey'
+        submitSurvey: '#submit-survey',
+
+        quitPopup: '#quit-popup',
+        quitShowPopup: '#cant-map',
+        quitReason: '#quit-reason',
+        quit: '#quit'
     },
 
     formTemplate = Handlebars.compile($(dom.treeFormTemplate).html()),
@@ -254,6 +260,19 @@ function getTreeData(i, form) {
 
 $(dom.submitSurvey).on('click', submitSurveyWithTrees);
 
+function createSurveyData() {
+    return {
+        survey: {
+            blockface_id: blockfaceId,
+            is_left_side: $(dom.leftButton).is('active'),
+            is_mapped_in_blockface_polyline_direction: isMappedFromStartOfLine,
+            has_trees: undefined,
+            quit_reason: undefined
+        },
+        trees: undefined
+    };
+}
+
 function submitSurveyWithTrees() {
     var $forms = $(dom.surveyPage).find('form'),
         $treeForms = $forms.filter('[data-class="tree-form"]');
@@ -267,15 +286,9 @@ function submitSurveyWithTrees() {
         // Only the last tree has "distance_to_end", so it gets special handling
         treeData[treeData.length - 1].distance_to_end = $(dom.distanceToEnd).val();
 
-        var data = {
-            survey: {
-                blockface_id: blockfaceId,
-                has_trees: true,
-                is_mapped_in_blockface_polyline_direction: isMappedFromStartOfLine,
-                is_left_side: $(dom.leftButton).is('active')
-            },
-            trees: treeData
-        };
+        var data = createSurveyData();
+        data.survey.has_trees = true;
+        data.trees = treeData;
 
         // There are two views we could POST to, 'survey' and
         // 'survey_from_event', depending on how we got to this page.
@@ -301,3 +314,55 @@ function submitSurveyWithTrees() {
         });
     }
 }
+
+$(dom.quit).on('click', quitSurvey);
+
+function quitSurvey() {
+    // Disable submit button to prevent double POSTs
+    $(dom.quit).off('click', quitSurvey);
+
+    var data = createSurveyData();
+    data.survey.has_trees = false;
+    data.survey.quit_reason = $(dom.quitReason).val();
+
+    // There are two views we could POST to, 'survey' and
+    // 'survey_from_event', depending on how we got to this page.
+    //
+    // Both share the same route as the view for this page, so we should be
+    // able to POST to our current URL, whatever it may be (which is the
+    // $.ajax default).
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        data: JSON.stringify(data)
+    })
+    .done(function(content) {
+        $(dom.quitPopup).modal('hide');
+        window.alert('Empty survey saved with quit reason - TODO: show options for what to do next');
+    })
+    .fail(function(jqXHR, textStatus, errorThrown) {
+        toastr.warning('Sorry, there was a problem stopping the survey. Please try again.', 'Something went wrong...');
+    })
+    .always(function() {
+        // Re-enable the submit button
+        $(dom.quit).on('click', quitSurvey);
+    });
+}
+
+$(dom.quitShowPopup).on('click', function(e) {
+    // Bootstrap will handle showing the modal, but the
+    // hidden class, applied by other code, needs to be
+    // removed.
+    $(dom.quitPopup).removeClass('hidden');
+});
+
+// The quit button is not enabled until a quit reason is entered
+$(dom.quit).prop('disabled', true);
+
+$(dom.quitReason).on('change keyup paste', function() {
+    $(dom.quit).prop('disabled', valIsEmpty(dom.quitReason));
+});
+
+$(dom.quitPopup).on('shown.bs.modal', function () {
+    $(dom.quitReason).focus();
+});
