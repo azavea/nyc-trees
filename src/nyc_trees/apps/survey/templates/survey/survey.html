@@ -21,6 +21,17 @@
                     <button id="btn-left" class="btn btn-default">Left</button>
                     <button id="btn-right" class="btn btn-default">Right</button>
                 </div>
+                <div id="btn-group-to-teammate" class="btn-group btn-group-justified hidden" role="group">
+                    <div class="btn-group" role="group">
+                        <button id="btn-to-teammate" class="btn btn-default">Next</button>
+                    </div>
+                </div>
+            </div>
+            <div id="select-teammate" class="hidden">
+                <p>Is someone helping you count trees? Enter their user name.</p>
+                <div id="teammate-list">
+                    {% include "event/partials/teammates.html" %}
+                </div>
                 <div id="btn-group-next" class="btn-group btn-group-justified hidden" role="group">
                     <div class="btn-group" role="group">
                         <button id="btn-next" class="btn btn-default">Next</button>

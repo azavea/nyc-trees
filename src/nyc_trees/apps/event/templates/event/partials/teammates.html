@@ -1,0 +1,7 @@
+<select>
+    {# A blank option to allow for clearing the selection #}
+    <option></option>
+    {% for teammate in teammates %}
+        {% include "event/partials/teammate_item.html" %}
+    {% endfor %}
+</select>

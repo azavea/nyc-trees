@@ -12,6 +12,37 @@ var $ = require('jquery'),
 // Extends the leaflet object
 require('leaflet-utfgrid');
 
+var makeMutexShow = (function() {
+    /*
+     Build function that will show a set of elements and hide
+     any other elements that has been passed to makeMutexShow
+
+     Example:
+
+     var showGroupOne = makeMutexShow(['a', 'b']);
+     var showGroupTwo = makeMutexShow(['a', 'c']);
+     var showGroupThree = makeMutexShow(['d']);
+
+     showGroupOne();   // a and b are shown, c and d are hidden
+     showGroupTwo();   // a and c are shown, b and d are hidden
+     showGroupThree(); // d is shown, a, b, and c are hidden
+
+     */
+    var allSelectors = [];
+    return function(selectorsInThisGroup){
+        allSelectors = allSelectors.concat(selectorsInThisGroup);
+        return function() {
+            $.each(allSelectors, function(i, selector){
+                if ($.inArray(selector, selectorsInThisGroup) >= 0) {
+                    $(selector).removeClass('hidden');
+                } else {
+                    $(selector).addClass('hidden');
+                }
+            });
+        };
+    };
+}());
+
 var dom = {
         selectStartingPoint: '#select-starting-point',
         selectSide: '#select-side',
@@ -34,8 +65,32 @@ var dom = {
         quitPopup: '#quit-popup',
         quitShowPopup: '#cant-map',
         quitReason: '#quit-reason',
-        quit: '#quit'
+        quit: '#quit',
+
+        btnGroupToTeammate: '#btn-group-to-teammate',
+        btnToTeammate: '#btn-to-teammate',
+        selectTeammate: '#select-teammate'
     },
+
+    showSelectStart = makeMutexShow([
+        dom.selectStartingPoint
+    ]),
+
+    showSelectSide = makeMutexShow([
+        dom.selectSide,
+        dom.leftRightButtons
+    ]),
+
+    showSelectSideNext = makeMutexShow([
+        dom.selectSide,
+        dom.leftRightButtons,
+        dom.btnGroupToTeammate
+    ]),
+
+    showSelectTeammate = makeMutexShow([
+        dom.selectTeammate,
+        dom.btnGroupNext
+    ]),
 
     formTemplate = Handlebars.compile($(dom.treeFormTemplate).html()),
 
@@ -82,8 +137,7 @@ var dom = {
             endPointLayers.addLayer(startCircle);
             endPointLayers.addLayer(endCircle);
 
-            $(dom.selectSide).addClass('hidden');
-            $(dom.btnGroupNext).addClass('hidden');
+            showSelectStart();
 
             mapUtil.zoomToBlockface(blockfaceMap, blockfaceId);
             return true;
@@ -102,16 +156,18 @@ endPointLayers.on('click', function(e) {
 
     isMappedFromStartOfLine = e.layer.isStart;
 
-    $(dom.selectStartingPoint).addClass('hidden');
     $(dom.leftRightButtons).removeClass('active');
-    $(dom.selectSide).removeClass('hidden');
-    $(dom.btnGroupNext).addClass('hidden');
+    showSelectSide();
 });
 
 $(dom.leftRightButtons).click(function(e) {
     $(dom.leftRightButtons).removeClass('active');
     $(this).addClass('active');
-    $(dom.btnGroupNext).removeClass('hidden');
+    showSelectSideNext();
+});
+
+$(dom.btnToTeammate).click(function(e) {
+    showSelectTeammate();
 });
 
 mapUtil.fetchBlockface(blockfaceId).done(function(blockface) {
