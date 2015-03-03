@@ -4,6 +4,7 @@ var $ = require('jquery'),
     L = require('leaflet'),
     mapModule = require('./map'),
     mapUtil = require('./lib/mapUtil'),
+    toastr = require('toastr'),
     zoom = require('./lib/mapUtil').ZOOM,
     SelectableBlockfaceLayer = require('./lib/SelectableBlockfaceLayer');
 
@@ -24,11 +25,12 @@ var dom = {
     grid = null,
     selectedLayer = null;
 
-$(dom.selectGroup).on('change', updateTileLayer);
+$(document).ready(showDataForChosenGroup);
+$(dom.selectGroup).on('change', showDataForChosenGroup);
 
-function updateTileLayer(e) {
-    var group_id = $(e.target).val(),
-        query = 'group=' + group_id;
+function showDataForChosenGroup() {
+    var groupId = $(dom.selectGroup).val(),
+        query = 'group=' + groupId;
     if (tileLayer) {
         territoryMap.removeLayer(tileLayer);
         territoryMap.removeLayer(grid);
@@ -36,11 +38,53 @@ function updateTileLayer(e) {
     }
     tileLayer = mapModule.addTileLayer(territoryMap, query);
     grid = mapModule.addGridLayer(territoryMap, query);
-    selectedLayer = new SelectableBlockfaceLayer(territoryMap, grid, {
-        onAdd: function (gridData) {
-            selectedLayer.clearLayers();
-            return true;
+
+    $.ajax({
+        // Keep this URL in sync with "group_territory_geojson"
+        // in src/nyc_trees/apps/users/urls/group.py
+        url: '/group/' + groupId + '/territory.json/',
+        type: 'GET',
+        success: initBlockfaceLayer,
+        error: function () {
+            window.alert("Unable to load blockfaces for this group");
         }
     });
+}
+
+function initBlockfaceLayer(data) {
+    selectedLayer = new SelectableBlockfaceLayer(territoryMap, grid, {
+        onAdd: onBlockfaceAdd,
+        onRemove: onBlockfaceRemove
+    });
+    // Add group's unmapped territory to selectedLayer
+    $.each(data, function(__, blockData) {
+        selectedLayer.addData({
+            'type': 'Feature',
+            'geometry': JSON.parse(blockData.geojson),
+            'properties': {id: blockData.id}
+        });
+    });
     territoryMap.addLayer(selectedLayer);
+}
+
+function onBlockfaceAdd(gridData) {
+    var type = gridData.survey_type;
+    if (type === 'available' || type === 'reserved') {
+        return true;
+    } else if (gridData.survey_type === 'unavailable') {
+        if (gridData.turf_group_id) {
+            var $option = $(dom.selectGroup + " option[value='" + gridData.turf_group_id + "']"),
+                groupName = $option.text();
+            toastr.error('That block is territory of ' + groupName);
+        } else {
+            toastr.error('That block is reserved by an individual');
+        }
+    } else {
+        toastr.error('That block has already been surveyed');
+    }
+    return false;
+}
+
+function onBlockfaceRemove(feature) {
+    return true;
 }

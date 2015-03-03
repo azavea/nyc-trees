@@ -224,3 +224,13 @@ def request_mapper_status(request):
     return {
         'success': True
     }
+
+
+def group_unmapped_territory_geojson(request, group_id):
+    blockfaces = Blockface.objects.filter(
+        is_available=True,
+        territory__group_id=group_id
+    )
+    blockfaceData = [{'id': bf.id, 'geojson': bf.geom.json}
+                     for bf in blockfaces]
+    return blockfaceData
