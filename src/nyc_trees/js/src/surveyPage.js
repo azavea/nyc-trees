@@ -118,6 +118,12 @@ mapUtil.fetchBlockface(blockfaceId).done(function(blockface) {
     selectedLayer.addBlockface(blockface);
 });
 
+// Show an "Are you sure" alert when leaving the page, to prevent accidental
+// data-loss
+$(window).on('beforeunload', function(e) {
+    return 'Are you sure you want to cancel mapping this block?';
+});
+
 function showPage(selector) {
     var pages = $(dom.pageContainer).children();
     pages.addClass('hidden');
