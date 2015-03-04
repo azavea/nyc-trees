@@ -57,8 +57,8 @@ class Species(NycModel, models.Model):
 
 
 CURB_CHOICES = (
-    ('OnCurb', 'Tree bed is along the curb'),
-    ('OffsetFromCurb', 'Tree bed is offset from the curb'),
+    ('OnCurb', 'Along the curb'),
+    ('OffsetFromCurb', 'Offset from the curb'),
 )
 
 
@@ -85,23 +85,23 @@ HEALTH_CHOICES = (
 
 STEWARDSHIP_CHOICES = (
     ('None', 'Zero'),
-    ('1or2', 'One to two'),
-    ('3or4', 'Three to four'),
-    ('4orMore', 'More than four'),
+    ('1or2', '1-2'),
+    ('3or4', '3-4'),
+    ('4orMore', '4+'),
 )
 
 
 GUARD_CHOICES = (
-    ('None', 'No guard installed'),
-    ('Helpful', 'Helpful guard installed'),
-    ('Harmful', 'Harmful guard installed'),
-    ('Unsure', 'Unsure if guard is helpful or harmful'),
+    ('None', 'Not installed'),
+    ('Helpful', 'Helpful'),
+    ('Harmful', 'Harmful'),
+    ('Unsure', 'Unsure'),
 )
 
 
 SIDEWALK_CHOICES = (
-    ('NoDamage', 'No damage is seen'),
-    ('Damage', 'Cracks or raised sidewalk seen'),
+    ('NoDamage', 'No damage'),
+    ('Damage', 'Cracks or raised'),
 )
 
 

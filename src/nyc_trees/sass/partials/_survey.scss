@@ -16,13 +16,13 @@
     left: 0;
     right: 0;
     @media (max-width: $screen-sm) {
-        bottom: 13rem; 
+        bottom: 15rem; 
     }
 }
 
 .action-bar-survey {
     .btn-group {
-        margin-bottom: 1rem;
+        margin-bottom: .75rem;
     }
 
     @media (max-width: $screen-sm) {
@@ -30,13 +30,17 @@
         left: 0;
         bottom: 0;
         width: 100%;
-        min-height: 13rem;
-        height: auto;
-        padding: $grid-gutter-width/3;
+        height: 15rem;
+        padding: $grid-gutter-width/3 $grid-gutter-width;
         z-index: 1;
-        background-color: #fff; 
+        background-color: #fff;
+        display: table;
         .tab-status-list & {
           display: none;
+        }
+        #select-starting-point, #select-side, #survey {
+            display: table-cell;
+            vertical-align: middle;
         }
     }
 }

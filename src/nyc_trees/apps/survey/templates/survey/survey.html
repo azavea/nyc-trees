@@ -6,7 +6,6 @@
 <div class="map-sidebar">
 
     <div class="action-bar-survey">
-        <h2>Tree Survey</h2>
         <div id="select-starting-point">
             <p>Select the block face you would like to map and then choose a starting point.</p>
         </div>
@@ -21,8 +20,9 @@
             </div>
         </div>
         <div id="survey" class="hidden">
-            <a class="btn btn-warning pull-right" href="javascript:" id="no-trees">No Trees</a>
-            <div class="tree-form-header">
+            <div class="tree-form-header text-right">
+                <a class="btn btn-warning" href="javascript:" id="no-trees">No Trees</a>
+            </div>
             <div id="tree-form-container" class="clearfix">
                 {% include "survey/partials/tree_form.html" with tree_number=1 %}
             </div>
