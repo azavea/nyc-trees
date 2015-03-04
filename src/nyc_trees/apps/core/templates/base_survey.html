@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load utils %}
+
+{% block content %}
+
+<div class="page-map page-action-bar page-new-survery">
+
+	{% block top %}
+    {% endblock top %}
+	
+	<div class="container">
+        <div class="row">
+            <aside class="pageheading-details map-action-sidebar block">
+
+                {% block aside %}
+                {% endblock aside %}
+
+            </aside>
+            <div class="map-container">
+
+                {% block main %}
+                {% endblock main %}
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block footer %}
+{# Map pages hide the footer to maximize viewable area #}
+{% endblock footer%}

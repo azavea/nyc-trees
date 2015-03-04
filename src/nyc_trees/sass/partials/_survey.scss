@@ -1,12 +1,73 @@
+.page-new-survery {
+    .map-action-sidebar {
+        position: static;
+    }
+
+    .map-sidebar {
+        max-height: 75%;
+        overflow: scroll;
+    }
+}
+
+.map-survey {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    @media (max-width: $screen-sm) {
+        bottom: 13rem; 
+    }
+}
+
+.action-bar-survey {
+    .btn-group {
+        margin-bottom: 1rem;
+    }
+
+    @media (max-width: $screen-sm) {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        min-height: 13rem;
+        height: auto;
+        padding: $grid-gutter-width/3;
+        z-index: 1;
+        background-color: #fff; 
+        .tab-status-list & {
+          display: none;
+        }
+    }
+}
+
+#tree-form-header {
+    #cant-map {
+        position: absolute;
+        top: 2rem;
+        right: 2rem;
+    }
+}
+
 .tree-form {
     // Hide checkboxes and radios, and use their checked/unchecked to style their label
     input[type="checkbox"], input[type="radio"] {
         opacity: 0;
+        display: none;
     }
     input[type="checkbox"] + label, input[type="radio"] + label {
-        @extend .btn-secondary
+        @extend .btn-switch;
     }
     input[type="checkbox"]:checked + label, input[type="radio"]:checked + label {
-        @extend .btn-primary
+        @extend .btn-switch.active;
+    }
+    label.btn ~ label.btn {
+        border-left: none;
+    }
+    label.btn:first-child {
+        border-radius: $border-radius-base 0 0 $border-radius-base;
+    }
+    .btn-group label.btn-switch {
+        border-radius: $border-radius-base;
     }
 }

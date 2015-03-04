@@ -1,7 +1,7 @@
 <div class="field">
     <label>{{ label }}</label>
 
-    <div class="btn-group">
+    <div class="btn-group btn-group-justified">
         {% for value, label in choices %}
             {# NOTE: For the styling to work correctly, the label must come directly after the radio #}
             <input id="{{ field }}-{{ value }}-{{ tree_number }}" required type="radio" name="{{ field }}" value="{{ value }}" />

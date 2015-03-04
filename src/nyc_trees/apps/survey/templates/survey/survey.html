@@ -1,63 +1,74 @@
-{% extends "base.html" %}
+{% extends "base_survey.html" %}
 {% load utils %}
 
-{% block content %}
-<div id="pages">
-    <div>
-        <div id="map" class="map-survey"
-            data-tile-url="{{ layer.tile_url }}"
-            data-grid-url="{{ layer.grid_url }}"
-            {% if bounds %}data-bounds="{{ bounds }}"
-            {% elif location %}data-location="{{ location }}"
-            {% endif %}>
+{% block aside %}
+
+<div class="map-sidebar">
+
+    <div class="action-bar-survey">
+        <h2>Tree Survey</h2>
+        <div id="select-starting-point">
+            <p>Select the block face you would like to map and then choose a starting point.</p>
         </div>
-        <div class="action-bar-survey">
-            <div id="select-starting-point">
-                <p>Select the block face you would like to map and then choose a starting point.</p>
+        <div id="select-side" class="hidden">
+            <p>What side of the street are you on?</p>
+            <div class="btn-group btn-group-justified" role="group">
+                <a id="btn-left" class="btn btn-switch">Left</a>
+                <a id="btn-right" class="btn btn-switch">Right</a>
             </div>
-            <div id="select-side" class="hidden">
-                <p>What side of the street are you on?</p>
-                <div class="btn-group" role="group">
-                    <button id="btn-left" class="btn btn-default">Left</button>
-                    <button id="btn-right" class="btn btn-default">Right</button>
-                </div>
-                <div id="btn-group-next" class="btn-group btn-group-justified hidden" role="group">
-                    <div class="btn-group" role="group">
-                        <button id="btn-next" class="btn btn-default">Next</button>
-                    </div>
-                </div>
+            <div id="btn-group-next" class="btn-group btn-group-justified hidden" role="group">
+                <a id="btn-next" class="btn btn-primary">Next</a>
             </div>
+        </div>
+        <div id="survey" class="hidden">
+            <a class="btn btn-warning pull-right" href="javascript:" id="no-trees">No Trees</a>
+            <div class="tree-form-header">
+            <div id="tree-form-container" class="clearfix">
+                {% include "survey/partials/tree_form.html" with tree_number=1 %}
+            </div>
+
+            <button class="btn btn-primary" id="another-tree">+ Another Tree</button>
+            <a class="btn btn-secondary" id="cant-map" href="#quit-popup" data-toggle="modal">I cannot map this block</a>
+
+            <form autocomplete="off">
+                <!-- We need a clickable submit button in order to trigger browser error validation popups -->
+                <input type="submit" data-class="fake-submit" class="hidden">
+
+                <div class="field">
+                    <label>
+                        Distance to End
+                        <input id="distance_to_end" class="form-control" required type="number" min="0" step="any" placeholder="ft">
+                    </label>
+                </div>
+            </form>
+
+            <button class="btn btn-primary" id="submit-survey">Submit</button>
         </div>
     </div>
-    <div id="survey" class="hidden">
-        <a class="btn btn-warning pull-right" href="javascript:" id="no-trees">No Trees</a>
-        <div id="tree-form-container">
-            {% include "survey/partials/tree_form.html" with tree_number=1 %}
-        </div>
 
-        <button class="btn btn-primary" id="another-tree">+ Another Tree</button>
-        <a class="btn btn-secondary" id="cant-map" href="#quit-popup" data-toggle="modal">I cannot map this block</a>
 
-        <form autocomplete="off">
-            <!-- We need a clickable submit button in order to trigger browser error validation popups -->
-            <input type="submit" data-class="fake-submit" class="hidden">
-
-            <div class="field">
-                <label>
-                    Distance to End
-                    <input id="distance_to_end" class="form-control" required type="number" min="0" step="any" placeholder="ft">
-                </label>
-            </div>
-        </form>
-
-        <button class="btn btn-primary" id="submit-survey">Submit</button>
-    </div>
 </div>
+
 <script type="handlebars/template" id="tree-form-template">
     {# 'tree_number' here goes into the template with the '{{ }}', which is used for handlebar templating #}
     {% include "survey/partials/tree_form.html" with tree_number="{{ tree_number }}" %}
 </script>
-{% endblock content %}
+{% endblock aside %}
+
+{% block main %}
+
+    <div id="pages">
+        <div>
+            <div id="map" class="map-survey"
+                data-tile-url="{{ layer.tile_url }}"
+                data-grid-url="{{ layer.grid_url }}"
+                {% if bounds %}data-bounds="{{ bounds }}"
+                {% elif location %}data-location="{{ location }}"
+                {% endif %}>
+            </div>
+        </div>
+    </div>
+{% endblock main %}
 
 {% block extra_content %}
 
