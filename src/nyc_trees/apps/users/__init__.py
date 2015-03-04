@@ -28,8 +28,7 @@ def user_profile_context(user, its_me):
     context = {
         'user': user,
         'viewing_own_profile': its_me,
-        'show_username': ((its_me or user.real_name_is_public) and
-                          (user.first_name or user.last_name)),
+        'show_username': can_show_full_name(user, its_me),
         'show_achievements': its_me or user.achievements_are_public,
         'show_contributions': its_me or user.contributions_are_public,
         'contributions_title': contributions_title,
@@ -51,6 +50,11 @@ def user_profile_context(user, its_me):
                          for key in user_achievements if key in achievements]
     }
     return context
+
+
+def can_show_full_name(user, its_me=False):
+    return ((its_me or user.real_name_is_public) and
+            (user.first_name or user.last_name))
 
 
 def get_privacy_categories(form):

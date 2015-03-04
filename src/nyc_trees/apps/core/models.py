@@ -46,7 +46,6 @@ class User(NycModel, AbstractUser):
 
     is_flagged = models.BooleanField(default=False)
     is_banned = models.BooleanField(default=False)
-    is_census_admin = models.BooleanField(default=False)
     is_ambassador = models.BooleanField(default=False)
     is_minor = models.BooleanField(default=False)
 

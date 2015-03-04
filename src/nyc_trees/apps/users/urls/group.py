@@ -41,4 +41,8 @@ urlpatterns = patterns(
 
     url(r'^(?P<group_slug>[\w-]+)/events/$',
         group_detail_events.endpoint, name=group_detail_events.url_name()),
+
+    url(r'^(?P<group_id>\d+)/territory.json/$',
+        r.group_unmapped_territory_geojson,
+        name='group_unmapped_territory_geojson'),
 )
