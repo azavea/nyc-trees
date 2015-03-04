@@ -41,7 +41,7 @@
         </div>
     </div>
     <div id="survey" class="hidden">
-        <a class="btn btn-warning pull-right" href="javascript:" id="no-trees">No Trees</a>
+        <a class="btn btn-warning pull-right" href="#no-trees-popup" data-toggle="modal" id="no-trees">No Trees</a>
         <div id="tree-form-container">
             {% include "survey/partials/tree_form.html" with tree_number=1 %}
         </div>
@@ -95,6 +95,23 @@
             </div>
             <div class="modal-footer">
                 <button id="quit" type="submit" class="btn btn-primary">Stop Mapping</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="no-trees-popup" tabindex="-1" role="dialog" aria-labelledby="no-trees-popup-title" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="no-trees-popup-title">Confirm No Trees</h4>
+            </div>
+            <div class="modal-body">
+                <div>Are you sure there are no trees and you are ready to finish this block?</div>
+            </div>
+            <div class="modal-footer">
+                <button id="no-trees-cancel" class="btn btn-default" data-dismiss="modal">Resume</button>
+                <button id="no-trees-confirm" type="submit" class="btn btn-primary">Finish With No Trees</button>
             </div>
         </div>
     </div>

@@ -73,7 +73,11 @@ var dom = {
         btnGroupToTeammate: '#btn-group-to-teammate',
         btnToTeammate: '#btn-to-teammate',
         selectTeammate: '#select-teammate',
-        teammateSelectElement: 'select.teammate'
+        teammateSelectElement: 'select.teammate',
+
+        btnNoTrees: '#no-trees',
+        noTreesPopup: '#no-trees-popup',
+        noTreesConfirm: '#no-trees-confirm'
     },
 
     showSelectStart = makeMutexShow([
@@ -438,3 +442,43 @@ $(dom.teammateSelectElement).select2({
     placeholder: "Username",
     allowClear: true
 });
+
+$(dom.btnNoTrees).on('click', function(e) {
+    // Bootstrap will handle showing the modal, but the
+    // hidden class, applied by other code, needs to be
+    // removed.
+    $(dom.noTreesPopup).removeClass('hidden');
+});
+
+$(dom.noTreesConfirm).on('click', saveWithoutTrees);
+
+function saveWithoutTrees() {
+    // Disable submit button to prevent double POSTs
+    $(dom.noTreesConfirm).off('click', saveWithoutTrees);
+
+    var data = createSurveyData();
+    data.survey.has_trees = false;
+
+    // There are two views we could POST to, 'survey' and
+    // 'survey_from_event', depending on how we got to this page.
+    //
+    // Both share the same route as the view for this page, so we should be
+    // able to POST to our current URL, whatever it may be (which is the
+    // $.ajax default).
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        data: JSON.stringify(data)
+    })
+    .done(function(content) {
+        $(dom.noTreesPopup).modal('hide');
+        window.alert('Empty survey submitted - TODO: show options for what to do next');
+    })
+    .fail(function(jqXHR, textStatus, errorThrown) {
+        toastr.warning('Sorry, there was a problem saving the survey. Please try again.', 'Something went wrong...');
+    })
+    .always(function() {
+        // Re-enable the submit button
+        $(dom.noTreesConfirm).on('click', saveWithoutTrees);
+    });
+}
