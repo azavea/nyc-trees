@@ -15,10 +15,8 @@
                 <a id="btn-left" class="btn btn-switch">Left</a>
                 <a id="btn-right" class="btn btn-switch">Right</a>
             </div>
-            <div id="btn-group-to-teammate" class="btn-group btn-group-justified hidden" role="group">
-                <div class="btn-group" role="group">
-                    <button id="btn-to-teammate" class="btn btn-primary">Next</button>
-                </div>
+            <div id="btn-group-to-teammate" class="hidden" role="group">
+                <button id="btn-to-teammate" class="btn btn-primary btn-block">Next</button>
             </div>
         </div>
         <div id="select-teammate" class="hidden">
@@ -26,24 +24,25 @@
             <div id="teammate-list">
                 {% include "event/partials/teammates.html" %}
             </div>
-            <div id="btn-group-next" class="btn-group btn-group-justified hidden" role="group">
-                <div class="btn-group" role="group">
-                    <button id="btn-next" class="btn btn-default">Next</button>
-                </div>
+            <div id="btn-group-next" class="hidden" role="group">
+                <button id="btn-next" class="btn btn-primary btn-block">Next</button>
             </div>
         </div>
         <div id="survey" class="hidden">
-            <div class="tree-form-header text-right">
-                <a class="btn btn-warning" href="javascript:" id="no-trees">No Trees</a>
+            <div id="tree-form-header">
+                <a class="btn btn-primary" href="javascript:" id="no-trees">No Trees</a>
+                <h4>Treecorder</h4>
             </div>
             <div id="tree-form-container" class="clearfix">
                 {% include "survey/partials/tree_form.html" with tree_number=1 %}
             </div>
+            <div class="tree-form-block">
+                <button class="btn btn-primary btn-block" id="another-tree">+ Another Tree</button>
+                <a class="btn btn-gray btn-block" id="cant-map" href="#quit-popup" data-toggle="modal">I cannot map this block</a>
+            </div>
+            
 
-            <button class="btn btn-primary" id="another-tree">+ Another Tree</button>
-            <a class="btn btn-secondary" id="cant-map" href="#quit-popup" data-toggle="modal">I cannot map this block</a>
-
-            <form autocomplete="off">
+            <form autocomplete="off" class="distance-end-form">
                 <!-- We need a clickable submit button in order to trigger browser error validation popups -->
                 <input type="submit" data-class="fake-submit" class="hidden">
 
@@ -54,8 +53,9 @@
                     </label>
                 </div>
             </form>
-
-            <button class="btn btn-primary" id="submit-survey">Submit</button>
+            <div class="tree-form-block">
+                <button class="btn btn-primary btn-block" id="submit-survey">Submit</button>
+            </div>
         </div>
     </div>
 

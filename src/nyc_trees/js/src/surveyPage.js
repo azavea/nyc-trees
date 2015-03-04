@@ -56,6 +56,7 @@ var dom = {
         btnGroupNext: '#btn-group-next',
         btnNext: '#btn-next',
 
+        actionBar: '.action-bar-survey',
         pageContainer: '#pages',
         surveyPage: '#survey',
         treeFormTemplate: '#tree-form-template',
@@ -185,8 +186,8 @@ $(window).on('beforeunload', function(e) {
 });
 
 function showPage(selector) {
-    $(dom.selectSide).toggleClass('hidden');
-    $(dom.selectTeammate).toggleClass('hidden');
+    $(dom.selectSide).addClass('hidden');
+    $(dom.selectTeammate).addClass('hidden');
     $(dom.surveyPage).toggleClass('hidden');
 }
 
@@ -284,6 +285,7 @@ $(dom.surveyPage).on('submit', 'form', function(e) {
 
 $(dom.btnNext).click(function(e) {
     showPage(dom.surveyPage);
+    $(dom.actionBar).addClass('expanded');
 });
 
 $(dom.addTree).click(function (){
