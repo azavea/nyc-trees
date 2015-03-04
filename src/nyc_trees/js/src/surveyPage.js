@@ -77,7 +77,9 @@ var dom = {
 
         btnNoTrees: '#no-trees',
         noTreesPopup: '#no-trees-popup',
-        noTreesConfirm: '#no-trees-confirm'
+        noTreesConfirm: '#no-trees-confirm',
+
+        mapAnotherPopup: '#map-another-popup'
     },
 
     showSelectStart = makeMutexShow([
@@ -152,7 +154,9 @@ var dom = {
         }
     }),
 
-    isMappedFromStartOfLine = null;
+    isMappedFromStartOfLine = null,
+
+    hasUnsavedData = true;
 
 blockfaceMap.addLayer(selectedLayer);
 blockfaceMap.addLayer(endPointLayers);
@@ -185,7 +189,11 @@ mapUtil.fetchBlockface(blockfaceId).done(function(blockface) {
 // Show an "Are you sure" alert when leaving the page, to prevent accidental
 // data-loss
 $(window).on('beforeunload', function(e) {
-    return 'Are you sure you want to cancel mapping this block?';
+    if (hasUnsavedData) {
+        return 'Are you sure you want to cancel mapping this block?';
+    } else {
+        return undefined;
+    }
 });
 
 function showPage(selector) {
@@ -409,7 +417,8 @@ function quitSurvey() {
     })
     .done(function(content) {
         $(dom.quitPopup).modal('hide');
-        window.alert('Empty survey saved with quit reason - TODO: show options for what to do next');
+        hasUnsavedData = false;
+        $(dom.mapAnotherPopup).modal('show');
     })
     .fail(function(jqXHR, textStatus, errorThrown) {
         toastr.warning('Sorry, there was a problem stopping the survey. Please try again.', 'Something went wrong...');
@@ -472,7 +481,8 @@ function saveWithoutTrees() {
     })
     .done(function(content) {
         $(dom.noTreesPopup).modal('hide');
-        window.alert('Empty survey submitted - TODO: show options for what to do next');
+        hasUnsavedData = false;
+        $(dom.mapAnotherPopup).modal('show');
     })
     .fail(function(jqXHR, textStatus, errorThrown) {
         toastr.warning('Sorry, there was a problem saving the survey. Please try again.', 'Something went wrong...');
