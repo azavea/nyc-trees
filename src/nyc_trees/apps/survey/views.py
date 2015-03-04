@@ -30,6 +30,8 @@ from apps.survey.layer_context import (get_context_for_reservations_layer,
                                        get_context_for_progress_layer,
                                        get_context_for_territory_survey_layer,
                                        get_context_for_territory_admin_layer)
+from apps.survey.helpers import (teammates_for_event,
+                                 teammates_for_individual_mapping)
 
 
 def progress_page(request):
@@ -189,7 +191,8 @@ def start_survey(request):
     return {
         'layer': get_context_for_reservations_layer(request),
         'bounds': _user_reservation_bounds(request.user),
-        'choices': _get_survey_choices()
+        'choices': _get_survey_choices(),
+        'teammates': teammates_for_individual_mapping(request.user)
     }
 
 
@@ -204,7 +207,8 @@ def start_survey_from_event(request, event_slug):
     return {
         'layer': get_context_for_territory_survey_layer(request, group.id),
         'location': [event.location.y, event.location.x],
-        'choices': _get_survey_choices()
+        'choices': _get_survey_choices(),
+        'teammates': teammates_for_event(group, event, request.user)
     }
 
 

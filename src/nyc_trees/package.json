@@ -12,7 +12,8 @@
     "bootstrap": "./node_modules/bootstrap/dist/js/bootstrap.js",
     "bootstrap-datetimepicker": "./js/shim/bootstrap-datetimepicker.js",
     "modernizr": "./js/shim/modernizr.js",
-    "leaflet-utfgrid": "./js/shim/leaflet.utfgrid-src.js"
+    "leaflet-utfgrid": "./js/shim/leaflet.utfgrid-src.js",
+    "select2": "./js/shim/select2.js"
   },
   "browserify-shim": {
     "bootstrap": {
@@ -24,6 +25,12 @@
     "leaflet-utfgrid": {
       "depends": [
         "leaflet:L"
+      ]
+    },
+    "select2": {
+      "exports": "Select2",
+      "depends": [
+        "jquery:jQuery"
       ]
     }
   },
