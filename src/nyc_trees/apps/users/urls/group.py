@@ -45,4 +45,8 @@ urlpatterns = patterns(
     url(r'^(?P<group_id>\d+)/territory.json/$',
         r.group_unmapped_territory_geojson,
         name='group_unmapped_territory_geojson'),
+
+    url(r'^(?P<group_id>\d+)/update-territory/$',
+        r.group_update_territory,
+        name='group_update_territory'),
 )

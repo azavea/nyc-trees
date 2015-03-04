@@ -8,8 +8,10 @@ import json
 from django.conf import settings
 from django.contrib.gis.geos import Polygon
 from django.core.urlresolvers import reverse
+from django.db import transaction
 from django.db.models import Q
 from django.http import HttpResponseRedirect, HttpResponseForbidden
+from django.shortcuts import get_object_or_404
 from django.utils.timezone import now
 
 from libs.formatters import humanize_bytes
@@ -24,7 +26,8 @@ from apps.users.models import Follow, TrustedMapper
 from apps.users.forms import GroupSettingsForm
 
 from apps.survey.models import Territory, Survey, Blockface
-from apps.survey.layer_context import get_context_for_territory_layer
+from apps.survey.layer_context import (get_context_for_territory_layer,
+                                       get_context_for_territory_admin_layer)
 
 from apps.event.models import Event, EventRegistration
 from apps.event.event_list import EventList
@@ -255,10 +258,58 @@ def group_unmapped_territory_geojson(request, group_id):
             .filter(my_territory_q | unclaimed_q) \
             .distinct()
 
+        # Return just blockface data
+        # (skipping expensive queries to make tiler URLs)
+        return _make_blockface_data_result(blockfaces)
+
     else:
         # Get all blockfaces in group's territory
         blockfaces = blockfaces.filter(my_territory_q)
+        return _make_blockface_and_tiler_urls_result(
+            request, blockfaces, group_id)
 
-    blockfaceData = [{'id': bf.id, 'geojson': bf.geom.json}
-                     for bf in blockfaces]
-    return blockfaceData
+
+@transaction.atomic
+def group_update_territory(request, group_id):
+    group = get_object_or_404(Group, id=group_id)
+
+    new_block_ids = set([int(id) for id in json.loads(request.body)])
+    old_block_ids = set(Territory.objects
+                        .filter(group=group)
+                        .values_list('blockface_id', flat=True))
+
+    ids_to_add = new_block_ids - old_block_ids
+    ids_to_kill = old_block_ids - new_block_ids
+
+    # Make sure no unavailable or already-assigned blocks slipped in
+    filtered_ids_to_add = Blockface.objects \
+        .filter(id__in=ids_to_add) \
+        .filter(is_available=True) \
+        .filter(territory=None) \
+        .values_list('id', flat=True)
+
+    new_territory = [Territory(group=group, blockface_id=id)
+                     for id in filtered_ids_to_add]
+    Territory.objects.bulk_create(new_territory)
+
+    Territory.objects \
+        .filter(blockface_id__in=ids_to_kill) \
+        .delete()
+
+    result_blockfaces = Blockface.objects.filter(territory__group=group)
+    return _make_blockface_and_tiler_urls_result(
+        request, result_blockfaces, group_id)
+
+
+def _make_blockface_and_tiler_urls_result(request, blockfaces, group_id):
+    result = {
+        'blockDataList': _make_blockface_data_result(blockfaces),
+        'tilerUrls': get_context_for_territory_admin_layer(request, group_id)
+    }
+    return result
+
+
+def _make_blockface_data_result(blockfaces):
+    block_data_list = [{'id': bf.id, 'geojson': bf.geom.json}
+                       for bf in blockfaces]
+    return block_data_list

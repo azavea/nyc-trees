@@ -128,9 +128,8 @@ function initCrosshairs(domId) {
     $map.append([$hHair, $vHair]);
 }
 
-function addTileLayer(map, queryString) {
-    var query = queryString || '',
-        tileUrl = getDomMapAttribute('tile-url') + query,
+function addTileLayer(map, url) {
+    var tileUrl = url || getDomMapAttribute('tile-url'),
         layer = L.tileLayer(tileUrl, {
             minZoom: zoom.MIN,
             maxZoom: zoom.MAX
@@ -138,9 +137,8 @@ function addTileLayer(map, queryString) {
     return layer;
 }
 
-function addGridLayer(map, queryString) {
-    var query = queryString || '',
-        gridUrl = getDomMapAttribute('grid-url') + query,
+function addGridLayer(map, url) {
+    var gridUrl = url || getDomMapAttribute('grid-url'),
         layer = L.utfGrid(gridUrl, {
             minZoom: zoom.MIN,
             maxZoom: zoom.MAX,

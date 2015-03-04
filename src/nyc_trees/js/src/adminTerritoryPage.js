@@ -11,7 +11,8 @@ require('leaflet-utfgrid');
 require('leaflet-draw');
 
 var dom = {
-        selectGroup: '#select-group',
+        groupChooser: '#select-group',
+        selectedGroupOption: '#select-group option:selected',
         areaControls: '.js-area',
         addAreaButton: '.js-area-add',
         removeAreaButton: '.js-area-remove',
@@ -26,11 +27,16 @@ var dom = {
     }),
     tileLayer = null,
     grid = null,
-    selectedLayer = null,
-    selectedBlockfaces = {};
+    selectionLayer = null,
 
-$(document).ready(showDataForChosenGroup);
-$(dom.selectGroup).on('change', showDataForChosenGroup);
+    blockDataListForRevert = null,
+    selectedBlockfaces = {},
+    hasUnsavedChanges = false,
+    $currentGroupOption = null;
+
+
+$(document).ready(onGroupChanged);
+$(dom.groupChooser).on('change', onGroupChanged);
 
 $(dom.addAreaButton).click(drawAreaToAdd);
 $(dom.removeAreaButton).click(drawAreaToRemove);
@@ -41,57 +47,87 @@ territoryMap.on('draw:created', onAreaComplete);
 $(dom.revertButton).click(revertTerritory);
 $(dom.saveButton).click(saveTerritory);
 
-function showDataForChosenGroup() {
-    var query = 'group=' + currentGroupId();
+$(window).on('beforeunload', function(e) {
+    if (hasUnsavedChanges) {
+        return 'You have unsaved changes. Continue anyway?';
+    } else {
+        return undefined;
+    }
+});
+
+function okToProceed() {
+    if (hasUnsavedChanges) {
+        return window.confirm('You have unsaved changes. Continue anyway?');
+    } else {
+        return true;
+    }
+}
+
+function onGroupChanged() {
+    if (okToProceed()) {
+        getGroupUnmappedTerritory(initAllLayers);
+        $currentGroupOption = $(dom.selectedGroupOption);
+    } else {
+        // Don't change group after all.
+        // Dropdown has already changed, so change it back.
+        $currentGroupOption.attr('selected', true);
+    }
+}
+
+function getGroupUnmappedTerritory(onSuccess, polygon) {
+    disableUserActions();
+    $.ajax({
+        // Keep this URL in sync with "group_unmapped_territory_geojson"
+        // in src/nyc_trees/apps/users/urls/group.py
+        url: '/group/' + currentGroupId() + '/territory.json/',
+        type: 'POST',
+        dataType: 'json',
+        data: polygon
+    })
+        .done(onSuccess)
+        .fail(function () {
+            toastr.error("Failed to retrieve blockfaces");
+        })
+        .always(enableUserActions);
+}
+
+function currentGroupId() {
+    return $(dom.groupChooser).val();
+}
+
+function initAllLayers(blockDataAndTilerUrls) {
     if (tileLayer) {
         territoryMap.removeLayer(tileLayer);
         territoryMap.removeLayer(grid);
-        territoryMap.removeLayer(selectedLayer);
-        selectedBlockfaces = {};
     }
-    tileLayer = mapModule.addTileLayer(territoryMap, query);
-    grid = mapModule.addGridLayer(territoryMap, query);
-    selectBlockfacesInGroupTerritory();
+    var blockDataList = blockDataAndTilerUrls.blockDataList,
+        urls = blockDataAndTilerUrls.tilerUrls;
+    tileLayer = mapModule.addTileLayer(territoryMap, urls.tile_url);
+    grid = mapModule.addGridLayer(territoryMap, urls.grid_url);
+
+    blockDataListForRevert = blockDataList;
+    initSelectionLayer(blockDataList);
 }
 
-function selectBlockfacesInGroupTerritory() {
-    if (selectedLayer ) {
-        territoryMap.removeLayer(selectedLayer);
+function initSelectionLayer(blockDataList) {
+    if (selectionLayer) {
+        territoryMap.removeLayer(selectionLayer);
         selectedBlockfaces = {};
     }
-    selectedLayer = new SelectableBlockfaceLayer(territoryMap, grid, {
+    selectionLayer = new SelectableBlockfaceLayer(territoryMap, grid, {
         onAdd: onBlockfaceMaybeAdd,
         onAdded: onBlockfaceAdded,
         onRemove: onBlockfaceRemove
     }).addTo(territoryMap);
 
-    getUnmappedTerritory(currentGroupId())
-        .done(addBlockfacesToSelection);
+    selectBlockfaces(blockDataList);
+    hasUnsavedChanges = false;
 }
 
-function currentGroupId() {
-    return $(dom.selectGroup).val();
-}
-
-function getUnmappedTerritory(groupId, polygon) {
-    var promise = $.ajax({
-        // Keep this URL in sync with "group_territory_geojson"
-        // in src/nyc_trees/apps/users/urls/group.py
-        url: '/group/' + groupId + '/territory.json/',
-        type: 'POST',
-        dataType: 'json',
-        data: polygon,
-        error: function () {
-            toastr.error("Failed to retrieve blockfaces");
-        }
-    });
-    return promise;
-}
-
-function addBlockfacesToSelection(blockDataList) {
+function selectBlockfaces(blockDataList) {
     $.each(blockDataList, function (__, blockData) {
         if (!selectedBlockfaces[blockData.id]) {
-            selectedLayer.addData({
+            selectionLayer.addData({
                 'type': 'Feature',
                 'geometry': JSON.parse(blockData.geojson),
                 'properties': {id: blockData.id}
@@ -100,18 +136,20 @@ function addBlockfacesToSelection(blockDataList) {
     });
 }
 
-function removeBlockfacesFromSelection(blockDataList) {
+function deselectBlockfaces(blockDataList) {
     $.each(blockDataList, function (__, blockData) {
         var layer = selectedBlockfaces[blockData.id];
         if (layer) {
-            selectedLayer.removeLayer(layer);
+            selectionLayer.removeLayer(layer);
             delete selectedBlockfaces[blockData.id];
+            hasUnsavedChanges = true;
         }
     });
 }
 
 function onBlockfaceAdded(feature, layer) {
     selectedBlockfaces[feature.properties.id] = layer;
+    hasUnsavedChanges = true;
 }
 
 function onBlockfaceMaybeAdd(gridData) {
@@ -120,7 +158,7 @@ function onBlockfaceMaybeAdd(gridData) {
         return true;
     } else if (gridData.survey_type === 'unavailable') {
         if (gridData.turf_group_id) {
-            var $option = $(dom.selectGroup + " option[value='" + gridData.turf_group_id + "']"),
+            var $option = $(dom.groupChooser + " option[value='" + gridData.turf_group_id + "']"),
                 groupName = $option.text();
             toastr.error('That block is territory of ' + groupName);
         } else {
@@ -134,6 +172,7 @@ function onBlockfaceMaybeAdd(gridData) {
 
 function onBlockfaceRemove(feature) {
     delete selectedBlockfaces[feature.properties.id];
+    hasUnsavedChanges = true;
     return true;
 }
 
@@ -146,7 +185,7 @@ function drawAreaToRemove() { drawArea(false); }
 function drawArea(willAdd) {
     willAddBlocks = willAdd;
     toggleAreaControls();
-    selectedLayer.clicksEnabled = false;
+    selectionLayer.clicksEnabled = false;
     drawer = new L.Draw.Polygon(territoryMap, {showArea: true});
     drawer.enable();
 }
@@ -154,7 +193,7 @@ function drawArea(willAdd) {
 function stopDrawing() {
     toggleAreaControls();
     drawer.disable();
-    selectedLayer.clicksEnabled = true;
+    selectionLayer.clicksEnabled = true;
 }
 
 function onAreaComplete(e) {
@@ -163,10 +202,11 @@ function onAreaComplete(e) {
     var polygonPoints = $.map(e.layer.getLatLngs(), function (p) {
             return [[p.lng, p.lat]];
         }),
-        polygonString = JSON.stringify(polygonPoints);
+        polygonString = JSON.stringify(polygonPoints),
+        onSuccess = willAddBlocks ? selectBlockfaces : deselectBlockfaces;
 
-    getUnmappedTerritory(currentGroupId(), polygonString)
-        .done(willAddBlocks ? addBlockfacesToSelection : removeBlockfacesFromSelection);
+    // Get blocks in polygon, then select or deselect them
+    getGroupUnmappedTerritory(onSuccess, polygonString);
 }
 
 function toggleAreaControls() {
@@ -174,8 +214,47 @@ function toggleAreaControls() {
 }
 
 function revertTerritory() {
-    selectBlockfacesInGroupTerritory();
+    if (okToProceed()) {
+        initSelectionLayer(blockDataListForRevert);
+    }
 }
 
 function saveTerritory() {
+    disableUserActions();
+    var blockface_ids = Object.keys(selectedBlockfaces);
+    $.ajax({
+        // Keep this URL in sync with "group_update_territory"
+        // in src/nyc_trees/apps/users/urls/group.py
+        url: '/group/' + currentGroupId() + '/update-territory/',
+        type: 'POST',
+        dataType: 'json',
+        data: JSON.stringify(blockface_ids)
+    })
+        .done(initAllLayers)
+        .fail(function () {
+            toastr.error("Failed to save blockfaces");
+        })
+        .always(enableUserActions);
+}
+
+var $userActionControls = $([
+        dom.groupChooser,
+        dom.addAreaButton,
+        dom.removeAreaButton,
+        dom.revertButton,
+        dom.saveButton
+    ].join(','));
+
+function disableUserActions() {
+    $userActionControls.attr('disabled', 'disabled');
+    if (selectionLayer) {
+        territoryMap.removeLayer(selectionLayer);
+    }
+}
+
+function enableUserActions() {
+    $userActionControls.removeAttr('disabled');
+    if (selectionLayer) {
+        territoryMap.addLayer(selectionLayer);
+    }
 }

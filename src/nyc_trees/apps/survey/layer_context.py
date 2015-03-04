@@ -42,10 +42,10 @@ def get_context_for_territory_survey_layer(request, group_id):
     return _get_context_for_layer("territory_survey", models, request, params)
 
 
-def get_context_for_territory_admin_layer(request):
+def get_context_for_territory_admin_layer(request, group_id):
     models = [Blockface, Territory, BlockfaceReservation]
-    return _get_context_for_layer("territory_admin", models, request, '?')
-    # Note: client will add group=<group_id>
+    params = '?group=%s' % group_id
+    return _get_context_for_layer("territory_admin", models, request, params)
 
 
 def _get_context_for_layer(layer_name, models, request, params=''):
