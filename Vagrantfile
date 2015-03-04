@@ -88,8 +88,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     services.vm.hostname = "services"
     services.vm.network "private_network", ip: ENV.fetch("NYC_TREES_SERVICES_IP", "33.33.33.30")
 
-    services.vm.synced_folder ".", "/vagrant", disabled: true
-
     # Graphite Web
     services.vm.network "forwarded_port", {
       guest: 8080,
