@@ -1,3 +1,9 @@
+.btn-group-justified {
+  .btn + .btn {
+    border-left: none;
+  }
+}
+
 .btn-switch {
   border: 2px solid $brand-secondary;
   color: $brand-secondary !important;

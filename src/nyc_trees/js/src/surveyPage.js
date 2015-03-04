@@ -197,9 +197,8 @@ $(window).on('beforeunload', function(e) {
 });
 
 function showPage(selector) {
-    var pages = $(dom.pageContainer).children();
-    pages.addClass('hidden');
-    pages.filter(selector).removeClass('hidden');
+    $(dom.selectSide).toggleClass('hidden');
+    $(dom.surveyPage).toggleClass('hidden');
 }
 
 // There is no attribute for requiring "one or more" of a group of checkboxes to
