@@ -15,39 +15,50 @@
 
     <fieldset>
         {% include "survey/partials/radios.html" with label="Curb Location" field="curb_location" choices=choices.curb_location %}
-
+    </fieldset>
+    <fieldset>
         {% include "survey/partials/radios.html" with label="Tree Condition" field="status" choices=choices.status %}
-
-        <div data-status="Stump" class="hidden">
+    </fieldset>
+    <div data-status="Stump" class="hidden">
+        <fieldset>
+            <legend>Stump Size</legend>
             <div class="field">
                 <label>
                     Stump Diameter
                     <input class="form-control" name="stump_diameter" required type="number" min="0" step="any" placeholder="in">
                 </label>
             </div>
-        </div>
+        </fieldset>
+    </div>
 
         <!-- Circumference is repeated here for convenience, to avoid having to special-case showing/hiding it. -->
-        <div data-status="Dead" class="hidden">
+    <div data-status="Dead" class="hidden">
+        <fieldset>
+            <legend>Tree Trunk</legend>
             <div class="field">
                 <label>
                     Circumference
                     <input class="form-control" name="circumference" required type="number" min="0" step="any" placeholder="in">
                 </label>
             </div>
-        </div>
-
-        <div data-status="Alive">
+        </fieldset>
+    </div>
+    
+    <div data-status="Alive">
+        <fieldset>
+            <legend>Tree Trunk</legend>
             <div class="field">
                 <label>
                     Circumference
                     <input class="form-control" name="circumference" required type="number" min="0" step="any" placeholder="in">
                 </label>
             </div>
-
+        </fieldset>
+        <fieldset>
+            <legend>Tree Species</legend>
             <div class="field">
                 <label>
-                    Species
+                    Species Name
                     <select name="species_id" class="form-control" required>
                       <option></option>
                       {% for pk, name in choices.species %}
@@ -58,21 +69,26 @@
             </div>
 
             {% include "survey/partials/radios.html" with label="Tree Species Confidence" field="species_certainty" choices=choices.species_certainty %}
-
+        </fieldset>
+        <fieldset>
             {% include "survey/partials/radios.html" with label="Perception of Tree Health" field="health" choices=choices.health %}
-
+        </fieldset>
+        <fieldset>
             {% include "survey/partials/radios.html" with label="Evidence of Stewardship" field="stewardship" choices=choices.stewardship %}
-
+        </fieldset>
+        <fieldset>
             {% include "survey/partials/radios.html" with label="Tree Guards" field="guard_installation" choices=choices.guard_installation %}
-
+        
             <div data-guard_installation="Yes">
                 {% include "survey/partials/radios.html" with label="Is the tree guard:" field="guards" choices=choices.guards %}
             </div>
-
+        </fieldset>
+        <fieldset>
             {% include "survey/partials/radios.html" with label="Sidewalk Damage" field="sidewalk_damage" choices=choices.sidewalk_damage %}
-
+        </fieldset>
+        <fieldset>
+            <legend>Tree Problems</legend>
             <div class="field">
-                <label>Tree Problems</label>
                 <div>
                     <input id="no-problems-{{ tree_number }}" required type="checkbox" name="problems" value="None" />
                     <label class="btn btn-block" for="no-problems-{{ tree_number }}">
@@ -93,6 +109,6 @@
                     </div>
                 {% endfor %}
             </div>
-        </div>
-    </fieldset>
+        </fieldset>
+    </div>
 </form>

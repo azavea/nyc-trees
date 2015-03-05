@@ -58,10 +58,7 @@
             </div>
         </div>
     </div>
-
-
 </div>
-
 <script type="handlebars/template" id="tree-form-template">
     {# 'tree_number' here goes into the template with the '{{ }}', which is used for handlebar templating #}
     {% include "survey/partials/tree_form.html" with tree_number="{{ tree_number }}" %}
@@ -100,14 +97,14 @@
                 <h4 class="modal-title" id="quit-popup-title">Stop Mapping This Block</h4>
             </div>
             <div class="modal-body">
-                <div>I can no longer map because</div>
                 <form id="quit-form" method="POST">
-                    <textarea id="quit-reason" style="width: 100%;"
-                              placeholder="Offset tree bed, bad sidewalks, etc."></textarea>
+                    <label for="quit-reason">I can no longer map because</label>
+                    <textarea id="quit-reason" class="form-control"
+                              placeholder="Offset tree bed, bad sidewalks, etc." rows="4"></textarea>
                 </form>
             </div>
             <div class="modal-footer">
-                <button id="quit" type="submit" class="btn btn-primary">Stop Mapping</button>
+                <button id="quit" type="submit" class="btn btn-primary btn-block">Stop Mapping</button>
             </div>
         </div>
     </div>

@@ -88,6 +88,9 @@
 }
 
 .tree-form {
+    label {
+        color: $gray;
+    }
     // Hide checkboxes and radios, and use their checked/unchecked to style their label
     input[type="checkbox"], input[type="radio"] {
         opacity: 0;
@@ -106,6 +109,16 @@
     .btn-group label.btn-switch {
         border-radius: $border-radius-base;
     }
+    fieldset {
+        border-bottom: 2px solid $gray-lightest;
+        margin-bottom: 1rem;
+    }
+    legend {
+        font-size: $font-size-h5;
+        font-weight: 600;
+        margin: 0;
+        border: none;
+    }
 }
 
 // Requires such specifity in order to override bootstrap default behavior
@@ -114,7 +127,7 @@
 }
 
 .distance-end-form {
-    padding: $grid-gutter-width/3 $grid-gutter-width;
+    padding: $grid-gutter-width/3 $grid-gutter-width/2;
     background: $gray-lightest;
     border-radius: $border-radius-base;
     margin: 2rem 0;
