@@ -5,16 +5,37 @@
 
     <div class="map-sidebar">
         <h2>Group Territory</h2>
-        <p class="pageheading-description-detail hidden-xs">
-            Select a group to modify its territory.
-        </p>
+        <div>Select a group to modify its territory.</div>
         <select id="select-group">
             {% for group in groups %}
                 <option value="{{ group.id }}">{{ group.name }}</option>
             {% endfor %}
         </select>
+        <div style="margin:8px 0 12px 0">
+            <div>Add and remove blocks by clicking them, or by drawing an area:</div>
+            <button class="btn btn-default js-area js-area-add"
+                    title="Start drawing an area, enclosing blocks to add to group's territory">
+                Draw to add
+            </button>
+            <button class="btn btn-default js-area js-area-remove"
+                    title="Start drawing an area, enclosing blocks to remove from group's territory">
+                Draw to remove
+            </button>
+            <button class="btn btn-warning hidden js-area js-area-cancel">Cancel drawing</button>
+        </div>
         {% include 'home/partials/legend.html' %}
-        <div class="action-bar h4" id="action-bar"></div>
+        <div style="margin-top:12px">
+            <div class="pull-right">
+                <button class="btn btn-warning js-revert"
+                    title="Reset selection of blocks to match group's saved territory">
+                    Revert
+                </button>
+                <button class="btn btn-success js-save"
+                    title="Save currently-selected blocks as group's new territory">
+                    Save
+                </button>
+            </div>
+        </div>
     </div>
 
     {% include 'home/partials/location_search.html' %}

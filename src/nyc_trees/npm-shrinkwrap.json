@@ -4542,6 +4542,11 @@
       "from": "https://registry.npmjs.org/leaflet/-/leaflet-0.7.3.tgz",
       "resolved": "https://registry.npmjs.org/leaflet/-/leaflet-0.7.3.tgz"
     },
+    "leaflet-draw": {
+      "version": "0.2.3",
+      "from": "https://registry.npmjs.org/leaflet-draw/-/leaflet-draw-0.2.3.tgz",
+      "resolved": "https://registry.npmjs.org/leaflet-draw/-/leaflet-draw-0.2.3.tgz"
+    },
     "merge-stream": {
       "version": "0.1.6",
       "from": "https://registry.npmjs.org/merge-stream/-/merge-stream-0.1.6.tgz",

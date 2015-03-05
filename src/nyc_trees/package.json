@@ -39,6 +39,7 @@
     "handlebars": "^3.0.0",
     "jquery": "^2.1.1",
     "leaflet": "^0.7.3",
+    "leaflet-draw": "^0.2.3",
     "moment": "^2.8.4",
     "toastr": "^2.0.4"
   },
