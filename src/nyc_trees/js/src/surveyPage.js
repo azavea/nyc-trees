@@ -57,7 +57,6 @@ var dom = {
         btnNext: '#btn-next',
 
         actionBar: '.action-bar-survey',
-        pageContainer: '#pages',
         surveyPage: '#survey',
         treeFormTemplate: '#tree-form-template',
         treeFormcontainer: '#tree-form-container',
@@ -185,12 +184,6 @@ $(window).on('beforeunload', function(e) {
     return 'Are you sure you want to cancel mapping this block?';
 });
 
-function showPage(selector) {
-    $(dom.selectSide).addClass('hidden');
-    $(dom.selectTeammate).addClass('hidden');
-    $(dom.surveyPage).toggleClass('hidden');
-}
-
 // There is no attribute for requiring "one or more" of a group of checkboxes to
 // be selected, so we have to handle it ourselves.
 $(dom.treeFormcontainer).on('change', 'input[name="problems"]', function () {
@@ -284,7 +277,9 @@ $(dom.surveyPage).on('submit', 'form', function(e) {
 
 
 $(dom.btnNext).click(function(e) {
-    showPage(dom.surveyPage);
+    $(dom.selectSide).addClass('hidden');
+    $(dom.selectTeammate).addClass('hidden');
+    $(dom.surveyPage).toggleClass('hidden');
     $(dom.actionBar).addClass('expanded');
 });
 
