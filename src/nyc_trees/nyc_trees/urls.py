@@ -23,7 +23,6 @@ urlpatterns = patterns(
     url(r'^group/', include('apps.event.urls.group')),
     url(r'^group/', include('apps.users.urls.group')),
     url(r'^login/', include('apps.login.urls.login')),
-    url(r'^species/', include('apps.survey.urls.species')),
     url(r'^survey/', include('apps.survey.urls.survey')),
     url(r'^user/', include('apps.users.urls.user')),
 )

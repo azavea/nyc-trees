@@ -330,11 +330,6 @@ def survey_detail(request, survey_id):
     }
 
 
-def species_autocomplete_list(request):
-    # TODO: implement
-    pass
-
-
 def admin_territory_page(request):
     context = {
         'groups': Group.objects.all().order_by('name'),
@@ -350,11 +345,6 @@ def admin_territory_page(request):
     }
     context['layer'] = get_context_for_territory_admin_layer(request)
     return context
-
-
-def admin_blockface_page(request):
-    # TODO: implement
-    pass
 
 
 def admin_blockface_partial(request):
