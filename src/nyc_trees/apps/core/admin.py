@@ -56,7 +56,6 @@ class NycUserAdmin(UserAdmin):
                                     'achievements_are_public',
                                     'is_flagged',
                                     'is_banned',
-                                    'is_census_admin',
                                     'is_ambassador',
                                     'is_minor')}),
 
