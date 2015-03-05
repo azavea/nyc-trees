@@ -231,7 +231,7 @@ def _get_survey_choices():
     guard_helpfulness_choices = [choice for choice in GUARD_CHOICES
                                  if choice[0] != 'None']
 
-    species_choices = Species.objects.all().values_list('pk', 'name')
+    species_choices = Species.objects.all()
 
     return {
         'curb_location': CURB_CHOICES,
