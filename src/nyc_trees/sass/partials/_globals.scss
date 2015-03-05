@@ -221,16 +221,6 @@ aside {
   color: $headings-color;
 }
 
-.event-detail {
-  font-size: $font-size-h6;
-  color: $gray-light;
-  vertical-align: top;
-  &.event-detail--title {
-    font-size: $font-size-h5;
-    color: $text-color;
-  }
-}
-
 .pageheading-controls {
   @include extend();
   border-top: solid 1px $gray-lighter;
@@ -295,61 +285,6 @@ input[type="checkbox"] + label {
   margin-top: 3rem;
   padding: 4rem;
   background-color: lighten($brand-primary, 60%);
-}
-
-.calendar {
-  background-color: #fff;
-  max-width: 10rem;
-  box-shadow: 0px 0px 20px 0px rgba(50, 50, 50, 0.3);
-}
-
-.calendar-heading {
-  background-color: $brand-secondary;
-  color: #fff;
-  font-size: $font-size-h6;
-  text-transform: uppercase;
-}
-
-.calendar-body {
-  font-size: $font-size-h3;
-  color: $headings-color;
-  font-weight: $headings-font-weight;
-}
-
-.calendar-body, .calendar-heading {
-  padding: .5rem;
-  text-align: center;
-}
-
-.group-table {
-  width: 100%;
-  vertical-align: top;
-  tr {
-    border-bottom: 1px solid $gray-lighter;
-    vertical-align: top;
-    &:last-child {
-      border-bottom: 0;
-    }
-  }
-  td {
-    padding: 1rem 1rem 1rem 0;
-    &:last-child {
-      padding-right: 0;
-    }
-  }
-}
-
-.text--break {
-  word-wrap: break-word;
-}
-
-.rsvp-count-context {
-  margin-top: 0;
-  position: relative;
-  top: .7rem;
-  left: .6rem;
-  line-height: 1;
-  color: #777;
 }
 
 .privacy-item {
