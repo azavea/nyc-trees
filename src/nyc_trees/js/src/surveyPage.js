@@ -247,7 +247,10 @@ function checkFormValidity($forms) {
 
     // For each form element
     $forms.find('input, select, textarea').each(function(i, el) {
-        if ($(el).is(':visible') && !el.validity.valid) {
+        // We would be checking the input itself for visibility, but that
+        // makes styling more complicated. Instead we check the parent's
+        // visiblity.
+        if ($(el).parent().is(':visible') && !el.validity.valid) {
             valid = false;
 
             $(el).focus();
@@ -295,8 +298,15 @@ $(dom.addTree).click(function (){
 });
 
 function getTreeData(i, form) {
-    var formArray = $(form).find('input,select').not(':hidden').serializeArray(),
-        obj = {};
+    // We would be checking the input itself for visibility, but that makes styling more complicated
+    // Instead we check the parent's visiblity.
+    var obj = {},
+        formArray = $(form)
+            .find('input:not([type="submit"]),select')
+            .not(function(_, el) {
+                return $(el).parent().is(':hidden');
+            })
+            .serializeArray();
 
     $.each(formArray, function(i, o){
         // Diameter needs to be converted to circumference
@@ -319,6 +329,7 @@ function getTreeData(i, form) {
     });
 
     return obj;
+
 }
 
 $(dom.submitSurvey).on('click', submitSurveyWithTrees);
