@@ -164,6 +164,10 @@ class Tree(NycModel, models.Model):
         blank=True, max_length=15, choices=SIDEWALK_CHOICES)
     problems = models.CharField(blank=True, max_length=130)
 
+    def __unicode__(self):
+        t = 'id: %s - survey: %s - dist: %s'
+        return t % (self.id, self.survey.id, self.distance_to_tree)
+
     def clean(self):
         if self.status != 'Alive':
             self.species_certainty = ''
