@@ -61,7 +61,7 @@ p {
 .text-capitalize     { text-transform: capitalize; }
 
 
-.nobold {
+.text--normal {
   font-weight: normal;
 }
 
@@ -83,6 +83,10 @@ p {
 
 .color--quaternary {
   color: $brand-quaternary !important;
+}
+
+.text--break {
+  word-wrap: break-word;
 }
 
 // Lists
