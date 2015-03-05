@@ -17,7 +17,7 @@ vagrant ssh app -c "cd /opt/app && npm run lint"
 
 # Run JS unit tests.
 vagrant ssh app -c "cd /var/www/nyc-trees/static &&
-    xvfb-run /opt/app/node_modules/.bin/testem -f /opt/app/testem.json ci Firefox $*"
+    xvfb-run /opt/app/node_modules/.bin/testem -f /opt/app/testem.json ci"
 
 # Check for tiler JS lint.
 vagrant ssh tiler -c "cd /opt/tiler && npm run lint"
