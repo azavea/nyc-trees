@@ -7,7 +7,8 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 
 from apps.core.models import Group
-from apps.survey.models import Blockface, Territory
+from apps.survey.models import (Blockface, Territory,
+                                BlockfaceReservation)
 
 
 class Command(BaseCommand):
@@ -39,6 +40,13 @@ class Command(BaseCommand):
         print("Removing %d assignments to groups other than %s" %
               (assigned_to_others.count(), group.name))
         assigned_to_others.delete()
+
+        old_reservations =\
+            BlockfaceReservation.objects\
+                                .filter(blockface__in=new_expert_blocks)
+        print("Removing %d reservations on blocks that are being reassigned" %
+              old_reservations.count())
+        old_reservations.delete()
 
         print("Assigning %d blocks to %s" %
               (new_expert_blocks.count(), group.name))
