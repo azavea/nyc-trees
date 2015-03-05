@@ -4,8 +4,8 @@ require('./event_list');
 
 var $ = require('jquery'),
     mapModule = require('./map'),
+    mapUtil = require('./lib/mapUtil'),
     L = require('leaflet'),
-    zoom = require('./lib/mapUtil').ZOOM,
 
     dom = {
         mapToggle: '[data-toggle="tab"][href="#map-tab"]',
@@ -25,13 +25,7 @@ $(dom.mapToggle).one('shown.bs.tab', function() {
 
         var eventLayer = L.geoJson(geojson, {
             pointToLayer: function(feature, latLng) {
-                // TODO: Share this style with map.js
-                return L.circleMarker(latLng, {
-                    stroke: false,
-                    fillColor: '#198d5e',
-                    radius: 5,
-                    fillOpacity: 1
-                });
+                return mapUtil.styledCircleMarker(latLng);
             }
         });
 

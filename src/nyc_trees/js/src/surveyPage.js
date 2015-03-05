@@ -339,7 +339,7 @@ function createSurveyData() {
     return {
         survey: {
             blockface_id: blockfaceId,
-            is_left_side: $(dom.leftButton).is('active'),
+            is_left_side: $(dom.leftButton).is('.active'),
             is_mapped_in_blockface_polyline_direction: isMappedFromStartOfLine,
             teammate_id: $(dom.teammateSelectElement).select2("val"),
             has_trees: undefined,
@@ -378,8 +378,8 @@ function submitSurveyWithTrees() {
             data: JSON.stringify(data)
         })
         .done(function(content) {
-            window.alert('Successfully saved survey');
-            // TODO: Go to preview page
+            hasUnsavedData = false;
+            window.location.href = '/survey/detail/' + content.survey_id + '/';
         })
         .fail(function(jqXHR, textStatus, errorThrown) {
             toastr.warning('Double-check your survey and try resubmitting it.', 'Something went wrong...');

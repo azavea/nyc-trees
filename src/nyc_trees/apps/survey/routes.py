@@ -66,6 +66,10 @@ reservations_instructions = do(
 # SURVEY ROUTES
 #####################################
 
+survey_detail = individual_mapper_do(
+    route(GET=do(render_template('survey/survey_detail.html'),
+                 v.survey_detail)))
+
 survey = individual_mapper_do(
     route(GET=do(render_template('survey/survey.html'),
                  v.start_survey),

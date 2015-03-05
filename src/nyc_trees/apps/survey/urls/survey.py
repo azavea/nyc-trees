@@ -5,13 +5,16 @@ from __future__ import division
 
 from django.conf.urls import patterns, url
 
-from apps.survey.routes import survey, survey_from_event, flag_survey
+from apps.survey.routes import (survey, survey_from_event,
+                                flag_survey, survey_detail)
 
 
 # These URLs have the prefix 'survey/'
 urlpatterns = patterns(
     '',
     url(r'^$', survey, name='survey'),
+
+    url(r'^detail/(?P<survey_id>\d+)/$', survey_detail, name='survey_detail'),
 
     url(r'^(?P<group_slug>[\w-]+)/event/(?P<event_slug>[\w-]+)/$',
         survey_from_event, name='survey_from_event'),
