@@ -3,10 +3,12 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
+import os
+
 import json
 
 from django.conf import settings
-from django.db import transaction
+from django.db import transaction, connection
 from django.http import HttpResponseForbidden, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404
 from django.utils.timezone import now
@@ -32,6 +34,13 @@ from apps.survey.layer_context import (get_context_for_reservations_layer,
                                        get_context_for_territory_admin_layer)
 from apps.survey.helpers import (teammates_for_event,
                                  teammates_for_individual_mapping)
+
+
+_SURVEY_DETAIL_QUERY_FILE = os.path.join(os.path.dirname(__file__),
+                                         'survey_detail.sql')
+
+with open(_SURVEY_DETAIL_QUERY_FILE, 'r') as f:
+    _SURVEY_DETAIL_QUERY = f.read()
 
 
 def progress_page(request):
@@ -305,6 +314,20 @@ def flag_survey(request, survey_id):
     survey.is_flagged = True
     survey.clean_and_save()
     return {'success': True}
+
+
+def survey_detail(request, survey_id):
+    survey = Survey.objects.get(id=survey_id)
+    with connection.cursor() as cursor:
+        cursor.execute(_SURVEY_DETAIL_QUERY, [survey_id])
+        trees = [tree[0] for tree in cursor]
+    return {
+        'survey_id': survey_id,
+        'blockface_id': survey.blockface_id,
+        'trees': json.dumps(trees),
+        'layer': get_context_for_reservations_layer(request),
+        'bounds': _user_reservation_bounds(request.user),
+    }
 
 
 def species_autocomplete_list(request):

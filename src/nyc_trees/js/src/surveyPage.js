@@ -378,8 +378,8 @@ function submitSurveyWithTrees() {
             data: JSON.stringify(data)
         })
         .done(function(content) {
-            window.alert('Successfully saved survey');
-            // TODO: Go to preview page
+            hasUnsavedData = false;
+            window.location.href = '/survey/detail/' + content.survey_id + '/';
         })
         .fail(function(jqXHR, textStatus, errorThrown) {
             toastr.warning('Double-check your survey and try resubmitting it.', 'Something went wrong...');

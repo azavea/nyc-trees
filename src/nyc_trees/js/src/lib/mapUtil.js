@@ -54,6 +54,15 @@ function zoomToBlockface(map, blockfaceId) {
     });
 }
 
+function styledCircleMarker(latLng) {
+    return L.circleMarker(latLng, {
+        stroke: false,
+        fillColor: '#198d5e',
+        radius: 5,
+        fillOpacity: 1
+    });
+}
+
 module.exports = {
     ZOOM: Object.freeze ? Object.freeze(_ZOOM) : _ZOOM,
 
@@ -73,6 +82,7 @@ module.exports = {
 
     parseGeoJSON: parseGeoJSON,
     getLatLngs: getLatLngs,
+    styledCircleMarker: styledCircleMarker,
     fetchBlockface: fetchBlockface,
     zoomToBlockface: zoomToBlockface
 };
