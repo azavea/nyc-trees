@@ -26,54 +26,68 @@ Optional Information
         {{ form.zip_code.label_tag }}
         {{ form.zip_code }}
     </div>
-    <h3>
+    <h4>
         How did you hear about this?
-    </h3>
-    <ul>
+    </h4>
+    <ul class="list-unstyled register-referral">
         <li>
-            <label>
-                <input type="checkbox" data-toggle-field="#id_referrer_parks" />
-                NYC Parks
-            </label>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" data-toggle-field="#id_referrer_parks" />
+                    NYC Parks
+                </label>
+            </div>
             {{ form.referrer_parks }}
         </li>
         <li>
-            <label>
-                <input type="checkbox" data-toggle-field="#id_referrer_group" />
-                Census Group
-            </label>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" data-toggle-field="#id_referrer_group" />
+                    Census Group
+                </label>
+            </div>
             {{ form.referrer_group }}
         </li>
         <li>
-            <label>
-                <input type="checkbox" data-toggle-field="#id_referrer_ad" />
-                Advertisement/Promotion
-            </label>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" data-toggle-field="#id_referrer_ad" />
+                    Advertisement/Promotion
+                </label>
+            </div>
             {{ form.referrer_ad }}
         </li>
         <li>
-            <label>
-                {{ form.referrer_social_media }}
-                Social Media
-            </label>
+            <div class="checkbox">
+                <label>
+                    {{ form.referrer_social_media }}
+                    Social Media
+                </label>
+            </div>
         </li>
         <li>
-            <label>
-                {{ form.referrer_friend }}
-                Friends, family or co-workers
-            </label>
+            <div class="checkbox">
+                <label>
+                    {{ form.referrer_friend }}
+                    Friends, family or co-workers
+                </label>
+            </div>
         </li>
         <li>
-            <label>
-                {{ form.referrer_311 }}
-                3-1-1
-            </label>
+            <div class="checkbox">
+                <label>
+                    {{ form.referrer_311 }}
+                    3-1-1
+                </label>
+            </div>
         </li>
         <li>
-            <label>
-                <input type="checkbox" data-toggle-field="#id_referrer_other" />
-                Other
-            </label>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" data-toggle-field="#id_referrer_other" />
+                    Other
+                </label>
+            </div>
             {{ form.referrer_other }}
         </li>
     </ul>
@@ -82,9 +96,11 @@ Optional Information
             Are you interested in receiving additional information on
             stewardship opportunities available through NYC Parks?
         </label>
-        <label>
-            {{ form.opt_in_stewardship_info }} Yes
-        </label>
+        <div class="checkbox">
+            <label>
+                {{ form.opt_in_stewardship_info }} Yes
+            </label>
+        </div>
     </div>
     <div>
         <input type="submit" class="btn btn-primary pull-right" value="Submit" />
