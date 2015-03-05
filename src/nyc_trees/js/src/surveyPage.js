@@ -339,7 +339,7 @@ function createSurveyData() {
     return {
         survey: {
             blockface_id: blockfaceId,
-            is_left_side: $(dom.leftButton).is('active'),
+            is_left_side: $(dom.leftButton).is('.active'),
             is_mapped_in_blockface_polyline_direction: isMappedFromStartOfLine,
             teammate_id: $(dom.teammateSelectElement).select2("val"),
             has_trees: undefined,
