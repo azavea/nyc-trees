@@ -19,6 +19,8 @@ urlpatterns = patterns(
     '',
     url(r'^$', r.home_page, name='home_page'),
 
+    url(r'^health-check/$', include('watchman.urls')),
+
     url(r'^individual-mapper-instructions/$',
         r.individual_mapper_instructions,
         name='individual_mapper_instructions'),
