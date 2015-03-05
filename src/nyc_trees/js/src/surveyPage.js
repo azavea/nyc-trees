@@ -302,11 +302,8 @@ function getTreeData(i, form) {
         obj = {};
 
     $.each(formArray, function(i, o){
-        // Diameter needs to be converted to circumference
-        if ('stump_diameter' === o.name) {
-            obj.circumference = obj.value * Math.PI;
         // We need to explicitly serialize "problems" as a list, and append to it
-        } else if ('problems' === o.name) {
+        if ('problems' === o.name) {
             if (! obj.problems) {
                 obj.problems = [];
             }

@@ -139,14 +139,13 @@ class Tree(NycModel, models.Model):
     # should not allow it to be deleted if there is a related Tree
     species = models.ForeignKey(Species, null=True, blank=True,
                                 on_delete=models.PROTECT)
-    # TODO: Parks may want floats
-    distance_to_tree = models.PositiveIntegerField()
-    distance_to_end = models.PositiveIntegerField(null=True, blank=True)
-    # TODO: Parks may want to separate circumferences/diameter fields.
-    # If so, switch to PositiveIntegerField and add clean() test that
-    # diameter is specified only for stumps.
-    # If not, add clean() test that circumference > 0
-    circumference = models.FloatField()
+
+    distance_to_tree = models.FloatField()
+    distance_to_end = models.FloatField(null=True, blank=True)
+
+    circumference = models.PositiveIntegerField(null=True, blank=True)
+    stump_diameter = models.PositiveIntegerField(null=True, blank=True)
+
     curb_location = models.CharField(max_length=25, choices=CURB_CHOICES)
     status = models.CharField(max_length=15, choices=STATUS_CHOICES)
 
@@ -184,6 +183,32 @@ class Tree(NycModel, models.Model):
                 if code not in codes:
                     raise ValidationError({'problems': [
                         'Invalid entry: %s' % code]})
+
+        if self.distance_to_tree is not None and self.distance_to_tree < 0:
+            raise ValidationError({'distance_to_tree': ['Cannot be negative']})
+
+        if self.distance_to_end is not None and self.distance_to_end < 0:
+            raise ValidationError({'distance_to_end': ['Cannot be negative']})
+
+        if self.circumference is not None and self.circumference <= 0:
+            raise ValidationError({'circumference': ['Must be positive']})
+
+        if self.stump_diameter is not None and self.stump_diameter <= 0:
+            raise ValidationError({'stump_diameter': ['Must be positive']})
+
+        if self.status in {'Alive', 'Dead'}:
+            if not self.circumference:
+                raise ValidationError({'circumference': ['Field is required']})
+            if self.stump_diameter:
+                raise ValidationError(
+                    {'stump_diameter': ['Only valid for Stumps']})
+        elif self.status == 'Stump':
+            if not self.stump_diameter:
+                raise ValidationError(
+                    {'stump_diameter': ['Field is required']})
+            if self.circumference:
+                raise ValidationError(
+                    {'circumference': ['Not valid for Stumps']})
 
 
 class ReservationsQuerySet(models.QuerySet):
