@@ -7,7 +7,8 @@ var $ = require('jquery'),
     mapModule = require('./map'),
     mapUtil = require('./lib/mapUtil'),
     SelectableBlockfaceLayer = require('./lib/SelectableBlockfaceLayer'),
-    valIsEmpty = require('./lib/valIsEmpty');
+    valIsEmpty = require('./lib/valIsEmpty'),
+    mapAnotherPopup = require('./mapAnotherPopup');
 
 // Extends the leaflet object
 require('leaflet-utfgrid');
@@ -77,9 +78,7 @@ var dom = {
 
         btnNoTrees: '#no-trees',
         noTreesPopup: '#no-trees-popup',
-        noTreesConfirm: '#no-trees-confirm',
-
-        mapAnotherPopup: '#map-another-popup'
+        noTreesConfirm: '#no-trees-confirm'
     },
 
     showSelectStart = makeMutexShow([
@@ -427,7 +426,7 @@ function quitSurvey() {
     .done(function(content) {
         $(dom.quitPopup).modal('hide');
         hasUnsavedData = false;
-        $(dom.mapAnotherPopup).modal('show');
+        mapAnotherPopup.show();
     })
     .fail(function(jqXHR, textStatus, errorThrown) {
         toastr.warning('Sorry, there was a problem stopping the survey. Please try again.', 'Something went wrong...');
@@ -491,7 +490,7 @@ function saveWithoutTrees() {
     .done(function(content) {
         $(dom.noTreesPopup).modal('hide');
         hasUnsavedData = false;
-        $(dom.mapAnotherPopup).modal('show');
+        mapAnotherPopup.show();
     })
     .fail(function(jqXHR, textStatus, errorThrown) {
         toastr.warning('Sorry, there was a problem saving the survey. Please try again.', 'Something went wrong...');

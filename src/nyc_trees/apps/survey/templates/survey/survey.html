@@ -127,25 +127,7 @@
     </div>
 </div>
 
-
-<div class="modal fade" id="map-another-popup" tabindex="-1" role="dialog" aria-labelledby="map-another-popup-title" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div>Map another block?</div>
-            </div>
-            <div class="modal-footer">
-                <a id="map-another-no" href="{% url 'progress_page' %}" class="btn btn-default">
-                    I'm Done For Now
-                </a>
-                <a id="map-another-yes" href="{{ request.path }}" class="btn btn-primary">
-                    Yes!
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
+{% include "survey/partials/map_another_popup.html" %}
 
 {% endblock extra_content %}
 

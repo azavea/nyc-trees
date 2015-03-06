@@ -8,6 +8,7 @@ import os
 import json
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import transaction, connection
 from django.http import HttpResponseForbidden, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404
@@ -259,6 +260,20 @@ def submit_survey_from_event(request, event_slug):
     return _create_survey_and_trees(request, event)
 
 
+def _mark_survey_blockface_not_available(survey):
+    if survey.quit_reason != '':
+        raise ValidationError('Cannot mark blockface complete for survey '
+                              'that has been quit.')
+    survey.blockface.is_available = False
+    survey.blockface.clean_and_save()
+
+
+def complete_survey(request, survey_id):
+    survey = Survey.objects.get(id=survey_id)
+    _mark_survey_blockface_not_available(survey)
+    return {}
+
+
 @transaction.atomic
 def _create_survey_and_trees(request, event=None):
     """
@@ -297,8 +312,7 @@ def _create_survey_and_trees(request, event=None):
     survey.clean_and_save()
 
     if survey.quit_reason == '':
-        blockface.is_available = False
-        blockface.clean_and_save()
+        _mark_survey_blockface_not_available(survey)
 
     for tree_data in tree_list:
         if 'problems' in tree_data:
