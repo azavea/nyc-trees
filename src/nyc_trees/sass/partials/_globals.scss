@@ -89,7 +89,7 @@ a {
     @include tab-focus;
   }
 
-  .item.block & {
+  .item.block &:not(.btn), &.item.block {
     color: inherit;
   }
 

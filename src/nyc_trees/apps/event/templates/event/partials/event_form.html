@@ -93,10 +93,10 @@
             <a href="javascript:;" id="use-my-contact-info">Use my contact information</a>
         </div>
 
-        <div style="float:right;">
-            <input type="submit" class="btn" value="Save" />
+        <div class="pull-right">
+            <input type="submit" class="btn btn-primary" value="Save">
         </div>
-        <a class="btn" href="{% url 'group_edit' group_slug=group.slug %}">Cancel</a>
+        <a class="btn btn-link" href="{% url 'group_edit' group_slug=group.slug %}">Cancel</a>
 
     </fieldset>
 </form>

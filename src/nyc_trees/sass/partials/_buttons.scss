@@ -30,15 +30,6 @@
   }
 }
 
-.btn-plain {
-  background-color: transparent;
-  border: 0;
-  box-shadow: none !important;
-  &:hover {
-    color: $brand-secondary !important;
-  }
-}
-
 .btn-secondary {
   background-color: $brand-secondary;
   color: #fff;
@@ -57,6 +48,7 @@
   width: 8.5rem;
 }
 
-.btn {
-  transition: all 100ms $transition;
+.btn-link {
+  padding-left: 0;
+  padding-right: 0;
 }
