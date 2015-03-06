@@ -1,29 +1,37 @@
-{% extends "base.html" %}
+{% extends "base_survey.html" %}
 {% load utils %}
 
-{% block content %}
-<div>
-    <div id="map" class="map-survey"
-        data-trees-json="{{ trees }}"
-        data-tile-url="{{ layer.tile_url }}"
-        data-grid-url="{{ layer.grid_url }}"
-        data-survey-id="{{ survey_id }}"
-        data-blockface-id="{{ blockface_id }}"
-        {% if bounds %}data-bounds="{{ bounds }}"
-        {% elif location %}data-location="{{ location }}"
-        {% endif %}>
-    </div>
-    <div class="action-bar-survey">
-        <div>
-            <p>Does this look right?</p>
-            <button id="survey-detail-abandon-incomplete" class="btn btn-default">No - Start Over</button><br/>
-            <button id="survey-detail-submit-incomplete" class="btn btn-default">No - Submit For Review</button><br/>
-            <button id="survey-detail-submit-complete" class="btn btn-default">Yes</button><br/>
+{% block aside %}
+    <div class="map-sidebar">
+        <div class="action-bar-survey">
+            <div>
+                <p>Does this look right?</p>
+                <div class="block--bottom">
+                    <button id="survey-detail-abandon-incomplete" class="btn btn-default">No, Restart</button>
+                    <button id="survey-detail-submit-incomplete" class="btn btn-default">No, Submit For Review</button>
+                </div>
+                <button id="survey-detail-submit-complete" class="btn btn-primary btn-mobile--max">Yes</button>
+            </div>
         </div>
     </div>
-</div>
+{% endblock aside %}
 
-{% endblock content %}
+{% block main %}
+
+    <div id="pages">
+        <div id="map" class="map-survey"
+            data-trees-json="{{ trees }}"
+            data-tile-url="{{ layer.tile_url }}"
+            data-grid-url="{{ layer.grid_url }}"
+            data-survey-id="{{ survey_id }}"
+            data-blockface-id="{{ blockface_id }}"
+            {% if bounds %}data-bounds="{{ bounds }}"
+            {% elif location %}data-location="{{ location }}"
+            {% endif %}>
+        </div>
+    </div>
+
+{% endblock main %}
 
 {% block extra_content %}
 {% include "survey/partials/map_another_popup.html" %}

@@ -18,7 +18,7 @@
     left: 0;
     right: 0;
     @media (max-width: $screen-sm) {
-        bottom: 15rem; 
+        bottom: 15rem;
     }
 }
 
@@ -34,7 +34,7 @@
         bottom: 0;
         width: 100%;
         height: 15rem;
-        padding: $grid-gutter-width/3 $grid-gutter-width;
+        padding: $grid-gutter-width/3 $grid-gutter-width/2;
         z-index: 1;
         background-color: #fff;
         display: table;
@@ -135,6 +135,10 @@
     #submit-survey {
         margin-bottom: 2rem;
     }
+}
+
+.teammate {
+    top: -.75rem;
 }
 
 // Requires such specifity in order to override bootstrap default behavior
