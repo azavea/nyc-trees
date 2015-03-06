@@ -9,6 +9,10 @@ The following instructions can be used to apply migrations to an AWS stack of th
 
 ## Steps
 
+### Disable Automated Deployments
+
+Depending on the environment you're applying migrations to, you may need to pause automated deployments. In this project, you'll need to pause the Jenkins job for [staging deployments](http://civicci01.internal.azavea.com/job/nyc-trees-staging-deployment/).
+
 ### Add Private Key to SSH Authentication Agent
 
 First, verify that the SSH Authentication Agent is running:
@@ -67,3 +71,7 @@ This script will:
 - Ensure that PostGIS is installed on the configured database
 - Attempt to apply any outstanding migrations
 - Attempt to create the training flatpages
+
+### Enable Automated Deployments
+
+Make sure to re-enable any automated deployments if you previously disabled them.
