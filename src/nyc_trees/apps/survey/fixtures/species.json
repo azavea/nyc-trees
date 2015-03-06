@@ -1,1 +1,1705 @@
-[{"fields": {"species_code": "FAGR", "scientific_name": "Fagus Grandifolia", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "35575", "common_name": "American Beech", "cultivar": ""}, "model": "survey.species", "pk": 4}, {"fields": {"species_code": "OSVI", "scientific_name": "Ostrya Virginiana", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "59861", "common_name": "American Hophornbeam", "cultivar": ""}, "model": "survey.species", "pk": 5}, {"fields": {"species_code": "CACA", "scientific_name": "Carpinus Caroliniana", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "13202", "common_name": "American Hornbeam", "cultivar": ""}, "model": "survey.species", "pk": 6}, {"fields": {"species_code": "LALA", "scientific_name": "Larix Laricina", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "46118", "common_name": "American Larch", "cultivar": ""}, "model": "survey.species", "pk": 7}, {"fields": {"species_code": "TIAM", "scientific_name": "Tilia Americana", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "86679", "common_name": "American Linden", "cultivar": ""}, "model": "survey.species", "pk": 8}, {"fields": {"species_code": "PHAM", "scientific_name": "Phellodendron Amurense", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "63599", "common_name": "Amur Cork Tree", "cultivar": ""}, "model": "survey.species", "pk": 9}, {"fields": {"species_code": "ACGI", "scientific_name": "Acer Ginnala", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "264", "common_name": "Amur Maple", "cultivar": ""}, "model": "survey.species", "pk": 10}, {"fields": {"species_code": "THOC", "scientific_name": "Thuja Occidentalis", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "86325", "common_name": "Arborvitae", "cultivar": ""}, "model": "survey.species", "pk": 11}, {"fields": {"species_code": "CHTH", "scientific_name": "Chamaecyparis Thyoides", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "19248", "common_name": "Atlantic White Cedar", "cultivar": ""}, "model": "survey.species", "pk": 12}, {"fields": {"species_code": "CEAT", "scientific_name": "Cedrus Atlantica", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "92398", "common_name": "Atlas Cedar", "cultivar": ""}, "model": "survey.species", "pk": 13}, {"fields": {"species_code": "TADI", "scientific_name": "Taxodium Distichum", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "85031", "common_name": "Bald Cypress", "cultivar": ""}, "model": "survey.species", "pk": 14}, {"fields": {"species_code": "POGR", "scientific_name": "Populus Grandidentata", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "68155", "common_name": "Big-Tooth Aspen", "cultivar": ""}, "model": "survey.species", "pk": 15}, {"fields": {"species_code": "BENI", "scientific_name": "Betula Nigra", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "10152", "common_name": "Black Birch", "cultivar": ""}, "model": "survey.species", "pk": 16}, {"fields": {"species_code": "PRSE1", "scientific_name": "Prunus Serotina", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "70007", "common_name": "Black Cherry", "cultivar": ""}, "model": "survey.species", "pk": 17}, {"fields": {"species_code": "NYSY", "scientific_name": "Nyssa Sylvatica", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "58191", "common_name": "Black Gum", "cultivar": ""}, "model": "survey.species", "pk": 18}, {"fields": {"species_code": "ROPS", "scientific_name": "Robinia Pseudoacacia", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "74464", "common_name": "Black Locust", "cultivar": ""}, "model": "survey.species", "pk": 19}, {"fields": {"species_code": "ACNI", "scientific_name": "Acer Nigrum", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "586", "common_name": "Black Maple", "cultivar": ""}, "model": "survey.species", "pk": 20}, {"fields": {"species_code": "QUVE", "scientific_name": "Quercus Velutina", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "72074", "common_name": "Black Oak", "cultivar": ""}, "model": "survey.species", "pk": 21}, {"fields": {"species_code": "PINI", "scientific_name": "Pinus Nigra", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "65915", "common_name": "Black Pine", "cultivar": ""}, "model": "survey.species", "pk": 22}, {"fields": {"species_code": "JUNI", "scientific_name": "Juglans Nigra", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "45200", "common_name": "Black Walnut", "cultivar": ""}, "model": "survey.species", "pk": 23}, {"fields": {"species_code": "PIPU", "scientific_name": "Picea Pungens", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "66003", "common_name": "Blue Spruce", "cultivar": ""}, "model": "survey.species", "pk": 24}, {"fields": {"species_code": "ACNE", "scientific_name": "Acer Negundo", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "547", "common_name": "Boxelder", "cultivar": ""}, "model": "survey.species", "pk": 25}, {"fields": {"species_code": "QUMA1", "scientific_name": "Quercus Macrocarpa", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "71907", "common_name": "Bur Oak", "cultivar": ""}, "model": "survey.species", "pk": 26}, {"fields": {"species_code": "PYCA", "scientific_name": "Pyrus Calleryana", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "71298", "common_name": "Callery Pear", "cultivar": ""}, "model": "survey.species", "pk": 27}, {"fields": {"species_code": "CA1", "scientific_name": "Catalpa Cultivar", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "92397", "common_name": "Catalpa", "cultivar": ""}, "model": "survey.species", "pk": 28}, {"fields": {"species_code": "CAMO", "scientific_name": "Castanea Mollissima", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "15059", "common_name": "Chinese Chestnut", "cultivar": ""}, "model": "survey.species", "pk": 29}, {"fields": {"species_code": "ULPA", "scientific_name": "Ulmus Parvifolia", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "88975", "common_name": "Chinese Elm", "cultivar": ""}, "model": "survey.species", "pk": 30}, {"fields": {"species_code": "CHRE", "scientific_name": "Chionanthus Retusus", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "92400", "common_name": "Chinese Fringetree", "cultivar": ""}, "model": "survey.species", "pk": 31}, {"fields": {"species_code": "SYPE", "scientific_name": "Syringa Pekinensis", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "84653", "common_name": "Chinese Treelilac", "cultivar": ""}, "model": "survey.species", "pk": 32}, {"fields": {"species_code": "PRVISH", "scientific_name": "Prunus Virginiana", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "70087", "common_name": "Chokecherry", "cultivar": ""}, "model": "survey.species", "pk": 33}, {"fields": {"species_code": "CRCR", "scientific_name": "Crataegus Crusgalli Var Inermis", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "92401", "common_name": "Cockspur Hawthorn", "cultivar": ""}, "model": "survey.species", "pk": 34}, {"fields": {"species_code": "CEOC", "scientific_name": "Celtis Occidentalis", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "17434", "common_name": "Common Hackberry", "cultivar": ""}, "model": "survey.species", "pk": 35}, {"fields": {"species_code": "COMA", "scientific_name": "Cornus Mas", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "21826", "common_name": "Cornelian Cherry", "cultivar": ""}, "model": "survey.species", "pk": 36}, {"fields": {"species_code": "MA2", "scientific_name": "Malus Cultivar", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "92407", "common_name": "Crabapple", "cultivar": ""}, "model": "survey.species", "pk": 37}, {"fields": {"species_code": "LA", "scientific_name": "Lagerstroemia Cultivar", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "92405", "common_name": "Crepe Myrtle", "cultivar": ""}, "model": "survey.species", "pk": 38}, {"fields": {"species_code": "MAAC", "scientific_name": "Magnolia Acuminata", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "52366", "common_name": "Cucumber Magnolia", "cultivar": ""}, "model": "survey.species", "pk": 39}, {"fields": {"species_code": "MEGL", "scientific_name": "Metasequoia Glyptostroboides", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "54051", "common_name": "Dawn Redwood", "cultivar": ""}, "model": "survey.species", "pk": 40}, {"fields": {"species_code": "PZME", "scientific_name": "Pseudotsuga Menziesii", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "70536", "common_name": "Douglas-Fir", "cultivar": ""}, "model": "survey.species", "pk": 41}, {"fields": {"species_code": "PODE", "scientific_name": "Populus Deltoides", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "67812", "common_name": "Eastern Cottonwood", "cultivar": ""}, "model": "survey.species", "pk": 42}, {"fields": {"species_code": "TSCA", "scientific_name": "Tsuga Canadensis", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "88821", "common_name": "Eastern Hemlock", "cultivar": ""}, "model": "survey.species", "pk": 43}, {"fields": {"species_code": "CECA", "scientific_name": "Cercis Canadensis", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "17037", "common_name": "Eastern Redbud", "cultivar": ""}, "model": "survey.species", "pk": 44}, {"fields": {"species_code": "JUVI", "scientific_name": "Juniperus Virginiana", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "45367", "common_name": "Eastern Redcedar", "cultivar": ""}, "model": "survey.species", "pk": 45}, {"fields": {"species_code": "PATO", "scientific_name": "Paulownia Tomentosa", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "61618", "common_name": "Empress Tree", "cultivar": ""}, "model": "survey.species", "pk": 46}, {"fields": {"species_code": "QURO", "scientific_name": "Quercus Robur", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "71993", "common_name": "English Oak", "cultivar": ""}, "model": "survey.species", "pk": 47}, {"fields": {"species_code": "ALGL", "scientific_name": "Alnus Glutinosa", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "2274", "common_name": "European Alder", "cultivar": ""}, "model": "survey.species", "pk": 48}, {"fields": {"species_code": "FASY", "scientific_name": "Fagus Sylvatica", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "35626", "common_name": "European Beech", "cultivar": ""}, "model": "survey.species", "pk": 49}, {"fields": {"species_code": "CABE", "scientific_name": "Carpinus Betulus", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "12996", "common_name": "European Bornbeam", "cultivar": ""}, "model": "survey.species", "pk": 50}, {"fields": {"species_code": "CHPI", "scientific_name": "Chamaecyparis Pisifera", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "18931", "common_name": "False Cypress", "cultivar": ""}, "model": "survey.species", "pk": 51}, {"fields": {"species_code": "COFL", "scientific_name": "Cornus Florida", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "21528", "common_name": "Flowering Dogwood", "cultivar": ""}, "model": "survey.species", "pk": 52}, {"fields": {"species_code": "GIBI", "scientific_name": "Ginkgo Biloba", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "38243", "common_name": "Ginkgo", "cultivar": ""}, "model": "survey.species", "pk": 53}, {"fields": {"species_code": "KOPA", "scientific_name": "Koelreuteria Paniculata", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "45643", "common_name": "Golden Raintree", "cultivar": ""}, "model": "survey.species", "pk": 54}, {"fields": {"species_code": "FRPE", "scientific_name": "Fraxinus Pennsylvanica", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "36700", "common_name": "Green Ash", "cultivar": ""}, "model": "survey.species", "pk": 55}, {"fields": {"species_code": "CR", "scientific_name": "Crataegus Cultivar", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "92402", "common_name": "Green Hawthorn", "cultivar": ""}, "model": "survey.species", "pk": 56}, {"fields": {"species_code": "EUUL", "scientific_name": "Eucommia Ulmoides", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "92403", "common_name": "Hardy Rubber Tree", "cultivar": ""}, "model": "survey.species", "pk": 57}, {"fields": {"species_code": "ACCA", "scientific_name": "Acer Campestre", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "89", "common_name": "Hedge Maple", "cultivar": ""}, "model": "survey.species", "pk": 58}, {"fields": {"species_code": "CEDE", "scientific_name": "Cedrus Deodara", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "17099", "common_name": "Himalayan Cedar", "cultivar": ""}, "model": "survey.species", "pk": 59}, {"fields": {"species_code": "ILSP", "scientific_name": "Ilex Cultivar", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "92404", "common_name": "Holly", "cultivar": ""}, "model": "survey.species", "pk": 60}, {"fields": {"species_code": "GLTR", "scientific_name": "Gleditsia Triacanthos", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "38664", "common_name": "Honeylocust var. inermis", "cultivar": ""}, "model": "survey.species", "pk": 61}, {"fields": {"species_code": "AEHI", "scientific_name": "Aesculus Hippocastanum", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "1189", "common_name": "Horse Chestnut", "cultivar": ""}, "model": "survey.species", "pk": 62}, {"fields": {"species_code": "PR", "scientific_name": "Prunus", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T21:41:43.847Z", "forms_id": "92410", "common_name": "Japanese Cherry", "cultivar": "Green Leaf Cultivar"}, "model": "survey.species", "pk": 63}, {"fields": {"species_code": "CAJA", "scientific_name": "Carpinus Japonica", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "92396", "common_name": "Japanese Hornbeam", "cultivar": ""}, "model": "survey.species", "pk": 64}, {"fields": {"species_code": "ACPA", "scientific_name": "Acer Palmatum", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "659", "common_name": "Japanese Maple", "cultivar": ""}, "model": "survey.species", "pk": 65}, {"fields": {"species_code": "STJA1", "scientific_name": "Styrax Japonica", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "83284", "common_name": "Japanese Snowbell", "cultivar": ""}, "model": "survey.species", "pk": 66}, {"fields": {"species_code": "SYRE", "scientific_name": "Syringa Reticulata", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "84775", "common_name": "Japanese Treelilac", "cultivar": ""}, "model": "survey.species", "pk": 67}, {"fields": {"species_code": "ZESE", "scientific_name": "Zelkova Serrata", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "92181", "common_name": "Japanese Zelkova", "cultivar": ""}, "model": "survey.species", "pk": 68}, {"fields": {"species_code": "CEJA", "scientific_name": "Cercidiphyllum Japonicum", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "17274", "common_name": "Katsura Tree", "cultivar": ""}, "model": "survey.species", "pk": 69}, {"fields": {"species_code": "GYDI", "scientific_name": "Gymnocladus Dioicus", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "39377", "common_name": "Kentucky Coffeetree", "cultivar": ""}, "model": "survey.species", "pk": 70}, {"fields": {"species_code": "CLKE", "scientific_name": "Cladrastris Kentukea", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "20483", "common_name": "Kentucky Yellowwood", "cultivar": ""}, "model": "survey.species", "pk": 71}, {"fields": {"species_code": "COKO", "scientific_name": "Cornus Kousa", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "21738", "common_name": "Kousa Dogwood", "cultivar": ""}, "model": "survey.species", "pk": 72}, {"fields": {"species_code": "TICO", "scientific_name": "Tilia Cordata", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "86734", "common_name": "Little-Leaf Linden", "cultivar": ""}, "model": "survey.species", "pk": 73}, {"fields": {"species_code": "PLAC", "scientific_name": "Platanus X Acerifolia", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "66603", "common_name": "London Planetree", "cultivar": ""}, "model": "survey.species", "pk": 74}, {"fields": {"species_code": "MAAM", "scientific_name": "Maackia Amurensis", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "52396", "common_name": "Maackia", "cultivar": ""}, "model": "survey.species", "pk": 75}, {"fields": {"species_code": "MA1", "scientific_name": "Magnolia Cultivar", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "92406", "common_name": "Magnolia", "cultivar": ""}, "model": "survey.species", "pk": 76}, {"fields": {"species_code": "AC", "scientific_name": "Acer Cultivar", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "92391", "common_name": "Maple", "cultivar": ""}, "model": "survey.species", "pk": 77}, {"fields": {"species_code": "ALJU", "scientific_name": "Albizia Julibrissin", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "2361", "common_name": "Mimosa", "cultivar": ""}, "model": "survey.species", "pk": 78}, {"fields": {"species_code": "MO", "scientific_name": "Morus Cultivar", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "92408", "common_name": "Mulberry", "cultivar": ""}, "model": "survey.species", "pk": 79}, {"fields": {"species_code": "QURU", "scientific_name": "Quercus Rubra", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "71997", "common_name": "Northern Red Oak", "cultivar": ""}, "model": "survey.species", "pk": 80}, {"fields": {"species_code": "ACPL", "scientific_name": "Acer Platanoides", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "699", "common_name": "Norway Maple", "cultivar": "Green Leaf Cultivar"}, "model": "survey.species", "pk": 81}, {"fields": {"species_code": "ACPLCR", "scientific_name": "Acer Platanoides", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "92393", "common_name": "Norway Maple", "cultivar": "Not Green Leaf Cultivar"}, "model": "survey.species", "pk": 82}, {"fields": {"species_code": "PIAB", "scientific_name": "Picea Abies", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "65429", "common_name": "Norway Spruce", "cultivar": ""}, "model": "survey.species", "pk": 83}, {"fields": {"species_code": "AEGL", "scientific_name": "Aesculus Glabra", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "1173", "common_name": "Ohio Buckeye", "cultivar": ""}, "model": "survey.species", "pk": 84}, {"fields": {"species_code": "CERE", "scientific_name": "Cercis Reniformis", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "92399", "common_name": "Oklahoma Redbud", "cultivar": ""}, "model": "survey.species", "pk": 85}, {"fields": {"species_code": "MAPO", "scientific_name": "Maclura Pomifera", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "53332", "common_name": "Osage Orange", "cultivar": ""}, "model": "survey.species", "pk": 86}, {"fields": {"species_code": "COAL", "scientific_name": "Cornus Alterniflora", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "21052", "common_name": "Pagoda Dogwood", "cultivar": ""}, "model": "survey.species", "pk": 87}, {"fields": {"species_code": "BEPA", "scientific_name": "Betula Papyrifera", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "10171", "common_name": "Paper Birch", "cultivar": ""}, "model": "survey.species", "pk": 88}, {"fields": {"species_code": "ACGR", "scientific_name": "Acer Griseum", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "295", "common_name": "Paperbark Maple", "cultivar": ""}, "model": "survey.species", "pk": 89}, {"fields": {"species_code": "PAPE", "scientific_name": "Parrotia Persica", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "61197", "common_name": "Persian Ironwood", "cultivar": ""}, "model": "survey.species", "pk": 90}, {"fields": {"species_code": "CAGL", "scientific_name": "Carya Glabra", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "14079", "common_name": "Pignut Hickory", "cultivar": ""}, "model": "survey.species", "pk": 91}, {"fields": {"species_code": "QUPA", "scientific_name": "Quercus Palustris", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "71962", "common_name": "Pin Oak", "cultivar": ""}, "model": "survey.species", "pk": 92}, {"fields": {"species_code": "PI", "scientific_name": "Pinus Cultivar", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "92392", "common_name": "Pine", "cultivar": ""}, "model": "survey.species", "pk": 93}, {"fields": {"species_code": "PIRI", "scientific_name": "Pinus Rigida", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "66047", "common_name": "Pitch Pine", "cultivar": ""}, "model": "survey.species", "pk": 94}, {"fields": {"species_code": "TAAS", "scientific_name": "Taxodium Ascendens", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "84952", "common_name": "Pond Cypress", "cultivar": ""}, "model": "survey.species", "pk": 95}, {"fields": {"species_code": "PRCE", "scientific_name": "Prunus Cerasifera", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "69640", "common_name": "Purple Leaf Plum", "cultivar": ""}, "model": "survey.species", "pk": 96}, {"fields": {"species_code": "POTR", "scientific_name": "Populus Tremuloides", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "69402", "common_name": "Quaking Aspen", "cultivar": ""}, "model": "survey.species", "pk": 97}, {"fields": {"species_code": "AECA", "scientific_name": "Aesculus X Carnea", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "1146", "common_name": "Red Horse Chestnut", "cultivar": ""}, "model": "survey.species", "pk": 98}, {"fields": {"species_code": "ACRU", "scientific_name": "Acer Rubrum", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "784", "common_name": "Red Maple", "cultivar": ""}, "model": "survey.species", "pk": 99}, {"fields": {"species_code": "PIRE", "scientific_name": "Pinus Resinosa", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "66037", "common_name": "Red Pine", "cultivar": ""}, "model": "survey.species", "pk": 100}, {"fields": {"species_code": "SAAL", "scientific_name": "Sassafras Albidum", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "75755", "common_name": "Sassafras", "cultivar": ""}, "model": "survey.species", "pk": 101}, {"fields": {"species_code": "QUAC", "scientific_name": "Quercus Acutissima", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "71705", "common_name": "Sawtooth Oak", "cultivar": ""}, "model": "survey.species", "pk": 102}, {"fields": {"species_code": "QUCO", "scientific_name": "Quercus Coccinea", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "71764", "common_name": "Scarlet Oak", "cultivar": ""}, "model": "survey.species", "pk": 103}, {"fields": {"species_code": "PRVISC", "scientific_name": "Prunus", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "92411", "common_name": "Schubert Chokecherry", "cultivar": "Not Green Leaf Cultivar"}, "model": "survey.species", "pk": 104}, {"fields": {"species_code": "QUSH", "scientific_name": "Quercus Shumardii", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "72018", "common_name": "Schumard Oak", "cultivar": ""}, "model": "survey.species", "pk": 105}, {"fields": {"species_code": "PISY", "scientific_name": "Pinus Sylvestris", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "66125", "common_name": "Scots Pine", "cultivar": ""}, "model": "survey.species", "pk": 106}, {"fields": {"species_code": "AM", "scientific_name": "Amelanchier Cultivar", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "92395", "common_name": "Serviceberry", "cultivar": ""}, "model": "survey.species", "pk": 107}, {"fields": {"species_code": "ACTR", "scientific_name": "Acer Truncatum", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "92394", "common_name": "Shantung Maple", "cultivar": ""}, "model": "survey.species", "pk": 108}, {"fields": {"species_code": "QUIM", "scientific_name": "Quercus Imbricaria", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "71863", "common_name": "Shingle Oak", "cultivar": ""}, "model": "survey.species", "pk": 109}, {"fields": {"species_code": "ULPU", "scientific_name": "Ulmus Pumila", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "88985", "common_name": "Siberian Elm", "cultivar": ""}, "model": "survey.species", "pk": 110}, {"fields": {"species_code": "BEPE", "scientific_name": "Betula Pendula", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "10189", "common_name": "Silver Birch", "cultivar": ""}, "model": "survey.species", "pk": 111}, {"fields": {"species_code": "TITO", "scientific_name": "Tilia Tomentosa", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "86856", "common_name": "Silver Linden", "cultivar": ""}, "model": "survey.species", "pk": 112}, {"fields": {"species_code": "ACSA1", "scientific_name": "Acer Saccharinum", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "819", "common_name": "Silver Maple", "cultivar": ""}, "model": "survey.species", "pk": 113}, {"fields": {"species_code": "HACA", "scientific_name": "Halesia Caroliniana", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "39541", "common_name": "Silverbell", "cultivar": ""}, "model": "survey.species", "pk": 114}, {"fields": {"species_code": "COCO3", "scientific_name": "Cotinus Coggygria", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "21279", "common_name": "Smoketree", "cultivar": ""}, "model": "survey.species", "pk": 115}, {"fields": {"species_code": "STJA2", "scientific_name": "Styphnolobium Japonicum", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "83286", "common_name": "Sophora", "cultivar": ""}, "model": "survey.species", "pk": 116}, {"fields": {"species_code": "MAGR", "scientific_name": "Magnolia Grandiflora", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "52941", "common_name": "Southern Magnolia", "cultivar": ""}, "model": "survey.species", "pk": 117}, {"fields": {"species_code": "QUFA", "scientific_name": "Quercus Falcata", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "71796", "common_name": "Southern Red Oak", "cultivar": ""}, "model": "survey.species", "pk": 118}, {"fields": {"species_code": "PI1", "scientific_name": "Picea Cultivar", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "92409", "common_name": "Spruce", "cultivar": ""}, "model": "survey.species", "pk": 119}, {"fields": {"species_code": "ACSA2", "scientific_name": "Acer Saccharum", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "824", "common_name": "Sugar Maple", "cultivar": ""}, "model": "survey.species", "pk": 120}, {"fields": {"species_code": "QUBI", "scientific_name": "Quercus Bicolor", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "71738", "common_name": "Swamp White Oak", "cultivar": ""}, "model": "survey.species", "pk": 121}, {"fields": {"species_code": "LIST", "scientific_name": "Liquidambar Styraciflua", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "49548", "common_name": "Sweetgum", "cultivar": ""}, "model": "survey.species", "pk": 122}, {"fields": {"species_code": "ACPS", "scientific_name": "Acer Pseudoplatanus", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "722", "common_name": "Sycamore Maple", "cultivar": ""}, "model": "survey.species", "pk": 123}, {"fields": {"species_code": "ACTA", "scientific_name": "Acer Tataricum", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "921", "common_name": "Tartar Maple", "cultivar": ""}, "model": "survey.species", "pk": 124}, {"fields": {"species_code": "AIAL", "scientific_name": "Ailanthus Altissima", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "1915", "common_name": "Tree of Heaven", "cultivar": ""}, "model": "survey.species", "pk": 125}, {"fields": {"species_code": "ACBU", "scientific_name": "Acer Buergerianum", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "56", "common_name": "Trident Maple", "cultivar": ""}, "model": "survey.species", "pk": 126}, {"fields": {"species_code": "LITU", "scientific_name": "Liriodendron Tulipifera", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "49627", "common_name": "Tulip Poplar", "cultivar": ""}, "model": "survey.species", "pk": 127}, {"fields": {"species_code": "COCO2", "scientific_name": "Corylus Colurna", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "21301", "common_name": "Turkish Hazelnut", "cultivar": ""}, "model": "survey.species", "pk": 128}, {"fields": {"species_code": "HADI", "scientific_name": "Halesia Diptera", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "39577", "common_name": "Two-Winged Silverbell", "cultivar": ""}, "model": "survey.species", "pk": 129}, {"fields": {"species_code": "PIVI", "scientific_name": "Pinus Virginiana", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "66177", "common_name": "Virginia Pine", "cultivar": ""}, "model": "survey.species", "pk": 130}, {"fields": {"species_code": "FRAM", "scientific_name": "Fraxinus Americana", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "36480", "common_name": "White Ash", "cultivar": ""}, "model": "survey.species", "pk": 131}, {"fields": {"species_code": "QUAL", "scientific_name": "Quercus Alba", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "71714", "common_name": "White Oak", "cultivar": ""}, "model": "survey.species", "pk": 132}, {"fields": {"species_code": "PIST", "scientific_name": "Pinus Strobus", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "66105", "common_name": "White Pine", "cultivar": ""}, "model": "survey.species", "pk": 133}, {"fields": {"species_code": "QUPH", "scientific_name": "Quercus Phellos", "created_at": "2015-03-05T20:08:50.350Z", "updated_at": "2015-03-05T20:08:50.350Z", "forms_id": "71982", "common_name": "Willow Oak", "cultivar": ""}, "model": "survey.species", "pk": 134}]
+[
+    {
+        "fields": {
+            "species_code": "FAGR",
+            "scientific_name": "Fagus grandifolia",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "35575",
+            "common_name": "American Beech",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 4
+    },
+    {
+        "fields": {
+            "species_code": "OSVI",
+            "scientific_name": "Ostrya virginiana",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "59861",
+            "common_name": "American Hophornbeam",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 5
+    },
+    {
+        "fields": {
+            "species_code": "CACA",
+            "scientific_name": "Carpinus caroliniana",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "13202",
+            "common_name": "American Hornbeam",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 6
+    },
+    {
+        "fields": {
+            "species_code": "LALA",
+            "scientific_name": "Larix laricina",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "46118",
+            "common_name": "American Larch",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 7
+    },
+    {
+        "fields": {
+            "species_code": "TIAM",
+            "scientific_name": "Tilia americana",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "86679",
+            "common_name": "American Linden",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 8
+    },
+    {
+        "fields": {
+            "species_code": "PHAM",
+            "scientific_name": "Phellodendron amurense",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "63599",
+            "common_name": "Amur Cork Tree",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 9
+    },
+    {
+        "fields": {
+            "species_code": "ACGI",
+            "scientific_name": "Acer ginnala",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "264",
+            "common_name": "Amur Maple",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 10
+    },
+    {
+        "fields": {
+            "species_code": "THOC",
+            "scientific_name": "Thuja occidentalis",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "86325",
+            "common_name": "Arborvitae",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 11
+    },
+    {
+        "fields": {
+            "species_code": "CHTH",
+            "scientific_name": "Chamaecyparis thyoides",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "19248",
+            "common_name": "Atlantic White Cedar",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 12
+    },
+    {
+        "fields": {
+            "species_code": "CEAT",
+            "scientific_name": "Cedrus atlantica",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "92398",
+            "common_name": "Atlas Cedar",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 13
+    },
+    {
+        "fields": {
+            "species_code": "TADI",
+            "scientific_name": "Taxodium distichum",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "85031",
+            "common_name": "Bald Cypress",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 14
+    },
+    {
+        "fields": {
+            "species_code": "POGR",
+            "scientific_name": "Populus grandidentata",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "68155",
+            "common_name": "Big-Tooth Aspen",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 15
+    },
+    {
+        "fields": {
+            "species_code": "BENI",
+            "scientific_name": "Betula nigra",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "10152",
+            "common_name": "Black Birch",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 16
+    },
+    {
+        "fields": {
+            "species_code": "PRSE1",
+            "scientific_name": "Prunus serotina",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "70007",
+            "common_name": "Black Cherry",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 17
+    },
+    {
+        "fields": {
+            "species_code": "NYSY",
+            "scientific_name": "Nyssa sylvatica",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "58191",
+            "common_name": "Black Gum",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 18
+    },
+    {
+        "fields": {
+            "species_code": "ROPS",
+            "scientific_name": "Robinia pseudoacacia",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "74464",
+            "common_name": "Black Locust",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 19
+    },
+    {
+        "fields": {
+            "species_code": "ACNI",
+            "scientific_name": "Acer nigrum",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "586",
+            "common_name": "Black Maple",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 20
+    },
+    {
+        "fields": {
+            "species_code": "QUVE",
+            "scientific_name": "Quercus velutina",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "72074",
+            "common_name": "Black Oak",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 21
+    },
+    {
+        "fields": {
+            "species_code": "PINI",
+            "scientific_name": "Pinus nigra",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "65915",
+            "common_name": "Black Pine",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 22
+    },
+    {
+        "fields": {
+            "species_code": "JUNI",
+            "scientific_name": "Juglans nigra",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "45200",
+            "common_name": "Black Walnut",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 23
+    },
+    {
+        "fields": {
+            "species_code": "PIPU",
+            "scientific_name": "Picea pungens",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "66003",
+            "common_name": "Blue Spruce",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 24
+    },
+    {
+        "fields": {
+            "species_code": "ACNE",
+            "scientific_name": "Acer negundo",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "547",
+            "common_name": "Boxelder",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 25
+    },
+    {
+        "fields": {
+            "species_code": "QUMA1",
+            "scientific_name": "Quercus macrocarpa",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "71907",
+            "common_name": "Bur Oak",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 26
+    },
+    {
+        "fields": {
+            "species_code": "PYCA",
+            "scientific_name": "Pyrus calleryana",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "71298",
+            "common_name": "Callery Pear",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 27
+    },
+    {
+        "fields": {
+            "species_code": "CA1",
+            "scientific_name": "Catalpa cultivar",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "92397",
+            "common_name": "Catalpa",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 28
+    },
+    {
+        "fields": {
+            "species_code": "CAMO",
+            "scientific_name": "Castanea mollissima",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "15059",
+            "common_name": "Chinese Chestnut",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 29
+    },
+    {
+        "fields": {
+            "species_code": "ULPA",
+            "scientific_name": "Ulmus parvifolia",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "88975",
+            "common_name": "Chinese Elm",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 30
+    },
+    {
+        "fields": {
+            "species_code": "CHRE",
+            "scientific_name": "Chionanthus retusus",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "92400",
+            "common_name": "Chinese Fringetree",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 31
+    },
+    {
+        "fields": {
+            "species_code": "SYPE",
+            "scientific_name": "Syringa pekinensis",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "84653",
+            "common_name": "Chinese Treelilac",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 32
+    },
+    {
+        "fields": {
+            "species_code": "PRVISH",
+            "scientific_name": "Prunus virginiana",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "70087",
+            "common_name": "Chokecherry",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 33
+    },
+    {
+        "fields": {
+            "species_code": "CRCR",
+            "scientific_name": "Crataegus Crusgalli",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "92401",
+            "common_name": "Cockspur Hawthorn",
+            "cultivar": "var. inermis"
+        },
+        "model": "survey.species",
+        "pk": 34
+    },
+    {
+        "fields": {
+            "species_code": "CEOC",
+            "scientific_name": "Celtis occidentalis",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "17434",
+            "common_name": "Common Hackberry",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 35
+    },
+    {
+        "fields": {
+            "species_code": "COMA",
+            "scientific_name": "Cornus mas",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "21826",
+            "common_name": "Cornelian Cherry",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 36
+    },
+    {
+        "fields": {
+            "species_code": "MA2",
+            "scientific_name": "Malus cultivar",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "92407",
+            "common_name": "Crabapple",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 37
+    },
+    {
+        "fields": {
+            "species_code": "LA",
+            "scientific_name": "Lagerstroemia cultivar",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "92405",
+            "common_name": "Crepe Myrtle",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 38
+    },
+    {
+        "fields": {
+            "species_code": "MAAC",
+            "scientific_name": "Magnolia acuminata",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "52366",
+            "common_name": "Cucumber Magnolia",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 39
+    },
+    {
+        "fields": {
+            "species_code": "MEGL",
+            "scientific_name": "Metasequoia glyptostroboides",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "54051",
+            "common_name": "Dawn Redwood",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 40
+    },
+    {
+        "fields": {
+            "species_code": "PZME",
+            "scientific_name": "Pseudotsuga menziesii",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "70536",
+            "common_name": "Douglas-Fir",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 41
+    },
+    {
+        "fields": {
+            "species_code": "PODE",
+            "scientific_name": "Populus deltoides",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "67812",
+            "common_name": "Eastern Cottonwood",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 42
+    },
+    {
+        "fields": {
+            "species_code": "TSCA",
+            "scientific_name": "Tsuga canadensis",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "88821",
+            "common_name": "Eastern Hemlock",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 43
+    },
+    {
+        "fields": {
+            "species_code": "CECA",
+            "scientific_name": "Cercis canadensis",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "17037",
+            "common_name": "Eastern Redbud",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 44
+    },
+    {
+        "fields": {
+            "species_code": "JUVI",
+            "scientific_name": "Juniperus virginiana",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "45367",
+            "common_name": "Eastern Redcedar",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 45
+    },
+    {
+        "fields": {
+            "species_code": "PATO",
+            "scientific_name": "Paulownia tomentosa",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "61618",
+            "common_name": "Empress Tree",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 46
+    },
+    {
+        "fields": {
+            "species_code": "QURO",
+            "scientific_name": "Quercus robur",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "71993",
+            "common_name": "English Oak",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 47
+    },
+    {
+        "fields": {
+            "species_code": "ALGL",
+            "scientific_name": "Alnus glutinosa",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "2274",
+            "common_name": "European Alder",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 48
+    },
+    {
+        "fields": {
+            "species_code": "FASY",
+            "scientific_name": "Fagus sylvatica",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "35626",
+            "common_name": "European Beech",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 49
+    },
+    {
+        "fields": {
+            "species_code": "CABE",
+            "scientific_name": "Carpinus betulus",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "12996",
+            "common_name": "European Bornbeam",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 50
+    },
+    {
+        "fields": {
+            "species_code": "CHPI",
+            "scientific_name": "Chamaecyparis pisifera",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "18931",
+            "common_name": "False Cypress",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 51
+    },
+    {
+        "fields": {
+            "species_code": "COFL",
+            "scientific_name": "Cornus florida",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "21528",
+            "common_name": "Flowering Dogwood",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 52
+    },
+    {
+        "fields": {
+            "species_code": "GIBI",
+            "scientific_name": "Ginkgo biloba",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "38243",
+            "common_name": "Ginkgo",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 53
+    },
+    {
+        "fields": {
+            "species_code": "KOPA",
+            "scientific_name": "Koelreuteria paniculata",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "45643",
+            "common_name": "Golden Raintree",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 54
+    },
+    {
+        "fields": {
+            "species_code": "FRPE",
+            "scientific_name": "Fraxinus pennsylvanica",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "36700",
+            "common_name": "Green Ash",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 55
+    },
+    {
+        "fields": {
+            "species_code": "CR",
+            "scientific_name": "Crataegus cultivar",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "92402",
+            "common_name": "Green Hawthorn",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 56
+    },
+    {
+        "fields": {
+            "species_code": "EUUL",
+            "scientific_name": "Eucommia ulmoides",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "92403",
+            "common_name": "Hardy Rubber Tree",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 57
+    },
+    {
+        "fields": {
+            "species_code": "ACCA",
+            "scientific_name": "Acer campestre",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "89",
+            "common_name": "Hedge Maple",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 58
+    },
+    {
+        "fields": {
+            "species_code": "CEDE",
+            "scientific_name": "Cedrus deodara",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "17099",
+            "common_name": "Himalayan Cedar",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 59
+    },
+    {
+        "fields": {
+            "species_code": "ILSP",
+            "scientific_name": "Ilex cultivar",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "92404",
+            "common_name": "Holly",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 60
+    },
+    {
+        "fields": {
+            "species_code": "GLTR",
+            "scientific_name": "Gleditsia triacanthos",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "38664",
+            "common_name": "Honeylocust var. inermis",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 61
+    },
+    {
+        "fields": {
+            "species_code": "AEHI",
+            "scientific_name": "Aesculus hippocastanum",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "1189",
+            "common_name": "Horse Chestnut",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 62
+    },
+    {
+        "fields": {
+            "species_code": "PR",
+            "scientific_name": "Prunus",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T21:41:43.847Z",
+            "forms_id": "92410",
+            "common_name": "Japanese Cherry",
+            "cultivar": "Green Leaf Cultivar"
+        },
+        "model": "survey.species",
+        "pk": 63
+    },
+    {
+        "fields": {
+            "species_code": "CAJA",
+            "scientific_name": "Carpinus japonica",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "92396",
+            "common_name": "Japanese Hornbeam",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 64
+    },
+    {
+        "fields": {
+            "species_code": "ACPA",
+            "scientific_name": "Acer palmatum",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "659",
+            "common_name": "Japanese Maple",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 65
+    },
+    {
+        "fields": {
+            "species_code": "STJA1",
+            "scientific_name": "Styrax japonica",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "83284",
+            "common_name": "Japanese Snowbell",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 66
+    },
+    {
+        "fields": {
+            "species_code": "SYRE",
+            "scientific_name": "Syringa reticulata",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "84775",
+            "common_name": "Japanese Treelilac",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 67
+    },
+    {
+        "fields": {
+            "species_code": "ZESE",
+            "scientific_name": "Zelkova serrata",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "92181",
+            "common_name": "Japanese Zelkova",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 68
+    },
+    {
+        "fields": {
+            "species_code": "CEJA",
+            "scientific_name": "Cercidiphyllum japonicum",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "17274",
+            "common_name": "Katsura Tree",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 69
+    },
+    {
+        "fields": {
+            "species_code": "GYDI",
+            "scientific_name": "Gymnocladus dioicus",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "39377",
+            "common_name": "Kentucky Coffeetree",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 70
+    },
+    {
+        "fields": {
+            "species_code": "CLKE",
+            "scientific_name": "Cladrastris kentukea",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "20483",
+            "common_name": "Kentucky Yellowwood",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 71
+    },
+    {
+        "fields": {
+            "species_code": "COKO",
+            "scientific_name": "Cornus kousa",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "21738",
+            "common_name": "Kousa Dogwood",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 72
+    },
+    {
+        "fields": {
+            "species_code": "TICO",
+            "scientific_name": "Tilia cordata",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "86734",
+            "common_name": "Little-Leaf Linden",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 73
+    },
+    {
+        "fields": {
+            "species_code": "PLAC",
+            "scientific_name": "Platanus x acerifolia",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "66603",
+            "common_name": "London Planetree",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 74
+    },
+    {
+        "fields": {
+            "species_code": "MAAM",
+            "scientific_name": "Maackia amurensis",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "52396",
+            "common_name": "Maackia",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 75
+    },
+    {
+        "fields": {
+            "species_code": "MA1",
+            "scientific_name": "Magnolia cultivar",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "92406",
+            "common_name": "Magnolia",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 76
+    },
+    {
+        "fields": {
+            "species_code": "AC",
+            "scientific_name": "Acer cultivar",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "92391",
+            "common_name": "Maple",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 77
+    },
+    {
+        "fields": {
+            "species_code": "ALJU",
+            "scientific_name": "Albizia julibrissin",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "2361",
+            "common_name": "Mimosa",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 78
+    },
+    {
+        "fields": {
+            "species_code": "MO",
+            "scientific_name": "Morus cultivar",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "92408",
+            "common_name": "Mulberry",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 79
+    },
+    {
+        "fields": {
+            "species_code": "QURU",
+            "scientific_name": "Quercus rubra",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "71997",
+            "common_name": "Northern Red Oak",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 80
+    },
+    {
+        "fields": {
+            "species_code": "ACPL",
+            "scientific_name": "Acer platanoides",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "699",
+            "common_name": "Norway Maple",
+            "cultivar": "Green Leaf Cultivar"
+        },
+        "model": "survey.species",
+        "pk": 81
+    },
+    {
+        "fields": {
+            "species_code": "ACPLCR",
+            "scientific_name": "Acer platanoides",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "92393",
+            "common_name": "Norway Maple",
+            "cultivar": "Not Green Leaf Cultivar"
+        },
+        "model": "survey.species",
+        "pk": 82
+    },
+    {
+        "fields": {
+            "species_code": "PIAB",
+            "scientific_name": "Picea abies",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "65429",
+            "common_name": "Norway Spruce",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 83
+    },
+    {
+        "fields": {
+            "species_code": "AEGL",
+            "scientific_name": "Aesculus glabra",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "1173",
+            "common_name": "Ohio Buckeye",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 84
+    },
+    {
+        "fields": {
+            "species_code": "CERE",
+            "scientific_name": "Cercis reniformis",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "92399",
+            "common_name": "Oklahoma Redbud",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 85
+    },
+    {
+        "fields": {
+            "species_code": "MAPO",
+            "scientific_name": "Maclura pomifera",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "53332",
+            "common_name": "Osage Orange",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 86
+    },
+    {
+        "fields": {
+            "species_code": "COAL",
+            "scientific_name": "Cornus alterniflora",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "21052",
+            "common_name": "Pagoda Dogwood",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 87
+    },
+    {
+        "fields": {
+            "species_code": "BEPA",
+            "scientific_name": "Betula papyrifera",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "10171",
+            "common_name": "Paper Birch",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 88
+    },
+    {
+        "fields": {
+            "species_code": "ACGR",
+            "scientific_name": "Acer griseum",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "295",
+            "common_name": "Paperbark Maple",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 89
+    },
+    {
+        "fields": {
+            "species_code": "PAPE",
+            "scientific_name": "Parrotia persica",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "61197",
+            "common_name": "Persian Ironwood",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 90
+    },
+    {
+        "fields": {
+            "species_code": "CAGL",
+            "scientific_name": "Carya glabra",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "14079",
+            "common_name": "Pignut Hickory",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 91
+    },
+    {
+        "fields": {
+            "species_code": "QUPA",
+            "scientific_name": "Quercus palustris",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "71962",
+            "common_name": "Pin Oak",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 92
+    },
+    {
+        "fields": {
+            "species_code": "PI",
+            "scientific_name": "Pinus cultivar",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "92392",
+            "common_name": "Pine",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 93
+    },
+    {
+        "fields": {
+            "species_code": "PIRI",
+            "scientific_name": "Pinus rigida",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "66047",
+            "common_name": "Pitch Pine",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 94
+    },
+    {
+        "fields": {
+            "species_code": "TAAS",
+            "scientific_name": "Taxodium ascendens",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "84952",
+            "common_name": "Pond Cypress",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 95
+    },
+    {
+        "fields": {
+            "species_code": "PRCE",
+            "scientific_name": "Prunus cerasifera",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "69640",
+            "common_name": "Purple Leaf Plum",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 96
+    },
+    {
+        "fields": {
+            "species_code": "POTR",
+            "scientific_name": "Populus tremuloides",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "69402",
+            "common_name": "Quaking Aspen",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 97
+    },
+    {
+        "fields": {
+            "species_code": "AECA",
+            "scientific_name": "Aesculus x carnea",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "1146",
+            "common_name": "Red Horse Chestnut",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 98
+    },
+    {
+        "fields": {
+            "species_code": "ACRU",
+            "scientific_name": "Acer rubrum",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "784",
+            "common_name": "Red Maple",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 99
+    },
+    {
+        "fields": {
+            "species_code": "PIRE",
+            "scientific_name": "Pinus resinosa",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "66037",
+            "common_name": "Red Pine",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 100
+    },
+    {
+        "fields": {
+            "species_code": "SAAL",
+            "scientific_name": "Sassafras albidum",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "75755",
+            "common_name": "Sassafras",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 101
+    },
+    {
+        "fields": {
+            "species_code": "QUAC",
+            "scientific_name": "Quercus acutissima",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "71705",
+            "common_name": "Sawtooth Oak",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 102
+    },
+    {
+        "fields": {
+            "species_code": "QUCO",
+            "scientific_name": "Quercus coccinea",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "71764",
+            "common_name": "Scarlet Oak",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 103
+    },
+    {
+        "fields": {
+            "species_code": "PRVISC",
+            "scientific_name": "Prunus",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "92411",
+            "common_name": "Schubert Chokecherry",
+            "cultivar": "Not Green Leaf Cultivar"
+        },
+        "model": "survey.species",
+        "pk": 104
+    },
+    {
+        "fields": {
+            "species_code": "QUSH",
+            "scientific_name": "Quercus shumardii",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "72018",
+            "common_name": "Schumard Oak",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 105
+    },
+    {
+        "fields": {
+            "species_code": "PISY",
+            "scientific_name": "Pinus sylvestris",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "66125",
+            "common_name": "Scots Pine",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 106
+    },
+    {
+        "fields": {
+            "species_code": "AM",
+            "scientific_name": "Amelanchier cultivar",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "92395",
+            "common_name": "Serviceberry",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 107
+    },
+    {
+        "fields": {
+            "species_code": "ACTR",
+            "scientific_name": "Acer truncatum",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "92394",
+            "common_name": "Shantung Maple",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 108
+    },
+    {
+        "fields": {
+            "species_code": "QUIM",
+            "scientific_name": "Quercus imbricaria",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "71863",
+            "common_name": "Shingle Oak",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 109
+    },
+    {
+        "fields": {
+            "species_code": "ULPU",
+            "scientific_name": "Ulmus pumila",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "88985",
+            "common_name": "Siberian Elm",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 110
+    },
+    {
+        "fields": {
+            "species_code": "BEPE",
+            "scientific_name": "Betula pendula",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "10189",
+            "common_name": "Silver Birch",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 111
+    },
+    {
+        "fields": {
+            "species_code": "TITO",
+            "scientific_name": "Tilia tomentosa",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "86856",
+            "common_name": "Silver Linden",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 112
+    },
+    {
+        "fields": {
+            "species_code": "ACSA1",
+            "scientific_name": "Acer saccharinum",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "819",
+            "common_name": "Silver Maple",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 113
+    },
+    {
+        "fields": {
+            "species_code": "HACA",
+            "scientific_name": "Halesia caroliniana",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "39541",
+            "common_name": "Silverbell",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 114
+    },
+    {
+        "fields": {
+            "species_code": "COCO3",
+            "scientific_name": "Cotinus coggygria",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "21279",
+            "common_name": "Smoketree",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 115
+    },
+    {
+        "fields": {
+            "species_code": "STJA2",
+            "scientific_name": "Styphnolobium japonicum",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "83286",
+            "common_name": "Sophora",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 116
+    },
+    {
+        "fields": {
+            "species_code": "MAGR",
+            "scientific_name": "Magnolia grandiflora",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "52941",
+            "common_name": "Southern Magnolia",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 117
+    },
+    {
+        "fields": {
+            "species_code": "QUFA",
+            "scientific_name": "Quercus falcata",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "71796",
+            "common_name": "Southern Red Oak",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 118
+    },
+    {
+        "fields": {
+            "species_code": "PI1",
+            "scientific_name": "Picea cultivar",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "92409",
+            "common_name": "Spruce",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 119
+    },
+    {
+        "fields": {
+            "species_code": "ACSA2",
+            "scientific_name": "Acer saccharum",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "824",
+            "common_name": "Sugar Maple",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 120
+    },
+    {
+        "fields": {
+            "species_code": "QUBI",
+            "scientific_name": "Quercus bicolor",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "71738",
+            "common_name": "Swamp White Oak",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 121
+    },
+    {
+        "fields": {
+            "species_code": "LIST",
+            "scientific_name": "Liquidambar styraciflua",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "49548",
+            "common_name": "Sweetgum",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 122
+    },
+    {
+        "fields": {
+            "species_code": "ACPS",
+            "scientific_name": "Acer pseudoplatanus",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "722",
+            "common_name": "Sycamore Maple",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 123
+    },
+    {
+        "fields": {
+            "species_code": "ACTA",
+            "scientific_name": "Acer tataricum",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "921",
+            "common_name": "Tartar Maple",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 124
+    },
+    {
+        "fields": {
+            "species_code": "AIAL",
+            "scientific_name": "Ailanthus altissima",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "1915",
+            "common_name": "Tree of Heaven",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 125
+    },
+    {
+        "fields": {
+            "species_code": "ACBU",
+            "scientific_name": "Acer buergerianum",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "56",
+            "common_name": "Trident Maple",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 126
+    },
+    {
+        "fields": {
+            "species_code": "LITU",
+            "scientific_name": "Liriodendron tulipifera",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "49627",
+            "common_name": "Tulip Poplar",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 127
+    },
+    {
+        "fields": {
+            "species_code": "COCO2",
+            "scientific_name": "Corylus colurna",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "21301",
+            "common_name": "Turkish Hazelnut",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 128
+    },
+    {
+        "fields": {
+            "species_code": "HADI",
+            "scientific_name": "Halesia diptera",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "39577",
+            "common_name": "Two-Winged Silverbell",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 129
+    },
+    {
+        "fields": {
+            "species_code": "PIVI",
+            "scientific_name": "Pinus virginiana",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "66177",
+            "common_name": "Virginia Pine",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 130
+    },
+    {
+        "fields": {
+            "species_code": "FRAM",
+            "scientific_name": "Fraxinus americana",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "36480",
+            "common_name": "White Ash",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 131
+    },
+    {
+        "fields": {
+            "species_code": "QUAL",
+            "scientific_name": "Quercus alba",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "71714",
+            "common_name": "White Oak",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 132
+    },
+    {
+        "fields": {
+            "species_code": "PIST",
+            "scientific_name": "Pinus strobus",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "66105",
+            "common_name": "White Pine",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 133
+    },
+    {
+        "fields": {
+            "species_code": "QUPH",
+            "scientific_name": "Quercus phellos",
+            "created_at": "2015-03-05T20:08:50.350Z",
+            "updated_at": "2015-03-05T20:08:50.350Z",
+            "forms_id": "71982",
+            "common_name": "Willow Oak",
+            "cultivar": ""
+        },
+        "model": "survey.species",
+        "pk": 134
+    }
+]
