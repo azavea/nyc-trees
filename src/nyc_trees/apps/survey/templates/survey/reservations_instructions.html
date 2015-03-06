@@ -2,42 +2,82 @@
 
 {% block aside %}
 
-  <h2>Reservations Instructions</h2>
-  <p class="pageheading-description-detail">
-    Before you're able to make reservations you'll need to do the following:
-  </p>
+    <h2>Reservations Instructions</h2>
+    <p class="pageheading-description-detail">
+        Before you're able to make reservations you'll need to complete these tasks.
+    </p>
 
 {% endblock aside %}
 
 {% block main %}
 
-  <h3>Step #1</h3>
-  <p>
-  {% if user.online_training_complete %}<s>{% endif %}
-  Complete your <a href="{% url "training_summary_pure" %}">online training</a>.
-  {% if user.online_training_complete %}</s>{% endif %}
-  </p>
+    <a href="{% url "training_summary_pure" %}" class="training block item">
+        <div class="row">
+            <div class="col-xs-8">
+                <h5>Complete your online training</h5>
+                <div class="h6"></div>
+            </div>
+            <div class="col-xs-4 text-right">
+                {% if user.online_training_complete %}
+                    <i class="icon-check h4"></i>
+                {% else %}
+                    <button class="btn-primary btn">Start</button>
+                {% endif %}
+            </div>
+        </div>
+    </a>
 
-  <h3>Step #2</h3>
-  <p>
-  {% if user.field_training_complete %}<s>{% endif %}
-  Attend a <a href="{% url "events_list_page" %}?active_filter=training">training event</a>.
-  {% if user.field_training_complete %}</s>{% endif %}
-  </p>
+    <a href="{% url "events_list_page" %}?active_filter=training" class="training block item{% if not step2_enabled %} inactive{% endif %}">
+        <div class="row">
+            <div class="col-xs-8">
+                <h5>Attend a first training event</h5>
+                <div class="h6"></div>
+            </div>
+            <div class="col-xs-4 text-right">
+                {% if user.field_training_complete %}
+                    <i class="icon-check h4"></i>
+                {% elif step2_enabled %}
+                    <button class="btn-primary btn">Start</button>
+                {% endif %}
+            </div>
+        </div>
+    </a>
 
-  <h3>Step #3</h3>
-  <p>
-  {% if user.attended_at_least_two_events %}<s>{% endif %}
-  Attend at least one more <a href="{% url "events_list_page" %}?active_filter=training">training</a>
-  or <a href="{% url "events_list_page" %}?active_filter=mapping">mapping</a> event.
-  {% if user.attended_at_least_two_events %}</s>{% endif %}
-  </p>
+    <a href="{% url "events_list_page" %}?active_filter=training" class="training block item{% if not step3_enabled %} inactive{% endif %}">
+        <div class="row">
+            <div class="col-xs-8">
+                <h5>Attend a second training event</h5>
+                <div class="h6"></div>
+            </div>
+            <div class="col-xs-4 text-right">
+                {% if user.attended_at_least_two_events %}
+                    <i class="icon-check h4"></i>
+                {% elif step3_enabled %}
+                    <button class="btn-primary btn">Start</button>
+                {% endif %}
+            </div>
+        </div>
+    </a>
 
-  <h3>Step #4</h3>
-  <p>
-  Press the "Request Individual Mapper Status" button from your
-  <a href="{% url "user_detail" username=user.username %}">profile page</a> or
-  the <a href="{% url "home_page" %}">dashboard</a>.
-  </p>
+    <form method="POST" action="{% url "request_individual_mapper_status" username=user.username %}">
+        {% csrf_token %}
+        <a href="javascript:;" onclick="form.submit()" class="training block item{% if not step4_enabled %} inactive{% endif %}">
+            <div class="row">
+                <div class="col-xs-8">
+                    <h5>Request individual mapper status</h5>
+                    <div class="h6"></div>
+                </div>
+                <div class="col-xs-4 text-right">
+                    {% if step4_enabled %}
+                        {% if step4_complete %}
+                            <i class="icon-check h4"></i>
+                        {% elif step4_enabled %}
+                            <button class="btn-primary btn">Start</button>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </a>
+    </form>
 
 {% endblock main %}
