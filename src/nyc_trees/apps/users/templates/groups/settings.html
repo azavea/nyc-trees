@@ -87,7 +87,7 @@
 
                         <div class="main-footer">
                             <div class="pull-right">
-                                <input type="submit" class="btn btn-link" value="Save group details" />
+                                <input type="submit" class="btn btn-primary" value="Save group details" />
                             </div>
                             <a class="btn btn-link" href="{% url 'group_detail' group_slug=group_slug %}">Cancel</a>
                         </div>
@@ -113,10 +113,12 @@
                                 {{ form.allows_individual_mappers.errors }}
                                 <!-- Because we use a hidden 'allows_individual_mappers' field above, this field
                                      does not get an 'id'.  So wrap the input, because the 'for' attribute won't work -->
-                                <label>
-                                    {{ form.allows_individual_mappers }}
-                                    {{ form.allows_individual_mappers.label }}
-                                </label>
+                                <div class="checkbox">
+                                    <label>
+                                        {{ form.allows_individual_mappers }}
+                                        {{ form.allows_individual_mappers.label }}
+                                    </label>
+                                </div>
                             </div>
 
                             {% comment %}
@@ -132,14 +134,14 @@
                             {{ form.image.as_hidden }}
 
                             <div class="pull-right">
-                              <input id="submit-individual-mappers-form" type="submit" class="btn btn-link" value="Save" />
+                              <input id="submit-individual-mappers-form" type="submit" class="btn btn-primary" value="Save" />
                             </div>
                             <a class="btn btn-link" href="{% url 'group_detail' group_slug=group_slug %}">Cancel</a>
                         </form>
                     </div>
-                    <hr>
                 </div>
                 {% if group.allows_individual_mappers %}
+                <hr>
                 <div class="mappers-view">
                     <ul class="nav nav-tabs nav-tabs--filter">
                         <li class="active">
