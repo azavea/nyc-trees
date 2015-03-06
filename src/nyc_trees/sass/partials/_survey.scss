@@ -1,4 +1,13 @@
 .tree-form {
+    // Override Select2 styling.  We want the element to be visible but "under" the autocomplete
+    // to play well with form validation and serialization
+    select[name="species_id"] {
+        display: block !important;
+        position: relative;
+        top: -39px;
+        opacity: 0;
+        z-index: -1;
+    }
     // Hide checkboxes and radios, and use their checked/unchecked to style their label
     input[type="checkbox"], input[type="radio"] {
         opacity: 0;

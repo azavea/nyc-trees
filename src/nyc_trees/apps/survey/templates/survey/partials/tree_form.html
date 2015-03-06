@@ -50,8 +50,10 @@
                     Species
                     <select name="species_id" class="form-control" required>
                       <option></option>
-                      {% for pk, name in choices.species %}
-                        <option value="{{ pk }}">{{ name }}</option>
+                      {% for species in choices.species %}
+                      <option value="{{ species.pk }}" data-scientific-name="{{ species.scientific_name }}" data-cultivar="{{ species.cultivar }}">
+                        {{ species.common_name }}
+                      </option>
                       {% endfor %}
                     </select>
                 </label>

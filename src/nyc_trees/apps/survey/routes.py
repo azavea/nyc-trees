@@ -85,9 +85,6 @@ survey_from_event = do(
 flag_survey = do(login_required,
                  route(POST=do(json_api_call, v.flag_survey)))
 
-species_autocomplete_list = route(
-    GET=v.species_autocomplete_list)
-
 blockface = route(GET=do(json_api_call, v.blockface))
 
 #####################################
@@ -102,7 +99,7 @@ admin_blockface_partial = route(
     GET=v.admin_blockface_partial)
 
 admin_blockface_detail_page = route(
-    GET=v.admin_blockface_page)
+    GET=v.admin_blockface_detail_page)
 
 admin_extend_blockface_reservation = route(
     POST=v.admin_extend_blockface_reservation)

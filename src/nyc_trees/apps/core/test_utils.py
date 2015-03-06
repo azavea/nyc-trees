@@ -13,7 +13,7 @@ from django.test import RequestFactory
 from django.utils.timezone import now
 
 from apps.event.models import Event
-from apps.survey.models import Tree, Survey
+from apps.survey.models import Tree, Survey, Species
 
 
 def make_request(params={}, user=None, method='GET', body=None, file=None,
@@ -107,3 +107,18 @@ def make_tree(survey, **kwargs):
     t.clean_and_save()
 
     return t
+
+
+def make_species(**kwargs):
+    defaults = {
+        'forms_id': '123',
+        'species_code': 'BDL',
+        'scientific_name': 'Ulmus Americanan',
+        'common_name': 'Elm'
+    }
+    defaults.update(kwargs)
+
+    s = Species(**defaults)
+    s.clean_and_save()
+
+    return s
