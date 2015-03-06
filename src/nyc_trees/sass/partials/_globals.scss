@@ -236,6 +236,7 @@ aside {
   padding-top: .4rem;
   > li {
     display: inline-block;
+    background-color: #fff;
     &.active {
       & > a {
         font-weight: bold;

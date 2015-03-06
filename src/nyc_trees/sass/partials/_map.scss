@@ -107,6 +107,14 @@
   }
 }
 
+@media (max-width: $screen-sm - 1) {
+  .pageheading-description-detail {
+    .tab-status-map-tab & {
+      display: none;
+    }
+  }
+}
+
 @media (min-width: $screen-sm) {
   .location-search-container {
     top: 1rem;
@@ -114,12 +122,15 @@
     width: 40rem;
     background-color: transparent;
   }
-  .toggle-tab-button {
-    border: 0 !important;
-    background-color: transparent !important;
+  .nav-tabs > li {
     .active & {
-      background-color: $brand-primary !important;
-      color: #fff !important;
+      background-color: transparent;
+      color: #fff;
+    }
+    & > .toggle-tab-button {
+      border: 0 !important;
+      border-radius: $border-radius-base !important;
+      background-color: transparent;
     }
   }
   .nav-tabs-event {
@@ -128,6 +139,10 @@
     position: absolute;
     border: 0;
     background-color: transparent;
+    &.nav-tabs > li.active > a {
+      background-color: $brand-secondary;
+      color: #fff;
+    }
   }
   .tab-status-list {
     .map-sidebar {
