@@ -236,8 +236,8 @@ def immediate_events(request):
     seven_days = relativedelta(days=7)
     nowish = (Event.objects
               .filter(is_private=False,
-                      begins_at__gte=now() - seven_days,
-                      begins_at__lte=now() + seven_days)
+                      ends_at__gt=now(),
+                      ends_at__lte=now() + seven_days)
               .order_by('begins_at'))
 
     if user.is_authenticated():
@@ -252,4 +252,5 @@ def immediate_events(request):
 
 @EventList
 def all_events(request):
-    return Event.objects.filter(is_private=False).order_by('begins_at')
+    return Event.objects.filter(is_private=False,
+                                ends_at__gt=now()).order_by('begins_at')

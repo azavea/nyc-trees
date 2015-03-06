@@ -35,20 +35,20 @@
     <div class="tab-pane active" id="list">
       <section>
         {# TODO: make event_list return a totally empty context to avoid introspection #}
+        <h4>Your Events this week</h4>
+        <div data-class="event-list-container">
         {% if immediate_events.event_infos %}
-          <h4>Your Events this week</h4>
-          <div data-class="event-list-container">
-              {% include "event/partials/event_list.html" with event_list=immediate_events %}
-          </div>
+          {% include "event/partials/event_list.html" with event_list=immediate_events %}
+        {% else %}
+          <p>You haven't RSVPed to any events yet.</p>
         {% endif %}
+        </div>
 
         {# TODO: make event_list return a totally empty context to avoid introspection #}
-        {% if all_events.event_infos %}
-          <h4>Browse events</h4>
-          <div data-class="event-list-container">
-              {% include "event/partials/event_list.html" with event_list=all_events %}
-          </div>
-        {% endif %}
+        <h4>Browse events</h4>
+        <div data-class="event-list-container">
+        {% include "event/partials/event_list.html" with event_list=all_events %}
+        </div>
       </section>
     </div>
     <div class="tab-pane map-container" id="map-tab">
