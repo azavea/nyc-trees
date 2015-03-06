@@ -107,6 +107,10 @@
   }
 }
 
+.modal {
+  z-index: $zindex-modal;
+}
+
 @media (max-width: $screen-sm - 1) {
   .pageheading-description-detail {
     .tab-status-map-tab & {
