@@ -265,6 +265,13 @@ aside {
   }
 }
 
+.panel {
+  overflow: hidden;
+  ul:last-child {
+    margin-bottom: 0;
+  }
+}
+
 .tab-pane {
   padding-top: 6px;
 }

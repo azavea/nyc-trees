@@ -31,31 +31,36 @@
 {% endif %}
 </h3>
 
-<p>You answered {{ score }}/{{ quiz.questions|length }}
+<p>You answered <span class="color--primary">{{ score }}/{{ quiz.questions|length }}</span>
     question{{ quiz.questions|length|pluralize }} correctly.</p>
 
-<p>Your best score so far was {{ best_score }}/{{ quiz.questions|length }}.</p>
-
-{% for item in quiz_summary %}
+<p>Your best score so far was <span class="color--primary">{{ best_score }}/{{ quiz.questions|length }}</span>.</p>
 <hr />
-
-<p>{{ forloop.counter }}. {{ item.question.text }}</p>
-
-<p>
-<strong>
+{% for item in quiz_summary %}
 {% if item.is_correct %}
-    Correct.
+    <div class="panel panel-success">
 {% else %}
-    Not Correct.
+    <div class="panel panel-warning">
 {% endif %}
-</strong>
-You answered:
-<ul>
-{% for ans in item.submitted_answers %}
-    <li>{{ ans }}</li>
-{% endfor %}
-</ul>
-</p>
+    <div class="panel-heading">
+        {{ forloop.counter }}. {{ item.question.text }}
+    </div>
+    <div class="panel-body">
+        <p>
+            {% if item.is_correct %}
+                <strong class="color--primary">Correct.</strong>
+            {% else %}
+                <strong class="color--warning">Not Correct.</strong>
+            {% endif %}
+            You answered:
+        </p>
+        <ul>
+        {% for ans in item.submitted_answers %}
+            <li>{{ ans }}</li>
+        {% endfor %}
+        </ul>
+    </div>
+</div>
 {% endfor %}
 
 <hr/>
