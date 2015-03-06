@@ -226,8 +226,8 @@ def _get_survey_choices():
     grouped_problem_choices = [choice for choice in PROBLEMS_CHOICES
                                if isinstance(choice[1], tuple)]
 
-    guard_installation_choices = (('Yes', 'Guard is installed'),
-                                  ('No', 'No guard installed'))
+    guard_installation_choices = (('Yes', 'Installed'),
+                                  ('No', 'Not installed'))
     guard_helpfulness_choices = [choice for choice in GUARD_CHOICES
                                  if choice[0] != 'None']
 

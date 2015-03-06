@@ -56,7 +56,7 @@ var dom = {
         btnGroupNext: '#btn-group-next',
         btnNext: '#btn-next',
 
-        pageContainer: '#pages',
+        actionBar: '.action-bar-survey',
         surveyPage: '#survey',
         treeFormTemplate: '#tree-form-template',
         treeFormcontainer: '#tree-form-container',
@@ -196,12 +196,6 @@ $(window).on('beforeunload', function(e) {
     }
 });
 
-function showPage(selector) {
-    var pages = $(dom.pageContainer).children();
-    pages.addClass('hidden');
-    pages.filter(selector).removeClass('hidden');
-}
-
 // There is no attribute for requiring "one or more" of a group of checkboxes to
 // be selected, so we have to handle it ourselves.
 $(dom.treeFormcontainer).on('change', 'input[name="problems"]', function () {
@@ -265,7 +259,10 @@ function checkFormValidity($forms) {
 
     // For each form element
     $forms.find('input, select, textarea').each(function(i, el) {
-        if ($(el).is(':visible') && !el.validity.valid) {
+        // We would be checking the input itself for visibility, but that
+        // makes styling more complicated. Instead we check the parent's
+        // visiblity.
+        if ($(el).parent().is(':visible') && !el.validity.valid) {
             valid = false;
 
             $(el).focus();
@@ -296,7 +293,10 @@ $(dom.surveyPage).on('submit', 'form', function(e) {
 
 
 $(dom.btnNext).click(function(e) {
-    showPage(dom.surveyPage);
+    $(dom.selectSide).addClass('hidden');
+    $(dom.selectTeammate).addClass('hidden');
+    $(dom.surveyPage).toggleClass('hidden');
+    $(dom.actionBar).addClass('expanded');
 });
 
 $(dom.addTree).click(function (){
@@ -314,8 +314,15 @@ $(dom.addTree).click(function (){
 });
 
 function getTreeData(i, form) {
-    var formArray = $(form).find('input,select').not(':hidden').serializeArray(),
-        obj = {};
+    // We would be checking the input itself for visibility, but that makes styling more complicated
+    // Instead we check the parent's visiblity.
+    var obj = {},
+        formArray = $(form)
+            .find('input:not([type="submit"]),select')
+            .not(function(_, el) {
+                return $(el).parent().is(':hidden');
+            })
+            .serializeArray();
 
     $.each(formArray, function(i, o){
         // We need to explicitly serialize "problems" as a list, and append to it
@@ -335,6 +342,7 @@ function getTreeData(i, form) {
     });
 
     return obj;
+
 }
 
 $(dom.submitSurvey).on('click', submitSurveyWithTrees);
