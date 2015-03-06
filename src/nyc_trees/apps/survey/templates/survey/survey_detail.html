@@ -16,11 +16,18 @@
     <div class="action-bar-survey">
         <div>
             <p>Does this look right?</p>
+            <button id="survey-detail-abandon-incomplete" class="btn btn-default">No - Start Over</button><br/>
+            <button id="survey-detail-submit-incomplete" class="btn btn-default">No - Submit For Review</button><br/>
+            <button id="survey-detail-submit-complete" class="btn btn-default">Yes</button><br/>
         </div>
     </div>
 </div>
 
 {% endblock content %}
+
+{% block extra_content %}
+{% include "survey/partials/map_another_popup.html" %}
+{% endblock extra_content %}
 
 {# No footer on the survey pages, they have their own footer #}
 {% block footer %}
