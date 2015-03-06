@@ -6,7 +6,8 @@ from __future__ import division
 from django.conf.urls import patterns, url
 
 from apps.survey.routes import (survey, survey_from_event,
-                                flag_survey, survey_detail)
+                                flag_survey, survey_detail,
+                                complete_survey)
 
 
 # These URLs have the prefix 'survey/'
@@ -20,4 +21,7 @@ urlpatterns = patterns(
         survey_from_event, name='survey_from_event'),
 
     url(r'^flag/(?P<survey_id>\d+)/$', flag_survey, name='flag_survey'),
+
+    url(r'^complete/(?P<survey_id>\d+)/$',
+        complete_survey, name='complete_survey'),
 )
