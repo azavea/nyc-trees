@@ -5,9 +5,11 @@ var $ = require('jquery'),
     L = require('leaflet');
 
 var zoom = require('./lib/mapUtil').ZOOM,
+    SATELLITE = 'satellite',
     searchController = require('./searchController');
 
 module.exports = {
+    SATELLITE: SATELLITE,
     create: create,
     addTileLayer: addTileLayer,
     addGridLayer: addGridLayer
@@ -48,7 +50,7 @@ function create(options) {
         map.fitBounds(config.bounds);
     }
 
-    initBaseMap(map);
+    initBaseMap(map, options);
 
     if (options.geolocation && navigator.geolocation) {
         initGeolocation($controlsContainer, map);
@@ -81,17 +83,19 @@ function isRetinaDevice() {
     return window.devicePixelRatio && window.devicePixelRatio > 1;
 }
 
-function initBaseMap(map) {
-    var strandardResUrl = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
-        retinaUrl = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png',
-        url = isRetinaDevice() ? retinaUrl : strandardResUrl,
-        options =  {
+function initBaseMap(map, options) {
+    var layerOptions =  {
             subdomains: 'abcd',
             maxZoom: zoom.MAX,
             attributon: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> ' +
                 'contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
-        };
-    map.addLayer(new L.TileLayer(url, options));
+        },
+        satelliteUrl = 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        strandardResUrl = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+        retinaUrl = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png',
+        url = options.baseMap === SATELLITE ? satelliteUrl :
+            isRetinaDevice() ? retinaUrl : strandardResUrl;
+    map.addLayer(new L.TileLayer(url, layerOptions));
 }
 
 function initGeolocation($controlsContainer, map) {
