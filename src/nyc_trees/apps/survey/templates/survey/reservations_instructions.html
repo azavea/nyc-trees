@@ -18,7 +18,7 @@
                 <div class="h6"></div>
             </div>
             <div class="col-xs-4 text-right">
-                {% if user.online_training_complete %}
+                {% if step1_complete %}
                     <i class="icon-check h4"></i>
                 {% else %}
                     <button class="btn-primary btn">Start</button>
@@ -27,32 +27,32 @@
         </div>
     </a>
 
-    <a href="{% url "events_list_page" %}?active_filter=training" class="training block item{% if not step2_enabled %} inactive{% endif %}">
+    <a href="{% url "events_list_page" %}?active_filter=training" class="training block item{% if not step1_complete %} inactive{% endif %}">
         <div class="row">
             <div class="col-xs-8">
                 <h5>Attend a first training event</h5>
                 <div class="h6"></div>
             </div>
             <div class="col-xs-4 text-right">
-                {% if user.field_training_complete %}
+                {% if step2_complete %}
                     <i class="icon-check h4"></i>
-                {% elif step2_enabled %}
+                {% elif step1_complete %}
                     <button class="btn-primary btn">Start</button>
                 {% endif %}
             </div>
         </div>
     </a>
 
-    <a href="{% url "events_list_page" %}?active_filter=training" class="training block item{% if not step3_enabled %} inactive{% endif %}">
+    <a href="{% url "events_list_page" %}?active_filter=training" class="training block item{% if not step2_complete %} inactive{% endif %}">
         <div class="row">
             <div class="col-xs-8">
                 <h5>Attend a second training event</h5>
                 <div class="h6"></div>
             </div>
             <div class="col-xs-4 text-right">
-                {% if user.attended_at_least_two_events %}
+                {% if step3_complete %}
                     <i class="icon-check h4"></i>
-                {% elif step3_enabled %}
+                {% elif step2_complete %}
                     <button class="btn-primary btn">Start</button>
                 {% endif %}
             </div>
@@ -61,19 +61,17 @@
 
     <form method="POST" action="{% url "request_individual_mapper_status" username=user.username %}">
         {% csrf_token %}
-        <a href="javascript:;" onclick="form.submit()" class="training block item{% if not step4_enabled %} inactive{% endif %}">
+        <a href="javascript:;" onclick="form.submit()" class="training block item{% if not step3_complete %} inactive{% endif %}">
             <div class="row">
                 <div class="col-xs-8">
                     <h5>Request individual mapper status</h5>
                     <div class="h6"></div>
                 </div>
                 <div class="col-xs-4 text-right">
-                    {% if step4_enabled %}
-                        {% if step4_complete %}
-                            <i class="icon-check h4"></i>
-                        {% elif step4_enabled %}
-                            <button class="btn-primary btn">Start</button>
-                        {% endif %}
+                    {% if step4_complete %}
+                        <i class="icon-check h4"></i>
+                    {% elif step3_complete %}
+                        <button class="btn-primary btn">Start</button>
                     {% endif %}
                 </div>
             </div>
