@@ -17,9 +17,9 @@ psql -c "CREATE EXTENSION IF NOT EXISTS postgis;"
 # Run migrations
 envdir /etc/nyc-trees.d/env /opt/app/manage.py migrate
 # Load block face data
-envdir /etc/nyc-trees.d/env /opt/app/manage.py loaddata $DIR/../src/nyc_trees/apps/survey/fixtures/blockface.json
+envdir /etc/nyc-trees.d/env /opt/app/manage.py loaddata $DIR/../../src/nyc_trees/apps/survey/fixtures/blockface.json
 # Load species data
-envdir /etc/nyc-trees.d/env /opt/app/manage.py loaddata $DIR/../src/nyc_trees/apps/survey/fixtures/species.json
+envdir /etc/nyc-trees.d/env /opt/app/manage.py loaddata $DIR/../../src/nyc_trees/apps/survey/fixtures/species.json
 
 # Setup soft launch flag if it does not already exist
 if ! envdir /etc/nyc-trees.d/env /opt/app/manage.py flag -l | grep full_access; then
