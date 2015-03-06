@@ -22,7 +22,8 @@ var $ = require('jquery'),
     treesJSON = $(dom.mapSelector).attr(dom.treesJSONAttr),
     blockfaceMap = mapModule.create({
         legend: false,
-        search: false
+        search: false,
+        baseMap: mapModule.SATELLITE
     }),
 
     drawLayer = new L.geoJson(null, {
