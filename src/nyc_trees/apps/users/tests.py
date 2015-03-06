@@ -16,12 +16,12 @@ from django.utils.timezone import now
 
 from apps.core.models import User, Group
 from apps.core.test_utils import (make_request, make_event, make_tree,
-                                  make_survey)
+                                  make_survey, make_species)
 
 from apps.event.models import EventRegistration
 from apps.event.routes import event_registration, check_in_user_to_event
 
-from apps.survey.models import Species, Blockface, Territory
+from apps.survey.models import Blockface, Territory
 
 from apps.users.models import (Follow, Achievement, achievements,
                                AchievementDefinition, TrustedMapper)
@@ -149,8 +149,8 @@ class ProfileTemplateTests(UsersTestCase):
         blockface = Blockface.objects.create(
             geom=MultiLineString(LineString(((0, 0), (1, 1))))
         )
-        elm = Species.objects.create(name='Elm')
-        maple = Species.objects.create(name='Maple')
+        elm = make_species(common_name='Elm')
+        maple = make_species(common_name='Maple')
         survey = make_survey(self.user, blockface)
         make_tree(survey, species=maple)
         make_tree(survey, species=elm)

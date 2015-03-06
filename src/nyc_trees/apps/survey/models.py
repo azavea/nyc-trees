@@ -53,7 +53,18 @@ class Survey(NycModel, models.Model):
 
 
 class Species(NycModel, models.Model):
-    name = models.CharField(max_length=200, unique=True)
+    scientific_name = models.CharField(max_length=100)
+    common_name = models.CharField(max_length=100)
+    cultivar = models.CharField(max_length=100, blank=True)
+
+    forms_id = models.CharField(max_length=10)
+    species_code = models.CharField(max_length=10)
+
+    def __unicode__(self):
+        return '%s [%s]' % (self.common_name, self.scientific_name)
+
+    class Meta:
+        unique_together = ("scientific_name", "cultivar", "common_name")
 
 
 CURB_CHOICES = (

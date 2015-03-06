@@ -266,8 +266,9 @@ function checkFormValidity($forms) {
             valid = false;
 
             $(el).focus();
-            if (el.select) {
-                el.select();
+
+            if ($(el).is('select[name="species_id"]') && ! $(el).select2("val")) {
+                valid = false;
             }
 
             // "submit" the form.  This will trigger the builtin browser validation messages.
@@ -306,6 +307,9 @@ $(dom.addTree).click(function (){
         var treeNumber = $treeForms.length + 1;
 
         $(dom.treeFormcontainer).append(formTemplate({tree_number: treeNumber}));
+
+        var $newForm = $(dom.treeFormcontainer).find('[data-class="tree-form"]').last();
+        setupSpeciesAutocomplete($newForm);
     }
 });
 
@@ -497,3 +501,69 @@ function saveWithoutTrees() {
         $(dom.noTreesConfirm).on('click', saveWithoutTrees);
     });
 }
+
+function setupSpeciesAutocomplete($form) {
+    var getFormattedData = function(state) {
+        var $option = $(state.element),
+            scientificName = $option.data('scientific-name').trim(),
+            cultivar = $option.data('cultivar').trim(),
+            commonName = state.text.trim();
+
+        if (cultivar) {
+            return {
+                essentialName: "<i>" + scientificName + "</i> (" + cultivar + ")",
+                commonName: commonName
+            };
+        } else {
+            return {
+                essentialName: "<i>" + scientificName + "</i>",
+                commonName: commonName
+            };
+        }
+    };
+
+    $form.find('select[name="species_id"]').select2({
+        allowClear: false,
+        matcher: function(term, commonName, $option) {
+            var scientificName = $option.data('scientific-name'),
+                cultivar = $option.data('cultivar'),
+
+                matches = function(content) {
+                    if ($.type(content) === "string") {
+                        return content.toUpperCase().indexOf(term.toUpperCase()) >= 0;
+                    }
+                    return false;
+                };
+
+            return matches(commonName) || matches(scientificName) || matches(cultivar);
+        },
+
+        // For the formatted selection, we need to do our best to get it on one
+        // line.  It will get cut off with ellipsis if it's too long
+        formatSelection: function(state) {
+            var data = getFormattedData(state);
+
+            return data.commonName + ' &mdash; ' + data.essentialName;
+        },
+
+        // For the formatted result row, it's ok to be on multiple rows
+        formatResult: function(state, container, query) {
+            var data = getFormattedData(state),
+                html = '<p>' + data.commonName + '</p><p>' + data.essentialName + '</p>',
+                index = html.toUpperCase().indexOf(query.term.toUpperCase()),
+                end = Math.max(0, index) + query.term.length;
+
+            // We add a class of 'select2-match' around the first piece of text
+            // matching our query, to indicate what part matched
+            if (index >= 0 && end > index) {
+                return html.slice(0, index) + '<span class="select2-match">' + html.slice(index, end) + '</span>' + html.slice(end);
+            } else {
+                return html;
+            }
+        },
+
+        escapeMarkup: function(m) { return m; }
+    });
+}
+
+setupSpeciesAutocomplete($(dom.treeFormcontainer).find('[data-class="tree-form"]'));
