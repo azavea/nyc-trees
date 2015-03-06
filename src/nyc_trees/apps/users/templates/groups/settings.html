@@ -87,7 +87,7 @@
 
                         <div class="main-footer">
                             <div class="pull-right">
-                                <input type="submit" class="btn" value="Save group details" />
+                                <input type="submit" class="btn btn-link" value="Save group details" />
                             </div>
                             <a class="btn btn-link" href="{% url 'group_detail' group_slug=group_slug %}">Cancel</a>
                         </div>
@@ -132,7 +132,7 @@
                             {{ form.image.as_hidden }}
 
                             <div class="pull-right">
-                              <input id="submit-individual-mappers-form" type="submit" class="btn" value="Save" />
+                              <input id="submit-individual-mappers-form" type="submit" class="btn btn-link" value="Save" />
                             </div>
                             <a class="btn btn-link" href="{% url 'group_detail' group_slug=group_slug %}">Cancel</a>
                         </form>

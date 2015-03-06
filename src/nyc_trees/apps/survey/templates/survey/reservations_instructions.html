@@ -1,38 +1,43 @@
-{% extends "base.html" %}
+{% extends "base_two_frames.html" %}
 
-{% block content %}
+{% block aside %}
 
-{# TODO: Design #}
-<h1>Reservations Instructions</h1>
-<p>Before you're able to make reservations you'll need to do the following:
+  <h2>Reservations Instructions</h2>
+  <p class="pageheading-description-detail">
+    Before you're able to make reservations you'll need to do the following:
+  </p>
 
-<h3>Step #1</h3>
-<p>
-{% if user.online_training_complete %}<s>{% endif %}
-Complete your <a href="{% url "training_summary_pure" %}">online training</a>.
-{% if user.online_training_complete %}</s>{% endif %}
-</p>
+{% endblock aside %}
 
-<h3>Step #2</h3>
-<p>
-{% if user.field_training_complete %}<s>{% endif %}
-Attend a <a href="{% url "events_list_page" %}?active_filter=training">training event</a>.
-{% if user.field_training_complete %}</s>{% endif %}
-</p>
+{% block main %}
 
-<h3>Step #3</h3>
-<p>
-{% if user.attended_at_least_two_events %}<s>{% endif %}
-Attend at least one more <a href="{% url "events_list_page" %}?active_filter=training">training</a>
-or <a href="{% url "events_list_page" %}?active_filter=mapping">mapping</a> event.
-{% if user.attended_at_least_two_events %}</s>{% endif %}
-</p>
+  <h3>Step #1</h3>
+  <p>
+  {% if user.online_training_complete %}<s>{% endif %}
+  Complete your <a href="{% url "training_summary_pure" %}">online training</a>.
+  {% if user.online_training_complete %}</s>{% endif %}
+  </p>
 
-<h3>Step #4</h3>
-<p>
-Press the "Request Individual Mapper Status" button from your
-<a href="{% url "user_detail" username=user.username %}">profile page</a> or
-the <a href="{% url "home_page" %}">dashboard</a>.
-</p>
+  <h3>Step #2</h3>
+  <p>
+  {% if user.field_training_complete %}<s>{% endif %}
+  Attend a <a href="{% url "events_list_page" %}?active_filter=training">training event</a>.
+  {% if user.field_training_complete %}</s>{% endif %}
+  </p>
 
-{% endblock %}
+  <h3>Step #3</h3>
+  <p>
+  {% if user.attended_at_least_two_events %}<s>{% endif %}
+  Attend at least one more <a href="{% url "events_list_page" %}?active_filter=training">training</a>
+  or <a href="{% url "events_list_page" %}?active_filter=mapping">mapping</a> event.
+  {% if user.attended_at_least_two_events %}</s>{% endif %}
+  </p>
+
+  <h3>Step #4</h3>
+  <p>
+  Press the "Request Individual Mapper Status" button from your
+  <a href="{% url "user_detail" username=user.username %}">profile page</a> or
+  the <a href="{% url "home_page" %}">dashboard</a>.
+  </p>
+
+{% endblock main %}

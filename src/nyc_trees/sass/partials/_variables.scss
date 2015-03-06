@@ -84,7 +84,7 @@ $body-bg:               $gray-lightest;
 $text-color:            $gray-light;
 
 //** Global textual link color.
-$link-color:            $brand-primary;
+$link-color:            $brand-secondary;
 //** Link hover color set via `darken()` function.
 $link-hover-color:      darken($link-color, 15%);
 
@@ -200,27 +200,27 @@ $table-border-color:            #ddd;
 
 $btn-font-weight:                normal;
 
-$btn-default-color:              $gray-light !important;
+$btn-default-color:              #fff;
 $btn-default-bg:                 $brand-secondary;
 $btn-default-border:             $brand-secondary;
 
-$btn-primary-color:              #fff !important;
+$btn-primary-color:              #fff;
 $btn-primary-bg:                 $brand-primary;
 $btn-primary-border:             $brand-primary;
 
-$btn-success-color:              #fff !important;
+$btn-success-color:              #fff;
 $btn-success-bg:                 $brand-success;
 $btn-success-border:             darken($btn-success-bg, 5%);
 
-$btn-info-color:                 #fff !important;
+$btn-info-color:                 #fff;
 $btn-info-bg:                    $brand-info;
 $btn-info-border:                darken($btn-info-bg, 5%);
 
-$btn-warning-color:              #fff !important;
+$btn-warning-color:              #fff;
 $btn-warning-bg:                 $brand-warning;
 $btn-warning-border:             darken($btn-warning-bg, 5%);
 
-$btn-danger-color:               #fff !important;
+$btn-danger-color:               #fff;
 $btn-danger-bg:                  $brand-danger;
 $btn-danger-border:              darken($btn-danger-bg, 5%);
 
