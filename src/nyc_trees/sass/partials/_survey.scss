@@ -82,9 +82,12 @@
     h3 {
         margin-bottom: 2rem;
     }
+    #another-tree {
+        margin-bottom: 2rem;
+    }
 
     @media (max-width: $screen-sm) {
-        padding: $grid-gutter-width/3 $grid-gutter-width;
+        padding: $grid-gutter-width/3 $grid-gutter-width/2;
     }
 }
 
@@ -119,6 +122,9 @@
         font-weight: 600;
         margin: 0;
         border: none;
+    }
+    #submit-survey {
+        margin-bottom: 2rem;
     }
 }
 
