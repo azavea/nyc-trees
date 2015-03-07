@@ -40,17 +40,15 @@
                 <button class="btn btn-primary btn-block" id="another-tree">+ Another Tree</button>
                 <a class="btn btn-gray btn-block" id="cant-map" href="#quit-popup" data-toggle="modal">I cannot map this block</a>
             </div>
-            
+
 
             <form autocomplete="off" class="distance-end-form">
                 <!-- We need a clickable submit button in order to trigger browser error validation popups -->
                 <input type="submit" data-class="fake-submit" class="hidden">
 
                 <div class="field">
-                    <label>
-                        Distance to End
-                        <input id="distance_to_end" class="form-control" required type="number" min="0" step="any" placeholder="ft">
-                    </label>
+                    <label for="distance_to_end">Distance to End</label>
+                    <input id="distance_to_end" class="form-control" required type="number" min="0" step="any" placeholder="ft">
                 </div>
             </form>
             <div class="tree-form-block">

@@ -6,10 +6,8 @@
     <fieldset>
         <legend>Measurements</legend>
         <div class="field">
-            <label>
-                Distance to Tree
-                <input class="form-control" name="distance_to_tree" required type="number" min="0" step="any" placeholder="ft">
-            </label>
+            <label for="distance_to_tree">Distance to Tree</label>
+            <input class="form-control" name="distance_to_tree" id="distance_to_tree" required type="number" min="0" step="any" placeholder="ft">
         </div>
     </fieldset>
 
@@ -22,11 +20,9 @@
     <div data-status="Stump" class="hidden">
         <fieldset>
             <legend>Stump Size</legend>
-            <div class="field">
-                <label>
-                    Stump Diameter
-                    <input class="form-control" name="stump_diameter" required type="number" min="1" step="1" placeholder="in">
-                </label>
+            <div class="stump_diameter">
+                <label>Stump Diameter</label>
+                <input class="form-control" name="stump_diameter" id="stump_diameter" required type="number" min="1" step="1" placeholder="in">
             </div>
         </fieldset>
     </div>
@@ -36,38 +32,32 @@
         <fieldset>
             <legend>Tree Trunk</legend>
             <div class="field">
-                <label class="block">
-                    Circumference
-                    <input class="form-control" name="circumference" required type="number" min="1" step="1" placeholder="in">
-                </label>
+                <label>Circumference</label>
+                <input class="form-control" name="circumference" required type="number" min="1" step="1" placeholder="in">
             </div>
         </fieldset>
     </div>
-    
+
     <div data-status="Alive">
         <fieldset>
             <legend>Tree Trunk</legend>
             <div class="field">
-                <label class="block">
-                    Circumference
-                    <input class="form-control" name="circumference" required type="number" min="1" step="1" placeholder="in">
-                </label>
+                <label for="circumference">Circumference</label>
+                <input class="form-control" name="circumference" id="circumference" required type="number" min="1" step="1" placeholder="in">
             </div>
         </fieldset>
         <fieldset>
             <legend>Tree Species</legend>
             <div class="field">
-                <label class="block">
-                    Species Name
-                    <select name="species_id" class="form-control" required>
-                      <option></option>
-                      {% for species in choices.species %}
-                      <option value="{{ species.pk }}" data-scientific-name="{{ species.scientific_name }}" data-cultivar="{{ species.cultivar }}">
-                        {{ species.common_name }}
-                      </option>
-                      {% endfor %}
-                    </select>
-                </label>
+                <label for="species_id">Species Name</label>
+                <select name="species_id" class="form-control" required>
+                  <option></option>
+                  {% for species in choices.species %}
+                  <option value="{{ species.pk }}" data-scientific-name="{{ species.scientific_name }}" data-cultivar="{{ species.cultivar }}">
+                    {{ species.common_name }}
+                  </option>
+                  {% endfor %}
+                </select>
             </div>
 
             {% include "survey/partials/radios.html" with label="Tree Species Confidence" field="species_certainty" choices=choices.species_certainty %}
@@ -80,7 +70,7 @@
         </fieldset>
         <fieldset>
             {% include "survey/partials/radios.html" with label="Tree Guards" field="guard_installation" choices=choices.guard_installation %}
-        
+
             <div data-guard_installation="Yes">
                 {% include "survey/partials/radios.html" with label="Is the tree guard:" field="guards" choices=choices.guards %}
             </div>
