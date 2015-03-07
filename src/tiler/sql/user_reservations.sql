@@ -10,6 +10,6 @@
         AND reservation.user_id = <%= user_id %>
         AND reservation.expires_at > now() at time zone 'utc')
   <% if (is_utf_grid) { %>
-    WHERE reservation.user_id = <%= user_id %>
+    WHERE block.is_available AND reservation.user_id = <%= user_id %>
   <% } %>
 ) AS query
