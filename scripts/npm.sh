@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Pass arguments to 'npm' at the project root
+
 set -e
 set -x
 
