@@ -5,6 +5,56 @@
   }
 }
 
+.btn-group-2, .btn-group-3, .btn-group-4 {
+  vertical-align: middle;
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  min-height: 45px;
+  @extend .clearfix;
+  
+  .btn {
+    display: table-cell;
+    float: none;
+    vertical-align: middle;
+    padding: 8px;
+    
+    // This fixes the white space between buttons caused by the checkbox/radio btns
+    // Bad Practice
+    // Look into a better solution for this fix
+    ~ .btn {
+      left: -1px;
+
+      ~ .btn {
+        left: -2px;
+
+        ~ .btn {
+          left: -3px;
+        }
+      }
+    }
+  }
+}
+
+.btn-group-2 {
+  .btn {
+    width: 50%;
+  }
+}
+
+.btn-group-3 {
+  .btn {
+    width: 33.33333%;
+  }
+}
+
+.btn-group-4 {
+  .btn {
+    width: 25%;
+  }
+}
+
 .btn-switch {
   border: 2px solid $brand-secondary;
   color: $brand-secondary !important;
