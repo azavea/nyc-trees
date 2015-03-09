@@ -12,7 +12,7 @@
     </fieldset>
 
     <fieldset>
-        {% include "survey/partials/radios.html" with label="Curb Location" field="curb_location" choices=choices.curb_location %}
+        {% include "survey/partials/radios.html" with label="Location of Tree Bed" field="curb_location" choices=choices.curb_location %}
     </fieldset>
     <fieldset>
         {% include "survey/partials/radios.html" with label="Tree Condition" field="status" choices=choices.status %}
@@ -60,13 +60,13 @@
                 </select>
             </div>
 
-            {% include "survey/partials/radios.html" with label="Tree Species Confidence" field="species_certainty" choices=choices.species_certainty %}
+            {% include "survey/partials/radios.html" with label="Are you confident in this answer?" field="species_certainty" choices=choices.species_certainty %}
         </fieldset>
         <fieldset>
             {% include "survey/partials/radios.html" with label="Perception of Tree Health" field="health" choices=choices.health %}
         </fieldset>
         <fieldset>
-            {% include "survey/partials/radios.html" with label="Evidence of Stewardship" field="stewardship" choices=choices.stewardship %}
+            {% include "survey/partials/radios.html" with label="How many stewardship practices do you see?" field="stewardship" choices=choices.stewardship %}
         </fieldset>
         <fieldset>
             {% include "survey/partials/radios.html" with label="Tree Guards" field="guard_installation" choices=choices.guard_installation %}
