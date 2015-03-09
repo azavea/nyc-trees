@@ -12,14 +12,13 @@
   table-layout: fixed;
   border-collapse: separate;
   min-height: 45px;
-  @extend .clearfix;
-  
+
   .btn {
     display: table-cell;
     float: none;
     vertical-align: middle;
     padding: 8px;
-    
+
     // This fixes the white space between buttons caused by the checkbox/radio btns
     // Bad Practice
     // Look into a better solution for this fix

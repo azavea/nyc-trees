@@ -140,9 +140,8 @@
     input[type="checkbox"], input[type="radio"] {
           opacity: 0;
           margin: -1px;
-          position: relative;
-          height: 0;
-          width: 0;
+          position: absolute;
+          min-width: 1px;
     }
     input[type="checkbox"] + label, input[type="radio"] + label {
         @extend .btn-switch;
