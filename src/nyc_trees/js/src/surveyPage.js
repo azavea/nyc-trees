@@ -155,13 +155,18 @@ var dom = {
 
     isMappedFromStartOfLine = null,
 
-    hasUnsavedData = true;
+    hasUnsavedData = true,
+
+    clicksEnabled = true;
 
 blockfaceMap.addLayer(selectedLayer);
 blockfaceMap.addLayer(endPointLayers);
 
 endPointLayers.setStyle(defaultStyle);
 endPointLayers.on('click', function(e) {
+    if (!clicksEnabled) {
+        return;
+    }
     endPointLayers.setStyle(defaultStyle);
     e.layer.setStyle(selectStyle);
 
@@ -289,6 +294,8 @@ $(dom.btnNext).click(function(e) {
     $(dom.selectTeammate).addClass('hidden');
     $(dom.surveyPage).toggleClass('hidden');
     $(dom.actionBar).addClass('expanded');
+    selectedLayer.clicksEnabled = false;
+    clicksEnabled = false;
 });
 
 $(dom.addTree).click(function (){
