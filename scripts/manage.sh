@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Pass arguments to 'python manage.py' at the project root
+
 set -e
 set -x
 

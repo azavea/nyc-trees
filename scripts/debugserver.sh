@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Run a gunicorn webserver with expanded logging and auto-restart
+
 set -e
 set -x
 
