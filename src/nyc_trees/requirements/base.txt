@@ -13,3 +13,5 @@ python-omgeo==1.7.1
 pytz==2014.10
 django-waffle==0.10.1
 django-watchman==0.5.0
+django-redis==3.8.3
+hiredis==0.1.6

@@ -40,6 +40,7 @@ STATSD_PREFIX = 'django'
 STATSD_HOST = environ.get('NYC_TREES_STATSD_HOST', 'localhost')
 # END STATSD CONFIGURATION
 
+
 # EMAIL CONFIGURATION
 DEFAULT_FROM_EMAIL = 'treescount.help@parks.nyc.gov'
 # END EMAIL CONFIGURATION
@@ -47,6 +48,27 @@ DEFAULT_FROM_EMAIL = 'treescount.help@parks.nyc.gov'
 # FILE STORAGE CONFIGURATION
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 # END FILE STORAGE CONFIGURATION
+
+# CACHE CONFIGURATION
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#caches
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        # The Redis database at index 0 is used by Logstash/Beaver
+        'LOCATION': 'redis://{0}:{1}/1'.format(
+            environ.get('NYC_TREES_CACHE_HOST', 'localhost'),
+            environ.get('NYC_TREES_CACHE_PORT', 6379)),
+        'OPTIONS': {
+            'PARSER_CLASS': 'redis.connection.HiredisParser',
+            'SOCKET_TIMEOUT': 3,
+        }
+    }
+}
+
+# Don't throw exceptions if Redis is down.
+DJANGO_REDIS_IGNORE_EXCEPTIONS = True
+# END CACHE CONFIGURATION
+
 
 # DATABASE CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases

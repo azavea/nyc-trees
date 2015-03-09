@@ -11,8 +11,8 @@ var Windshaft = require('windshaft'),
     dbHost = process.env.NYC_TREES_DB_HOST || 'localhost',
     dbPort = process.env.NYC_TREES_DB_PORT || 5432,
 
-    redisHost = process.env.NYC_TREES_REDIS_HOST || 'localhost',
-    redisPort = process.env.NYC_TREES_REDIS_PORT || 6379,
+    redisHost = process.env.NYC_TREES_CACHE_HOST || 'localhost',
+    redisPort = process.env.NYC_TREES_CACHE_PORT || 6379,
 
     statsdHost = process.env.NYC_TREES_STATSD_HOST || 'localhost',
     statsdPort = process.env.NYC_TREES_STATSD_PORT || 8125,

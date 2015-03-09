@@ -9,6 +9,12 @@ PASSWORD_HASHERS = (
     'django.contrib.auth.hashers.MD5PasswordHasher',
 )
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}
+
 SELENIUM_DEFAULT_BROWSER = 'firefox'
 SELENIUM_TEST_COMMAND_OPTIONS = {'pattern': 'uitest*.py'}
 
