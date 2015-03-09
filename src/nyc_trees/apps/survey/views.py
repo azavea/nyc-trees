@@ -31,8 +31,7 @@ from apps.survey.models import (BlockfaceReservation, Blockface, Territory,
 from apps.survey.layer_context import (get_context_for_reservations_layer,
                                        get_context_for_reservable_layer,
                                        get_context_for_progress_layer,
-                                       get_context_for_territory_survey_layer,
-                                       get_context_for_territory_admin_layer)
+                                       get_context_for_territory_survey_layer)
 from apps.survey.helpers import (teammates_for_event,
                                  teammates_for_individual_mapping)
 
@@ -345,8 +344,9 @@ def survey_detail(request, survey_id):
 
 
 def admin_territory_page(request):
+    groups = Group.objects.all().order_by('name')
     context = {
-        'groups': Group.objects.all().order_by('name'),
+        'groups': groups,
         'legend_entries': [
             {'css_class': 'available', 'label': 'Available'},
             {'css_class': 'reserved',
@@ -357,7 +357,6 @@ def admin_territory_page(request):
             {'css_class': 'surveyed-by-others', 'label': 'Mapped by others'},
         ]
     }
-    context['layer'] = get_context_for_territory_admin_layer(request)
     return context
 
 
