@@ -91,8 +91,8 @@ function initBaseMap(map, options) {
                 'contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
         },
         satelliteUrl = 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-        strandardResUrl = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
-        retinaUrl = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png',
+        strandardResUrl = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
+        retinaUrl = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}@2x.png',
         url = options.baseMap === SATELLITE ? satelliteUrl :
             isRetinaDevice() ? retinaUrl : strandardResUrl;
     map.addLayer(new L.TileLayer(url, layerOptions));
