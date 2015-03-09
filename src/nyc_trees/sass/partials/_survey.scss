@@ -138,8 +138,10 @@
     }
     // Hide checkboxes and radios, and use their checked/unchecked to style their label
     input[type="checkbox"], input[type="radio"] {
-        opacity: 0;
-        display: none;
+          opacity: 0;
+          margin: -1px;
+          position: absolute;
+          min-width: 1px;
     }
     input[type="checkbox"] + label, input[type="radio"] + label {
         @extend .btn-switch;

@@ -258,17 +258,10 @@ function checkFormValidity($forms) {
 
     // For each form element
     $forms.find('input, select, textarea').each(function(i, el) {
-        // We would be checking the input itself for visibility, but that
-        // makes styling more complicated. Instead we check the parent's
-        // visiblity.
-        if ($(el).parent().is(':visible') && !el.validity.valid) {
+        if ($(el).is(':visible') && !el.validity.valid) {
             valid = false;
 
             $(el).focus();
-
-            if ($(el).is('select[name="species_id"]') && ! $(el).select2("val")) {
-                valid = false;
-            }
 
             // "submit" the form.  This will trigger the builtin browser validation messages.
             // Our submit handler will prevent this from actually submitting
@@ -313,14 +306,10 @@ $(dom.addTree).click(function (){
 });
 
 function getTreeData(i, form) {
-    // We would be checking the input itself for visibility, but that makes styling more complicated
-    // Instead we check the parent's visiblity.
     var obj = {},
         formArray = $(form)
             .find('input:not([type="submit"]),select')
-            .not(function(_, el) {
-                return $(el).parent().is(':hidden');
-            })
+            .not(':hidden')
             .serializeArray();
 
     $.each(formArray, function(i, o){
