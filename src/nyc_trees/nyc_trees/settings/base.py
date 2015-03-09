@@ -44,6 +44,10 @@ STATSD_HOST = environ.get('NYC_TREES_STATSD_HOST', 'localhost')
 DEFAULT_FROM_EMAIL = 'treescount.help@parks.nyc.gov'
 # END EMAIL CONFIGURATION
 
+# FILE STORAGE CONFIGURATION
+DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+# END FILE STORAGE CONFIGURATION
+
 # DATABASE CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
