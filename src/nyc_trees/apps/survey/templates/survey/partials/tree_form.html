@@ -50,7 +50,7 @@
             <legend>Tree Species</legend>
             <div class="field">
                 <label for="species_id">Species Name</label>
-                <select name="species_id" class="form-control" required>
+                <select name="species_id" required>
                   <option></option>
                   {% for species in choices.species %}
                   <option value="{{ species.pk }}" data-scientific-name="{{ species.scientific_name }}" data-cultivar="{{ species.cultivar }}">

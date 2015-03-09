@@ -56,6 +56,38 @@
         }
 
     }
+    
+    // Select2 dropdown styling
+    .select2-container a.select2-choice {
+      background: none;
+      border-radius: $input-border-radius;
+      height: $input-height-base;
+      padding: 6px 12px;
+      font-size: $font-size-base;
+      line-height: $line-height-base;
+      color: $input-color;
+      background-color: $input-bg;
+      background-image: none;
+      border: 1px solid $input-border;
+    }
+
+    .select2-dropdown-open.select2-container a.select2-choice {
+      border-radius: $input-border-radius $input-border-radius 0 0;
+      border: 1px solid #5897fb;
+    }
+
+    // Select2 icons
+
+    .select2-container .select2-choice .select2-arrow {
+        padding: 5px;
+        background: none;
+        width: 30px;
+    }
+
+    .select2-container .select2-choice abbr {
+      right: 40px;
+      top: 11px;
+    }
 }
 
 #tree-form-header {
