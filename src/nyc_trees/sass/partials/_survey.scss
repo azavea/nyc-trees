@@ -17,18 +17,17 @@
     bottom: 0;
     left: 0;
     right: 0;
-    @media (max-width: $screen-sm) {
+    @media (max-width: $screen-sm - 1) {
         bottom: 15rem;
     }
 }
 
 .action-bar-survey {
-    overflow-x: hidden;
     .btn-group {
         margin-bottom: .75rem;
     }
 
-    @media (max-width: $screen-sm) {
+    @media (max-width: $screen-sm - 1) {
         position: fixed;
         left: 0;
         bottom: 0;
@@ -97,7 +96,7 @@
         right: 2rem;
     }
 
-    @media (max-width: $screen-sm) {
+    @media (max-width: $screen-sm - 1) {
         padding: $grid-gutter-width/3 $grid-gutter-width;
         background: $gray-lightest;
         margin-bottom: 1rem;
@@ -118,7 +117,7 @@
         margin-bottom: 2rem;
     }
 
-    @media (max-width: $screen-sm) {
+    @media (max-width: $screen-sm - 1) {
         padding: $grid-gutter-width/3 $grid-gutter-width/2;
     }
 }
@@ -184,7 +183,7 @@
     border-radius: $border-radius-base;
     margin: 2rem 0;
 
-    @media (max-width: $screen-sm) {
+    @media (max-width: $screen-sm - 1) {
         margin: $grid-gutter-width/3 $grid-gutter-width;
     }
 }
