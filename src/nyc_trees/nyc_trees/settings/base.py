@@ -221,6 +221,7 @@ THIRD_PARTY_APPS = (
     'django_statsd',
     'floppyforms',
     'waffle',
+    'watchman',
 )
 
 # THIRD-PARTY CONFIGURATION
@@ -311,4 +312,5 @@ SOFT_LAUNCH_REGEXES = [
     r'^/user/',
     r'^/accounts/',
     r'^/admin/',
+    r'^/health-check/',
 ]

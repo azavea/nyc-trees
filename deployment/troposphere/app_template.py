@@ -156,7 +156,7 @@ app_server_load_balancer = t.add_resource(elb.LoadBalancer(
         )
     ],
     HealthCheck=elb.HealthCheck(
-        Target="HTTP:80/health-check",
+        Target="HTTP:80/health-check/",
         HealthyThreshold="3",
         UnhealthyThreshold="2",
         Interval="30",
