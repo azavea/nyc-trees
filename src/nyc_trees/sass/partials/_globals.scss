@@ -303,3 +303,12 @@ aside {
 .select2-container {
   display: block !important;
 }
+
+.no-data {
+  padding: 5px 10px;
+  margin-bottom: 1em;
+  border: 1px solid $state-warning-border;
+  border-radius: $border-radius-base;
+  color: $state-warning-text;
+  background-color: $state-warning-bg;
+}
