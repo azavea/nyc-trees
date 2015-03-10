@@ -21,6 +21,7 @@ function create(options) {
     }, options);
 
     var mapOptions = {
+        attributionControl: false,
         zoomControl: false,
         maxBounds: L.latLngBounds(config.bounds[0], config.bounds[1]).pad(4)
     };
@@ -37,6 +38,8 @@ function create(options) {
         $controlsContainer = $(zoomControl.getContainer()),
         bounds = getDomMapAttribute('bounds', options.domId),
         mapLocation = getDomMapAttribute('location', options.domId);
+
+    map.addControl(L.control.attribution({prefix: false}));
 
     if (bounds) {
         fitBounds(map, bounds);
