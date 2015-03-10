@@ -1,6 +1,11 @@
 {% extends "registration/registration_base.html" %}
 {% load i18n %}
 
+{# We shouldn't ever redirect back to the login page #}
+{% block login_link %}
+<a href="{% url 'auth_login' %}">Login</a>
+{% endblock %}
+
 {% block registration_title %}{% trans "Login" %}{% endblock %}
 
 {% block registration_content %}

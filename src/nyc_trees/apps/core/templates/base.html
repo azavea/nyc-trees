@@ -32,7 +32,9 @@
                     {% if request.user.is_authenticated %}
                     <a href="{% url 'auth_logout' %}">Logout</a>
                     {% else %}
-                    <a href="{% url 'auth_login' %}">Login</a>
+                    {% block login_link %}
+                    <a href="{% url 'auth_login' %}?next={{ request.get_full_path|urlencode }}">Login</a>
+                    {% endblock %}
                     | <a href="{% url 'registration_register' %}">Register</a>
                     {% endif %}
                 </div>
