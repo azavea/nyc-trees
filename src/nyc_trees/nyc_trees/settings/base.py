@@ -49,6 +49,7 @@ DEFAULT_FROM_EMAIL = 'treescount.help@parks.nyc.gov'
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 # END FILE STORAGE CONFIGURATION
 
+
 # CACHE CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#caches
 CACHES = {
@@ -88,6 +89,25 @@ POSTGIS_VERSION = tuple(
     map(int, environ.get('DJANGO_POSTGIS_VERSION', '2.1.3').split("."))
 )
 # END DATABASE CONFIGURATION
+
+
+# LOGGING CONFIGURATION
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+    }
+}
+# END LOGGING CONFIGURATION
 
 
 # GENERAL CONFIGURATION
@@ -273,36 +293,6 @@ LOCAL_APPS = (
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 # END APP CONFIGURATION
-
-
-# LOGGING CONFIGURATION
-# See: https://docs.djangoproject.com/en/dev/ref/settings/#logging
-# TODO: Use logstash for logging
-# See http://docs.djangoproject.com/en/dev/topics/logging for
-# more details on how to customize your logging configuration.
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse'
-        }
-    },
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler'
-        },
-    },
-    'loggers': {
-        'django.request': {
-            'handlers': ['console'],
-            'level': 'ERROR',
-            'propagate': True,
-        },
-    }
-}
-# END LOGGING CONFIGURATION
 
 
 # WSGI CONFIGURATION

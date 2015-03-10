@@ -18,6 +18,25 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # END EMAIL CONFIGURATION
 
 
+# LOGGING CONFIGURATION
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    }
+}
+# END LOGGING CONFIGURATION
+
+
 # TOOLBAR CONFIGURATION
 # See https://github.com/django-debug-toolbar/django-debug-toolbar#installation
 INSTALLED_APPS += (
