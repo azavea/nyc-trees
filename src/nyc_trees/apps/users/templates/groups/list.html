@@ -37,7 +37,8 @@
          style="display: none;"
          {% endif %}
          data-group-name="{{ group.name|lower }}"
-         data-group-description="{{ group.description.lower }}">
+         data-group-description="{{ group.description.lower }}"
+         data-affiliation="{{ group.affiliation.lower }}">
         <td>
             <a href="{% url 'group_detail' group_slug=group.slug %}"><div class="h4 color--primary">{{ group.name }}</div></a>
             <div>{{ group.description }}</div>

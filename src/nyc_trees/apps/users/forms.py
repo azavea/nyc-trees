@@ -49,7 +49,8 @@ class GroupSettingsForm(ModelForm):
             'contact_email',
             'contact_url',
             'image',
-            'allows_individual_mappers'
+            'allows_individual_mappers',
+            'affiliation',
         ]
 
     def clean_image(self):

@@ -2,12 +2,17 @@
 
 var $ = require('jquery'),
     fetchAndReplace = require('./fetchAndReplace'),
-    attrs = {name: 'data-group-name',
-             description: 'data-group-description'},
-    dom = {searchInput: '[data-class="group-search"]',
-           viewAll: '[data-class="group-view-all"]',
-           searchNoneFound: '[data-class="group-search-none-found"]',
-           groups: '[' + attrs.name + ']'},
+    attrs = {
+        name: 'data-group-name',
+        description: 'data-group-description',
+        affiliation: 'data-affiliation'
+    },
+    dom = {
+        searchInput: '[data-class="group-search"]',
+        viewAll: '[data-class="group-view-all"]',
+        searchNoneFound: '[data-class="group-search-none-found"]',
+        groups: '[' + attrs.name + ']'
+    },
     $groups,
     $searchNoneFound;
 
@@ -26,7 +31,7 @@ $(dom.viewAll).on('click', function () {
 });
 
 $(dom.searchInput).on('input', function (e) {
-    var query = $(e.target).val(),
+    var query = $(e.target).val().toLowerCase(),
         noneFound = false;
 
     $(dom.viewAll).hide();
@@ -38,10 +43,12 @@ $(dom.searchInput).on('input', function (e) {
         $.each($groups, function(__, group) {
             var $group = $(group),
                 name = $group.attr(attrs.name),
-                description = $group.attr(attrs.description);
+                description = $group.attr(attrs.description),
+                affiliation = $group.attr(attrs.affiliation);
 
             if (name.indexOf(query) !== -1 ||
-                description.indexOf(query) !== -1) {
+                description.indexOf(query) !== -1 ||
+                affiliation.indexOf(query) !== -1) {
                 $group.show();
                 noneFound = false;
             } else {
