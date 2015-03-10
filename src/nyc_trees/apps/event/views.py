@@ -10,6 +10,7 @@ from django.http import (HttpResponseRedirect, HttpResponseForbidden,
                          HttpResponseNotAllowed)
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.timezone import get_current_timezone, now
+from django.contrib.sites.models import Site
 
 from apps.core.forms import EmailForm
 from apps.core.models import User
@@ -166,8 +167,25 @@ def events_list_page_partial(request):
 
 
 def events_list_feed(request):
-    # TODO: implement
-    pass
+    site_domain = Site.objects.get_current().domain
+
+    return [{
+        'id': e.id,
+        'name': e.title,
+        'date': e.begins_at.strftime('%Y-%m-%d %H:%M:%S'),
+        'start_time': e.begins_at.time(),
+        'end_time': e.ends_at.time(),
+        'description': e.description,
+        'snippet': e.description[:169],
+        'email': e.contact_email,
+        'locations': [{
+            "name": e.location_description,
+            "lat": e.location.y,
+            "long": e.location.x,
+            "address": e.address,
+        }],
+        'links': [{'link_url': site_domain + e.get_absolute_url()}],
+    } for e in Event.objects.order_by('-begins_at').filter(is_private=False)]
 
 
 def delete_event(request, event_slug):
