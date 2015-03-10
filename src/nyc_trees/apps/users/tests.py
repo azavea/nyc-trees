@@ -278,22 +278,22 @@ class GroupDetailViewTests(UsersTestCase):
         EventRegistration.objects.create(event=other_past_event,
                                          user=self.user, did_attend=True)
 
-        # Users aren't double counted for event attendence
-        self._assert_count_equals('attendees', 1)
+        # Users are double counted for event attendence
+        self._assert_count_equals('attendees', 2)
 
         EventRegistration.objects.create(event=other_past_event,
                                          user=self.other_user)
         # We don't count users who were not checked in to the event
-        self._assert_count_equals('attendees', 1)
+        self._assert_count_equals('attendees', 2)
 
         # We don't count future events
         EventRegistration.objects.create(event=future_event,
                                          user=self.other_user, did_attend=True)
-        self._assert_count_equals('attendees', 1)
+        self._assert_count_equals('attendees', 2)
 
         EventRegistration.objects.create(event=past_event,
                                          user=self.other_user, did_attend=True)
-        self._assert_count_equals('attendees', 2)
+        self._assert_count_equals('attendees', 3)
 
 
 class GroupAccessTests(UsersTestCase):
