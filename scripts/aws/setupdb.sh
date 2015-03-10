@@ -28,3 +28,11 @@ fi
 
 # Create training flatpages
 envdir /etc/nyc-trees.d/env /opt/app/manage.py make_training_flatpages || true
+
+# If a domain is not provided, default to treescount.nycgovparks.org
+DJANGO_SITE_DOMAIN=${DJANGO_SITE_DOMAIN:-treescount.nycgovparks.org}
+
+# Set django_sites name and domain
+envdir /etc/nyc-trees.d/env /opt/app/manage.py set_django_site_domain \
+    --django-site-name="${DJANGO_SITE_DOMAIN}" \
+    --django-site-domain="${DJANGO_SITE_DOMAIN}"
