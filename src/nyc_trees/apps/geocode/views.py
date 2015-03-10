@@ -3,11 +3,13 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
-from django.conf import settings
-from django.contrib.gis.geos.point import Point
+from django_tinsel.exceptions import HttpBadRequestException
 
 from omgeo import Geocoder
 from omgeo.places import Viewbox, PlaceQuery
+
+from django.conf import settings
+from django.contrib.gis.geos.point import Point
 
 from libs.response import make_json_404
 
@@ -22,7 +24,10 @@ def geocode(request):
     Configuration for sources is pulled from the OMGEO_SETTINGS
     settings key
     """
-    address = request.REQUEST['address']
+    address = request.REQUEST.get('address', None)
+
+    if not address:
+        raise HttpBadRequestException('Must include nonempty address')
 
     candidates = _get_candidates(address)
     if candidates:
