@@ -90,7 +90,7 @@ function initBaseMap(map, options) {
     var layerOptions =  {
             subdomains: 'abcd',
             maxZoom: zoom.MAX,
-            attributon: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> ' +
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> ' +
                 'contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
         },
         satelliteUrl = 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
