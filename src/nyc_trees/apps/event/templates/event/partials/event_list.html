@@ -17,7 +17,7 @@
     {% for info in event_list.event_infos %}
         {% include "event/partials/event_section.html" %}
     {% empty %}
-        <p>No events</p>
+        <p class="no-data">No events</p>
     {% endfor %}
 {% endblock event_list_loop %}
 
