@@ -7,6 +7,7 @@ postgresql_listen_addresses: "*"
 postgresql_username: nyc_trees
 postgresql_password: nyc_trees
 postgresql_database: nyc_trees
+postgresql_log_min_duration_statement: 500
 postgresql_hba_mapping:
   - { type: "host", database: "all", user: "all", address: "33.33.33.1/24", method: "md5" }
   - { type: "host", database: "all", user: "all", address: "10.0.2.0/24", method: "md5" }

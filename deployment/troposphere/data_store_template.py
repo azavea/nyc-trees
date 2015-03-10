@@ -195,6 +195,15 @@ database_server_subnet_group = t.add_resource(rds.DBSubnetGroup(
     Tags=Tags(Name='dbsngDatabaseServer')
 ))
 
+database_server_parameter_group = t.add_resource(rds.DBParameterGroup(
+    'dbpgDatabaseServer',
+    Family='postgres9.3',
+    Description='Parameter group for the RDS instances',
+    Parameters={
+        'log_min_duration_statement': '500'
+    }
+))
+
 database_server_instance = t.add_resource(rds.DBInstance(
     "DatabaseServer",
     AllocatedStorage=20,
@@ -204,6 +213,7 @@ database_server_instance = t.add_resource(rds.DBInstance(
     DBInstanceClass=Ref(database_server_instance_type_param),
     DBInstanceIdentifier='nyctrees-nyc-trees-database-server',
     DBName='nyc_trees',
+    DBParameterGroupName=Ref(database_server_parameter_group),
     DBSubnetGroupName=Ref(database_server_subnet_group),
     Engine='postgres',
     EngineVersion='9.3.5',
