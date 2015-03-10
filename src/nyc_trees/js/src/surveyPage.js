@@ -562,3 +562,12 @@ function setupSpeciesAutocomplete($form) {
 }
 
 setupSpeciesAutocomplete($(dom.treeFormcontainer).find('[data-class="tree-form"]'));
+
+// Need to blur the Select2 element when it is closed to make sure any soft
+// keyboards also are closed
+$('body').on('select2-close', 'select', function() {
+    setTimeout(function() {
+        $('.select2-container-active').removeClass('select2-container-active');
+        $('.select2-focusser:focus').blur();
+    }, 1);
+});
