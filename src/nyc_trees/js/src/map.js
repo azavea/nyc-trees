@@ -21,6 +21,7 @@ function create(options) {
     }, options);
 
     var mapOptions = {
+        attributionControl: false,
         zoomControl: false,
         maxBounds: L.latLngBounds(config.bounds[0], config.bounds[1]).pad(4)
     };
@@ -37,6 +38,8 @@ function create(options) {
         $controlsContainer = $(zoomControl.getContainer()),
         bounds = getDomMapAttribute('bounds', options.domId),
         mapLocation = getDomMapAttribute('location', options.domId);
+
+    map.addControl(L.control.attribution({prefix: false}));
 
     if (bounds) {
         fitBounds(map, bounds);
@@ -87,7 +90,7 @@ function initBaseMap(map, options) {
     var layerOptions =  {
             subdomains: 'abcd',
             maxZoom: zoom.MAX,
-            attributon: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> ' +
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> ' +
                 'contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
         },
         satelliteUrl = 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
