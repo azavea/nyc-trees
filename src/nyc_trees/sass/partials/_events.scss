@@ -25,11 +25,30 @@
   font-size: $font-size-h3;
   color: $headings-color;
   font-weight: $headings-font-weight;
+
+  @media (max-width: $screen-phone) {
+    font-size: $font-size-h5; 
+    line-height: 1.8;
+  }
 }
 
 .calendar-body, .calendar-heading {
   padding: .5rem;
   text-align: center;
+  @media (max-width: $screen-phone) {
+    padding: 0;  
+  }
+}
+
+@media (max-width: $screen-phone) {
+  .event-action .btn {
+    padding: 5px 10px;
+    font-size: 1.2rem;
+    line-height: 1.5;
+    border-radius: 3px;
+    background: #fff;
+    color: $brand-primary;
+  }
 }
 
 .rsvp-count-context {
