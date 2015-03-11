@@ -189,3 +189,13 @@
         margin: $grid-gutter-width/3 $grid-gutter-width;
     }
 }
+
+#treeform-sponsor {
+    text-align: center;
+    margin-top: 10px;
+    img {
+        max-width: 200px;
+        display: block;
+        margin: 10px auto 0;
+    }
+}
