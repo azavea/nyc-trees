@@ -16,6 +16,7 @@ from django.utils.timezone import now
 
 from apps.core.models import Group
 from apps.core.views import map_legend
+from apps.core.helpers import user_is_group_admin
 
 from apps.event.models import Event
 from apps.event.helpers import user_is_checked_in_to_event
@@ -53,9 +54,14 @@ def progress_page_blockface_popup(request, blockface_id):
     survey_type = request.GET.get('survey_type')
     group_id = request.GET.get('group_id', None)
     group = get_object_or_404(Group, id=group_id) if group_id else None
+
+    is_active = (group is None or group.is_active or
+                 user_is_group_admin(request.user, group))
+
     return {
         'survey_type': survey_type,
-        'group': group
+        'group': group,
+        'is_active': is_active
     }
 
 

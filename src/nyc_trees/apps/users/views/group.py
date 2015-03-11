@@ -10,7 +10,7 @@ from django.contrib.gis.geos import Polygon
 from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.db.models import Q
-from django.http import HttpResponseRedirect, HttpResponseForbidden
+from django.http import HttpResponseRedirect, HttpResponseForbidden, Http404
 from django.shortcuts import get_object_or_404
 from django.utils.timezone import now
 
@@ -38,7 +38,7 @@ GROUP_EDIT_EVENTS_TAB_ID = 'events'
 
 def group_list_page(request):
     # TODO: pagination
-    groups = Group.objects.order_by('name')
+    groups = Group.objects.filter(is_active=True).order_by('name')
     group_ids = Follow.objects.filter(user_id=request.user.id) \
         .values_list('group_id', flat=True)
     user_is_following = [group.id in group_ids for group in groups]
@@ -75,6 +75,10 @@ group_edit_events = EventList(
 def group_detail(request):
     user = request.user
     group = request.group
+
+    if not user_is_group_admin(user, group) and not request.group.is_active:
+        raise Http404('Must be a group admin to view an inactive group')
+
     event_list = (group_detail_events
                   .configure(chunk_size=2,
                              active_filter=EventList.Filters.CURRENT,
