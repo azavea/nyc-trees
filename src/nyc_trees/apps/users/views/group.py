@@ -110,7 +110,6 @@ def group_detail(request):
     num_event_attendees = EventRegistration.objects \
         .filter(event__in=events_held) \
         .filter(did_attend=True) \
-        .distinct('user') \
         .count()
 
     return {
