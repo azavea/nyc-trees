@@ -7,7 +7,7 @@ from django.contrib.gis.geos import Point
 from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.http import (HttpResponseRedirect, HttpResponseForbidden,
-                         HttpResponseNotAllowed)
+                         HttpResponseNotAllowed, HttpResponse)
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.timezone import get_current_timezone, now
 from django.contrib.sites.models import Site
@@ -24,6 +24,8 @@ from apps.event.event_list import (EventList, immediate_events, all_events)
 from apps.core.helpers import user_is_group_admin
 from apps.event.helpers import (user_is_rsvped_for_event,
                                 user_is_checked_in_to_event)
+
+from libs.png_to_pdf import png_to_pdf
 
 
 def add_event(request):
@@ -259,9 +261,14 @@ def cancel_event_registration(request, event_slug):
     return event_detail(request, event_slug)
 
 
-def start_event_map_print_job(request, event_slug):
-    # TODO: implement
-    pass
+def printable_event_map(request, event_slug):
+    # TODO: Generate map image using phantomjs
+    png_file_path = "img/logo-nycparks@2x.png"
+    response = HttpResponse(content_type="application/pdf")
+
+    png_to_pdf(png_file_path, response)
+
+    return response
 
 
 def event_admin_check_in_page(request, event_slug):

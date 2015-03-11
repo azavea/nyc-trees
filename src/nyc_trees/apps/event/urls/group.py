@@ -7,7 +7,7 @@ from django.conf.urls import patterns, url
 
 from apps.event.routes import (add_event, event_detail,
                                event_edit, event_popup_partial,
-                               event_registration, start_event_map_print_job,
+                               event_registration, printable_event_map,
                                event_admin_check_in_page,
                                check_in_user_to_event,
                                email_event_registered_users, event_email,
@@ -36,8 +36,8 @@ urlpatterns = patterns(
         event_registration, name='event_registration'),
 
     url(r'^(?P<group_slug>[\w-]+)/event/'
-        r'(?P<event_slug>[\w-]+)/printable-map/$',
-        start_event_map_print_job, name='start_event_map_print_job'),
+        '(?P<event_slug>[\w-]+)/printable-map/$',
+        printable_event_map, name='printable_event_map'),
 
     url(r'^(?P<group_slug>[\w-]+)/event/(?P<event_slug>[\w-]+)/checkin/$',
         event_admin_check_in_page, name='event_admin_check_in_page'),

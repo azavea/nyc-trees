@@ -13,6 +13,9 @@
 - name: Install PostgreSQL client
   apt: pkg=postgresql-client-{{ postgresql_version }}={{ postgresql_package_version }}
 
+- name: Install python-cairo (for PDF generation)
+  apt: pkg=python-cairo=1.8.8-1ubuntu5 state=present
+
 - name: Install application Python dependencies for production
   pip: chdir="{{ app_home }}/requirements" requirements=production.txt
   when: "['packer'] | is_in(group_names)"
