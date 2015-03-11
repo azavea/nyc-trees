@@ -412,6 +412,14 @@ function submitSurveyWithTrees() {
 
 $(dom.quit).on('click', quitSurvey);
 
+function dismissAndPrompt(modalId) {
+    return function(content) {
+        $(modalId).modal('hide');
+        hasUnsavedData = false;
+        mapAnotherPopup.show(content);
+    };
+}
+
 function quitSurvey() {
     // Disable submit button to prevent double POSTs
     $(dom.quit).off('click', quitSurvey);
@@ -431,11 +439,7 @@ function quitSurvey() {
         dataType: 'json',
         data: JSON.stringify(data)
     })
-    .done(function(content) {
-        $(dom.quitPopup).modal('hide');
-        hasUnsavedData = false;
-        mapAnotherPopup.show();
-    })
+    .done(dismissAndPrompt(dom.quitPopup))
     .fail(function(jqXHR, textStatus, errorThrown) {
         toastr.warning('Sorry, there was a problem stopping the survey. Please try again.', 'Something went wrong...');
     })
@@ -495,11 +499,7 @@ function saveWithoutTrees() {
         dataType: 'json',
         data: JSON.stringify(data)
     })
-    .done(function(content) {
-        $(dom.noTreesPopup).modal('hide');
-        hasUnsavedData = false;
-        mapAnotherPopup.show();
-    })
+    .done(dismissAndPrompt(dom.noTreesPopup))
     .fail(function(jqXHR, textStatus, errorThrown) {
         toastr.warning('Sorry, there was a problem saving the survey. Please try again.', 'Something went wrong...');
     })
