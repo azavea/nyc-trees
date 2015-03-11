@@ -222,6 +222,7 @@ database_server_instance = t.add_resource(rds.DBInstance(
     MultiAZ=True,
     PreferredBackupWindow='01:00-01:30',  # 9:00-9:30PM ET
     PreferredMaintenanceWindow='mon:01:30-mon:02:30',  # 9:30PM-10:30PM ET
+    StorageType='gp2',
     VPCSecurityGroups=[Ref(database_server_security_group)],
     Tags=Tags(Name='DatabaseServer')
 ))
