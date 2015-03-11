@@ -143,8 +143,10 @@ def events_list_page(request):
 
 
 def future_events_geojson(request):
-    return [_event_geojson(e) for e
-            in Event.objects.filter(ends_at__gt=now()).select_related('group')]
+    events = Event.objects.filter(
+        ends_at__gt=now(), group__is_active=True).select_related('group')
+
+    return [_event_geojson(e) for e in events]
 
 
 def _event_geojson(event):
@@ -168,6 +170,8 @@ def events_list_page_partial(request):
 
 def events_list_feed(request):
     site_domain = Site.objects.get_current().domain
+    events = Event.objects.order_by('-begins_at').filter(is_private=False,
+                                                         group__is_active=True)
 
     return [{
         'id': e.id,
@@ -185,7 +189,7 @@ def events_list_feed(request):
             "address": e.address,
         }],
         'links': [{'link_url': site_domain + e.get_absolute_url()}],
-    } for e in Event.objects.order_by('-begins_at').filter(is_private=False)]
+    } for e in events]
 
 
 def delete_event(request, event_slug):

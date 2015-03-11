@@ -23,9 +23,18 @@
         WHEN (core_group.id IS NOT NULL
               AND NOT core_group.allows_individual_mappers) THEN 'unavailable'
         WHEN NOT block.is_available THEN 'unavailable'
+        -- We should only allow requesting access to active groups that you are
+        -- not already a trusted mapper or admin of
         WHEN (turf.id IS NOT NULL
-              AND NOT (trustedmapper.id IS NOT NULL
-                       OR core_group.admin_id = <%= user_id %>)) THEN 'group_territory'
+              AND (core_group.is_active = TRUE
+                   AND trustedmapper.id IS NULL
+                   AND core_group.admin_id <> <%= user_id %>)) THEN 'group_territory'
+        -- If a group is inactive, it is unavailable unless you are an admin or
+        -- a trusted mapper of that group
+        WHEN (turf.id IS NOT NULL
+              AND core_group.is_active = FALSE
+              AND trustedmapper.id IS NULL
+              AND core_group.admin_id <> <%= user_id %>) THEN 'unavailable'
         ELSE 'none'
       END AS restriction
       FROM survey_blockface AS block
