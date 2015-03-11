@@ -25,7 +25,7 @@ events_list_page = route(
 
 events_list_page_partial = route(GET=v.events_list_page_partial)
 
-events_list_feed = route(GET=v.events_list_feed)
+events_list_feed = route(GET=do(json_api_call, v.events_list_feed))
 
 future_events_geojson = route(GET=do(json_api_call, v.future_events_geojson))
 
