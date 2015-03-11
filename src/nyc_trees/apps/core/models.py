@@ -152,6 +152,7 @@ class Group(NycModel, models.Model):
     image = models.ImageField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
     allows_individual_mappers = models.BooleanField(default=False)
+    affiliation = models.CharField(max_length=255, default='', blank=True)
 
     def __unicode__(self):
         return self.name

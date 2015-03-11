@@ -68,6 +68,11 @@
                             {{ form.contact_url }}
                         </div>
                         <div class="block item">
+                            {{ form.affiliation.errors }}
+                            {{ form.affiliation.label_tag }}
+                            {{ form.affiliation }}
+                        </div>
+                        <div class="block item">
                             {{ form.image.errors }}
                             {{ form.image.label_tag }}
                             <div>
@@ -128,6 +133,7 @@
                             need to be included as hidden input elements.
                             {% endcomment %}
                             {{ form.description.as_hidden }}
+                            {{ form.affiliation.as_hidden }}
                             {{ form.contact_name.as_hidden }}
                             {{ form.contact_email.as_hidden }}
                             {{ form.contact_url.as_hidden }}
