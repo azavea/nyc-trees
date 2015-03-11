@@ -263,10 +263,22 @@ function checkFormValidity($forms) {
 
     // For each form element
     $forms.find('input, select, textarea').each(function(i, el) {
+        if (el.setCustomValidity) {
+            el.setCustomValidity('');
+        }
+
         if ($(el).is(':visible') && !el.validity.valid) {
             valid = false;
 
             $(el).focus();
+
+            // The problems checkboxes are a group of checkboxes, but the HTML5
+            // "required" attribute wants you to check every box.
+            // We add/remove "required" when one box is checked, but we need
+            // a better error message.
+            if (el.setCustomValidity && $(el).is('[name="problems"]')) {
+                el.setCustomValidity('Please select one or more of these options.');
+            }
 
             // "submit" the form.  This will trigger the builtin browser validation messages.
             // Our submit handler will prevent this from actually submitting
