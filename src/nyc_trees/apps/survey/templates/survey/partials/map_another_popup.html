@@ -2,15 +2,15 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">
-                <div>Map another block?</div>
+                <div class="hidden" data-class="map-another-possible">Map another block?</div>
+                <div class="hidden" data-class="map-another-impossible">You've mapped all your reserved blocks!</div>
             </div>
             <div class="modal-footer">
-                <a id="map-another-no" href="{% url 'progress_page' %}" class="btn btn-default">
-                    I'm Done For Now
+                <a class="btn btn-default" href="{% url 'progress_page' %}">
+                  <span data-class="map-another-possible">I'm Done For Now</span>
+                  <span data-class="map-another-impossible">OK</span>
                 </a>
-                <a id="map-another-yes" href="{% url 'survey' %}" class="btn btn-primary">
-                    Yes!
-                </a>
+                <a class="btn btn-primary hidden" data-class="map-another-possible" href="{% url 'survey' %}">Yes!</a>
             </div>
         </div>
     </div>

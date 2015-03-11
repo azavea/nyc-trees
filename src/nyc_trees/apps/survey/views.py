@@ -10,7 +10,8 @@ import json
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import transaction, connection
-from django.http import HttpResponseForbidden, HttpResponseBadRequest
+from django.http import (HttpResponse, HttpResponseForbidden,
+                         HttpResponseBadRequest)
 from django.shortcuts import get_object_or_404
 from django.utils.timezone import now
 
@@ -254,7 +255,17 @@ def _get_survey_choices():
 
 
 def submit_survey(request):
-    return _create_survey_and_trees(request)
+    ctx = {}
+
+    # sometimes a dict, sometimes HttpResponse
+    create_result = _create_survey_and_trees(request)
+
+    if isinstance(create_result, HttpResponse):
+        return create_result
+    else:
+        ctx.update(create_result)
+        ctx.update(_get_map_another_popup_context(request))
+        return ctx
 
 
 def submit_survey_from_event(request, event_slug):
@@ -276,7 +287,7 @@ def _mark_survey_blockface_not_available(survey):
 def complete_survey(request, survey_id):
     survey = Survey.objects.get(id=survey_id)
     _mark_survey_blockface_not_available(survey)
-    return {}
+    return _get_map_another_popup_context(request)
 
 
 @transaction.atomic
@@ -332,7 +343,17 @@ def flag_survey(request, survey_id):
     survey = get_object_or_404(Survey, id=survey_id, user=request.user)
     survey.is_flagged = True
     survey.clean_and_save()
-    return {'success': True}
+    ctx = {'success': True}
+    ctx.update(_get_map_another_popup_context(request))
+    return ctx
+
+
+def _get_map_another_popup_context(request):
+    more_reservations_exist = (request.user
+                               .blockfacereservation_set
+                               .filter(blockface__is_available=True)
+                               .exists())
+    return {'noMoreReservations': not more_reservations_exist}
 
 
 def survey_detail(request, survey_id):
