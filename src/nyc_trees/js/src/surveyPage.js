@@ -62,6 +62,8 @@ var dom = {
         treeFormTemplate: '#tree-form-template',
         treeFormcontainer: '#tree-form-container',
         distanceToEnd: '#distance_to_end',
+        treeForms: '[data-class="tree-form"]',
+        collapseButton: '[data-toggle="collapse"]',
 
         addTree: '#another-tree',
         submitSurvey: '#submit-survey',
@@ -254,12 +256,17 @@ $(dom.treeFormcontainer).on('change', 'input[name="guard_installation"]', getSec
 function checkFormValidity($forms) {
     var valid = true;
 
+    // If any forms are collapsed, show them temporarily
+    $forms.removeClass('collapse');
+
     // Disable things we don't want to validate. Prevents the browser
     // complaining about unfocusable elements
     $forms.find('input, select, textarea')
         .not(':visible')
         .not('[data-class="fake-submit"]')
         .attr('disabled', true);
+
+    var $elemToFocus = null;
 
     // For each form element
     $forms.find('input, select, textarea').each(function(i, el) {
@@ -270,8 +277,6 @@ function checkFormValidity($forms) {
         if ($(el).is(':visible') && !el.validity.valid) {
             valid = false;
 
-            $(el).focus();
-
             // The problems checkboxes are a group of checkboxes, but the HTML5
             // "required" attribute wants you to check every box.
             // We add/remove "required" when one box is checked, but we need
@@ -280,18 +285,44 @@ function checkFormValidity($forms) {
                 el.setCustomValidity('Please select one or more of these options.');
             }
 
-            // "submit" the form.  This will trigger the builtin browser validation messages.
-            // Our submit handler will prevent this from actually submitting
-            $(el).closest('form').find('[data-class="fake-submit"]').click();
+            $elemToFocus = $(el);
 
             return false;
         }
     });
 
-    // Reenable things now that we're done validating
-    $forms.find('input, select, textarea').attr('disabled', false);
+    // If there is more than one form, re-collapse them now that we're done validating
+    if ($(dom.treeFormcontainer).find(dom.treeForms).length > 1) {
+        $forms.filter(dom.treeForms).addClass('collapse');
+    }
+
+    if ($elemToFocus !== null) {
+        var $form = $elemToFocus.closest('form');
+
+        if ($form.hasClass('collapse') && $form.is(':hidden')) {
+            // Make sure the form with the errors on it is not collapsed
+            $elemToFocus.closest(dom.treeForms).collapse('show');
+
+            $forms.one('shown.bs.collapse', function() {
+                triggerValidationMesasages($elemToFocus, $forms);
+            });
+        } else {
+            triggerValidationMesasages($elemToFocus, $forms);
+        }
+    }
 
     return valid;
+}
+
+function triggerValidationMesasages($elemToFocus, $forms) {
+    $elemToFocus.focus();
+
+    // "submit" the form.  This will trigger the builtin browser validation messages.
+    // Our submit handler will prevent this from actually submitting
+    $elemToFocus.closest('form').find('[data-class="fake-submit"]').click();
+
+    // Reenable things now that we're done validating
+    $forms.find('input, select, textarea').attr('disabled', false);
 }
 
 // We need to submit the form to see the error bubbles, but we don't want to
@@ -311,7 +342,7 @@ $(dom.btnNext).click(function(e) {
 });
 
 $(dom.addTree).click(function (){
-    var $treeForms = $(dom.treeFormcontainer).find('[data-class="tree-form"]'),
+    var $treeForms = $(dom.treeFormcontainer).find(dom.treeForms),
         $lastTreeForm = $treeForms.last();
 
     if (checkFormValidity($lastTreeForm)) {
@@ -319,9 +350,28 @@ $(dom.addTree).click(function (){
 
         $(dom.treeFormcontainer).append(formTemplate({tree_number: treeNumber}));
 
-        var $newForm = $(dom.treeFormcontainer).find('[data-class="tree-form"]').last();
+        var $newForm = $(dom.treeFormcontainer).find(dom.treeForms).last();
         setupSpeciesAutocomplete($newForm);
+
+        $treeForms.collapse('hide');
+        $newForm.collapse('show');
+
+        $(dom.collapseButton).removeClass('hidden');
     }
+});
+
+// When tree forms are opened/closed we need to change the icon class of the toggle
+$(dom.treeFormcontainer).on('show.bs.collapse', function(e) {
+    var formId = $(e.target).attr('id'),
+        $toggle = $(dom.collapseButton).filter('[data-target="#' + formId + '"]').children('i');
+
+    $toggle.removeClass('icon-down-open-big').addClass('icon-left-open-big');
+});
+$(dom.treeFormcontainer).on('hide.bs.collapse', function(e) {
+    var formId = $(e.target).attr('id'),
+        $toggle = $(dom.collapseButton).filter('[data-target="#' + formId + '"]').children('i');
+
+    $toggle.removeClass('icon-left-open-big').addClass('icon-down-open-big');
 });
 
 function getTreeData(i, form) {
@@ -370,7 +420,7 @@ function createSurveyData() {
 
 function submitSurveyWithTrees() {
     var $forms = $(dom.surveyPage).find('form'),
-        $treeForms = $forms.filter('[data-class="tree-form"]');
+        $treeForms = $forms.filter(dom.treeForms);
 
     if (checkFormValidity($forms)) {
         // Disable submit button to prevent double POSTs
@@ -573,7 +623,7 @@ function setupSpeciesAutocomplete($form) {
     });
 }
 
-setupSpeciesAutocomplete($(dom.treeFormcontainer).find('[data-class="tree-form"]'));
+setupSpeciesAutocomplete($(dom.treeFormcontainer).find(dom.treeForms));
 
 // Need to blur the Select2 element when it is closed to make sure any soft
 // keyboards also are closed
