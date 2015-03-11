@@ -222,7 +222,7 @@ t.add_resource(cw.Alarm(
     AlarmActions=[Ref(notification_arn_param)],
     Statistic='Average',
     Period=300,
-    Threshold=75,
+    Threshold='75',
     EvaluationPeriods=1,
     ComparisonOperator='GreaterThanThreshold',
     MetricName='CPUUtilization',
@@ -242,7 +242,7 @@ t.add_resource(cw.Alarm(
     AlarmActions=[Ref(notification_arn_param)],
     Statistic='Average',
     Period=60,
-    Threshold=1,
+    Threshold='1',
     EvaluationPeriods=1,
     ComparisonOperator='GreaterThanThreshold',
     MetricName='DiskQueueDepth',
@@ -262,7 +262,7 @@ t.add_resource(cw.Alarm(
     AlarmActions=[Ref(notification_arn_param)],
     Statistic='Average',
     Period=60,
-    Threshold=int(5.0e+09),  # 5GB in bytes
+    Threshold=str(int(5.0e+09)),  # 5GB in bytes
     EvaluationPeriods=1,
     ComparisonOperator='LessThanThreshold',
     MetricName='FreeStorageSpace',
@@ -282,7 +282,7 @@ t.add_resource(cw.Alarm(
     AlarmActions=[Ref(notification_arn_param)],
     Statistic='Average',
     Period=60,
-    Threshold=int(1.28e+08),  # 128MB in bytes
+    Threshold=str(int(1.28e+08)),  # 128MB in bytes
     EvaluationPeriods=1,
     ComparisonOperator='LessThanThreshold',
     MetricName='FreeableMemory',
@@ -335,7 +335,7 @@ t.add_resource(cw.Alarm(
     AlarmActions=[Ref(notification_arn_param)],
     Statistic='Average',
     Period=300,
-    Threshold=75,
+    Threshold='75',
     EvaluationPeriods=1,
     ComparisonOperator='GreaterThanThreshold',
     MetricName='CPUUtilization',
@@ -355,7 +355,7 @@ t.add_resource(cw.Alarm(
     AlarmActions=[Ref(notification_arn_param)],
     Statistic='Average',
     Period=60,
-    Threshold=int(5e+06),  # 5MB in bytes
+    Threshold=str(int(5e+06)),  # 5MB in bytes
     EvaluationPeriods=1,
     ComparisonOperator='LessThanThreshold',
     MetricName='FreeableMemory',
