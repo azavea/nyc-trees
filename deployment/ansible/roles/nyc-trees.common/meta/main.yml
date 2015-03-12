@@ -1,6 +1,7 @@
 ---
 dependencies:
   - { role: "azavea.ntp" }
+  - { role: "azavea.rds-ca-bundle", when: "['packer'] | is_in(group_names)" }
   - { role: "azavea.git" }
   - { role: "nyc-trees.nginx", when: "['monitoring-servers'] | is_not_in(group_names)" }
   - { role: "azavea.daemontools", when: "['monitoring-servers'] | is_not_in(group_names)" }

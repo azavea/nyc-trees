@@ -28,3 +28,4 @@ azavea.swapfile,0.1.0
 azavea.build-essential,0.1.0
 azavea.tasseo,0.1.1
 azavea.phantomjs,0.1.0
+azavea.rds-ca-bundle,0.1.0
