@@ -62,9 +62,9 @@ event_registration = do(login_required,
                         route(POST=v.register_for_event,
                               DELETE=v.cancel_event_registration))
 
-start_event_map_print_job = do(group_request,
-                               user_must_have_online_training,
-                               route(POST=v.start_event_map_print_job))
+printable_event_map = do(group_request,
+                         user_must_have_online_training,
+                         route(GET=v.printable_event_map))
 
 event_admin_check_in_page = group_admin_do(
     route(GET=do(render_template('event/admin_checkin.html'),
