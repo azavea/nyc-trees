@@ -351,7 +351,7 @@ def flag_survey(request, survey_id):
 def _get_map_another_popup_context(request):
     more_reservations_exist = (request.user
                                .blockfacereservation_set
-                               .filter(blockface__is_available=True)
+                               .current()
                                .exists())
     return {'noMoreReservations': not more_reservations_exist}
 
