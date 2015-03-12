@@ -176,6 +176,7 @@
         top: -39px;
         opacity: 0;
         z-index: -1;
+        max-height: 1px;
     }
     // Hide checkboxes and radios, and use their checked/unchecked to style their label
     input[type="checkbox"], input[type="radio"] {
