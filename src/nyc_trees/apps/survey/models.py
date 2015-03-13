@@ -5,6 +5,7 @@ from __future__ import division
 
 from django.contrib.gis.db import models
 from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
 from django.utils.timezone import now
 
 from apps.core.models import User, Group
@@ -50,6 +51,9 @@ class Survey(NycModel, models.Model):
     def __unicode__(self):
         return 'block %s on %s by %s' % (self.blockface_id, self.created_at,
                                          self.user)
+
+    def get_absolute_url(self):
+        return reverse('survey_detail', args=[self.pk])
 
 
 class Species(NycModel, models.Model):
