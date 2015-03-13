@@ -5,39 +5,20 @@
   }
 }
 
-@for $i from 2 through 4 {
-  .btn-group-#{$i} {
+.btn-group-toggles {
+  vertical-align: middle;
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  min-height: 45px;
+
+  .btn {
+    display: table-cell;
+    float: none;
     vertical-align: middle;
-    display: table;
+    padding: 8px;
     width: 100%;
-    table-layout: fixed;
-    border-collapse: separate;
-    min-height: 45px;
-
-    .btn {
-      display: table-cell;
-      float: none;
-      vertical-align: middle;
-      padding: 8px;
-    }
-  }
-}
-
-.btn-group-2 {
-  .btn {
-    width: 50%;
-  }
-}
-
-.btn-group-3 {
-  .btn {
-    width: 33.334%;
-  }
-}
-
-.btn-group-4 {
-  .btn {
-    width: 25%;
   }
 }
 

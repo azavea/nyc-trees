@@ -97,7 +97,7 @@
             <div class="field">
                 {% for group_label, group_choices in choices.problem_groups %}
                     <label>{{ group_label }}</label>
-                    <div class="btn-group btn-group-3">
+                    <div class="btn-group btn-group-toggles">
                         {% for value, label in group_choices %}
                             <input id="problems-{{ value }}-{{ tree_number }}" required type="checkbox" name="problems" value="{{ value }}" />
                             <label class="btn btn-switch" for="problems-{{ value }}-{{ tree_number }}">
