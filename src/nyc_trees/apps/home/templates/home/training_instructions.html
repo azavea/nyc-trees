@@ -1,25 +1,42 @@
-{% extends "base.html" %}
+{% extends "base_two_frames.html" %}
 
-{% block content %}
+{% block aside %}
+    <h2>Training</h2>
+    <p class="pageheading-description-detail">
+        Before you're able to RSVP to mapping events you'll need to do the following.
+    </p>
+{% endblock aside %}
 
-{# TODO: Design #}
+{% block main %}
+    <a href="{% url "training_summary_pure" %}" class="training block item">
+        <div class="row">
+            <div class="col-xs-8">
+                <h5>Complete your online training</h5>
+                <div class="h6"></div>
+            </div>
+            <div class="col-xs-4 text-right">
+                {% if step1_complete %}
+                    <i class="icon-check h4"></i>
+                {% else %}
+                    <button class="btn-primary btn">Start</button>
+                {% endif %}
+            </div>
+        </div>
+    </a>
 
-<h2>Training</h2>
-<p>
-Before you're able to RSVP to mapping events you'll need to do the following:
-</p>
-
-<h3>Step #1</h3>
-<p>
-{% if user.online_training_complete %}<s>{% endif %}
-Complete your <a href="{% url "training_summary_pure" %}">online training</a>.
-{% if user.online_training_complete %}</s>{% endif %}
-</p>
-
-<h3>Step #2</h3>
-<p>
-{% if user.field_training_complete %}<s>{% endif %}
-Attend a <a href="{% url "events_list_page" %}?active_filter=training">training event</a>.
-{% if user.field_training_complete %}</s>{% endif %}
-</p>
-{% endblock %}
+    <a href="{% url "events_list_page" %}?active_filter=training" class="training block item{% if not step1_complete %} inactive{% endif %}">
+        <div class="row">
+            <div class="col-xs-8">
+                <h5>Attend a first training event</h5>
+                <div class="h6"></div>
+            </div>
+            <div class="col-xs-4 text-right">
+                {% if step2_complete %}
+                    <i class="icon-check h4"></i>
+                {% elif step1_complete %}
+                    <button class="btn-primary btn">Start</button>
+                {% endif %}
+            </div>
+        </div>
+    </a>
+{% endblock main %}

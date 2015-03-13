@@ -80,4 +80,10 @@ def _quiz_summary(quiz, submitted_answers):
 
 
 def training_instructions(request):
-    return {}
+    user = request.user
+    step1_complete = user.online_training_complete
+    step2_complete = step1_complete and user.field_training_complete
+    return {
+        'step1_complete': step1_complete,
+        'step2_complete': step2_complete,
+    }
