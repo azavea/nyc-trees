@@ -1,0 +1,6 @@
+---
+celery_log_level: "info"
+
+celery_log: /var/log/nyc-trees-celery.log
+celery_log_rotate_count: 5
+celery_log_rotate_interval: daily

@@ -1,0 +1,3 @@
+---
+- name: Restart nyc-trees-celery
+  service: name=nyc-trees-celery state=restarted

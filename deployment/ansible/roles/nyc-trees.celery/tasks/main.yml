@@ -1,0 +1,19 @@
+---
+- name: Configure Celery service definition
+  template: src=upstart-nyc-trees-celery.conf.j2 dest=/etc/init/nyc-trees-celery.conf
+  notify:
+    - Restart nyc-trees-celery
+
+- name: Touch Celery log file if it does not exist
+  command: touch {{ celery_log }}
+           creates={{ celery_log }}
+
+- name: Set Celery log file permissions
+  file: path={{ celery_log }}
+        owner=nyc-trees
+        group=nyc-trees
+        mode=0664
+
+- name: Configure Celery log rotation
+  template: src=logrotate-nyc-trees-celery.j2
+            dest=/etc/logrotate.d/nyc-trees-celery

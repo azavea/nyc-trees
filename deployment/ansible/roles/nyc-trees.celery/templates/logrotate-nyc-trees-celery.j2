@@ -1,0 +1,7 @@
+{{ celery_log }} {
+  rotate {{ celery_log_rotate_count }}
+  {{ celery_log_rotate_interval }}
+  compress
+  missingok
+  notifempty
+}
