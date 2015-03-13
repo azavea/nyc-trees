@@ -2,6 +2,7 @@
 {% load utils %}
 
 {% block aside %}
+{% if show_controls %}
 <div class="map-sidebar">
     <div class="action-bar-survey">
         <div>
@@ -14,6 +15,7 @@
         </div>
     </div>
 </div>
+{% endif %}
 {% endblock aside %}
 
 {% block main %}

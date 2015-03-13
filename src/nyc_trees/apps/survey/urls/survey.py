@@ -7,13 +7,16 @@ from django.conf.urls import patterns, url
 
 from apps.survey.routes import (survey, survey_from_event,
                                 flag_survey, survey_detail,
-                                complete_survey)
+                                confirm_survey, complete_survey)
 
 
 # These URLs have the prefix 'survey/'
 urlpatterns = patterns(
     '',
     url(r'^$', survey, name='survey'),
+
+    url(r'^confirm/(?P<survey_id>\d+)/$',
+        confirm_survey, name='confirm_survey'),
 
     url(r'^detail/(?P<survey_id>\d+)/$', survey_detail, name='survey_detail'),
 

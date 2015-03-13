@@ -9,7 +9,7 @@ from django_tinsel.decorators import route, render_template, json_api_call
 from django_tinsel.utils import decorate as do
 
 from apps.core.decorators import (individual_mapper_do, group_request,
-                                  census_admin_do)
+                                  census_admin_do, update_with)
 from apps.survey import views as v
 
 #####################################
@@ -68,6 +68,11 @@ reservations_instructions = do(
 
 survey_detail = individual_mapper_do(
     route(GET=do(render_template('survey/survey_detail.html'),
+                 v.survey_detail)))
+
+confirm_survey = individual_mapper_do(
+    route(GET=do(render_template('survey/survey_detail.html'),
+                 update_with({'show_controls': True}),
                  v.survey_detail)))
 
 survey = individual_mapper_do(

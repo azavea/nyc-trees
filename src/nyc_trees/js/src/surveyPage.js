@@ -448,7 +448,7 @@ function submitSurveyWithTrees() {
         })
         .done(function(content) {
             hasUnsavedData = false;
-            window.location.href = '/survey/detail/' + content.survey_id + '/';
+            window.location.href = '/survey/confirm/' + content.survey_id + '/';
         })
         .fail(function(jqXHR, textStatus, errorThrown) {
             toastr.warning('Double-check your survey and try resubmitting it.', 'Something went wrong...');
