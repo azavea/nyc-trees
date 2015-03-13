@@ -230,7 +230,8 @@ class ReservationsQuerySet(models.QuerySet):
     def current(self):
         return self \
             .filter(canceled_at__isnull=True) \
-            .filter(expires_at__gt=now())
+            .filter(expires_at__gt=now()) \
+            .filter(blockface__is_available=True)
 
 
 class BlockfaceReservation(NycModel, models.Model):
