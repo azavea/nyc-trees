@@ -1,0 +1,24 @@
+{% load utils %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <!-- vendor.css contains styles which override bootstrap styling.  It must come after main.css -->
+        <link rel="stylesheet" href="{{ "css/main.css"|static_url }}">
+        <link rel="stylesheet" href="{{ "css/vendor.css"|static_url }}">
+        <link rel="stylesheet" type="text/css" href="//cloud.typography.com/7429932/717646/css/fonts.css" />
+    </head>
+    <body>
+    {% block body %}
+    {% endblock body %}
+    </body>
+    <script type="text/javascript">
+        {% include 'core/partials/config.js' %}
+    </script>
+    {# TODO: Concatenate common.js and base.js #}
+    <script type="text/javascript" src="{{ "js/common.js"|static_url }}"></script>
+    <script type="text/javascript" src="{{ "js/base.js"|static_url }}"></script>
+    {% block page_js %}
+    {% endblock page_js %}
+</html>
