@@ -34,6 +34,12 @@ reservations = route(
         render_template('survey/reservations.html'),
         v.reservations_page))
 
+printable_reservations_map = route(
+    GET=do(
+        login_required,
+        render_template('survey/printable_reservations_map.html'),
+        v.printable_reservations_page))
+
 reserve_blockface_page = route(
     GET=individual_mapper_do(
         render_template('survey/reserve_blockface.html'),

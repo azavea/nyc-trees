@@ -30,6 +30,11 @@ def get_context_for_reservations_layer(request):
     return _get_context_for_layer("reservations", models, request)
 
 
+def get_context_for_printable_reservations_layer(request):
+    models = [Blockface, BlockfaceReservation]
+    return _get_context_for_layer("reservations_print", models, request)
+
+
 def get_context_for_territory_layer(request, group_id):
     models = [Blockface, Territory]
     params = '?group=%s' % group_id

@@ -18,6 +18,7 @@ var EventMap = function (options) {
     }
 
     return {
+        map: map,
         setLocation: function (latLng) {
             if (!marker) {
                 marker = createMarker(map, latLng);
