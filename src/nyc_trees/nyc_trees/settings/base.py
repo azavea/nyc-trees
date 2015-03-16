@@ -256,6 +256,13 @@ THIRD_PARTY_APPS = (
 ACCOUNT_ACTIVATION_DAYS = 7
 REGISTRATION_AUTO_LOGIN = True
 
+# django-watchman
+# Disable Storage checking, to avoid creating files on S3 on every health check
+WATCHMAN_CHECKS = (
+    'watchman.checks.caches',
+    'watchman.checks.databases',
+)
+
 # END THIRD-PARTY CONFIGURATION
 
 # Apps specific for this project go here.

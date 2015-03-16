@@ -136,6 +136,10 @@ class User(NycModel, AbstractUser):
             not user_is_trusted_mapper(self, group)
 
 
+def _generate_image_filename(group, filename):
+    return 'group_images/{}/{}'.format(group.slug, filename)
+
+
 class Group(NycModel, models.Model):
     name = models.CharField(max_length=255, unique=True)
     # blank=True is valid for 'slug', because we'll automatically create slugs
@@ -149,7 +153,8 @@ class Group(NycModel, models.Model):
     # delete is allowed.
     admin = models.ForeignKey(User, null=True, blank=True,
                               on_delete=models.PROTECT)
-    image = models.ImageField(null=True, blank=True)
+    image = models.ImageField(null=True, blank=True,
+                              upload_to=_generate_image_filename)
     is_active = models.BooleanField(default=True)
     allows_individual_mappers = models.BooleanField(default=False)
     affiliation = models.CharField(max_length=255, default='', blank=True)
