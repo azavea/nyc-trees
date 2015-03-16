@@ -1,5 +1,5 @@
-ansible==1.8.2
-awscli==1.6.10
+ansible==1.8.4
+awscli==1.7.13
 boto==2.34.0
 requests==2.4.1
-troposphere==0.6.2
+troposphere==0.7.1
