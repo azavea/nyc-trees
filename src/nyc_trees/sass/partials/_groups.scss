@@ -22,3 +22,13 @@
     }
   }
 }
+
+#new-group {
+  @media (min-width: 768px) and (max-width: 991px) {
+    float: none !important;
+  }
+  @media (max-width: 767px){
+    position: relative;
+    top: -5px;
+  }
+}
