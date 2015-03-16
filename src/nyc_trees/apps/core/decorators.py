@@ -94,6 +94,17 @@ def user_must_be_individual_mapper(view_fn):
                                    % request.user)
     return wrapper
 
+
+def update_with(d):
+    def outer(view_fn):
+        @wraps(view_fn)
+        def inner(request, *args, **kwargs):
+            ctx = view_fn(request, *args, **kwargs)
+            ctx.update(d)
+            return ctx
+        return inner
+    return outer
+
 ##############################################################################
 # Composite Route Helpers
 
