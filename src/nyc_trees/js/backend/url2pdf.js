@@ -18,7 +18,7 @@ var url = system.args[1],
 // It doesn't appear to be that simple, at least when rendering Leaflet maps.
 // However, using 96 DPI gives a reasonable result.
 
-var DPI = 96;
+var DPI = 72;
 page.viewportSize = {
     width: 7.5 * DPI,  // 8.5in with .5in margins
     height: 10 * DPI   //  11in with .5in margins
@@ -29,6 +29,15 @@ page.paperSize = {
     margin: '0.5in'
 };
 page.zoomFactor = zoomFactor;
+
+// Uncomment to log HTTP requests and responses
+//
+//page.onResourceRequested = function(request) {
+//  console.log('Request ' + JSON.stringify(request.url, undefined, 4));
+//};
+//page.onResourceReceived = function(response) {
+//  console.log('Receive ' + JSON.stringify(response.url, undefined, 4));
+//};
 
 page.open(url, function (status) {
     if (status !== 'success') {

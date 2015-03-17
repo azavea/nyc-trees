@@ -28,6 +28,7 @@ from apps.event.helpers import (user_is_rsvped_for_event,
 from apps.mail.views import notify_rsvp
 
 from apps.survey.layer_context import get_context_for_territory_layer
+from libs.pdf_maps import create_event_map_pdf
 
 from libs.data import merge
 
@@ -48,7 +49,7 @@ def add_event(request):
         }
 
 
-def _process_event_form(form, request):
+def _process_event_form(form, request, event=None):
     form.data['group'] = request.group.pk
     try:
         form.data['location'] = Point(float(request.POST['lng']),
@@ -56,9 +57,22 @@ def _process_event_form(form, request):
     except ValueError:
         # Lat/lng were not submitted or could not be converted to floats.
         pass
+
+    if event:
+        event_location = event.location
+
     is_valid = form.is_valid()
+
     if is_valid:
-        form.save()
+        needs_pdf_map = (
+            event is None or
+            not event_location.equals_exact(form.data['location']))
+
+        event = form.save()
+
+        if needs_pdf_map:
+            create_event_map_pdf(event)
+
     return is_valid
 
 
@@ -228,7 +242,7 @@ def edit_event_page(request, event_slug):
 def edit_event(request, event_slug):
     event = get_object_or_404(Event, group=request.group, slug=event_slug)
     form = EventForm(request.POST.copy(), instance=event)
-    is_valid = _process_event_form(form, request)
+    is_valid = _process_event_form(form, request, event)
 
     if is_valid:
         return HttpResponseRedirect(
