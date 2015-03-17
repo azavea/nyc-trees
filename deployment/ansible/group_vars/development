@@ -4,6 +4,7 @@ django_settings_module: "nyc_trees.settings.development"
 redis_bind_address: "0.0.0.0"
 
 celery_log_level: "debug"
+celery_start_on: "vagrant-mounted"
 
 postgresql_listen_addresses: "*"
 postgresql_username: nyc_trees
