@@ -72,14 +72,14 @@
             {% include "survey/partials/radios.html" with label="Perception of Tree Health" field="health" choices=choices.health %}
         </fieldset>
         <fieldset>
-            {% include "survey/partials/radios.html" with label="How many stewardship practices do you see?" field="stewardship" choices=choices.stewardship %}
-        </fieldset>
-        <fieldset>
             {% include "survey/partials/radios.html" with label="Tree Guards" field="guard_installation" choices=choices.guard_installation %}
 
             <div data-guard_installation="Yes">
                 {% include "survey/partials/radios.html" with label="Is the tree guard:" field="guards" choices=choices.guards %}
             </div>
+        </fieldset>
+        <fieldset>
+            {% include "survey/partials/radios.html" with label="How many stewardship practices do you see?" field="stewardship" choices=choices.stewardship %}
         </fieldset>
         <fieldset>
             {% include "survey/partials/radios.html" with label="Sidewalk Damage" field="sidewalk_damage" choices=choices.sidewalk_damage %}
