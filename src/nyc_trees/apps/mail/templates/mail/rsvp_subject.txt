@@ -1,0 +1,1 @@
+You are registered for {{ event.title }} on {{ event.begins_at|date:"l, F jS" }}

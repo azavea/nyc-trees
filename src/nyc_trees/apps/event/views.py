@@ -25,7 +25,11 @@ from apps.event.event_list import (EventList, immediate_events, all_events)
 from apps.event.helpers import (user_is_rsvped_for_event,
                                 user_is_checked_in_to_event)
 
+from apps.mail.views import notify_rsvp
+
 from apps.survey.layer_context import get_context_for_territory_layer
+
+from libs.data import merge
 
 
 def add_event(request):
@@ -250,9 +254,11 @@ def event_popup_partial(request, event_slug):
 def register_for_event(request, event_slug):
     user = request.user
     event = get_object_or_404(Event, group=request.group, slug=event_slug)
+    mail_context = {}
     if event.has_space_available and not user_is_rsvped_for_event(user, event):
         EventRegistration.objects.create(user=user, event=event)
-    return event_detail(request, event_slug)
+        mail_context = notify_rsvp(request, user, event)
+    return merge(event_detail(request, event_slug), mail_context)
 
 
 @transaction.atomic
