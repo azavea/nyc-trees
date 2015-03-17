@@ -261,10 +261,11 @@ function checkFormValidity($forms) {
 
     // Disable things we don't want to validate. Prevents the browser
     // complaining about unfocusable elements
-    $forms.find('input, select, textarea')
+    var $disabledElems = $forms.find('input, select, textarea')
         .not(':visible')
-        .not('[data-class="fake-submit"]')
-        .attr('disabled', true);
+        .not('[data-class="fake-submit"]');
+
+    $disabledElems.attr('disabled', true);
 
     var $elemToFocus = null;
 
@@ -304,17 +305,17 @@ function checkFormValidity($forms) {
             $elemToFocus.closest(dom.treeForms).collapse('show');
 
             $forms.one('shown.bs.collapse', function() {
-                triggerValidationMesasages($elemToFocus, $forms);
+                triggerValidationMesasages($elemToFocus, $forms, $disabledElems);
             });
         } else {
-            triggerValidationMesasages($elemToFocus, $forms);
+            triggerValidationMesasages($elemToFocus, $forms, $disabledElems);
         }
     }
 
     return valid;
 }
 
-function triggerValidationMesasages($elemToFocus, $forms) {
+function triggerValidationMesasages($elemToFocus, $forms, $disabledElems) {
     $elemToFocus.focus();
 
     // "submit" the form.  This will trigger the builtin browser validation messages.
@@ -322,7 +323,7 @@ function triggerValidationMesasages($elemToFocus, $forms) {
     $elemToFocus.closest('form').find('[data-class="fake-submit"]').click();
 
     // Reenable things now that we're done validating
-    $forms.find('input, select, textarea').attr('disabled', false);
+    $disabledElems.attr('disabled', false);
 }
 
 // We need to submit the form to see the error bubbles, but we don't want to
@@ -376,7 +377,14 @@ $(dom.treeFormcontainer).on('hide.bs.collapse', function(e) {
 
 function getTreeData(i, form) {
     var obj = {},
-        formArray = $(form)
+        $form = $(form),
+        wasCollapsed = $form.hasClass('collapse');
+
+    // Temporarily show form before serializing form fields, otherwise all
+    // fields will appear to be hidden.
+    $form.removeClass('collapse');
+
+    var formArray = $form
             .find('input:not([type="submit"]),select')
             .not(':hidden')
             .serializeArray();
@@ -398,8 +406,11 @@ function getTreeData(i, form) {
         }
     });
 
-    return obj;
+    if (wasCollapsed) {
+        $form.addClass('collapse');
+    }
 
+    return obj;
 }
 
 $(dom.submitSurvey).on('click', submitSurveyWithTrees);
