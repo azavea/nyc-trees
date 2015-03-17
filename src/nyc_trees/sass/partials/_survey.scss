@@ -26,7 +26,10 @@
     .btn-group {
         margin-bottom: .75rem;
     }
-
+    #survey {
+        padding-top: 100px;
+    }
+    
     @media (max-width: $screen-sm - 1) {
         position: fixed;
         left: 0;
@@ -40,7 +43,7 @@
         .tab-status-list & {
           display: none;
         }
-        #select-starting-point, #select-side, #survey {
+        #select-starting-point, #select-side {
             display: table-cell;
             vertical-align: middle;
         }
@@ -53,7 +56,6 @@
             height: auto;
             padding: 0;
         }
-
     }
     
     // Select2 dropdown styling
@@ -132,10 +134,14 @@
 }
 
 #tree-form-header {
+    background: #f3f3f3;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    padding: 1rem 2rem 2rem;
     #no-trees {
-        position: absolute;
-        top: 1.2rem;
-        right: 2rem;
+        border-radius: $border-radius-base;
     }
 
     @media (max-width: $screen-sm - 1) {
@@ -211,6 +217,10 @@
     #submit-survey {
         margin-bottom: 2rem;
     }
+}
+
+#cant-map {
+    margin-top: 2rem;
 }
 
 .teammate {

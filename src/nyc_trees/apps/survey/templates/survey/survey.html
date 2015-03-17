@@ -30,15 +30,16 @@
         </div>
         <div id="survey" class="hidden">
             <div id="tree-form-header">
-                <a class="btn btn-warning pull-right" href="#no-trees-popup" data-toggle="modal" id="no-trees">No Trees</a>
                 <h4>Treecorder</h4>
+                <a class="btn btn-warning btn-block btn-sm" href="#no-trees-popup" data-toggle="modal" id="no-trees">No Trees</a>
             </div>
             <div id="tree-form-container" class="clearfix">
                 {% include "survey/partials/tree_form.html" with tree_number=1 %}
             </div>
             <div class="tree-form-block">
-                <button class="btn btn-primary btn-block" id="another-tree">+ Another Tree</button>
-                <a class="btn btn-gray btn-block" id="cant-map" href="#quit-popup" data-toggle="modal">I cannot map this block because...</a>
+                <div class="field">
+                    <button class="btn btn-primary btn-block" id="another-tree">+ Another Tree</button>
+                </div>
             </div>
 
 
@@ -53,6 +54,7 @@
             </form>
             <div class="tree-form-block">
                 <button class="btn btn-primary btn-block" id="submit-survey">Submit</button>
+                <a class="btn btn-warning btn-block" id="cant-map" href="#quit-popup" data-toggle="modal">I cannot map this block because...</a>
             </div>
             <div class="block" id="treeform-sponsor">
                 <span>Powered By</span>
