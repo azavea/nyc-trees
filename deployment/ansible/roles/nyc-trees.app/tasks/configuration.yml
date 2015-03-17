@@ -20,6 +20,12 @@
         state=present
   when: "['packer'] | is_in(group_names)"
 
+- name: Add Celery user to nyc-trees group
+  user: name=celery
+        append=yes
+        groups=nyc-trees
+        state=present
+
 - name: Create configuration file directory
   file: path={{ app_config_home }}
         owner=root

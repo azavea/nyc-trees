@@ -1,0 +1,5 @@
+---
+celery_dir: "{{ app_home }}"
+celery_bin: "envdir /etc/nyc-trees.d/env celery"
+celery_app: "nyc_trees.celery:app"
+celery_broker_url: "redis://{{ redis_host }}:{{ redis_port }}/2"
