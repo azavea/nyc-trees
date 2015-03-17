@@ -128,9 +128,9 @@ function get_latest_internal_ami() {
   aws ec2 describe-images --owners self \
     | grep "${1}" \
     | grep IMAGES \
-    | sort -k5 -r \
+    | sort -k8 -r \
     | head -n1 \
-    | cut -f4
+    | cut -f5
 }
 
 function create_ami() {
