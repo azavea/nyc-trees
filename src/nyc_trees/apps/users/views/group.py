@@ -14,6 +14,7 @@ from django.http import HttpResponseRedirect, HttpResponseForbidden, Http404
 from django.shortcuts import get_object_or_404
 from django.utils.timezone import now
 
+from libs.data import merge
 from libs.formatters import humanize_bytes
 from libs.sql import get_group_tree_count
 
@@ -21,6 +22,8 @@ from apps.core.helpers import (user_is_group_admin,
                                user_is_eligible_to_become_trusted_mapper)
 from apps.core.decorators import group_request
 from apps.core.models import Group
+
+from apps.mail.views import notify_group_mapping_approved
 
 from apps.users.models import Follow, TrustedMapper
 from apps.users.forms import GroupSettingsForm
@@ -208,7 +211,11 @@ def start_group_map_print_job(request):
 
 
 def give_user_mapping_priveleges(request, username):
-    return _grant_mapping_access(request.group, username, is_approved=True)
+    mapper_context = _grant_mapping_access(request.group, username,
+                                           is_approved=True)
+    mail_context = notify_group_mapping_approved(request, request.group,
+                                                 username)
+    return merge(mapper_context, mail_context)
 
 
 def remove_user_mapping_priveleges(request, username):

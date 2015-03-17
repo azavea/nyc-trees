@@ -1,0 +1,1 @@
+Your request to map for {{group.name}} was approved

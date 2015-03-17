@@ -9,6 +9,7 @@ from waffle.models import Flag
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.gis.geos import LineString, MultiLineString
 
+from django.core import mail
 from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpResponseRedirect
 from django.test import TestCase
@@ -468,11 +469,17 @@ class TrustedMapperTests(UsersTestCase):
         response = request_mapper_status(request, group_slug=group.slug)
         self.assertEqual(response.content, '{"success": true}')
 
+        # Clear the test inbox
+        mail.outbox = []
+
         # Group admin approve mapper status
         request = make_request(user=group.admin, method='PUT')
         response = edit_user_mapping_priveleges(request,
                                                 group_slug=group.slug,
                                                 username=user.username)
+        self.assertEqual(1, len(mail.outbox),
+                         'Expected approving a trusted mapper to send an '
+                         'email')
         self.assertTrue('btn-approve' in response.content)
 
     def _is_eligible(self):
