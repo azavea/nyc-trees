@@ -396,9 +396,11 @@ class IndividualMapperTests(UsersTestCase):
         self.assertIs(type(response), HttpResponseRedirect)
 
     def _rsvp_to_event(self, event):
+        mail.outbox = []
         request = make_request(user=self.user, method='POST')
         response = event_registration(request, group_slug=self.group.slug,
                                       event_slug=event.slug)
+        self.assertEqual(1, len(mail.outbox), "Expected RSVP to send an email")
         self.assertTrue('data-verb="DELETE"' in response.content)
 
     def _checkin_to_event(self, event):

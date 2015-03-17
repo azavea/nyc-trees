@@ -17,6 +17,7 @@ from apps.core.models import User
 
 # Message Types
 GROUP_MAPPING_APPROVED = 'group_mapping_approved'
+RSVP = 'rsvp'
 
 
 def _send_to(user, message_type, *args, **kwargs):
@@ -59,3 +60,15 @@ def notify_group_mapping_approved(request, group, username):
                     GROUP_MAPPING_APPROVED,
                     group=group,
                     reservations_url=reservations_url)
+
+
+def notify_rsvp(request, user, event):
+    relative_event_url = reverse('event_detail', kwargs={
+        'group_slug': event.group.slug,
+        'event_slug': event.slug
+    })
+    event_url = request.build_absolute_uri(relative_event_url)
+    return _send_to(user,
+                    RSVP,
+                    event=event,
+                    event_url=event_url)
