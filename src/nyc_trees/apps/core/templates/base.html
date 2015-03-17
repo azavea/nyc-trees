@@ -1,93 +1,76 @@
+{% extends "skeleton.html" %}
 {% load utils %}
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-        <!-- vendor.css contains styles which override bootstrap styling.  It must come after main.css -->
-        <link rel="stylesheet" href="{{ "css/main.css"|static_url }}">
-        <link rel="stylesheet" href="{{ "css/vendor.css"|static_url }}">
-        <link rel="stylesheet" type="text/css" href="//cloud.typography.com/7429932/717646/css/fonts.css" />
-    </head>
-    <body>
-        <header class="left-content">
-        {% block nav %}
-            {% include "core/partials/nav.html" %}
-        {% endblock nav %}
-        </header>
-        <header class="main-header">
-            <nav class="nav-main clearfix">
-                <div class="nav-left">
-                    <button class="nav-menubutton nav-left" type="button" data-target="" aria-expanded="false">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <div class="brand nav-left">
-                        <img src="{{ "img/logo-treescount.png"|static_url }}" alt="TreesCount! 2015 logo">
-                    </div>
-                </div>
-                <div class="nav-right nav-account">
-                    {% if request.user.is_authenticated %}
-                    <a href="{% url 'auth_logout' %}">Logout</a>
-                    {% else %}
-                    {% block login_link %}
-                    <a href="{% url 'auth_login' %}?next={{ request.get_full_path|urlencode }}">Login</a>
-                    {% endblock %}
-                    | <a href="{% url 'registration_register' %}">Register</a>
-                    {% endif %}
-                </div>
-                {% if my_events_now %}
-                <div class="nav-right nav-alert">
-                    <div class="dropdown">
-                        <button class="btn dropdown-toggle" type="button" id="eventNowAlert" data-toggle="dropdown" aria-expanded="false">
-                            <div class="nav-alert-badge">!</div>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="eventNowAlert">
-                            {% for event in my_events_now %}
-                            <li class="text-right" role="presentation">
-                                <a role="menuitem" tabindex="-1" href="{{ event.get_user_checkin_url }}">
-                                    The event
-                                    <b>{{ event.title }}</b>
-                                    {% if event.has_started %}
-                                        has started
-                                    {% else %}
-                                        is starting soon
-                                    {% endif %}
-                                </a>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                </div>
-                {% endif %}
-            </nav>
-        </header>
-        <div class="overlay-menued"></div>
-        <div class="right-content">
-            {% block content %}
-            {% endblock content %}
-        </div>
-        {# This block exists for placing elements that need to be children of the body, like bootstrap modals #}
-        {% block extra_content %}
-        {% endblock extra_content %}
 
-        {% block footer %}
-            <footer class="visible-xs">
-                <div class="container">
-                    <img class="section-about-logo pull-left" src="{{ 'img/logo-nycparks.png'|static_url }}" srcset="{{ 'img/logo-nycparks@2x.png'|static_url }} 2x">
-                    <p>A project of New York City <strong>Department of Parks &amp; Recreation</strong></p>
+{% block body %}
+    <header class="left-content">
+    {% block nav %}
+        {% include "core/partials/nav.html" %}
+    {% endblock nav %}
+    </header>
+    <header class="main-header">
+        <nav class="nav-main clearfix">
+            <div class="nav-left">
+                <button class="nav-menubutton nav-left" type="button" data-target="" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <div class="brand nav-left">
+                    <img src="{{ "img/logo-treescount.png"|static_url }}" alt="TreesCount! 2015 logo">
                 </div>
-            </footer>
-        {% endblock footer %}
-    </body>
-    <script type="text/javascript">
-      {% include 'core/partials/config.js' %}
-    </script>
-    {# TODO: Concatenate common.js and base.js #}
-    <script type="text/javascript" src="{{ "js/common.js"|static_url }}"></script>
-    <script type="text/javascript" src="{{ "js/base.js"|static_url }}"></script>
-    {% block page_js %}
-    {% endblock page_js %}
-</html>
+            </div>
+            <div class="nav-right nav-account">
+                {% if request.user.is_authenticated %}
+                <a href="{% url 'auth_logout' %}">Logout</a>
+                {% else %}
+                {% block login_link %}
+                <a href="{% url 'auth_login' %}?next={{ request.get_full_path|urlencode }}">Login</a>
+                {% endblock %}
+                | <a href="{% url 'registration_register' %}">Register</a>
+                {% endif %}
+            </div>
+            {% if my_events_now %}
+            <div class="nav-right nav-alert">
+                <div class="dropdown">
+                    <button class="btn dropdown-toggle" type="button" id="eventNowAlert" data-toggle="dropdown" aria-expanded="false">
+                        <div class="nav-alert-badge">!</div>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="eventNowAlert">
+                        {% for event in my_events_now %}
+                        <li class="text-right" role="presentation">
+                            <a role="menuitem" tabindex="-1" href="{{ event.get_user_checkin_url }}">
+                                The event
+                                <b>{{ event.title }}</b>
+                                {% if event.has_started %}
+                                    has started
+                                {% else %}
+                                    is starting soon
+                                {% endif %}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+        </nav>
+    </header>
+    <div class="overlay-menued"></div>
+    <div class="right-content">
+        {% block content %}
+        {% endblock content %}
+    </div>
+    {# This block exists for placing elements that need to be children of the body, like bootstrap modals #}
+    {% block extra_content %}
+    {% endblock extra_content %}
+
+    {% block footer %}
+        <footer class="visible-xs">
+            <div class="container">
+                <img class="section-about-logo pull-left" src="{{ 'img/logo-nycparks.png'|static_url }}" srcset="{{ 'img/logo-nycparks@2x.png'|static_url }} 2x">
+                <p>A project of New York City <strong>Department of Parks &amp; Recreation</strong></p>
+            </div>
+        </footer>
+    {% endblock footer %}
+{% endblock body %}

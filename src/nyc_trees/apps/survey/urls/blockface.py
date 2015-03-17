@@ -11,7 +11,8 @@ from apps.survey.routes import (reserve_blockface_page, cancel_reservation,
                                 reservations_instructions,
                                 blockface_reservations_confirmation_page,
                                 blockface, progress_page,
-                                progress_page_blockface_popup)
+                                progress_page_blockface_popup,
+                                printable_reservations_map)
 
 
 # These URLs have the prefix 'blockface/'
@@ -20,6 +21,9 @@ urlpatterns = patterns(
     url(r'^progress/$', progress_page, name='progress_page'),
 
     url(r'^$', reservations, name='reservations'),
+
+    url(r'^printable-map/$', printable_reservations_map,
+        name='printable_reservations_map'),
 
     url(r'^reserve/$', reserve_blockface_page, name='reserve_blockface_page'),
 

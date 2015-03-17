@@ -1,0 +1,13 @@
+{% extends "skeleton.html" %}
+{% load utils %}
+
+{% block body %}
+    <div id="map" class="map-event"
+         data-tile-url="{{ layer.tile_url }}"
+         {% if bounds %}data-bounds="{{ bounds }}"{% endif %}>
+    </div>
+{% endblock body %}
+
+{% block page_js %}
+    <script type="text/javascript" src="{{ "js/printableReservationsMapPage.js"|static_url }}"></script>
+{% endblock page_js %}

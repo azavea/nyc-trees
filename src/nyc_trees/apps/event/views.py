@@ -7,12 +7,13 @@ from django.contrib.gis.geos import Point
 from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.http import (HttpResponseRedirect, HttpResponseForbidden,
-                         HttpResponseNotAllowed, HttpResponse)
+                         HttpResponseNotAllowed)
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.timezone import get_current_timezone, now
 from django.contrib.sites.models import Site
 
 from apps.core.forms import EmailForm
+from apps.core.helpers import user_is_group_admin
 from apps.core.models import User
 
 from apps.users.views.group import GROUP_EVENTS_ID, GROUP_EDIT_EVENTS_TAB_ID
@@ -21,11 +22,10 @@ from apps.event.forms import EventForm
 from apps.event.models import Event, EventRegistration
 from apps.event.event_list import (EventList, immediate_events, all_events)
 
-from apps.core.helpers import user_is_group_admin
 from apps.event.helpers import (user_is_rsvped_for_event,
                                 user_is_checked_in_to_event)
 
-from libs.phantomjs import url_to_pdf
+from apps.survey.layer_context import get_context_for_territory_layer
 
 
 def add_event(request):
@@ -266,10 +266,12 @@ def cancel_event_registration(request, event_slug):
 
 
 def printable_event_map(request, event_slug):
-    # TODO: use URL of a page designed to show a printable event map
-    url = 'http://localhost/blockface/progress/'
-    pdf_bytes = url_to_pdf(url)
-    return HttpResponse(pdf_bytes, content_type="application/pdf")
+    event = get_object_or_404(Event, group=request.group, slug=event_slug)
+    context = {
+        'event': event,
+        'layer': get_context_for_territory_layer(request, request.group.id),
+    }
+    return context
 
 
 def event_admin_check_in_page(request, event_slug):

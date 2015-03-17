@@ -30,10 +30,10 @@ from apps.survey.models import (BlockfaceReservation, Blockface, Territory,
                                 HEALTH_CHOICES, STEWARDSHIP_CHOICES,
                                 GUARD_CHOICES, SIDEWALK_CHOICES,
                                 PROBLEMS_CHOICES)
-from apps.survey.layer_context import (get_context_for_reservations_layer,
-                                       get_context_for_reservable_layer,
-                                       get_context_for_progress_layer,
-                                       get_context_for_territory_survey_layer)
+from apps.survey.layer_context import (
+    get_context_for_reservations_layer, get_context_for_reservable_layer,
+    get_context_for_progress_layer, get_context_for_territory_survey_layer,
+    get_context_for_printable_reservations_layer)
 from apps.survey.helpers import (teammates_for_event,
                                  teammates_for_individual_mapping)
 
@@ -93,6 +93,13 @@ def reservations_page(request):
             {'css_class': 'unavailable', 'label': 'Not reserved by you'},
         ],
         'layer': get_context_for_reservations_layer(request),
+        'bounds': _user_reservation_bounds(request.user)
+    }
+
+
+def printable_reservations_page(request):
+    return {
+        'layer': get_context_for_printable_reservations_layer(request),
         'bounds': _user_reservation_bounds(request.user)
     }
 

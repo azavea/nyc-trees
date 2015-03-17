@@ -36,8 +36,7 @@ function create(options) {
     var map = L.map(options.domId, mapOptions),
         zoomControl = L.control.zoom({position: 'bottomleft'}).addTo(map),
         $controlsContainer = $(zoomControl.getContainer()),
-        bounds = getDomMapAttribute('bounds', options.domId),
-        mapLocation = getDomMapAttribute('location', options.domId);
+        bounds = getDomMapAttribute('bounds', options.domId);
 
     map.addControl(L.control.attribution({prefix: false}));
 
@@ -45,8 +44,6 @@ function create(options) {
         fitBounds(map, bounds);
     } else if (options.bounds) {
         map.fitBounds(options.bounds, {maxZoom: zoom.NEIGHBORHOOD});
-    } else if (mapLocation) {
-        map.setView(mapLocation, zoom.NEIGHBORHOOD);
     } else if (options.location && options.location.lat !== 0) {
         map.setView(options.location, zoom.NEIGHBORHOOD);
     } else {
