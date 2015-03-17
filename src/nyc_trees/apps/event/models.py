@@ -51,6 +51,8 @@ class Event(NycModel, models.Model):
     is_canceled = models.BooleanField(default=False)
     is_private = models.BooleanField(default=False)
 
+    map_pdf_filename = models.CharField(max_length=255, default='', blank=True)
+
     objects = models.GeoManager()
 
     @staticmethod
