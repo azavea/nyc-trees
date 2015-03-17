@@ -408,21 +408,14 @@ def admin_blockface_available(request, blockface_id):
 
 
 def reservations_instructions(request):
-    from apps.users import user_profile_context
     user = request.user
-    step1_enabled = not user.online_training_complete
-    step2_enabled = user.online_training_complete
-    step3_enabled = user.online_training_complete and \
-        user.field_training_complete
-    step4_enabled = user.online_training_complete and \
-        user.field_training_complete and \
-        user.attended_at_least_two_events and \
-        user.individual_mapper is None
-    context = user_profile_context(user, user.is_authenticated).copy()
-    context.update({
-        'step1_enabled': step1_enabled,
-        'step2_enabled': step2_enabled,
-        'step3_enabled': step3_enabled,
-        'step4_enabled': step4_enabled,
-    })
-    return context
+    step1_complete = user.online_training_complete
+    step2_complete = step1_complete and user.field_training_complete
+    step3_complete = step2_complete and user.attended_at_least_two_events
+    step4_complete = step3_complete and user.individual_mapper is not None
+    return {
+        'step1_complete': step1_complete,
+        'step2_complete': step2_complete,
+        'step3_complete': step3_complete,
+        'step4_complete': step4_complete,
+    }
