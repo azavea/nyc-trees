@@ -10,8 +10,10 @@
   <div class="map-sidebar">
     <h2>Events</h2>
     <p class="pageheading-description-detail">
-      Take a look at upcoming events and find your next tree mapping project.
+      Take a look at upcoming events and find your next tree mapping
+      project.
     </p>
+    <p class="pageheading-description-detail">Click to view as a list or find an event nearby using the map!</p>
     <div id="action-bar" class="action-bar">
       Select an event to view details
     </div>
@@ -40,7 +42,7 @@
         {% if immediate_events.event_infos %}
           {% include "event/partials/event_list.html" with event_list=immediate_events %}
         {% else %}
-          <p class="no-data">You haven't RSVPed to any events yet.</p>
+          <p class="no-data">You are not attending any events yet.</p>
         {% endif %}
         </div>
 
