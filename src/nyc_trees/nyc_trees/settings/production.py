@@ -83,7 +83,7 @@ vpc_id = mac_metadata.values()[0]['vpc-id']
 AWS_STORAGE_BUCKET_NAME = 'django-storages-{}'.format(vpc_id)
 
 AWS_AUTO_CREATE_BUCKET = True
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+DEFAULT_FILE_STORAGE = 'libs.custom_storages.PublicS3BotoStorage'
 
 # There is no need to specify access key or secret key
 # They are pulled from the instance metadata by Boto
