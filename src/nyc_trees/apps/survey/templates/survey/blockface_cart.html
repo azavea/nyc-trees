@@ -6,7 +6,7 @@
 
 {% block main %}
     <h3>Confirm</h3>
-    Lorem impsum dolor sit amet, consectetur adipiscing elit.  Integer mollies viverra ante.
+    <p>Indicate whether you will be using the app or paper worksheets to collect data on these block sides. Click the “Confirm Blocks” button to finalize your reservation.</p>
 
     <form method="post" action="{% url 'blockface_reservations_confirmation_page' %}">
         {% csrf_token %}
@@ -17,13 +17,13 @@
             <input type="radio" name="is_mapping_with_paper" value="False" checked="checked" />
             Mobile App
         </label>
-        <p>Lorem ipsum dolor sit amet</p>
+        <p>Map blocks online using the Treecorder! Just log in as usual into the TreesCount! Web App.</p>
 
         <label>
             <input type="radio" name="is_mapping_with_paper" value="True" />
             Paper Worksheets
         </label>
-        <p>Lorem ipsum dolor sit amet</p>
+        <p>You will be emailed a data collection worksheet to print at home. After you have collected data on the block sides you have reserved, login to the TreesCount! Web App to enter the information online into the Treecorder.</p>
 
         <a href="{% url 'reserve_blockface_page' %}">Cancel</a>
         <input type="submit" value="Confirm Blocks" class="btn btn-primary pull-right" />
