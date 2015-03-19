@@ -26,7 +26,6 @@
     .btn-group {
         margin-bottom: .75rem;
     }
-
     @media (max-width: $screen-sm - 1) {
         position: fixed;
         left: 0;
@@ -40,7 +39,7 @@
         .tab-status-list & {
           display: none;
         }
-        #select-starting-point, #select-side, #survey {
+        #select-starting-point, #select-side {
             display: table-cell;
             vertical-align: middle;
         }
@@ -53,7 +52,6 @@
             height: auto;
             padding: 0;
         }
-
     }
     
     // Select2 dropdown styling
@@ -132,28 +130,27 @@
 }
 
 #tree-form-header {
+    background: $gray-lightest;
+    padding: 1rem 2rem;
+    margin: -2rem -2rem 2rem;
     #no-trees {
-        position: absolute;
-        top: 1.2rem;
-        right: 2rem;
+        border-radius: $border-radius-base;
     }
-
+    h4 {
+        margin: 0;
+    }
     @media (max-width: $screen-sm - 1) {
-        padding: $grid-gutter-width/3 $grid-gutter-width;
-        background: $gray-lightest;
-        margin-bottom: 1rem;
-    }
-
-    @media (min-width: $screen-sm) {
-        h4 {
-            margin-top: 0;
-        }
+        margin: 0;
     }
 }
 
 #tree-form-container, .tree-form-block {
     h3 {
         margin-bottom: 2rem;
+    }
+    h4 {
+        padding-top: 1rem;
+        border-top: 2px solid $gray-lightest;
     }
     #another-tree {
         margin-bottom: 2rem;
@@ -211,6 +208,10 @@
     #submit-survey {
         margin-bottom: 2rem;
     }
+}
+
+#cant-map {
+    margin-top: 2rem;
 }
 
 .teammate {
