@@ -26,10 +26,6 @@
     .btn-group {
         margin-bottom: .75rem;
     }
-    #survey {
-        padding-top: 100px;
-    }
-    
     @media (max-width: $screen-sm - 1) {
         position: fixed;
         left: 0;
@@ -135,11 +131,8 @@
 
 #tree-form-header {
     background: #f3f3f3;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    padding: 1rem 2rem 2rem;
+    padding: 1rem 2rem;
+    margin: -2rem -2rem 2rem;
     #no-trees {
         border-radius: $border-radius-base;
     }
@@ -152,7 +145,7 @@
 
     @media (min-width: $screen-sm) {
         h4 {
-            margin-top: 0;
+            margin: 0;
         }
     }
 }
@@ -160,6 +153,10 @@
 #tree-form-container, .tree-form-block {
     h3 {
         margin-bottom: 2rem;
+    }
+    h4 {
+        padding-top: 1rem;
+        border-top: 2px solid $gray-lightest;
     }
     #another-tree {
         margin-bottom: 2rem;
