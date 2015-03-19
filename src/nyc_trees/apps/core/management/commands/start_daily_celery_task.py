@@ -3,7 +3,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
-from django.db import transaction
+from django.db import transaction, connection
 from django.core.management.base import BaseCommand
 from django.utils.timezone import now
 
@@ -35,11 +35,15 @@ class Command(BaseCommand):
         task_name = args[0]
         today = now().date()
 
-        # select_for_update will block if there are other transactions running
-        # which have also selected this table for update.
-        task_runs = TaskRun.objects.select_for_update().filter(name=task_name)
+        # Attempt to acquire a lock to the taskrun table, blocking if another
+        # transaction already has a lock.
+        # Since we create new rows to indicate when a task has been run, we
+        # need to lock the entire taskrun table, not just a subset of rows.
+        # This prevents us from using the builtin 'select_for_update'
+        with connection.cursor() as cursor:
+            cursor.execute('LOCK TABLE core_taskrun IN EXCLUSIVE MODE')
 
-        if task_runs.filter(date_started=today).exists():
+        if TaskRun.objects.filter(name=task_name, date_started=today).exists():
             self.stdout.write(
                 'Task {} has already been started today, skipping'.format(
                     task_name))
