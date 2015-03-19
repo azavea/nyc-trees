@@ -28,6 +28,11 @@ ELASTICACHE_INSTANCE_TYPES = [
     'cache.m1.small'
 ]
 
+S3_US_STANDARD_HOSTED_ZONE_ID = 'Z3AQBSTGFYJSTF'
+S3_US_STANDARD_HOSTED_ZONE_ALIAS_TARGET = 's3-website-us-east-1.amazonaws.com'
+
+CLOUDFRONT_HOSTED_ZONE_ID = 'Z2FDTNDATAQYW2'
+
 
 def get_ubuntu_daily_ami_mapping(arch='amd64', root_store='ebs',
                                  virtualization='hvm'):
