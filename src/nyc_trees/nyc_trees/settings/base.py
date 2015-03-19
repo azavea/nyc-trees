@@ -353,3 +353,5 @@ SOFT_LAUNCH_REGEXES = [
     r'^/admin/',
     r'^/health-check/',
 ]
+
+RESERVATION_REMINDER_WINDOW = 4
