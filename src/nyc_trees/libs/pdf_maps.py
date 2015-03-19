@@ -22,7 +22,7 @@ def create_event_map_pdf(event):
         'group_slug': event.group.slug,
         'event_slug': event.slug,
         })
-    url = 'http://localhost' + url
+    url = 'http://localhost:8000' + url
 
     create_and_save_pdf.delay(url, event.map_pdf_filename)
 
