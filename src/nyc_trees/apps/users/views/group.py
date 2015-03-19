@@ -286,7 +286,7 @@ def group_update_territory(request, group_id):
     _update_territory(group, request)
 
     # Recreate PDF maps to show updated group territory
-    _update_event_maps(group)
+    _update_event_maps(request, group)
 
     result_blockfaces = Blockface.objects.filter(territory__group=group)
     return _make_blockface_and_tiler_urls_result(
@@ -315,12 +315,12 @@ def _update_territory(group, request):
         .delete()
 
 
-def _update_event_maps(group):
+def _update_event_maps(request, group):
     events = Event.objects \
         .filter(group_id=group.id, begins_at__gt=now()) \
         .select_related('group')
     for event in events:
-        create_event_map_pdf(event)
+        create_event_map_pdf(request, event)
 
 
 def _make_blockface_and_tiler_urls_result(request, blockfaces, group_id):

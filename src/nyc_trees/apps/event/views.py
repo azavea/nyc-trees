@@ -71,7 +71,7 @@ def _process_event_form(form, request, event=None):
         event = form.save()
 
         if needs_pdf_map:
-            create_event_map_pdf(event)
+            create_event_map_pdf(request, event)
 
     return is_valid
 

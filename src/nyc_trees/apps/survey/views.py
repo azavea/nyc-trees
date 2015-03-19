@@ -37,6 +37,8 @@ from apps.survey.layer_context import (
 from apps.survey.helpers import (teammates_for_event,
                                  teammates_for_individual_mapping)
 
+from libs.pdf_maps import create_reservations_map_pdf
+
 
 _SURVEY_DETAIL_QUERY_FILE = os.path.join(os.path.dirname(__file__),
                                          'survey_detail.sql')
@@ -87,6 +89,12 @@ def blockface_cart_page(request):
 
 
 def reservations_page(request):
+    # Update reservations map PDF if reservations have changed
+    user = request.user
+    reservation_ids = _reservation_ids(user)
+    if reservation_ids != user.reservation_ids_in_map_pdf:
+        create_reservations_map_pdf(request, reservation_ids)
+
     return {
         'legend_entries': [
             {'css_class': 'reserved', 'label': 'Reserved by you'},
@@ -95,6 +103,16 @@ def reservations_page(request):
         'layer': get_context_for_reservations_layer(request),
         'bounds': _user_reservation_bounds(request.user)
     }
+
+
+def _reservation_ids(user):
+    reservation_ids = BlockfaceReservation.objects \
+        .filter(user=user) \
+        .current() \
+        .order_by('id') \
+        .values_list('id', flat=True)
+    reservation_ids = ','.join(str(x) for x in reservation_ids)
+    return reservation_ids
 
 
 def printable_reservations_page(request):
@@ -184,6 +202,8 @@ def confirm_blockface_reservations(request):
             ))
 
     BlockfaceReservation.objects.bulk_create(reservations)
+
+    create_reservations_map_pdf(request, _reservation_ids(request.user))
 
     # TODO: Send email confirmation (Github issue #434)
 
