@@ -168,3 +168,12 @@ class Group(NycModel, models.Model):
 
     def get_absolute_url(self):
         return reverse('group_detail', kwargs={'group_slug': self.slug})
+
+
+class TaskRun(models.Model):
+    name = models.CharField(max_length=255)
+    date_started = models.DateField()
+    task_result_id = models.CharField(max_length=50, null=True, blank=True)
+
+    class Meta:
+        unique_together = ("name", "date_started")
