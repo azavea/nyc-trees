@@ -131,7 +131,7 @@ PROBLEMS_CHOICES = (
      ('TrunkLights', 'Lights'),
      ('TrunkOther', 'Other'))),
     ('Branch problems', (
-     ('BranchLights', 'Lights/Wires'),
+     ('BranchLights', 'Lights or Wires'),
      ('Sneakers', 'Sneakers'),
      ('BranchOther', 'Other')))
 )
