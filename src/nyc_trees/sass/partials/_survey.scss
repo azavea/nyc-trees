@@ -130,23 +130,17 @@
 }
 
 #tree-form-header {
-    background: #f3f3f3;
+    background: $gray-lightest;
     padding: 1rem 2rem;
     margin: -2rem -2rem 2rem;
     #no-trees {
         border-radius: $border-radius-base;
     }
-
-    @media (max-width: $screen-sm - 1) {
-        padding: $grid-gutter-width/3 $grid-gutter-width;
-        background: $gray-lightest;
-        margin-bottom: 1rem;
+    h4 {
+        margin: 0;
     }
-
-    @media (min-width: $screen-sm) {
-        h4 {
-            margin: 0;
-        }
+    @media (max-width: $screen-sm - 1) {
+        margin: 0;
     }
 }
 
