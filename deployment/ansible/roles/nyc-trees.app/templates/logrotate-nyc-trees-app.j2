@@ -3,5 +3,8 @@
   {{ app_log_rotate_interval }}
   compress
   missingok
+  postrotate
+    restart nyc-trees-app
+  endscript
   notifempty
 }
