@@ -39,8 +39,6 @@ class Command(BaseCommand):
         # which have also selected this table for update.
         task_runs = TaskRun.objects.select_for_update().filter(name=task_name)
 
-        import time; time.sleep(10)
-
         if task_runs.filter(date_started=today).exists():
             self.stdout.write(
                 'Task {} has already been started today, skipping'.format(
