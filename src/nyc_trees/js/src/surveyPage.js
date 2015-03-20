@@ -366,13 +366,13 @@ $(dom.treeFormcontainer).on('show.bs.collapse', function(e) {
     var formId = $(e.target).attr('id'),
         $toggle = $(dom.collapseButton).filter('[data-target="#' + formId + '"]').children('i');
 
-    $toggle.removeClass('icon-down-open-big').addClass('icon-left-open-big');
+    $toggle.removeClass('icon-right-open-big').addClass('icon-down-open-big');
 });
 $(dom.treeFormcontainer).on('hide.bs.collapse', function(e) {
     var formId = $(e.target).attr('id'),
         $toggle = $(dom.collapseButton).filter('[data-target="#' + formId + '"]').children('i');
 
-    $toggle.removeClass('icon-left-open-big').addClass('icon-down-open-big');
+    $toggle.removeClass('icon-down-open-big').addClass('icon-right-open-big');
 });
 
 function getTreeData(i, form) {
