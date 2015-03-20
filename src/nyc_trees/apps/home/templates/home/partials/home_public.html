@@ -26,10 +26,24 @@
             <main class="col-sm-12 main-home">
                 <section class="section-about section-home">
                     <div class="home-container home-description">
-                        <img class="section-about-logo" src="{{ "img/logo-nycparks.png"|static_url }}" srcset="{{ "img/logo-nycparks@2x.png"|static_url }} 2x">
-                        <p>
-                            We need your help during the TreesCount! 2015 census! NYC Parks invites you to join us in counting and mapping all of New York City’s beautiful street trees. Come play a key role in planning for the future of our urban forest.
-                        </p>
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <img class="section-about-logo"
+                                     src="{{ "img/logo-nycparks.png"|static_url }}"
+                                     srcset="{{ "img/logo-nycparks@2x.png"|static_url }} 2x">
+                            </div>
+                            <div class="col-xs-8">
+                                We need your help during the
+                                TreesCount! 2015 census! NYC Parks
+                                invites you to join us in counting and
+                                mapping all of New York City’s
+                                beautiful street trees. Come play a
+                                key role in planning for the future of
+                                our urban forest.
+                            </div>
+                        </div>
+
+                        <p></p>
                         <p class="text-center block">
                             <a href="{% url 'registration_register' %}" class="btn btn-secondary btn-lg">Create an Account →</a>
                         </p>
