@@ -10,10 +10,14 @@ from django.utils.timezone import now
 from nyc_trees.celery import debug_task
 
 from apps.core.models import TaskRun
+from apps.census_admin.tasks import (dump_trees_to_shapefile,
+                                     dump_blockface_to_shapefile)
 
 
 tasks = {
-    'debug_task': debug_task
+    'debug_task': debug_task,
+    'dump_trees': dump_trees_to_shapefile,
+    'dump_blockfaces': dump_blockface_to_shapefile
 }
 
 
