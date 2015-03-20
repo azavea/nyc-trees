@@ -24,6 +24,12 @@ $ cd deployment
 $ pip install -r deployment/requirements.txt
 ```
 
+## S3 Website Failover
+
+In the event that all application servers fail simultaneously, Route 53 DNS handles failing over to an S3 static website. The contents of the failover site are located in `src/failover_website`, from the project root.
+
+In order for the failover process to complete successfully, an [S3 website enabled bucket](http://docs.aws.amazon.com/AmazonS3/latest/dev/HowDoIWebsiteConfiguration.html) needs to exist on the AWS account that the application is being deployed to. The name of the bucket must be the same name as `AWS_PUBLIC_HOSTED_ZONE` (this ensures that the S3 website can use it as a custom domain). A CloudFront distribution fronts the contents of the S3 website for HTTPS compatibility with the application server endpoint.
+
 ## Amazon Machine Images (AMIs)
 
 In order to generate AMIs for the application, tile, and monitoring servers, use the following `make` targets:
