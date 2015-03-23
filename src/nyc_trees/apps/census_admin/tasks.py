@@ -11,10 +11,19 @@ import shutil
 import fiona
 from celery import task
 
+from django.conf import settings
 from django.core.files.storage import default_storage
 from django.db import connection
 
+from libs.custom_storages import PrivateS3BotoStorage
+
 from apps.survey.models import Blockface
+
+
+if getattr(settings, 'PRIVATE_AWS_STORAGE_BUCKET_NAME', None):
+    _storage = PrivateS3BotoStorage()
+else:
+    _storage = default_storage
 
 
 TREES_QUERY_FILE = os.path.join(os.path.dirname(__file__), 'trees.sql')
@@ -89,22 +98,20 @@ def dump_trees_to_shapefile():
                 }
                 shp.write(rec)
 
-    # TODO: This should *not* go to the default storage, as it should not
-    # be publicly readable
     with open(shp_file, 'r') as f:
-        default_storage.save('dump/trees.shp', f)
+        _storage.save('dump/trees.shp', f)
 
     with open(os.path.join(tmp_dir, 'trees.dbf'), 'r') as f:
-        default_storage.save('dump/trees.dbf', f)
+        _storage.save('dump/trees.dbf', f)
 
     with open(os.path.join(tmp_dir, 'trees.prj'), 'r') as f:
-        default_storage.save('dump/trees.prj', f)
+        _storage.save('dump/trees.prj', f)
 
     with open(os.path.join(tmp_dir, 'trees.cpg'), 'r') as f:
-        default_storage.save('dump/trees.cpg', f)
+        _storage.save('dump/trees.cpg', f)
 
     with open(os.path.join(tmp_dir, 'trees.shx'), 'r') as f:
-        default_storage.save('dump/trees.shx', f)
+        _storage.save('dump/trees.shx', f)
 
     shutil.rmtree(tmp_dir)
 
@@ -149,21 +156,19 @@ def dump_blockface_to_shapefile():
             }
             shp.write(rec)
 
-    # TODO: This should *not* go to the default storage, as it should not
-    # be publicly readable
     with open(shp_file, 'r') as f:
-        default_storage.save('dump/blockface.shp', f)
+        _storage.save('dump/blockface.shp', f)
 
     with open(os.path.join(tmp_dir, 'blockface.dbf'), 'r') as f:
-        default_storage.save('dump/blockface.dbf', f)
+        _storage.save('dump/blockface.dbf', f)
 
     with open(os.path.join(tmp_dir, 'blockface.prj'), 'r') as f:
-        default_storage.save('dump/blockface.prj', f)
+        _storage.save('dump/blockface.prj', f)
 
     with open(os.path.join(tmp_dir, 'blockface.cpg'), 'r') as f:
-        default_storage.save('dump/blockface.cpg', f)
+        _storage.save('dump/blockface.cpg', f)
 
     with open(os.path.join(tmp_dir, 'blockface.shx'), 'r') as f:
-        default_storage.save('dump/blockface.shx', f)
+        _storage.save('dump/blockface.shx', f)
 
     shutil.rmtree(tmp_dir)
