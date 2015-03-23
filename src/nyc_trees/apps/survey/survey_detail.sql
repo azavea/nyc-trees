@@ -1,3 +1,4 @@
+-- Note: This was adapted into trees.sql.  Try to keep changes in sync
 WITH trees_for_this_survey AS(
   SELECT
     id,
