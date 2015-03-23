@@ -85,6 +85,16 @@ AWS_STORAGE_BUCKET_NAME = 'django-storages-{}'.format(vpc_id)
 AWS_AUTO_CREATE_BUCKET = True
 DEFAULT_FILE_STORAGE = 'libs.custom_storages.PublicS3BotoStorage'
 
+# The PRIVATE_AWS_STORAGE_* settings configure the S3 bucket
+# used for files only accessible by census admins (e.g. data dumps)
+PRIVATE_AWS_STORAGE_BUCKET_NAME = 'django-storages-private-{}'.format(vpc_id)
+PRIVATE_AWS_STORAGE_AUTO_CREATE_BUCKET = True
+# The number of seconds that a generated link to a file in the private
+# bucket is active.
+PRIVATE_AWS_STORAGE_QUERYSTRING_EXPIRE = 30
+PRIVATE_AWS_STORAGE_DEFAULT_ACL = 'private'
+PRIVATE_AWS_STORAGE_URL_PROTOCOL = 'https:'
+
 # There is no need to specify access key or secret key
 # They are pulled from the instance metadata by Boto
 

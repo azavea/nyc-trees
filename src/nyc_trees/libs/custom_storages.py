@@ -6,6 +6,8 @@ from __future__ import division
 import urllib
 import urlparse
 
+from django.conf import settings
+
 from storages.backends.s3boto import S3BotoStorage
 
 
@@ -36,3 +38,16 @@ class PublicS3BotoStorage(S3BotoStorage):
         query = urllib.urlencode(params)
         return urlparse.urlunparse((scheme, netloc, path, params, query,
                                     fragment))
+
+
+class PrivateS3BotoStorage(S3BotoStorage):
+    def __init__(self, *a, **k):
+        kwargs = dict(
+            bucket_name=settings.PRIVATE_AWS_STORAGE_BUCKET_NAME,
+            auto_create_bucket=settings.PRIVATE_AWS_STORAGE_AUTO_CREATE_BUCKET,
+            default_acl=settings.PRIVATE_AWS_STORAGE_DEFAULT_ACL,
+            querystring_expire=settings.PRIVATE_AWS_STORAGE_QUERYSTRING_EXPIRE,
+            url_protocol=settings.PRIVATE_AWS_STORAGE_URL_PROTOCOL
+        )
+        kwargs.update(k)
+        super(PrivateS3BotoStorage, self).__init__(*a, **kwargs)
