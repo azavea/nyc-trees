@@ -42,7 +42,8 @@ STATSD_HOST = environ.get('NYC_TREES_STATSD_HOST', 'localhost')
 
 
 # EMAIL CONFIGURATION
-DEFAULT_FROM_EMAIL = 'treescount.help@parks.nyc.gov'
+DEFAULT_FROM_EMAIL = 'noreply@treescount.nycgovparks.org'
+DEFAULT_HELP_EMAIL = 'treescount.help@parks.nyc.gov'
 # END EMAIL CONFIGURATION
 
 
