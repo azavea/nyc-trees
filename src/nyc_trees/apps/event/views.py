@@ -360,8 +360,3 @@ def increase_rsvp_limit(request, event_slug):
     return {
         'max_attendees': event.max_attendees
     }
-
-
-def email_event_registered_users(request, event_slug):
-    # TODO: implement
-    pass
