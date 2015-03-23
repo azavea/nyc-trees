@@ -89,3 +89,7 @@ check_in_user_to_event = group_admin_do(
 
 increase_rsvp_limit = route(POST=group_admin_do(json_api_call,
                                                 v.increase_rsvp_limit))
+
+event_map_poll = route(GET=do(group_request,
+                              json_api_call,
+                              v.event_map_poll))
