@@ -7,7 +7,7 @@ import shortuuid
 import subprocess
 
 from django.core.files.base import ContentFile
-from django.core.files.storage import DefaultStorage
+from django.core.files.storage import default_storage
 from django.core.urlresolvers import reverse
 
 from celery import task
@@ -65,4 +65,11 @@ def create_and_save_pdf(session_id, host, url, filename):
         ['phantomjs', 'js/backend/url2pdf.js',
          session_id, protocol, host, url, '1.0'])
     content = ContentFile(pdf_bytes)
-    DefaultStorage().save(filename, content)
+    default_storage.save(filename, content)
+
+
+def url_if_cooked(filename):
+    if filename and default_storage.exists(filename):
+        return default_storage.url(filename)
+    else:
+        return None

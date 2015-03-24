@@ -4,13 +4,11 @@ var $ = require('jquery'),
     L = require('leaflet'),
     EventMap = require('./EventMap'),
     fetchAndReplace = require('./fetchAndReplace'),
-    poller = require('./lib/poller'),
 
     dom = {
         map: '#map',
         rsvpSection: '#rsvp-section',
-        rsvpButton: '#rsvp',
-        mapLink: '[data-poll-url]'
+        rsvpButton: '#rsvp'
     },
 
     $map = $('#map');
@@ -21,20 +19,10 @@ new EventMap({
 });
 
 fetchAndReplace({
-    container: '#rsvp-section',
-    target: '#rsvp'
+    container: dom.rsvpSection,
+    target: dom.rsvpButton
 });
 
 require('./copyEventUrl');
 
-var pollUrl = $(dom.mapLink).attr('data-poll-url'),
-    poll = poller(pollUrl, function(data) {
-        if (data && data.map_pdf_url) {
-            $(dom.mapLink).html('Download');
-            $(dom.mapLink).attr('href', data.map_pdf_url);
-            return true;
-        }
-        return false;
-    });
-
-poll();
+require('./lib/pollForDownload');

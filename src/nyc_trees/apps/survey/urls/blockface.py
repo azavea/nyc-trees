@@ -12,7 +12,8 @@ from apps.survey.routes import (reserve_blockface_page, cancel_reservation,
                                 blockface_reservations_confirmation_page,
                                 blockface, progress_page,
                                 progress_page_blockface_popup,
-                                printable_reservations_map)
+                                printable_reservations_map,
+                                reservations_map_pdf_poll)
 
 
 # These URLs have the prefix 'blockface/'
@@ -52,4 +53,7 @@ urlpatterns = patterns(
     # js/src/reservationPage.js
     url(r'^(?P<blockface_id>\d+)/$', blockface,
         name='blockface'),
+
+    url(r'^map-poll/$', reservations_map_pdf_poll,
+        name='reservations_map_pdf_poll'),
 )

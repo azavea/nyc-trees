@@ -11,13 +11,13 @@ from django.utils import timezone
 from django.conf import settings
 from django.contrib.gis.db import models
 from django.core.exceptions import ValidationError
-from django.core.files.storage import default_storage
 from django.core.urlresolvers import reverse
 from django.utils.text import slugify
 
 from apps.core.models import User, Group
 
 from libs.mixins import NycModel
+from libs.pdf_maps import url_if_cooked
 
 
 # Amount of time before an event starts to display
@@ -129,11 +129,7 @@ class Event(NycModel, models.Model):
 
     @property
     def map_pdf_url(self):
-        if ((self.map_pdf_filename and
-             default_storage.exists(self.map_pdf_filename))):
-            return default_storage.url(self.map_pdf_filename)
-
-        return None
+        return url_if_cooked(self.map_pdf_filename)
 
     class Meta:
         unique_together = (("group", "slug"), ("group", "title"))

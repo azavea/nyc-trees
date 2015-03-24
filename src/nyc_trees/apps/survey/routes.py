@@ -68,6 +68,10 @@ reservations_instructions = do(
     render_template('survey/reservations_instructions.html'),
     v.reservations_instructions)
 
+reservations_map_pdf_poll = route(GET=do(login_required,
+                                         json_api_call,
+                                         v.reservations_map_pdf_poll))
+
 #####################################
 # SURVEY ROUTES
 #####################################

@@ -89,12 +89,6 @@ def blockface_cart_page(request):
 
 
 def reservations_page(request):
-    # Update reservations map PDF if reservations have changed
-    user = request.user
-    reservation_ids = _reservation_ids(user)
-    if reservation_ids != user.reservation_ids_in_map_pdf:
-        create_reservations_map_pdf(request, reservation_ids)
-
     return {
         'legend_entries': [
             {'css_class': 'reserved', 'label': 'Reserved by you'},
@@ -103,6 +97,20 @@ def reservations_page(request):
         'layer': get_context_for_reservations_layer(request),
         'bounds': _user_reservation_bounds(request.user)
     }
+
+
+def reservations_map_pdf_poll(request):
+    # Update reservations map PDF if reservations have changed
+    user = request.user
+    reservation_ids = _reservation_ids(user)
+    if reservation_ids != user.reservation_ids_in_map_pdf:
+        create_reservations_map_pdf(request, reservation_ids)
+
+    url = request.user.reservations_map_pdf_url
+    if url:
+        return {'map_pdf_url': url}
+    else:
+        return {}
 
 
 def _reservation_ids(user):

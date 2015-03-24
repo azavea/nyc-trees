@@ -3,6 +3,8 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
+from django.core.urlresolvers import reverse
+
 from libs.sql import get_user_tree_count, get_user_species_count
 from apps.users.forms import PrivacySettingsForm
 from apps.users.models import achievements
@@ -100,5 +102,8 @@ def _get_reservations_context(user):
                        .current()\
                        .select_related('blockface')\
                        .order_by('expires_at')
-    return _get_list_section_context('reservations', reservations,
-                                     _RESERVATION_CHUNK_SIZE)
+    context = _get_list_section_context('reservations', reservations,
+                                        _RESERVATION_CHUNK_SIZE)
+
+    context['map_poll_url'] = reverse('reservations_map_pdf_poll')
+    return context
