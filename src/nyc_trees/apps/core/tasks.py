@@ -14,7 +14,6 @@ from djqscsv import write_csv
 from django.conf import settings
 from django.core.files.storage import default_storage
 
-from libs.custom_storages import PrivateS3BotoStorage
 
 # Using strings so we can easily transition to async tasks, which need
 # serializable arguments
@@ -33,6 +32,9 @@ MODELS = ['apps.core.models.User',
 
 
 if getattr(settings, 'PRIVATE_AWS_STORAGE_BUCKET_NAME', None):
+    # Delay import to prevent failure on dev VMs that do not
+    # have boto/s3 tooling
+    from libs.custom_storages import PrivateS3BotoStorage
     _storage = PrivateS3BotoStorage()
 else:
     _storage = default_storage
