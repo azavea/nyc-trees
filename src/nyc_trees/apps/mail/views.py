@@ -18,6 +18,8 @@ from django_statsd.clients import statsd
 
 from apps.core.models import User
 
+from libs import storage_pdf_to_attachment
+
 # Message Types
 _RSVP = 'rsvp'
 _GROUP_MAPPING_APPROVED = 'group_mapping_approved'
@@ -31,6 +33,9 @@ def _send_to(user, message_type, *args, **kwargs):
     templates to be used (e.g. a message_type of 'welcome' will send an
     email using the subject template 'mail/welcome_subject.txt' and body
     template 'mail/welcome.txt'
+
+    An 'attachments' kwarg can be included. This must be a list of
+    MIMEBase subclass instances.
     """
     kwargs['user'] = user
     context = Context(kwargs)
@@ -46,6 +51,11 @@ def _send_to(user, message_type, *args, **kwargs):
     to = user.email
 
     msg = EmailMessage(subject, body_text, from_email, [to])
+
+    if 'attachments' in kwargs and kwargs['attachments']:
+        for attachment in kwargs['attachments']:
+            msg.attach(attachment)
+
     msg.send()
     statsd.incr('email.message.types.%s' % message_type)
     return {
@@ -72,10 +82,16 @@ def notify_rsvp(request, user, event):
         'event_slug': event.slug
     })
     event_url = request.build_absolute_uri(relative_event_url)
+    if event.map_pdf_filename:
+        attachments = [storage_pdf_to_attachment(event.map_pdf_filename)]
+    else:
+        attachments = None
+
     return _send_to(user,
                     _RSVP,
                     event=event,
-                    event_url=event_url)
+                    event_url=event_url,
+                    attachments=attachments)
 
 
 def send_reservation_reminder(user_id, **kwargs):
