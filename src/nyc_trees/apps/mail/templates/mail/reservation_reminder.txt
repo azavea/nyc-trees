@@ -1,0 +1,8 @@
+The following blockface reservations for user '{{ user.username }}' will expire soon:
+{% for reservation in reservations %}
+* 'id: {{ reservation.blockface.id }}' at {{ reservation.expires_at }}
+{% endfor %}
+
+Please visit the reservations page to start mapping:
+
+{{ reservations_url }}

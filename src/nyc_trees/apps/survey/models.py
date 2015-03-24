@@ -247,6 +247,7 @@ class BlockfaceReservation(NycModel, models.Model):
     is_mapping_with_paper = models.BooleanField(default=False)
     expires_at = models.DateTimeField()
     canceled_at = models.DateTimeField(null=True, blank=True)
+    reminder_sent_at = models.DateTimeField(null=True, blank=True)
 
     objects = ReservationsQuerySet.as_manager()
 
