@@ -72,6 +72,12 @@
   left: 0;
 }
 
+.map-pdf {
+  /* Should be 7.5 x 10, but adjusted to fit with PhantomJS */
+  width: 7.0in;
+  height: 9.3in
+}
+
 .map-sidebar-context {
   position: relative;
   background-color: $body-bg;
