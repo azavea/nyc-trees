@@ -1,6 +1,7 @@
 "use strict";
 
-var $ = require('jquery');
+var $ = require('jquery'),
+    poller = require('./lib/poller');
 
 var dom = {
     pollUrl: '#poll-url',
@@ -9,26 +10,15 @@ var dom = {
 };
 
 var POLL_INTERVAL_MS = 5000,
-    pollUrl = $(dom.pollUrl).val();
+    pollUrl = $(dom.pollUrl).val(),
 
-function poll() {
-    $.ajax(pollUrl, {
-        cache: false,
-        dataType: 'json'
-    })
-    .done(function(data) {
+    poll = poller(pollUrl, function(data) {
         if (data && data.checked_in) {
             $(dom.notCheckedIn).addClass('hidden');
             $(dom.checkedIn).removeClass('hidden');
-        } else {
-            retry();
+            return true;
         }
-    })
-    .fail(retry);
-}
-
-function retry() {
-    setTimeout(poll, POLL_INTERVAL_MS);
-}
+        return false;
+    });
 
 poll();

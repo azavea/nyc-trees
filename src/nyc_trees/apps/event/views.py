@@ -93,6 +93,7 @@ def event_detail(request, event_slug):
                         (reverse('group_detail',
                                  kwargs={'group_slug': request.group.slug}),
                          GROUP_EVENTS_ID))
+
     return {
         'group': request.group,
         'event': event,
@@ -106,6 +107,10 @@ def event_detail(request, event_slug):
             'event_slug': event.slug
         }),
         'rsvp_url': reverse('event_registration', kwargs={
+            'group_slug': request.group.slug,
+            'event_slug': event.slug
+        }),
+        'event_map_poll_url': reverse('event_map_poll', kwargs={
             'group_slug': request.group.slug,
             'event_slug': event.slug
         }),
@@ -264,6 +269,15 @@ def event_popup_partial(request, event_slug):
     }
 
 
+def event_map_poll(request, event_slug):
+    event = get_object_or_404(Event, group=request.group, slug=event_slug)
+
+    if event.map_pdf_url:
+        return {'map_pdf_url': event.map_pdf_url}
+
+    return {}
+
+
 @transaction.atomic
 def register_for_event(request, event_slug):
     user = request.user
@@ -366,8 +380,3 @@ def increase_rsvp_limit(request, event_slug):
     return {
         'max_attendees': event.max_attendees
     }
-
-
-def email_event_registered_users(request, event_slug):
-    # TODO: implement
-    pass
