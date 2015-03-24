@@ -84,16 +84,22 @@ function isRetinaDevice() {
 }
 
 function initBaseMap(map, options) {
-    var layerOptions =  {
+    var attribution = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> ' +
+                'contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+        attributionForPdf = '&copy; OpenStreetMap contributors, &copy; CartoDB',
+        layerOptions =  {
             subdomains: 'abcd',
             maxZoom: zoom.MAX,
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> ' +
-                'contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+            attribution: options.forPdf ? attributionForPdf : attribution
         },
         satelliteUrl = 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
         strandardResUrl = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
-        retinaUrl = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}@2x.png',
-        url = options.baseMap === SATELLITE ? satelliteUrl :
+        retinaSuffix = 'cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}@2x.png',
+        retinaUrl = 'https://' + retinaSuffix,
+        retinaUrlForPdf = 'http://' + retinaSuffix,  // PhantomJS fails with https
+        url =
+            options.baseMap === SATELLITE ? satelliteUrl :
+            options.forPdf ? retinaUrlForPdf :
             isRetinaDevice() ? retinaUrl : strandardResUrl;
     map.addLayer(new L.TileLayer(url, layerOptions));
 }

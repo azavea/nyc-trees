@@ -8,6 +8,7 @@ var $ = require('jquery'),
 var $map = $('#map'),
     eventMap = new EventMap({
         location: L.latLng($map.data('lat'), $map.data('lon')),
-        static: true
+        static: true,
+        forPdf: true
     });
 mapModule.addTileLayer(eventMap.map);

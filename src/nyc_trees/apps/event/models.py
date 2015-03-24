@@ -11,6 +11,7 @@ from django.utils import timezone
 from django.conf import settings
 from django.contrib.gis.db import models
 from django.core.exceptions import ValidationError
+from django.core.files.storage import default_storage
 from django.core.urlresolvers import reverse
 from django.utils.text import slugify
 
@@ -50,6 +51,8 @@ class Event(NycModel, models.Model):
     includes_training = models.BooleanField(default=False)
     is_canceled = models.BooleanField(default=False)
     is_private = models.BooleanField(default=False)
+
+    map_pdf_filename = models.CharField(max_length=255, default='', blank=True)
 
     objects = models.GeoManager()
 
@@ -123,6 +126,14 @@ class Event(NycModel, models.Model):
 
     def get_shareable_url(self, request):
         return request.build_absolute_uri(self.get_absolute_url())
+
+    @property
+    def map_pdf_url(self):
+        if ((self.map_pdf_filename and
+             default_storage.exists(self.map_pdf_filename))):
+            return default_storage.url(self.map_pdf_filename)
+
+        return None
 
     class Meta:
         unique_together = (("group", "slug"), ("group", "title"))
