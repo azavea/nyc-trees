@@ -11,15 +11,19 @@ var $ = require('jquery'),
         mapSelector: '#map',
         surveyIdAttr: 'data-survey-id',
         blockfaceIdAttr: 'data-blockface-id',
+        noMoreReservationsAttr: 'data-no-more-reservations',
         treesJSONAttr: 'data-trees-json',
         abandonIncomplete: '#survey-detail-abandon-incomplete',
         submitIncomplete: '#survey-detail-submit-incomplete',
         submitComplete: '#survey-detail-submit-complete'
     },
 
-    blockfaceId = $(dom.mapSelector).attr(dom.blockfaceIdAttr),
-    surveyId = $(dom.mapSelector).attr(dom.surveyIdAttr),
-    treesJSON = $(dom.mapSelector).attr(dom.treesJSONAttr),
+    $map = $(dom.mapSelector),
+    blockfaceId = $map.attr(dom.blockfaceIdAttr),
+    surveyId = $map.attr(dom.surveyIdAttr),
+    treesJSON = $map.attr(dom.treesJSONAttr),
+    noMoreReservations = $map.attr(dom.noMoreReservationsAttr) === 'True',
+    mapAnotherPopupContext = {noMoreReservations: noMoreReservations},
     blockfaceMap = mapModule.create({
         legend: false,
         search: false,
@@ -32,7 +36,7 @@ var $ = require('jquery'),
         }
     });
 
-function postAndPrompt(postUrl) {
+function postThen(postUrl, callback) {
     return function () {
         var p = $.ajax({
             url: postUrl + surveyId + '/',
@@ -40,7 +44,7 @@ function postAndPrompt(postUrl) {
             dataType: 'json'
         });
 
-        p.done(mapAnotherPopup.show);
+        p.done(callback);
 
         p.fail(function(jqXHR, textStatus, errorThrown) {
             toastr.warning('Sorry, there was a problem processing your answer. Please try again.',
@@ -60,8 +64,13 @@ $.each($(JSON.parse(treesJSON)), function (__, tree) {
     drawLayer.addData({ 'type': 'Feature', 'geometry': JSON.parse(tree) });
 });
 
-$(dom.abandonIncomplete).on('click', function () { window.location.href = '/survey/#' + blockfaceId; });
+$(dom.abandonIncomplete).on(
+    'click', postThen('/survey/release_blockface/', function () {
+        window.location.href = '/survey/#' + blockfaceId;
+    }));
 
-$(dom.submitIncomplete).on('click', postAndPrompt('/survey/flag/'));
+$(dom.submitIncomplete).on('click', postThen('/survey/flag/', mapAnotherPopup.show));
 
-$(dom.submitComplete).on('click', postAndPrompt('/survey/complete/'));
+$(dom.submitComplete).on('click', function () {
+    mapAnotherPopup.show(mapAnotherPopupContext);
+});

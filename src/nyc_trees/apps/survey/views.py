@@ -303,18 +303,21 @@ def submit_survey_from_event(request, event_slug):
     return _create_survey_and_trees(request, event)
 
 
-def _mark_survey_blockface_not_available(survey):
+def _mark_survey_blockface_availability(survey, availability):
     if survey.quit_reason != '':
         raise ValidationError('Cannot mark blockface complete for survey '
                               'that has been quit.')
-    survey.blockface.is_available = False
+    if not isinstance(availability, bool):
+        raise ValidationError('availability arg must be a boolean value')
+
+    survey.blockface.is_available = availability
     survey.blockface.clean_and_save()
 
 
-def complete_survey(request, survey_id):
-    survey = Survey.objects.get(id=survey_id)
-    _mark_survey_blockface_not_available(survey)
-    return _get_map_another_popup_context(request)
+def release_blockface(request, survey_id):
+    survey = get_object_or_404(Survey, id=survey_id, user=request.user)
+    _mark_survey_blockface_availability(survey, True)
+    return {'success': True}
 
 
 @transaction.atomic
@@ -355,7 +358,7 @@ def _create_survey_and_trees(request, event=None):
     survey.clean_and_save()
 
     if survey.quit_reason == '':
-        _mark_survey_blockface_not_available(survey)
+        _mark_survey_blockface_availability(survey, False)
 
     for tree_data in tree_list:
         if 'problems' in tree_data:
@@ -388,13 +391,15 @@ def survey_detail(request, survey_id):
     with connection.cursor() as cursor:
         cursor.execute(_SURVEY_DETAIL_QUERY, [survey_id])
         trees = [tree[0] for tree in cursor]
-    return {
+    ctx = {
         'survey_id': survey_id,
         'blockface_id': survey.blockface_id,
         'trees': json.dumps(trees),
         'layer': get_context_for_reservations_layer(request),
         'bounds': _user_reservation_bounds(request.user),
     }
+    ctx.update(_get_map_another_popup_context(request))
+    return ctx
 
 
 def admin_territory_page(request):
