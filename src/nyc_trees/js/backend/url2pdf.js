@@ -42,6 +42,12 @@ phantom.addCookie({
 
 url = protocol + '://' + host + url
 
+// Abort after 1 minute if page hasn't finished loading
+window.setTimeout(function () {
+    logError('Timeout loading ' + url);
+    phantom.exit(3);
+}, 60000);
+
 page.open(url, function (status) {
     if (status !== 'success') {
         console.log('Unable to load given URL.');
@@ -53,3 +59,7 @@ page.open(url, function (status) {
         }, 200);
     }
 });
+
+function logError(message) {
+    system.stderr.write('url2pdf: ' + message + '\n');
+}

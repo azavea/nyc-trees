@@ -53,19 +53,28 @@ def create_pdf(request, url, filename):
         create_and_save_pdf.delay(session_id, host, url, filename)
 
 
-@task()
-def create_and_save_pdf(session_id, host, url, filename):
-    if host.endswith(':8000'):
-        protocol = 'http'  # development
-        host = 'localhost'
-    else:
-        protocol = 'https'  # production
+@task(bind=True, max_retries=4, default_retry_delay=0)
+def create_and_save_pdf(self, session_id, host, url, filename):
+    try:
+        if host.endswith(':8000'):
+            protocol = 'http'  # development
+            host = 'localhost'
+        else:
+            protocol = 'https'  # production
 
-    pdf_bytes = subprocess.check_output(
-        ['phantomjs', 'js/backend/url2pdf.js',
-         session_id, protocol, host, url, '1.0'])
-    content = ContentFile(pdf_bytes)
-    default_storage.save(filename, content)
+        pdf_bytes = subprocess.check_output(
+            ['phantomjs', 'js/backend/url2pdf.js',
+             session_id, protocol, host, url, '1.0'])
+
+        content = ContentFile(pdf_bytes)
+        default_storage.save(filename, content)
+        return True
+
+    except subprocess.CalledProcessError as e:
+        if self.request.retries < self.max_retries:
+            self.retry(exc=e)
+        else:
+            return False
 
 
 def url_if_cooked(filename):
