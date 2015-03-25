@@ -25,6 +25,9 @@ _ALREADY_SENT_MESSAGE = ('WARNING: Reservation emails sent already today. '
 
 
 class Command(BaseCommand):
+    def _log(self, msg):
+        self.stdout.write("%s: %s" % (_COMMAND_NAME, msg))
+
     def handle(self, *args, **options):
         today = now().date()
         with transaction.atomic():
@@ -38,7 +41,7 @@ class Command(BaseCommand):
                                           date_started=today))
 
         if not unlocked:
-            self.stdout.write(_ALREADY_SENT_MESSAGE)
+            self._log(_ALREADY_SENT_MESSAGE)
             return
 
         soon = now() + timedelta(days=settings.RESERVATION_REMINDER_WINDOW)
@@ -56,7 +59,7 @@ class Command(BaseCommand):
             user_reservations[reservation.user_id] = user_data
 
         if not user_reservations:
-            self.stdout.write("no emails sent")
+            self._log("no emails sent")
             return
 
         for user_id, reservations in user_reservations.items():
@@ -64,7 +67,7 @@ class Command(BaseCommand):
                 send_reservation_reminder(user_id, reservations=reservations)
             except smtplib.SMTPException:
                 continue
-            self.stdout.write("Email sent to user_id: '%s'" % user_id)
+            self._log("Email sent to user_id: '%s'" % user_id)
             ids = map(operator.attrgetter('id'), reservations)
             (BlockfaceReservation
              .objects
