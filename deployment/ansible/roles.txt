@@ -1,5 +1,5 @@
 azavea.apache2,0.2.2
-azavea.ntp,0.1.0
+azavea.ntp,0.1.1
 azavea.pip,0.1.0
 azavea.nodejs,0.3.0
 azavea.postgresql,0.2.1
@@ -11,7 +11,7 @@ azavea.mapnik,0.1.0
 azavea.logstash,0.1.0
 azavea.relp,0.1.1
 azavea.kibana,0.3.1
-azavea.unzip,0.1.0
+azavea.unzip,0.1.2
 azavea.graphite,0.4.0
 azavea.statsite,0.1.1
 azavea.daemontools,0.1.0
