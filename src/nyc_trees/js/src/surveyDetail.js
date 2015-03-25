@@ -43,7 +43,7 @@ function postAndPrompt(postUrl) {
         p.done(mapAnotherPopup.show);
 
         p.fail(function(jqXHR, textStatus, errorThrown) {
-            toastr.warning('Sorry, there was a problem saving the survey. Please try again.',
+            toastr.warning('Sorry, there was a problem processing your answer. Please try again.',
                            'Something went wrong...');
         });
     };
