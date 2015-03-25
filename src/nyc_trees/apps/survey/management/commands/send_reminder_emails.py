@@ -8,6 +8,8 @@ import smtplib
 
 from datetime import timedelta
 
+from boto.ses.exceptions import SESError
+
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
@@ -65,7 +67,7 @@ class Command(BaseCommand):
         for user_id, reservations in user_reservations.items():
             try:
                 send_reservation_reminder(user_id, reservations=reservations)
-            except smtplib.SMTPException:
+            except (smtplib.SMTPException, SESError):
                 continue
             self._log("Email sent to user_id: '%s'" % user_id)
             ids = map(operator.attrgetter('id'), reservations)
