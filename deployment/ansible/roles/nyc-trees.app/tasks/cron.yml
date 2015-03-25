@@ -2,7 +2,7 @@
 - name: Send reservation reminder emails at 1AM EST
   cron: name="send-reminder-emails"
         user="nyc-trees"
-        job="cd /opt/app && envdir /etc/nyc-trees.d/env ./manage.py send_reminder_emails"
+        job="cd /opt/app && envdir /etc/nyc-trees.d/env ./manage.py send_reminder_emails >> {{ app_cron_log }} 2>&1"
         hour="5"
         minute="0"
         state=present

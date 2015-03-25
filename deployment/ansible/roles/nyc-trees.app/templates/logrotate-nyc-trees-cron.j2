@@ -1,0 +1,7 @@
+{{ app_cron_log }} {
+  rotate {{ app_cron_log_rotate_count }}
+  {{ app_cron_log_rotate_internal }}
+  compress
+  missingok
+  notifempty
+}
