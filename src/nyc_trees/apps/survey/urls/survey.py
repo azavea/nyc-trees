@@ -7,7 +7,7 @@ from django.conf.urls import patterns, url
 
 from apps.survey.routes import (survey, survey_from_event,
                                 flag_survey, survey_detail,
-                                confirm_survey, complete_survey)
+                                confirm_survey, release_blockface)
 
 
 # These URLs have the prefix 'survey/'
@@ -25,6 +25,6 @@ urlpatterns = patterns(
 
     url(r'^flag/(?P<survey_id>\d+)/$', flag_survey, name='flag_survey'),
 
-    url(r'^complete/(?P<survey_id>\d+)/$',
-        complete_survey, name='complete_survey'),
+    url(r'^release_blockface/(?P<survey_id>\d+)/$',
+        release_blockface, name='release_blockface'),
 )

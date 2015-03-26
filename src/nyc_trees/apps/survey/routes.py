@@ -100,8 +100,8 @@ survey_from_event = do(
 flag_survey = do(login_required,
                  route(POST=do(json_api_call, v.flag_survey)))
 
-complete_survey = do(login_required,
-                     route(POST=do(json_api_call, v.complete_survey)))
+release_blockface = do(login_required,
+                       route(POST=do(json_api_call, v.release_blockface)))
 
 blockface = route(GET=do(json_api_call, v.blockface))
 
