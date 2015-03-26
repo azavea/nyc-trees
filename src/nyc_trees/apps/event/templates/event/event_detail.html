@@ -139,18 +139,7 @@
                 <div class="col-xs-4 text-right js-copy-event-url"><a href="javascript:;" class="btn btn-default" data-event-url="{{ share_url }}">Copy</a></div>
             </div>
         </div>
-        <div class="description block item">
-            <div class="row">
-                <div class="col-xs-8">
-                    <h5>Downloadable Map</h5>
-                </div>
-                <div class="col-xs-4 text-right">
-                    <a href="javascript:;" class="btn btn-default" data-poll-url="{{ event_map_poll_url }}">
-                        <i class="animate-spin icon-spin4"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
+        {% include "core/partials/polling_download_section.html" with poll_url=event_map_poll_url %}
     </section>
     <div class="content-nextsteps">
         <div class="row">

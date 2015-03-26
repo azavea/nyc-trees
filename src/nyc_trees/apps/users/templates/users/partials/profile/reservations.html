@@ -21,4 +21,8 @@
 </a>
 {% endif %}
 
+{% if reservations.count > 0 %}
+    {% include "core/partials/polling_download_section.html" with poll_url=reservations.map_poll_url %}
+{% endif %}
+
 {% endblock section_content %}

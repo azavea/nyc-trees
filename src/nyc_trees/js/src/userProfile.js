@@ -20,3 +20,5 @@ $(dom.cancelButton).on('click', function () {
 });
 
 bindShowAllRowsHandlers();
+
+require('./lib/pollForDownload');

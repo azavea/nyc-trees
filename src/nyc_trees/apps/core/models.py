@@ -10,6 +10,7 @@ from django.core.urlresolvers import reverse
 from django.utils.text import slugify
 
 from libs.mixins import NycModel
+from libs.pdf_maps import url_if_cooked
 
 
 REFERRER_PARKS = (
@@ -31,7 +32,7 @@ REFERRER_AD = (
 # When adding new fields to the User model, please take care to add these
 # fields to the NycUserAdmin class as well, so that we may administer these
 # fields in the Django super admin.
-# Ref: src/nyc_trees/apps/core.admin.py
+# Ref: src/nyc_trees/apps/core/admin.py
 #######################################
 class User(NycModel, AbstractUser):
     individual_mapper = models.NullBooleanField()
@@ -138,6 +139,10 @@ class User(NycModel, AbstractUser):
             group.allows_individual_mappers and \
             not user_is_group_admin(self, group) and \
             not user_is_trusted_mapper(self, group)
+
+    @property
+    def reservations_map_pdf_url(self):
+        return url_if_cooked(self.reservations_map_pdf_filename)
 
 
 def _generate_image_filename(group, filename):
