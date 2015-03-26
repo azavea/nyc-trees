@@ -7,6 +7,8 @@ import os
 
 import json
 
+from operator import attrgetter
+
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import transaction, connection
@@ -211,9 +213,14 @@ def confirm_blockface_reservations(request):
 
     BlockfaceReservation.objects.bulk_create(reservations)
 
-    create_reservations_map_pdf(request, _reservation_ids(request.user))
+    notify_reservation_confirmed = {
+        'user_id': request.user.id,
+        'blockface_ids': map(attrgetter('blockface_id'), reservations)
+    }
 
-    # TODO: Send email confirmation (Github issue #434)
+    create_reservations_map_pdf(
+        request, _reservation_ids(request.user),
+        notify_reservation_confirmed=notify_reservation_confirmed)
 
     return {
         'blockfaces_requested': len(ids),

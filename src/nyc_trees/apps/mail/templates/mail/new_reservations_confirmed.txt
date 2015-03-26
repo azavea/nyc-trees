@@ -1,0 +1,8 @@
+Your blockface reservations are confirmed!
+
+The following blockfaces have been confirmed:
+{% for blockface in blockfaces %}
+* {{ blockface.id }}
+{% endfor %}
+
+You can view a summary of your reservations at {{ pdf_url }}

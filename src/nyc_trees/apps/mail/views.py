@@ -17,11 +17,14 @@ from django.contrib.sites.models import Site
 from django_statsd.clients import statsd
 
 from apps.core.models import User
+from apps.survey.models import Blockface
+
 
 # Message Types
 _RSVP = 'rsvp'
 _GROUP_MAPPING_APPROVED = 'group_mapping_approved'
 _RESERVATION_REMINDER = 'reservation_reminder'
+_NEW_RESERVATIONS_CONFIRMED = 'new_reservations_confirmed'
 
 
 def _send_to(user, message_type, *args, **kwargs):
@@ -86,3 +89,12 @@ def send_reservation_reminder(user_id, **kwargs):
     return _send_to(user, _RESERVATION_REMINDER,
                     reservations_url=reservations_url,
                     **kwargs)
+
+
+def notify_reservation_confirmed(user_id, blockface_ids, pdf_url=None):
+    user = User.objects.get(id=user_id)
+    blockfaces = Blockface.objects.filter(id__in=blockface_ids)
+    return _send_to(user,
+                    _NEW_RESERVATIONS_CONFIRMED,
+                    blockfaces=blockfaces,
+                    pdf_url=pdf_url)

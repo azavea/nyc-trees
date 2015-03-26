@@ -26,7 +26,7 @@ def create_event_map_pdf(request, event):
     create_pdf(request, url, filename)
 
 
-def create_reservations_map_pdf(request, reservation_ids):
+def create_reservations_map_pdf(request, reservation_ids, **kwargs):
     user = request.user
     user.reservation_ids_in_map_pdf = reservation_ids
 
@@ -43,18 +43,18 @@ def create_reservations_map_pdf(request, reservation_ids):
 
         url = reverse('printable_reservations_map')
 
-        create_pdf(request, url, filename)
+        create_pdf(request, url, filename, **kwargs)
 
 
-def create_pdf(request, url, filename):
+def create_pdf(request, url, filename, **kwargs):
     host = request.get_host()
     if hasattr(request, 'session'):  # prevent test failure
         session_id = request.session.session_key
-        create_and_save_pdf.delay(session_id, host, url, filename)
+        create_and_save_pdf.delay(session_id, host, url, filename, **kwargs)
 
 
 @task(bind=True, max_retries=4, default_retry_delay=0)
-def create_and_save_pdf(self, session_id, host, url, filename):
+def create_and_save_pdf(self, session_id, host, url, filename, **kwargs):
     try:
         if host.endswith(':8000'):
             protocol = 'http'  # development
@@ -68,6 +68,16 @@ def create_and_save_pdf(self, session_id, host, url, filename):
 
         content = ContentFile(pdf_bytes)
         default_storage.save(filename, content)
+
+        if 'notify_reservation_confirmed' in kwargs:
+            from apps.mail.views import notify_reservation_confirmed
+            notify_kwargs = kwargs['notify_reservation_confirmed']
+            # TODO: in dev with file storage, this is not a
+            # fully qualified URI. Confirm this works in staging
+            # or fix.
+            notify_kwargs['pdf_url'] = url_if_cooked(filename)
+            notify_reservation_confirmed(**notify_kwargs)
+
         return True
 
     except subprocess.CalledProcessError as e:
