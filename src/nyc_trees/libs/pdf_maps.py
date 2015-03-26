@@ -63,7 +63,7 @@ def create_and_save_pdf(self, session_id, host, url, filename):
             protocol = 'https'  # production
 
         pdf_bytes = subprocess.check_output(
-            ['phantomjs', 'js/backend/url2pdf.js',
+            ['phantomjs', '--ssl-protocol=tlsv1', 'js/backend/url2pdf.js',
              session_id, protocol, host, url, '1.0'])
 
         content = ContentFile(pdf_bytes)
