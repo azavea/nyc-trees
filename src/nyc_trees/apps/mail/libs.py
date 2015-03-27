@@ -3,6 +3,8 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
+import os
+
 from email.mime.application import MIMEApplication
 
 from django.conf import settings
@@ -62,4 +64,13 @@ def storage_pdf_to_attachment(path):
     MIMEApplication attachment with the content.
     """
     with default_storage.open(path) as pdf:
-        return MIMEApplication(pdf.read(), 'pdf')
+        attachment = MIMEApplication(pdf.read(), 'pdf')
+        filename = os.path.basename(path)
+        try:
+            filename = filename.encode('ascii')
+        except UnicodeEncodeError:
+            filename = ('utf-8', '', filename.encode('utf-8'))
+
+        attachment.add_header('Content-Disposition', 'attachment',
+                              filename=filename)
+        return attachment
