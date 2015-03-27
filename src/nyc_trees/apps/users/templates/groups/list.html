@@ -50,9 +50,6 @@
             <a href="{% url 'group_detail' group_slug=group.slug %}"><div class="h4 color--primary">{{ group.name }}</div></a>
             <div>{{ group.description }}</div>
         </td>
-        <td>
-            <div class="btn-follow-container pull-right">{% include 'groups/partials/follow_button.html' %}</div>
-        </td>
     </tr>
 {% endfor %}
 </table>
