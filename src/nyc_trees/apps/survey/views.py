@@ -4,13 +4,14 @@ from __future__ import unicode_literals
 from __future__ import division
 
 import os
-
 import json
+import shortuuid
 
-from operator import attrgetter
+from celery import chain
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
 from django.db import transaction, connection
 from django.http import (HttpResponse, HttpResponseForbidden,
                          HttpResponseBadRequest)
@@ -24,8 +25,10 @@ from apps.core.helpers import user_is_group_admin
 from apps.event.models import Event
 from apps.event.helpers import user_is_checked_in_to_event
 
-from apps.users.models import TrustedMapper
+from apps.mail.tasks import notify_reservation_confirmed
+from libs.pdf_maps import create_reservations_map_pdf
 
+from apps.users.models import TrustedMapper
 from apps.survey.models import (BlockfaceReservation, Blockface, Territory,
                                 Survey, Tree, Species, CURB_CHOICES,
                                 STATUS_CHOICES, CERTAINTY_CHOICES,
@@ -39,7 +42,7 @@ from apps.survey.layer_context import (
 from apps.survey.helpers import (teammates_for_event,
                                  teammates_for_individual_mapping)
 
-from libs.pdf_maps import create_reservations_map_pdf
+from libs.pdf_maps import create_and_save_pdf
 
 
 _SURVEY_DETAIL_QUERY_FILE = os.path.join(os.path.dirname(__file__),
@@ -213,14 +216,24 @@ def confirm_blockface_reservations(request):
 
     BlockfaceReservation.objects.bulk_create(reservations)
 
-    notify_reservation_confirmed = {
-        'user_id': request.user.id,
-        'blockface_ids': map(attrgetter('blockface_id'), reservations)
-    }
+    filename = "reservations_map/%s_%s.pdf" % (
+        request.user.username, shortuuid.uuid())
+    request.user.reservations_map_pdf_filename = filename
+    request.user.clean_and_save()
 
-    create_reservations_map_pdf(
-        request, _reservation_ids(request.user),
-        notify_reservation_confirmed=notify_reservation_confirmed)
+    url = reverse('printable_reservations_map')
+    host = request.get_host()
+
+    blockface_ids = list(BlockfaceReservation.objects
+                         .filter(user=request.user)
+                         .current()
+                         .values_list('blockface_id', flat=True))
+
+    if hasattr(request, 'session'):  # prevent test failure
+        session_id = request.session.session_key
+        chain(create_and_save_pdf.s(session_id, host, url, filename),
+              notify_reservation_confirmed.s(request.user.id, blockface_ids))\
+            .apply_async()
 
     return {
         'blockfaces_requested': len(ids),

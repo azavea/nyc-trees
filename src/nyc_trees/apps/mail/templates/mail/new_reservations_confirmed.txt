@@ -5,4 +5,4 @@ The following blockfaces have been confirmed:
 * {{ blockface.id }}
 {% endfor %}
 
-You can view a summary of your reservations at {{ pdf_url }}
+Please see the attached map detailing your reservation.
