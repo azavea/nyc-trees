@@ -12,15 +12,14 @@ t.add_description('Tiler hosted zone records for the nyc-trees project.')
 #
 # Parameters
 #
-hosted_zone_name_param = t.add_parameter(Parameter(
-    'PublicHostedZone', Type='String',
-    Default='treescount.azavea.com',
-    Description='Hosted zone name for public DNS'
-))
-
 tile_server_hosted_zone_alias_target_param = t.add_parameter(Parameter(
     'TileServerAliasTarget', Type='String',
     Description='Alias target for the hosted zone record set'
+))
+
+private_hosted_zone_id_param = t.add_parameter(Parameter(
+    'PrivateHostedZoneId', Type='String',
+    Description='Hosted zone ID for private record set'
 ))
 
 #
@@ -52,7 +51,7 @@ cloudfront_tile_distribution = t.add_resource(cf.Distribution(
 #
 private_dns_records_sets = t.add_resource(r53.RecordSetGroup(
     'dnsPrivateRecords',
-    HostedZoneName='nyc-trees.internal.',
+    HostedZoneId=Ref(private_hosted_zone_id_param),
     RecordSets=[
         r53.RecordSet(
             'dnsTileServers',

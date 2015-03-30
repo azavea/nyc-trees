@@ -82,7 +82,7 @@ toggle_app_server_stack() {
   if echo "${AWS_STACKS}" | grep -q "NYCTreesAppHostedZone"; then
     aws cloudformation update-stack \
       --stack-name "NYCTreesAppHostedZone" \
-      --use-previous-template \
+      --template-body "file://troposphere/app_hosted_zone_template.json" \
       --parameters ${AWS_STACK_PARAMS}
   else
     aws cloudformation create-stack \
@@ -99,15 +99,16 @@ toggle_tile_server_stack() {
   AWS_TILE_STACK_OUTPUTS=$(get_stack_outputs "NYCTrees${1}TileServers")
 
   AWS_ELB_TILE_ENDPOINT=$(echo $AWS_TILE_STACK_OUTPUTS | grep "TileServerLoadBalancerEndpoint" | cut -d' ' -f2)
+  AWS_PRIVATE_HOSTED_ZONE_ID=$(aws route53 list-hosted-zones | grep -B1 "${AWS_VPC_ID}" | grep -v "${AWS_VPC_ID}" | cut -f3 | cut -d'/' -f3)  
 
   # Build parameters argument
-  AWS_STACK_PARAMS="ParameterKey=PublicHostedZone,ParameterValue=${AWS_PUBLIC_HOSTED_ZONE}"
-  AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=TileServerAliasTarget,ParameterValue=${AWS_ELB_TILE_ENDPOINT}"
+  AWS_STACK_PARAMS="ParameterKey=TileServerAliasTarget,ParameterValue=${AWS_ELB_TILE_ENDPOINT}"
+  AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=PrivateHostedZoneId,ParameterValue=${AWS_PRIVATE_HOSTED_ZONE_ID}"
 
   if echo "${AWS_STACKS}" | grep -q "NYCTreesTileHostedZone"; then
     aws cloudformation update-stack \
       --stack-name "NYCTreesTileHostedZone" \
-      --use-previous-template \
+      --template-body "file://troposphere/tiler_hosted_zone_template.json" \
       --parameters ${AWS_STACK_PARAMS}
   else
     aws cloudformation create-stack \
@@ -157,12 +158,14 @@ case "$1" in
     # Get CloudFormation VPC stack outputs
     AWS_VPC_STACK_OUTPUTS=$(get_stack_outputs "NYCTreesVPC")
 
+    AWS_VPC_ID=$(echo "${AWS_VPC_STACK_OUTPUTS}" | grep "VpcId" | cut -f2)
+
     # Create private DNS hosted zone
     aws route53 create-hosted-zone \
       --name nyc-trees.internal \
       --caller-reference "create-hosted-zone-$(date +"%Y-%m-%d-%H:%M")" \
       --vpc "VPCRegion=${AWS_DEFAULT_REGION},VPCId=$(echo "${AWS_VPC_STACK_OUTPUTS}" | grep "VpcId" | cut -f2)" \
-      --hosted-zone-config "Comment=create-hosted-zone"
+      --hosted-zone-config "Comment=VpcId=${AWS_VPC_ID}"
     ;;
 
 
@@ -174,9 +177,11 @@ case "$1" in
     AWS_BASTION_HOST_AMI=$(get_latest_internal_ami "nyc-trees-monitoring")
     AWS_PUBLIC_SUBNETS=$(echo "${AWS_VPC_STACK_OUTPUTS}" | grep "PublicSubnets" | cut -f2)
     AWS_PRIVATE_SUBNETS=$(echo "${AWS_VPC_STACK_OUTPUTS}" | grep "PrivateSubnets" | cut -f2)
+    AWS_PRIVATE_HOSTED_ZONE_ID=$(aws route53 list-hosted-zones | grep -B1 "${AWS_VPC_ID}" | grep -v "${AWS_VPC_ID}" | cut -f3 | cut -d'/' -f3)
 
     # Build parameters argument
     AWS_STACK_PARAMS="ParameterKey=PublicHostedZone,ParameterValue=${AWS_PUBLIC_HOSTED_ZONE}"
+    AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=PrivateHostedZoneId,ParameterValue=${AWS_PRIVATE_HOSTED_ZONE_ID}"
     AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=KeyName,ParameterValue=${AWS_KEY_NAME}"
     AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=GlobalNotificationsARN,ParameterValue=${AWS_SNS_TOPIC}"
     AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=VpcId,ParameterValue=${AWS_VPC_ID}"

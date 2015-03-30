@@ -21,6 +21,11 @@ hosted_zone_name_param = t.add_parameter(Parameter(
     Description='Hosted zone name for public DNS'
 ))
 
+private_hosted_zone_id_param = t.add_parameter(Parameter(
+    'PrivateHostedZoneId', Type='String',
+    Description='Hosted zone ID for private record set'
+))
+
 vpc_param = t.add_parameter(Parameter(
     'VpcId', Type='String', Description='Name of an existing VPC'
 ))
@@ -211,7 +216,6 @@ database_server_instance = t.add_resource(rds.DBInstance(
     AutoMinorVersionUpgrade=True,
     BackupRetentionPeriod=30,
     DBInstanceClass=Ref(database_server_instance_type_param),
-    DBInstanceIdentifier='nyctrees-nyc-trees-database-server',
     DBName='nyc_trees',
     DBParameterGroupName=Ref(database_server_parameter_group),
     DBSubnetGroupName=Ref(database_server_subnet_group),
@@ -331,7 +335,6 @@ cache_cluster = t.add_resource(ec.CacheCluster(
     CacheNodeType=Ref(cache_cluster_instance_type_param),
     CacheParameterGroupName=Ref(cache_cluster_parameter_group),
     CacheSubnetGroupName=Ref(cache_cluster_subnet_group),
-    ClusterName='nyctrees',
     Engine='redis',
     EngineVersion='2.8.6',
     NotificationTopicArn=Ref(notification_arn_param),
@@ -399,7 +402,7 @@ public_dns_records_sets = t.add_resource(r53.RecordSetGroup(
 
 private_dns_records_sets = t.add_resource(r53.RecordSetGroup(
     'dnsPrivateRecords',
-    HostedZoneName='nyc-trees.internal.',
+    HostedZoneId=Ref(private_hosted_zone_id_param),
     RecordSets=[
         r53.RecordSet(
             'dnsBastionHost',

@@ -11,20 +11,21 @@ EC2_REGIONS = [
     'us-east-1'
 ]
 EC2_AVAILABILITY_ZONES = [
-    'b',
+    'a',
     'd'
 ]
 EC2_INSTANCE_TYPES = [
-    't1.micro',
     't2.micro',
     't2.medium',
-    'm3.medium'
+    'm3.medium',
+    'm3.large'
 ]
 RDS_INSTANCE_TYPES = [
     'db.t2.micro',
     'db.m3.large'
 ]
 ELASTICACHE_INSTANCE_TYPES = [
+    'cache.t2.small',
     'cache.m1.small'
 ]
 
