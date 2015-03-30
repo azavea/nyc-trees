@@ -1,0 +1,8 @@
+Your blockface reservations are confirmed!
+
+The following blockfaces have been confirmed:
+{% for blockface in blockfaces %}
+* {{ blockface.id }}
+{% endfor %}
+
+Please see the attached map detailing your reservation.

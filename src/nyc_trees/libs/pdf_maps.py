@@ -68,13 +68,14 @@ def create_and_save_pdf(self, session_id, host, url, filename):
 
         content = ContentFile(pdf_bytes)
         default_storage.save(filename, content)
-        return True
+
+        return filename
 
     except subprocess.CalledProcessError as e:
         if self.request.retries < self.max_retries:
             self.retry(exc=e)
         else:
-            return False
+            return None
 
 
 def url_if_cooked(filename):
