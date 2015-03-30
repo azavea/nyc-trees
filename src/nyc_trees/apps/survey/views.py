@@ -353,6 +353,15 @@ def _create_survey_and_trees(request, event=None):
 
     blockface = survey.blockface
 
+    def get_int_distance(t): return int(t.get('distance_to_tree', '0'))
+
+    survey_length = sum(map(get_int_distance, tree_list))
+    blockface_length = blockface.geom.transform(2263, clone=True).length
+
+    if survey_length > blockface_length:
+        return HttpResponseBadRequest(
+            'Total distances to trees greater than length of blockface')
+
     if event:
         territory = _get_territory(blockface)
         if territory is None or territory.group_id != event.group_id:
