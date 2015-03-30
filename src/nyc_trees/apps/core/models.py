@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from __future__ import division
 
 from django.db import models
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
@@ -26,6 +27,17 @@ REFERRER_AD = (
     ('radio', 'Radio'),
     ('website', 'Website')
 )
+
+
+class NycUserManager(UserManager):
+    def get_by_natural_key(self, username):
+        # For login, make username case-insensitive
+        return self.get(username__iexact=username)
+
+
+AuthenticationForm.error_messages['invalid_login'] = \
+    'Please enter a correct username and password. ' \
+    'Note that password is case-sensitive.'
 
 
 #######################################
@@ -77,7 +89,7 @@ class User(NycModel, AbstractUser):
     reservations_map_pdf_filename = models.CharField(
         max_length=255, default='', blank=True)
 
-    objects = UserManager()
+    objects = NycUserManager()
 
     privacy_fields = {'profile_is_public': 'profile',
                       'real_name_is_public': 'real name',
