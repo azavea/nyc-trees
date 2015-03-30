@@ -1,4 +1,5 @@
 {% load utils %}
+{% load waffle_tags %}
 
 <div class="page-dashboard">
 
@@ -10,8 +11,11 @@
                 <div class="row">
                     <div class="col-sm-6 col-sm-push-6">
                         <div class="hero-content">
-                            <h1 class="hero-heading">Welcome back, volun<span class="color--primary">treer!</span></h1>
-                            <p class="hero-text">In the past week, <span class="color--primary">405 trees</span> in <span class="color--primary">12 blocks</span> have been added. We're <span class="color--primary">43%</span> of the way to our goal!</p>
+                            <h1 class="hero-heading">Welcome back,
+                            volun<span class="color--primary">treer!</span></h1>
+                            {% flag full_access %}
+                                <p class="hero-text">In the past week, <span class="color--primary">405 trees</span> in <span class="color--primary">12 blocks</span> have been added. We're <span class="color--primary">43%</span> of the way to our goal!</p>
+                            {% endflag %}
                         </div>
                     </div>
                 </div>

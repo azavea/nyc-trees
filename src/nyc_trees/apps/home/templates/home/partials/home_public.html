@@ -1,4 +1,5 @@
 {% load utils %}
+{% load waffle_tags %}
 
 <div class="page-home">
 
@@ -46,6 +47,8 @@
                         </p>
                     </div>
                 </section>
+
+                {% flag full_access %}
                 <section class="section-ticker text-center section-home">
                     <div class="home-container">
                         <h2>Help us count our <span class="color--primary">street trees</span>!</h2>
@@ -97,6 +100,8 @@
                         </div>
                     </div>
                 </section>
+                {% endflag %}
+
                 <section class="section-appeal section-home">
                     <div class="row">
                         <div class="col-sm-6">
