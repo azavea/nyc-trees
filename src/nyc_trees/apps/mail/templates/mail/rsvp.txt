@@ -1,3 +1,5 @@
+{% extends "mail/base_email.txt" %}
+{% block content %}
 We have received your RSVP to {{ event.title }}, hosted by {{ event.group.name }}. Here are the details:
 
 When: {{ event.begins_at|date:"l, F jS fA" }} to {{ event.ends_at|date:"fA" }}
@@ -6,3 +8,4 @@ Contact: {{ event.contact_name }} {{ event.contact_email }}
 
 You can view the full details of the event, cancel your reservation, or
 check-in when the event starts by following this link: {{ event_url }}
+{% endblock content %}
