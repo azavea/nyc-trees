@@ -4,7 +4,7 @@
 
 set -e
 
-STOP_SERVICE="(sudo service nyc-trees-celery stop || /bin/true)"
+STOP_SERVICE="(sudo service celery stop || /bin/true)"
 CHANGE_DIR="cd /opt/app/"
 RUN_CELERY="envdir /etc/nyc-trees.d/env celery -A 'nyc_trees.celery:app' worker --autoreload -l debug"
 
