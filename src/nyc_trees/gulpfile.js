@@ -149,7 +149,9 @@ gulp.task('watchify', function() {
         cache: {},
         packageCache: {},
         fullPaths: true
-    }));
+    }), {
+        poll: true
+    });
 
     bundler.on('update', function() {
         gutil.log("Rebundling JS");
