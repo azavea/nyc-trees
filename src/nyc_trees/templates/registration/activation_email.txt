@@ -1,6 +1,6 @@
 {% load i18n %}
 {% load url from future %}
-Thank you for signing up for Trees Count!
+Thank you for signing up for TreesCount!
 
 Your username is {{ user.username }}
 

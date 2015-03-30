@@ -1,5 +1,6 @@
 {% extends "registration/registration_base.html" %}
 {% load i18n %}
+{% load waffle_tags %}
 
 {% block title %}{% trans "Activation email sent" %}{% endblock %}
 
@@ -9,12 +10,14 @@
 
 {% block registration_content %}
 <p>
-    Thank you for signing up as a volun<em>treer</em> with Trees Count! 2015.
+    Thank you for signing up as a volun<em>treer</em> with TreesCount! 2015.
     Please check your email inbox to confirm your account details.
 </p>
 <p>
-    Once confirmed, visit our Trees Count! <a href="{% url 'training_summary_pure' %}">census training</a>
+    {% flag full_access %}
+    Once confirmed, visit our TreesCount! <a href="{% url 'training_summary_pure' %}">census training</a>
     page to get started.
+    {% endflag %}
 </p>
 {% endblock %}
 
