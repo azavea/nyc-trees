@@ -1,8 +1,11 @@
-{% extends "registration_base.html" %}
+{% extends "registration/registration_base.html" %}
 {% load i18n %}
 
 {% block registration_content %}
-<p>{% trans "Account activation failed." %}</p>
+<p>Sorry, there was a problem activating your account.</p>
+<p>It may already be active. Please try to log in.</p>
+
+<p><a class="btn btn-primary btn-mobile--max" href="{% url 'auth_login' %}">Log In</a></p>
 {% endblock %}
 
 
