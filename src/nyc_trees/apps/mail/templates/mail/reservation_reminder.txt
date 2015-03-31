@@ -1,3 +1,5 @@
+{% extends "mail/base_email.txt" %}
+{% block content %}
 The following blockface reservations for user '{{ user.username }}' will expire soon:
 {% for reservation in reservations %}
 * 'id: {{ reservation.blockface.id }}' at {{ reservation.expires_at }}
@@ -6,3 +8,4 @@ The following blockface reservations for user '{{ user.username }}' will expire 
 Please visit the reservations page to start mapping:
 
 {{ reservations_url }}
+{% endblock content %}

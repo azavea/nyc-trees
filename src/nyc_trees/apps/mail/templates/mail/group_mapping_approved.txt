@@ -1,6 +1,9 @@
+{% extends "mail/base_email.txt" %}
+{% block content %}
 Congratulations! Your request to map the blocks managed by
 {{ group.name }} was approved.
 
 You can now reserve some blocks and start mapping.
 
 {{ reservations_url }}
+{% endblock content %}

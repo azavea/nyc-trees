@@ -1,3 +1,5 @@
+{% extends "mail/base_email.txt" %}
+{% block content %}
 Your blockface reservations are confirmed!
 
 The following blockfaces have been confirmed:
@@ -6,3 +8,4 @@ The following blockfaces have been confirmed:
 {% endfor %}
 
 Please see the attached map detailing your reservation.
+{% endblock content %}

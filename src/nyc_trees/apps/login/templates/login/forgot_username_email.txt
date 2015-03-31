@@ -1,3 +1,5 @@
+{% extends "mail/base_email.txt" %}
+{% block content %}
 {% with email=user.email username=user.username %}
 Hello,
 
@@ -8,3 +10,4 @@ If you want to reset your password, go to {{ password_url }}
 
 - NYC TreesCount!
 {% endwith %}
+{% endblock %}

@@ -1,5 +1,7 @@
+{% extends "mail/base_email.txt" %}
 {% load i18n %}
 {% load url from future %}
+{% block content %}
 Thank you for signing up for TreesCount!
 
 Your username is {{ user.username }}
@@ -48,3 +50,4 @@ following context:
 
         {{ request.scheme }}://{{ request.get_host }}{% url 'registration_activate' activation_key %}
 {% endcomment %}
+{% endblock content %}
