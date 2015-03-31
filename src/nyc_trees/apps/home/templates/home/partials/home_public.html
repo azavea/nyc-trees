@@ -1,4 +1,5 @@
 {% load utils %}
+{% load waffle_tags %}
 
 <div class="page-home">
 
@@ -11,6 +12,11 @@
                     <div class="col-sm-6 col-sm-push-6">
                         <div class="hero-content">
                             <h1 class="hero-heading">We're mapping <span class="color--primary">every street tree</span> in New York City!</h1>
+                            {% flag full_access %}
+                                <div class="text-right">
+                                    <a class="hero-link hero-text text-center color--secondary h4" href="{% url 'progress_page' %}">Show me the map →</a>
+                                </div>
+                            {% endflag %}
                         </div>
                     </div>
                 </div>
@@ -42,6 +48,8 @@
                         </p>
                     </div>
                 </section>
+
+                {% flag full_access %}
                 <section class="section-ticker text-center section-home">
                     <div class="home-container">
                         <h2>Help us count our <span class="color--primary">street trees</span>!</h2>
@@ -93,6 +101,8 @@
                         </div>
                     </div>
                 </section>
+                {% endflag %}
+
                 <section class="section-appeal section-home">
                     <div class="row">
                         <div class="col-sm-6">
