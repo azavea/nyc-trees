@@ -12,15 +12,17 @@
         {% csrf_token %}
         <p>
             Forgot your username? Enter the Email address you used to register
-            with TreesCount! and click the “Find” button below.
+            with TreesCount! and click the “Send” button below.
         </p>
         {{ form.non_field_errors }}
-        <div class="fieldWrapper">
-          {{ form.email.errors }}
-          {{ form.email.label_tag }}
-          {{ form.email }}
-        </div>
-        <input type="submit" class="btn btn-block btn-primary" value="Send" />
+        <p>
+          <div class="fieldWrapper">
+            {{ form.email.errors }}
+            {{ form.email.label_tag }}
+            {{ form.email }}
+          </div>
+        </p>
+        <input type="submit" class="btn btn-primary btn-mobile--max" value="Send" />
       </fieldset>
     </form>
   </div>

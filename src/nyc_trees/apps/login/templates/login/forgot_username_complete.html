@@ -1,10 +1,8 @@
-{% extends "base.html" %}
+{% extends "registration/registration_base.html" %}
+{% load i18n %}
 
-{% block content %}
-<div class="content login-signup">
-  <div class="well login-signup-panel">
-    <h2>Email Sent</h2>
+{% block registration_title %}{% trans "Sending Email" %}{% endblock %}
+
+{% block registration_content %}
     <p>Please check your email to retrieve your username. If you don't see it within 15 minutes, please check your spam folder.</p>
-  </div>
-</div>
-{% endblock content %}
+{% endblock %}
