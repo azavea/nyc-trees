@@ -31,7 +31,26 @@
         <div class="field">
             {{ form.address.label_tag }}
             {{ form.address.errors }}
-            {{ form.address }}
+            <div id="address-search">
+                <div class="input-group">
+                    {{ form.address }}
+                    <span class="input-group-btn">
+                        <button class="location-search-box btn btn-default" href="javascript:;" type="button"><i class="icon-search"></i></button>
+                    </span>
+                </div>
+                <div class="state searching">
+                    <p>Searching...</p>
+                </div>
+                <div class="state failure">
+                    <p>Sorry, there was a problem finding that location.</p>
+                </div>
+                <div class="state no-results">
+                    <p>Sorry, we could not find a location for that address.</p>
+                </div>
+                <div class="state results">
+                    <ul></ul>
+                </div>
+            </div>
         </div>
 
         <input type="hidden" name="lat" value="{{ event.location.y }}">

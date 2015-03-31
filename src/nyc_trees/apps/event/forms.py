@@ -6,7 +6,8 @@ from __future__ import division
 from datetime import datetime
 from pytz import timezone
 
-from floppyforms.__future__ import ModelForm, DateField, TimeField, RadioSelect
+from floppyforms.__future__ import (ModelForm, DateField, TimeField,
+                                    TextInput, RadioSelect)
 
 from django.utils.timezone import now
 
@@ -41,6 +42,9 @@ class EventForm(ModelForm):
             'contact_name'
         ]
         widgets = {
+            'address': TextInput(attrs={
+                'placeholder': 'Search for an address'
+            }),
             'is_private': RadioSelect(choices=((True, 'Private'),
                                                (False, 'Public'))),
             'includes_training': RadioSelect(choices=((False, 'Mapping'),

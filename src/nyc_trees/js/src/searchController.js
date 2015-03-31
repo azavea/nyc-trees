@@ -6,7 +6,10 @@ var $ = require('jquery'),
     zoom = require('./lib/mapUtil').ZOOM,
     setCenterAndZoomLL = require('./lib/mapUtil').setCenterAndZoomLL;
 
-module.exports = {create: create};
+module.exports = {
+    create: create,
+    locationSearch: locationSearch
+};
 
 function locationSearch(options) {
     var $textbox = options.$textbox,
@@ -20,6 +23,7 @@ function locationSearch(options) {
 
     $textbox.on('keypress', function(e){
         if (e.keyCode === 13) {
+            e.preventDefault();
             $button.click();
         }
     });
