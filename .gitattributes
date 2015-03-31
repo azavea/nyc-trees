@@ -3,6 +3,7 @@
 *  text=auto
 *.png  binary
 *.jpg  binary
+*.eot  binary
 
 # When a text file is committed, convert line endings to LF.
 # When a text file is checked out, do nothing.
