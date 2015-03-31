@@ -96,8 +96,10 @@ toggle_app_server_stack() {
 
 toggle_tile_server_stack() {
   AWS_STACKS=$(aws cloudformation describe-stacks | grep STACKS | cut -f7)
+  AWS_VPC_STACK_OUTPUTS=$(get_stack_outputs "NYCTreesVPC")
   AWS_TILE_STACK_OUTPUTS=$(get_stack_outputs "NYCTrees${1}TileServers")
 
+  AWS_VPC_ID=$(echo "${AWS_VPC_STACK_OUTPUTS}" | grep "VpcId" | cut -f2)
   AWS_ELB_TILE_ENDPOINT=$(echo $AWS_TILE_STACK_OUTPUTS | grep "TileServerLoadBalancerEndpoint" | cut -d' ' -f2)
   AWS_PRIVATE_HOSTED_ZONE_ID=$(aws route53 list-hosted-zones | grep -B1 "${AWS_VPC_ID}" | grep -v "${AWS_VPC_ID}" | cut -f3 | cut -d'/' -f3)  
 
