@@ -10,7 +10,17 @@
                   <span data-class="map-another-possible">I'm Done For Now</span>
                   <span data-class="map-another-impossible">OK</span>
                 </a>
-                <a class="btn btn-primary hidden" data-class="map-another-possible" href="{% url 'survey' %}">Yes!</a>
+                <a class="btn btn-primary hidden"
+                   data-class="map-another-possible"
+                   {% if group_slug and event_slug %}
+                   id="map-another-go-button"
+                   data-group-slug="{{ group_slug }}"
+                   data-event-slug="{{ event_slug }}"
+                   href="{% url 'survey_from_event' group_slug=group_slug event_slug=event_slug %}"
+                   {% else %}
+                   href="{% url 'survey' %}"
+                   {% endif %}
+                   >Yes!</a>
             </div>
         </div>
     </div>
