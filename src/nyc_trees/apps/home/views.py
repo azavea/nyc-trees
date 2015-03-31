@@ -62,3 +62,7 @@ def retrieve_job_status(request):
 
 def individual_mapper_instructions(request):
     pass
+
+
+def about_faq_page(request):
+    pass

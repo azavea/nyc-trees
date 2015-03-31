@@ -31,7 +31,7 @@
             <li{% if active_page == "reservations" %} class="active"{% endif %}><a href="{% url 'reservations' %}">Reservations</a></li>
             <li{% if active_page == "achievements" %} class="active"{% endif %}><a href="#">Achievements</a></li>
         {% endflag %}
-        <li{% if active_page == "about" %} class="active"{% endif %}><a href="#">About &amp; FAQ</a></li>
+        <li{% if active_page == "about" %} class="active"{% endif %}><a href="{% url 'about_faq_page' %}">About &amp; FAQ</a></li>
     </ul>
     <div class="nav-side-sub">
         <h3>NYC</h3>

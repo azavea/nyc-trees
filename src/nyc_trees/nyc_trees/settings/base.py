@@ -350,6 +350,7 @@ SOFT_LAUNCH_REDIRECT_URL = "/"
 SOFT_LAUNCH_REGEXES = [
     r'^/user/',
     r'^/accounts/',
+    r'^/faq/',
     r'^/admin/',
     r'^/health-check/',
 ]
