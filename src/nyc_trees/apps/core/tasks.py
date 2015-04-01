@@ -9,6 +9,8 @@ import uuid
 import importlib
 import tempfile
 
+from celery import task
+
 from djqscsv import write_csv
 
 from django.conf import settings
@@ -70,3 +72,11 @@ def _class_for_name(module_name, class_name):
 def _model_from_fq_name(fq_name):
     module_name, class_name = fq_name.rsplit('.', 1)
     return _class_for_name(module_name, class_name)
+
+
+@task(bind=True, max_retries=15, default_retry_delay=2)
+def wait_for_default_storage_file(self, filename):
+    if default_storage.exists(filename):
+        return filename
+    else:
+        self.retry()

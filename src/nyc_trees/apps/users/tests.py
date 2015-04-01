@@ -13,6 +13,7 @@ from django.core import mail
 from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpResponseRedirect
 from django.test import TestCase
+from django.test.utils import override_settings
 from django.utils.timezone import now
 
 from apps.core.models import User, Group
@@ -419,6 +420,11 @@ class IndividualMapperTests(UsersTestCase):
         self.user.training_finished_groups_to_follow = True
         self.user.clean_and_save()
 
+    # This test asserts that an email is sent when RSVPing to an
+    # event. Because the email is sent via a Celery task, we use
+    # CELERY_ALWAYS_EAGER to force synchronous execution and ensure
+    # the assertion is made after the task is complete.
+    @override_settings(CELERY_ALWAYS_EAGER=True)
     def test_individual_mapper_workflow(self):
         self.assertFalse(self.user.individual_mapper)
         self.assertFalse(self.user.field_training_complete)
