@@ -1,5 +1,6 @@
 {% extends "registration/registration_base.html" %}
 {% load i18n %}
+{% load widget_tweaks %}
 
 {# We shouldn't ever redirect back to the login page #}
 {% block login_link %}
@@ -17,13 +18,13 @@
 
     <p>
         {{ form.username.errors }}
-        <label for="id_username">Username:</label>
-        <input id="id_username" maxlength="254" name="username" type="text" class="form-control">
+        {{ form.username.label_tag }}
+        {{ form.username|add_class:"form-control" }}
     </p>
     <p>
         {{ form.password.errors }}
-        <label for="id_password">Password:</label>
-        <input id="id_password" name="password" type="password" class="form-control">
+        {{ form.password.label_tag }}
+        {{ form.password|add_class:"form-control" }}
     </p>
     <input type="submit" class="btn btn-primary btn-mobile--max" value="{% trans 'Log in' %}" />
     <input type="hidden" name="next" value="{{ next }}" />

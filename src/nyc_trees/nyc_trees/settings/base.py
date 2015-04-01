@@ -281,6 +281,7 @@ THIRD_PARTY_APPS = (
     'registration',
     'django_statsd',
     'floppyforms',
+    'widget_tweaks',
     'waffle',
     'watchman',
 )
@@ -350,6 +351,7 @@ SOFT_LAUNCH_REDIRECT_URL = "/"
 SOFT_LAUNCH_REGEXES = [
     r'^/user/',
     r'^/accounts/',
+    r'^/login/',
     r'^/faq/',
     r'^/admin/',
     r'^/health-check/',
