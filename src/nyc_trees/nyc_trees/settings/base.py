@@ -281,6 +281,7 @@ THIRD_PARTY_APPS = (
     'registration',
     'django_statsd',
     'floppyforms',
+    'widget_tweaks',
     'waffle',
     'watchman',
 )
