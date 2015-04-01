@@ -6,6 +6,7 @@ from __future__ import division
 from collections import OrderedDict
 
 from urllib import urlencode
+from django.db.models import Q
 from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
 
@@ -50,6 +51,19 @@ _MAPPING = Filter('mapping')
 _TRAINING = Filter('training')
 _CURRENT = Filter('current')
 _PAST = Filter('past')
+_RECOMMENDED = Filter('recommended',
+                      ('None of the groups you follow have scheduled events. '
+                       'You can <a href="%s">find groups to follow here</a>.'),
+                      'group_list_page')
+_ATTENDING = Filter('attending',
+                    ('You are not registered to attend any events. '
+                     'You can <a href="%s">find events here</a>.'),
+                    'events_list_page')
+_RECOMMENDED = Filter(
+    'recommended',
+    ('None of the groups you follow have scheduled events. '
+     'You can <a href="%s">find groups to follow here</a>.'),
+    'group_list_page')
 
 
 class _Filters(object):
@@ -58,6 +72,8 @@ class _Filters(object):
     TRAINING = _TRAINING.name
     CURRENT = _CURRENT.name
     PAST = _PAST.name
+    ATTENDING = _ATTENDING.name
+    RECOMMENDED = _RECOMMENDED.name
 
     def __getitem__(self, name):
         for f in [_ALL, _MAPPING, _TRAINING, _CURRENT,
@@ -66,6 +82,28 @@ class _Filters(object):
                 return f
         else:
             return None
+
+    @staticmethod
+    def get_rsvp_q(user):
+        event_registrations = (EventRegistration
+                               .objects
+                               .filter(user_id=user.pk)
+                               .values_list('event_id', flat=True))
+        return Q(pk__in=event_registrations)
+
+    @staticmethod
+    def get_recommended_q(user):
+        group_follows = (Follow
+                         .objects
+                         .filter(user_id=user.pk)
+                         .values_list('group_id', flat=True))
+
+        predicate = Q(group__in=group_follows)
+
+        if not getattr(user, 'field_training_complete', False):
+            predicate &= Q(includes_training=True)
+
+        return predicate
 
 
 class EventList(object):
@@ -76,6 +114,7 @@ class EventList(object):
     """
     trainingFilters = 'training_filter'
     chronoFilters = 'chrono_filters'
+    userFilters = 'user_filters'
     Filters = _Filters()
 
     @staticmethod
@@ -94,6 +133,15 @@ class EventList(object):
                 (_PAST, lambda qs: (qs
                                     .filter(ends_at__lt=right_now)
                                     .order_by('-begins_at'))),
+            ]),
+            EventList.userFilters: OrderedDict([
+                (_ATTENDING, lambda qs: (
+                    qs
+                    .filter(EventList.Filters.get_rsvp_q(request.user)))),
+                (_RECOMMENDED, lambda qs: (
+                    qs
+                    .exclude(EventList.Filters.get_rsvp_q(request.user))
+                    .filter(EventList.Filters.get_recommended_q(request.user)))),
             ]),
         }
         return filtersets.get(name, {})

@@ -7,7 +7,7 @@ from libs.sql import get_total_tree_count, get_total_species_count
 
 from apps.core.models import User
 
-from apps.event.event_list import immediate_events
+from apps.event.event_list import all_events, EventList
 
 from apps.home.training import training_summary
 
@@ -48,11 +48,14 @@ def home_page(request):
             }
         }
 
-    immediate_events_list = (immediate_events
-                             .configure(chunk_size=3)
-                             .as_context(request))
+    all_events_list = (
+        all_events
+        .configure(chunk_size=10,
+                   filterset_name=EventList.userFilters,
+                   active_filter=EventList.Filters.ATTENDING)
+        .as_context(request))
 
-    context.update({'immediate_events': immediate_events_list})
+    context.update({'all_events': all_events_list})
     return context
 
 
