@@ -30,6 +30,13 @@
         <div class="row">
             <main class="col-sm-12 main-dashboard">
                 {% flag full_access %}
+                    <section class="section-ticker section-home">
+                        <div class="home-container">
+                            <h4 class="section-heading">Total Trees Counted</h4>
+                            {% include "home/partials/ticker.html" %}
+                        </div>
+                    </section>
+
                     {% if user.online_training_complete %}
                         {% if immediate_events.event_infos %}
                             <section class="events section-home">

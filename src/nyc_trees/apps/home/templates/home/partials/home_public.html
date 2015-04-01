@@ -53,14 +53,7 @@
                 <section class="section-ticker text-center section-home">
                     <div class="home-container">
                         <h2>Help us count our <span class="color--primary">street trees</span>!</h2>
-                        <div class="ticker">
-                            {% for digit in counts.tree %}
-                                <div class="ticker-digit">
-                                    <div class="ticker-box ticker-box-top">{{ digit }}</div>
-                                    <div class="ticker-box ticker-box-bg"></div>
-                                </div>
-                            {% endfor %}
-                        </div>
+                        {% include "home/partials/ticker.html" with tree_count=counts.tree %}
                     </div>
                 </section>
                 <section class="section-progress text-center section-home">
