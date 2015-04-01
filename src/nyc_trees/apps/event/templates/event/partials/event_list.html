@@ -17,7 +17,11 @@
     {% for info in event_list.event_infos %}
         {% include "event/partials/event_section.html" %}
     {% empty %}
-        <p class="no-data">No events</p>
+        <p class="no-data">
+            {% for filter in event_list.filters %}
+                {% if filter.active %}{{ filter.no_result_markup|safe }}{% endif %}
+            {% endfor %}
+        </p>
     {% endfor %}
 {% endblock event_list_loop %}
 
