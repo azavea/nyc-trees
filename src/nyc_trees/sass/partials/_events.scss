@@ -60,11 +60,41 @@
   color: #777;
 }
 
-
 // Add event page
 
 #address-search {
     .state {
         display: none;
     }
+}
+
+
+.state.results {
+  padding: 5px 0 2px;
+  background: #f3f3f3;
+  margin: -10px 1px 0 0;
+  padding-top: 12px;
+  border-radius: 0 0 $border-radius-base $border-radius-base;
+  border: 1px solid #ddd;
+  border-top: none;
+
+  ul {
+    list-style-type: circle;
+    list-style-position: inside;
+    margin: 0;
+    padding: 0;
+  }
+
+  li {
+    border-bottom: 1px solid #ddd;
+    padding: 4px 20px;
+
+    &:last-child {
+      border: none;
+    }
+
+    a {
+      display: block;
+    }
+  }
 }
