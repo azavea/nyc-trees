@@ -109,7 +109,6 @@ $hero-box-side-padding: 3rem;
 }
 
 .section-about-logo {
-  float: left;
   margin: 0 3rem 1rem 0;
 }
 
@@ -171,10 +170,22 @@ $hero-box-side-padding: 3rem;
   font-size: $font-size-h5;
 }
 
+.section-appeal {
+  margin-top: -1rem;
+}
+
 @media (min-width: $screen-sm) {
+  .section-appeal {
+    margin-top: auto;
+  }
   .section-home {
-    margin: 3rem auto;
-    max-width: 62rem;
+    margin: 5rem auto 0;
+    margin-left: $grid-gutter-width/-2;
+    margin-right: $grid-gutter-width/-2;
+    padding-bottom: 5rem;
+  }
+  .section-appeal-text {
+    padding-top: 0;
   }
   .home-description {
     font-size: $font-size-h4;
@@ -202,5 +213,8 @@ $hero-box-side-padding: 3rem;
   }
   .progress-circle-label {
     font-size: $font-size-h5;
+  }
+  .home-container {
+    padding: 0 $grid-gutter-width/2;
   }
 }
