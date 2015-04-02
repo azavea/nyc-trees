@@ -7,9 +7,13 @@ import os
 import tempfile
 import json
 import shutil
+import zipfile
+from io import BytesIO
 
 import fiona
 from celery import task
+from djqscsv import write_csv
+import importlib
 
 from django.conf import settings
 from django.core.files.storage import default_storage
@@ -35,7 +39,24 @@ with open(TREES_QUERY_FILE, 'r') as f:
 
 
 @task
-def dump_trees_to_shapefile():
+def zip_dumps(file_lists, dump_id):
+    file_paths = [path for sublist in file_lists for path in sublist]
+
+    buffer = BytesIO()
+    with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_DEFLATED) as zip_f:
+
+        for path in file_paths:
+            with _storage.open(path) as dump_f:
+                zip_f.writestr(os.path.basename(path), dump_f.read())
+
+    buffer.flush()
+    buffer.seek(0)
+
+    _storage.save('dump/%s/dump.zip' % dump_id, buffer)
+
+
+@task
+def dump_trees_to_shapefile(dump_id):
     tmp_dir = tempfile.mkdtemp()
     shp_file = os.path.join(tmp_dir, 'trees.shp')
 
@@ -100,26 +121,29 @@ def dump_trees_to_shapefile():
                 }
                 shp.write(rec)
 
+    paths = []
     with open(shp_file, 'r') as f:
-        _storage.save('dump/trees.shp', f)
+        paths.append(_storage.save('dump/%s/trees.shp' % dump_id, f))
 
     with open(os.path.join(tmp_dir, 'trees.dbf'), 'r') as f:
-        _storage.save('dump/trees.dbf', f)
+        paths.append(_storage.save('dump/%s/trees.dbf' % dump_id, f))
 
     with open(os.path.join(tmp_dir, 'trees.prj'), 'r') as f:
-        _storage.save('dump/trees.prj', f)
+        paths.append(_storage.save('dump/%s/trees.prj' % dump_id, f))
 
     with open(os.path.join(tmp_dir, 'trees.cpg'), 'r') as f:
-        _storage.save('dump/trees.cpg', f)
+        paths.append(_storage.save('dump/%s/trees.cpg' % dump_id, f))
 
     with open(os.path.join(tmp_dir, 'trees.shx'), 'r') as f:
-        _storage.save('dump/trees.shx', f)
+        paths.append(_storage.save('dump/%s/trees.shx' % dump_id, f))
 
     shutil.rmtree(tmp_dir)
 
+    return paths
+
 
 @task
-def dump_blockface_to_shapefile():
+def dump_blockface_to_shapefile(dump_id):
     tmp_dir = tempfile.mkdtemp()
     shp_file = os.path.join(tmp_dir, 'blockface.shp')
 
@@ -158,19 +182,49 @@ def dump_blockface_to_shapefile():
             }
             shp.write(rec)
 
+    paths = []
     with open(shp_file, 'r') as f:
-        _storage.save('dump/blockface.shp', f)
+        paths.append(_storage.save('dump/%s/blockface.shp' % dump_id, f))
 
     with open(os.path.join(tmp_dir, 'blockface.dbf'), 'r') as f:
-        _storage.save('dump/blockface.dbf', f)
+        paths.append(_storage.save('dump/%s/blockface.dbf' % dump_id, f))
 
     with open(os.path.join(tmp_dir, 'blockface.prj'), 'r') as f:
-        _storage.save('dump/blockface.prj', f)
+        paths.append(_storage.save('dump/%s/blockface.prj' % dump_id, f))
 
     with open(os.path.join(tmp_dir, 'blockface.cpg'), 'r') as f:
-        _storage.save('dump/blockface.cpg', f)
+        paths.append(_storage.save('dump/%s/blockface.cpg' % dump_id, f))
 
     with open(os.path.join(tmp_dir, 'blockface.shx'), 'r') as f:
-        _storage.save('dump/blockface.shx', f)
+        paths.append(_storage.save('dump/%s/blockface.shx' % dump_id, f))
 
     shutil.rmtree(tmp_dir)
+
+    return paths
+
+
+@task
+def dump_model(fq_name, dump_id):
+    _, temp_file_path = tempfile.mkstemp()
+    Model = _model_from_fq_name(fq_name)
+    with open(temp_file_path, 'w') as f:
+        write_csv(Model.objects.all(), f)
+
+    model_name = Model.__name__.lower()
+    file_name = 'dump/{}/{}.csv'.format(dump_id, model_name)
+
+    with open(temp_file_path, 'r') as f:
+        destination_path = _storage.save(file_name, f)
+    os.remove(temp_file_path)
+
+    return [destination_path]
+
+
+def _class_for_name(module_name, class_name):
+    m = importlib.import_module(module_name)
+    return getattr(m, class_name)
+
+
+def _model_from_fq_name(fq_name):
+    module_name, class_name = fq_name.rsplit('.', 1)
+    return _class_for_name(module_name, class_name)
