@@ -67,6 +67,16 @@
                 </div>
             </div>
         {% endif %}
+        {% if group.affiliation %}
+            <div class="description block item">
+                <div class="row">
+                    <div class="col-xs-8">
+                        <h5>Affiliation</h5>
+                        <div class="h6">{{group.affiliation}}</div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
     </section>
     <section class="contributions">
         <h4 class="section-heading">Contributions</h4>
