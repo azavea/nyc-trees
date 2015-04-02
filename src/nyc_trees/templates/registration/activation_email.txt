@@ -1,14 +1,13 @@
 {% extends "mail/base_email.txt" %}
 {% load i18n %}
 {% load url from future %}
-{% block content %}
-Thank you for signing up for TreesCount!
+{% block content %}Thank you for signing up for TreesCount!
 
 Your username is {{ user.username }}
 
 Please click on this link to confirm your email address.
 
-http://{{site.domain}}{% url 'registration_activate' activation_key %}
+http://{{site.domain}}{% url 'registration_activate' activation_key %}{% endblock content %}
 
 {% comment %}
 **registration/activation_email.txt**
@@ -47,4 +46,3 @@ following context:
 
         {{ request.scheme }}://{{ request.get_host }}{% url 'registration_activate' activation_key %}
 {% endcomment %}
-{% endblock content %}
