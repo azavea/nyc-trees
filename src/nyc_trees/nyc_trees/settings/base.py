@@ -78,6 +78,8 @@ BROKER_URL = 'redis://{0}:{1}/2'.format(
     environ.get('NYC_TREES_CACHE_HOST', 'localhost'),
     environ.get('NYC_TREES_CACHE_PORT', 6379))
 
+CELERY_RESULT_BACKEND = BROKER_URL
+
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
