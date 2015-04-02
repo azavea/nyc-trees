@@ -14,7 +14,7 @@ _FOLLOWED_GROUP_CHUNK_SIZE = 2
 _RESERVATION_CHUNK_SIZE = 2
 
 
-def user_profile_context(user, its_me):
+def user_profile_context(user, its_me=True, home_page=True):
     user_achievements = set(user.achievement_set
                             .order_by('created_at')
                             .values_list('achievement_id', flat=True))
@@ -22,6 +22,13 @@ def user_profile_context(user, its_me):
     block_count = user.survey_set.distinct('blockface').count()
     tree_count = get_user_tree_count(user)
     species_count = get_user_species_count(user)
+    event_count = user.eventregistration_set \
+        .filter(did_attend=True) \
+        .count()
+
+    # In order to show the tree count in a "ticker" we need to break it up
+    # into digits and pad it with zeroes.
+    tree_digits = [digit for digit in "{:07d}".format(tree_count)]
 
     privacy_form = PrivacySettingsForm(instance=user)
 
@@ -32,7 +39,8 @@ def user_profile_context(user, its_me):
         'viewing_own_profile': its_me,
         'show_username': can_show_full_name(user, its_me),
         'show_achievements': its_me or user.achievements_are_public,
-        'show_contributions': its_me or user.contributions_are_public,
+        'show_contributions': (not home_page and
+                               (its_me or user.contributions_are_public)),
         'contributions_title': contributions_title,
         'show_groups': its_me or user.group_follows_are_public,
         'show_individual_mapper': (user.individual_mapper and
@@ -46,7 +54,9 @@ def user_profile_context(user, its_me):
         'counts': {
             'block': block_count,
             'tree': tree_count,
-            'species': species_count
+            'tree_digits': tree_digits,
+            'species': species_count,
+            'event': event_count
         },
         'achievements': [achievements[key]
                          for key in user_achievements if key in achievements]

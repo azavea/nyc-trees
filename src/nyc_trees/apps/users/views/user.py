@@ -34,7 +34,7 @@ def user_detail(request, username):
         # Private profile acts like a missing page to others
         raise Http404()
 
-    return user_profile_context(user, its_me)
+    return user_profile_context(user, its_me=its_me, home_page=False)
 
 
 def profile_settings(request):
