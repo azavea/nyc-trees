@@ -3,14 +3,30 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
+from celery import chord
+
 from django.core.management.base import BaseCommand
 from django.db import transaction, connection
 from django.utils.timezone import now
 
 from apps.core.models import TaskRun
-from apps.core.tasks import dump_models
+from apps.census_admin.tasks import (dump_model, dump_trees_to_shapefile,
+                                     dump_blockface_to_shapefile, zip_dumps)
 
-TASK_NAME = 'dump_models'
+TASK_NAME = 'dump_db'
+
+MODELS = ['apps.core.models.User',
+          'apps.core.models.Group',
+          'apps.event.models.Event',
+          'apps.event.models.EventRegistration',
+          'apps.survey.models.BlockfaceReservation',
+          'apps.survey.models.Species',
+          'apps.survey.models.Survey',
+          'apps.survey.models.Territory',
+          'apps.users.models.Achievement',
+          'apps.users.models.Follow',
+          'apps.users.models.TrainingResult',
+          'apps.users.models.TrustedMapper']
 
 
 class Command(BaseCommand):
@@ -34,16 +50,15 @@ class Command(BaseCommand):
                     TASK_NAME))
             return
 
-        if len(args) > 0:
-            dump_id = args[0]
-        else:
-            dump_id = None
-        file_paths = dump_models(dump_id=dump_id)
-        for path in file_paths:
-            print(path)
+        dump_id = today.isoformat()
 
-        # Using 0 as a task_result_id because this is currently not
-        # a celery task
+        dump_model_tasks = [dump_model.s(fqn, dump_id) for fqn in MODELS]
+        dump_model_tasks += [dump_trees_to_shapefile.s(dump_id),
+                             dump_blockface_to_shapefile.s(dump_id)]
+
+        dump_tasks = chord(dump_model_tasks, zip_dumps.s(dump_id))
+        dump_tasks.apply_async()
+
         TaskRun.objects.create(name=TASK_NAME,
                                date_started=today,
-                               task_result_id=0)
+                               task_result_id=dump_tasks.id)

@@ -6,3 +6,10 @@
         hour="5"
         minute="0"
         state=present
+- name: Create DB dumps at 1.30AM EST
+  cron: name="create-db-dumps"
+        user="nyc-trees"
+        job="cd /opt/app && envdir /etc/nyc-trees.d/env ./manage.py db_dump >> {{ app_cron_log }} 2>&1"
+        hour="5"
+        minute="30"
+        state=present
