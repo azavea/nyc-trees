@@ -24,18 +24,6 @@ def notify_group_mapping_approved(request, group, username):
                    reservations_url=reservations_url)
 
 
-def notify_rsvp(request, user, event):
-    relative_event_url = reverse('event_detail', kwargs={
-        'group_slug': event.group.slug,
-        'event_slug': event.slug
-    })
-    event_url = request.build_absolute_uri(relative_event_url)
-    return send_to(user,
-                   MessageType.RSVP,
-                   event=event,
-                   event_url=event_url)
-
-
 def send_reservation_reminder(user_id, **kwargs):
     user = get_object_or_404(User, id=user_id)
     reservations_url = urljoin(

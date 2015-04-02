@@ -3,6 +3,8 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
+from celery import chain
+
 from django.contrib.gis.geos import Point
 from django.core.urlresolvers import reverse
 from django.db import transaction
@@ -25,12 +27,11 @@ from apps.event.event_list import (EventList, immediate_events, all_events)
 from apps.event.helpers import (user_is_rsvped_for_event,
                                 user_is_checked_in_to_event)
 
-from apps.mail.views import notify_rsvp
+from apps.core.tasks import wait_for_default_storage_file
+from apps.mail.tasks import notify_rsvp
 
 from apps.survey.layer_context import get_context_for_territory_layer
 from libs.pdf_maps import create_event_map_pdf
-
-from libs.data import merge
 
 
 def add_event(request):
@@ -282,11 +283,17 @@ def event_map_poll(request, event_slug):
 def register_for_event(request, event_slug):
     user = request.user
     event = get_object_or_404(Event, group=request.group, slug=event_slug)
-    mail_context = {}
     if event.has_space_available and not user_is_rsvped_for_event(user, event):
         EventRegistration.objects.create(user=user, event=event)
-        mail_context = notify_rsvp(request, user, event)
-    return merge(event_detail(request, event_slug), mail_context)
+        relative_event_url = reverse('event_detail', kwargs={
+            'group_slug': event.group.slug,
+            'event_slug': event.slug
+        })
+        event_url = request.build_absolute_uri(relative_event_url)
+        chain(wait_for_default_storage_file.s(event.map_pdf_filename),
+              notify_rsvp.s(event_url, user.id, event.id))\
+            .apply_async()
+    return event_detail(request, event_slug)
 
 
 @transaction.atomic
