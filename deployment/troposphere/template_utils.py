@@ -12,18 +12,39 @@ EC2_AVAILABILITY_ZONES = [
     'd'
 ]
 EC2_INSTANCE_TYPES = [
+    # T2
     't2.micro',
+    't2.small',
     't2.medium',
+    # M3
     'm3.medium',
-    'm3.large'
+    'm3.large',
+    'm3.xlarge',
+    'm3.2xlarge',
 ]
 RDS_INSTANCE_TYPES = [
+    # T2
     'db.t2.micro',
-    'db.m3.large'
+    'db.t2.small',
+    'db.t2.medium',
+    # M3
+    'db.m3.medium',
+    'db.m3.large',
+    'db.m3.xlarge',
+    'db.m3.2xlarge',
 ]
 ELASTICACHE_INSTANCE_TYPES = [
+    # T2
+    'cache.t2.micro',
     'cache.t2.small',
-    'cache.m1.small'
+    'cache.t2.medium',
+    # M1
+    'cache.m1.small',
+    # M3
+    'cache.m3.medium',
+    'cache.m3.large',
+    'cache.m3.xlarge',
+    'cache.m3.2xlarge',
 ]
 
 S3_US_STANDARD_HOSTED_ZONE_ID = 'Z3AQBSTGFYJSTF'

@@ -222,6 +222,7 @@ case "$1" in
     AWS_TILE_SERVER_AMI=$(get_latest_internal_ami "nyc-trees-tiler" )
     AWS_PUBLIC_SUBNETS=$(echo "${AWS_VPC_STACK_OUTPUTS}" | grep "PublicSubnets" | cut -f2)
     AWS_PRIVATE_SUBNETS=$(echo "${AWS_VPC_STACK_OUTPUTS}" | grep "PrivateSubnets" | cut -f2)
+    AWS_TILE_INSTANCE_TYPE=${AWS_TILE_INSTANCE_TYPE:-t2.micro}
 
     # Determine stack color
     if echo "${AWS_STACKS}" | grep -q "NYCTreesBlueTileServers" &&
@@ -248,6 +249,7 @@ case "$1" in
     AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=GlobalNotificationsARN,ParameterValue=${AWS_SNS_TOPIC}"
     AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=VpcId,ParameterValue=${AWS_VPC_ID}"
     AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=TileServerAMI,ParameterValue=${AWS_TILE_SERVER_AMI}"
+    AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=TileServerInstanceType,ParameterValue=${AWS_TILE_INSTANCE_TYPE}"
     AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=PublicSubnets,ParameterValue='${AWS_PUBLIC_SUBNETS}'"
     AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=PrivateSubnets,ParameterValue='${AWS_PRIVATE_SUBNETS}'"
 
@@ -276,6 +278,7 @@ case "$1" in
     AWS_APP_SERVER_AMI=$(get_latest_internal_ami "nyc-trees-app" )
     AWS_PUBLIC_SUBNETS=$(echo "${AWS_VPC_STACK_OUTPUTS}" | grep "PublicSubnets" | cut -f2)
     AWS_PRIVATE_SUBNETS=$(echo "${AWS_VPC_STACK_OUTPUTS}" | grep "PrivateSubnets" | cut -f2)
+    AWS_APP_INSTANCE_TYPE=${AWS_APP_INSTANCE_TYPE:-t2.micro}
 
     # Determine stack color
     if echo "${AWS_STACKS}" | grep -q "NYCTreesBlueAppServers" &&
@@ -303,6 +306,7 @@ case "$1" in
     AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=AppSSLCertificateARN,ParameterValue=${AWS_SSL_CERTIFICATE}"
     AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=VpcId,ParameterValue=${AWS_VPC_ID}"
     AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=AppServerAMI,ParameterValue=${AWS_APP_SERVER_AMI}"
+    AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=AppServerInstanceType,ParameterValue=${AWS_APP_INSTANCE_TYPE}"
     AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=PublicSubnets,ParameterValue='${AWS_PUBLIC_SUBNETS}'"
     AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=PrivateSubnets,ParameterValue='${AWS_PRIVATE_SUBNETS}'"
 
