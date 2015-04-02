@@ -3,6 +3,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
+import csv
 import os
 import tempfile
 import json
@@ -208,7 +209,10 @@ def dump_model(fq_name, dump_id):
     _, temp_file_path = tempfile.mkstemp()
     Model = _model_from_fq_name(fq_name)
     with open(temp_file_path, 'w') as f:
-        write_csv(Model.objects.all(), f)
+        # We specify QUOTE_NONNUMERIC here but the current version of
+        # djqscsv coerces everything to a string. Overquoting is better
+        # than underquoting.
+        write_csv(Model.objects.all(), f, quoting=csv.QUOTE_NONNUMERIC)
 
     model_name = Model.__name__.lower()
     file_name = 'dump/{}/{}.csv'.format(dump_id, model_name)
