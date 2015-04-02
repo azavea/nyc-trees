@@ -30,8 +30,8 @@
         <div class="row">
             <main class="col-sm-12 main-dashboard">
                 {% flag full_access %}
-                    <section class="section-ticker section-home">
-                        <div class="home-container">
+                    <section class="section-ticker">
+                        <div class="home-container home-small">
                             <h4 class="section-heading">Total Trees Counted</h4>
                             {% include "home/partials/ticker.html" %}
                         </div>
@@ -39,7 +39,7 @@
 
                     {% if user.online_training_complete %}
                         {% if immediate_events.event_infos %}
-                            <section class="events section-home">
+                            <section class="events">
                                 <div class="home-container">
                                     <h4 class="section-heading">This week's events</h4>
                                     <div data-class="event-list-container">
@@ -51,7 +51,7 @@
                         {% include "users/partials/activity.html" %}
 
                     {% else %}
-                        <section class="trainings section-home">
+                        <section class="trainings">
                             <div class="home-container">
                                 {% include "home/partials/training.html" %}
                             </div>
