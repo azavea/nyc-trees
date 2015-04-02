@@ -92,7 +92,9 @@ gulp.task('version', buildTasks, function(cb) {
                 // Ignore source maps.
                 /\.(js|css)\.map$/,
                 // Ignore test bundle.
-                /test\.bundle\.js$/
+                /test\.bundle\.js$/,
+                // Ignore typography.com font bundle
+                /^\/font\/298264\//
             ]
         }))
         .pipe(gulp.dest(versionedDir, {mode: '0775'}))
