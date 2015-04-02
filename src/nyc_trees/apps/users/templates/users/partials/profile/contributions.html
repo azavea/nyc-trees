@@ -2,33 +2,31 @@
 
 {% block section_content %}
 
-<section class="your-contributions clearfix">
-    <div class="progress-circles">
-        <div class="col-xs-4 col-circle">
-            <div class="progress-circle color--primary">
-                <div class="progress-circle-content">
-                    <div class="progress-circle-number">{{ counts.tree }}</div>
-                    <div class="progress-circle-label">Trees</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xs-4 col-circle">
-            <div class="progress-circle color--quaternary">
-                <div class="progress-circle-content">
-                    <div class="progress-circle-number">{{ counts.block }}</div>
-                    <div class="progress-circle-label">Blocks</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xs-4 col-circle">
-            <div class="progress-circle color--secondary">
-                <div class="progress-circle-content">
-                    <div class="progress-circle-number">{{ counts.species }}</div>
-                    <div class="progress-circle-label">Species</div>
-                </div>
+<div class="progress-circles">
+    <div class="col-xs-4 col-circle">
+        <div class="progress-circle color--primary">
+            <div class="progress-circle-content">
+                <div class="progress-circle-number">{{ counts.tree }}</div>
+                <div class="progress-circle-label">Trees</div>
             </div>
         </div>
     </div>
-</section>
+    <div class="col-xs-4 col-circle">
+        <div class="progress-circle color--quaternary">
+            <div class="progress-circle-content">
+                <div class="progress-circle-number">{{ counts.block }}</div>
+                <div class="progress-circle-label">Blocks</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-4 col-circle">
+        <div class="progress-circle color--secondary">
+            <div class="progress-circle-content">
+                <div class="progress-circle-number">{{ counts.species }}</div>
+                <div class="progress-circle-label">Species</div>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock section_content %}

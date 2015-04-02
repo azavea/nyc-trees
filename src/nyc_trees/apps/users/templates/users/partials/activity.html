@@ -12,10 +12,12 @@
     {% endif %}
 
     {% if show_contributions %}
-    <section class="contributions">
-        {% with title=contributions_title section_id="contributions" public=user.contributions_are_public %}
-            {% include "users/partials/profile/contributions.html"%}
-        {% endwith %}
+    <section class="contributions clearfix">
+        <div class="home-small">
+            {% with title=contributions_title section_id="contributions" public=user.contributions_are_public %}
+                {% include "users/partials/profile/contributions.html"%}
+            {% endwith %}
+        </div>
     </section>
     {% endif %}
 

@@ -104,19 +104,17 @@ $hero-box-side-padding: 3rem;
   margin-top: -3rem;
 }
 
-.section-home {
-  margin: 1rem $grid-gutter-width/-2;
+.page-home, .page-dashboard {
+  section {
+    margin: 1rem $grid-gutter-width/-2;
+    padding: 1.5rem 1.5rem 1.5rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 .section-about-logo {
   margin: 0 3rem 1rem 0;
-}
-
-.home-container {
-  padding: 3% 1.5rem 7%;
-  max-width: 70rem;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .section-appeal-text {
@@ -170,6 +168,12 @@ $hero-box-side-padding: 3rem;
   font-size: $font-size-h5;
 }
 
+.home-small {
+  max-width: 60rem;
+  margin-right: auto;
+  margin-left: auto;
+}
+
 .section-appeal {
   margin-top: -1rem;
 }
@@ -178,11 +182,13 @@ $hero-box-side-padding: 3rem;
   .section-appeal {
     margin-top: auto;
   }
-  .section-home {
-    margin: 5rem auto 0;
-    margin-left: $grid-gutter-width/-2;
-    margin-right: $grid-gutter-width/-2;
-    padding-bottom: 5rem;
+  .page-home, .page-dashboard {
+    section {
+      margin: 5rem auto 0;
+      margin-left: $grid-gutter-width/-2;
+      margin-right: $grid-gutter-width/-2;
+      padding: 0 1.5rem 5rem;
+    }
   }
   .section-appeal-text {
     padding-top: 0;
@@ -213,8 +219,5 @@ $hero-box-side-padding: 3rem;
   }
   .progress-circle-label {
     font-size: $font-size-h5;
-  }
-  .home-container {
-    padding: 0 $grid-gutter-width/2;
   }
 }

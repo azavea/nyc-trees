@@ -17,7 +17,7 @@
 
 {% if reservations.hidden_count > 0 %}
 <a data-class="show-all-list-rows" data-row-data-class="reservation-row" href="javascript:;" class="reservation block item">
-   <div class="row"><div class="col-xs-12"><h5>+{{ reservations.hidden_count }} more reservation{{ reservations.hidden_count|pluralize }}</h5></div></div>
+   <div class="row"><div class="col-xs-12"><h5 class="color--secondary text--normal">+{{ reservations.hidden_count }} more reservation{{ reservations.hidden_count|pluralize }}</h5></div></div>
 </a>
 {% endif %}
 
