@@ -318,3 +318,27 @@ aside {
     font-size: 2.3rem;
   }
 }
+
+@media (min-width: $screen-sm) {
+  .two-frames {
+    aside {
+      background-color: #fff;
+      margin-right: 10px;
+    }
+    aside, main {
+      margin-top: 24px;
+    }
+  }
+  .tab-status-list {
+    .map-sidebar {
+      background-color: #fff !important;
+      margin-right: 10px;
+    }
+    .map-sidebar, main {
+      margin-top: 24px;
+    }
+    aside {
+      padding-top: 0;
+    }
+  }
+}
