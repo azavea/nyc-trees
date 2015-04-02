@@ -319,7 +319,13 @@ aside {
   }
 }
 
-@media (min-width: $screen-sm) {
+@media (max-width: $screen-md) and (min-width: $screen-sm) {
+  html {
+    font-size: 72.5%;
+  }
+}
+
+@media (min-width: $screen-md) {
   .two-frames {
     aside {
       background-color: #fff;
