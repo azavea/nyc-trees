@@ -46,6 +46,13 @@ class Command(BaseCommand):
             self._log(_ALREADY_SENT_MESSAGE)
             return
 
+        # the reservation reminder email runs at 1am EST and is scoped
+        # for three days. That means that the email that goes out on
+        # monday at 1am will notify for all reservations expiring
+        # Monday after 1am, all of Tuesday, and all of Wednesday, and
+        # thursday before 1am if they haven't been notified already.
+        # If something was expiring wednesday at 11pm, it would get another
+        # shot on tuesday at 1am, and another shot on wednesday at 1am.
         soon = now() + timedelta(days=settings.RESERVATION_REMINDER_WINDOW)
         expiring_soon = (BlockfaceReservation
                          .objects
