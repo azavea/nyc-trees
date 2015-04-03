@@ -198,9 +198,13 @@ class HomeTestCase(UsersTestCase):
             self._assertContains(
                 '<section class="section-about">', it_is)
 
-        def assert_contributions_visible(self, it_is):
+        def assert_progress_visible(self, it_is):
             self._assertContains(
                 '<div class="progress-circles', it_is)
+
+        def assert_achievements_visible(self, it_is):
+            self._assertContains(
+                '<section class="achievements"', it_is)
 
     def _render_homepage(self, user=None):
         if not user:
@@ -222,17 +226,17 @@ class HomeTestCase(UsersTestCase):
         response = self._render_homepage()
         response.assert_about_visible(True)
         response.assert_training_visible(False)
-        response.assert_contributions_visible(True)
+        response.assert_progress_visible(True)
 
     def test_untrained_user_content(self):
         response = self._render_homepage(self.user)
         response.assert_about_visible(False)
         response.assert_training_visible(True)
-        response.assert_contributions_visible(False)
+        response.assert_achievements_visible(False)
 
     def test_online_trained_user_content(self):
         self._complete_user_online_training()
         response = self._render_homepage(self.user)
         response.assert_about_visible(False)
         response.assert_training_visible(False)
-        response.assert_contributions_visible(True)
+        response.assert_achievements_visible(True)

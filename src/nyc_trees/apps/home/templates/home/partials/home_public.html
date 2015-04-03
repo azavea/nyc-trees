@@ -53,44 +53,18 @@
                 <section class="section-ticker text-center">
                     <div class="home-container">
                         <h2>Help us count our <span class="color--primary">street trees</span>!</h2>
-                        {% include "home/partials/ticker.html" with tree_count=counts.tree %}
+                        {% include "home/partials/ticker.html" with n=counts.tree %}
                     </div>
                 </section>
                 <section class="section-progress text-center">
                     <div class="home-container clearfix">
                         <div class="progress-circles">
-                            <div class="col-xs-4 col-sm-3 col-circle">
-                                <div class="progress-circle color--primary">
-                                    <div class="progress-circle-content">
-                                        <div class="progress-circle-number">{{ counts.block }}</div>
-                                        <div class="progress-circle-label">Blocks</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xs-4 col-sm-3 hidden-xs col-circle">
-                                <div class="progress-circle color--primary">
-                                    <div class="progress-circle-content">
-                                        <div class="progress-circle-number">{{ counts.block_percent }}</div>
-                                        <div class="progress-circle-label">Complete</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xs-4 col-sm-3 col-circle">
-                                <div class="progress-circle color--quaternary">
-                                    <div class="progress-circle-content">
-                                        <div class="progress-circle-number">{{ counts.user }}</div>
-                                        <div class="progress-circle-label">Users</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xs-4 col-sm-3 col-circle">
-                                <div class="progress-circle color--secondary">
-                                    <div class="progress-circle-content">
-                                        <div class="progress-circle-number">{{ counts.species }}</div>
-                                        <div class="progress-circle-label">Species</div>
-                                    </div>
-                                </div>
-                            </div>
+                            {% with xs3col=True %}
+                                {% include "home/partials/circle.html" with label="Blocks" n=counts.block color="primary" %}
+                                {% include "home/partials/circle.html" with label="Complete" n=counts.block_percent color="primary" hide_xs=True %}
+                                {% include "home/partials/circle.html" with label="Users" n=counts.user color="quaternary" %}
+                                {% include "home/partials/circle.html" with label="Species" n=counts.species color="secondary" %}
+                            {% endwith %}
                         </div>
                     </div>
                 </section>

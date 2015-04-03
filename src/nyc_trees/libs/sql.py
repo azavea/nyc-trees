@@ -46,13 +46,15 @@ def get_group_tree_count(group):
     return _get_count(sql, [group.pk])
 
 
-def get_total_tree_count():
+def get_total_tree_count(past_week=False):
     sql = _survey_sql + """
         SELECT COUNT(*)
         FROM survey_tree AS tree
         JOIN most_recent_survey
           ON tree.survey_id = most_recent_survey.id"""
-
+    if past_week:
+        sql += " WHERE most_recent_survey.created_at" \
+               " > now() at time zone 'utc' - INTERVAL '7 days'"
     return _get_count(sql)
 
 
@@ -81,3 +83,17 @@ def get_total_species_count():
         ) subquery"""
 
     return _get_count(sql)
+
+
+def get_block_count_past_week():
+    sql = _survey_sql + """
+        SELECT COUNT(*)
+        FROM survey_blockface AS block
+        JOIN most_recent_survey
+          ON block.id = most_recent_survey.blockface_id
+       WHERE most_recent_survey.created_at
+             > now() at time zone 'utc' - INTERVAL '7 days'"""
+
+    return _get_count(sql)
+
+
