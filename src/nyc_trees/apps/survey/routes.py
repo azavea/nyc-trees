@@ -3,6 +3,8 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
+from django.core.urlresolvers import reverse
+
 from django.contrib.auth.decorators import login_required
 
 from django_tinsel.decorators import route, render_template, json_api_call
@@ -76,6 +78,17 @@ reservations_map_pdf_poll = route(GET=do(login_required,
 # SURVEY ROUTES
 #####################################
 
+
+def _add_survey_url(request, *args, **kwargs):
+    return {'survey_url': reverse('survey')}
+
+
+def _add_event_url(request, event_slug, *args, **kwargs):
+    url = reverse('survey_from_event',
+                  kwargs={'group_slug': request.group.slug,
+                          'event_slug': event_slug})
+    return {'survey_url': url}
+
 survey_detail = individual_mapper_do(
     route(GET=do(render_template('survey/survey_detail.html'),
                  v.survey_detail)))
@@ -83,10 +96,20 @@ survey_detail = individual_mapper_do(
 confirm_survey = individual_mapper_do(
     route(GET=do(render_template('survey/survey_detail.html'),
                  update_with({'show_controls': True}),
+                 update_with(_add_survey_url),
                  v.survey_detail)))
+
+confirm_survey_from_event = do(
+    login_required,
+    group_request,
+    route(GET=do(render_template('survey/survey_detail.html'),
+                 update_with({'show_controls': True}),
+                 update_with(_add_event_url),
+                 v.survey_detail_from_event)))
 
 survey = individual_mapper_do(
     route(GET=do(render_template('survey/survey.html'),
+                 update_with(_add_survey_url),
                  v.start_survey),
           POST=do(json_api_call, v.submit_survey)))
 
@@ -94,6 +117,7 @@ survey_from_event = do(
     login_required,
     group_request,
     route(GET=do(render_template('survey/survey.html'),
+                 update_with(_add_event_url),
                  v.start_survey_from_event),
           POST=do(json_api_call, v.submit_survey_from_event)))
 

@@ -13,6 +13,7 @@ var $ = require('jquery'),
         blockfaceIdAttr: 'data-blockface-id',
         noMoreReservationsAttr: 'data-no-more-reservations',
         treesJSONAttr: 'data-trees-json',
+        surveyUrlAttr: 'data-survey-url',
         abandonIncomplete: '#survey-detail-abandon-incomplete',
         submitIncomplete: '#survey-detail-submit-incomplete',
         submitComplete: '#survey-detail-submit-complete'
@@ -22,6 +23,7 @@ var $ = require('jquery'),
     blockfaceId = $map.attr(dom.blockfaceIdAttr),
     surveyId = $map.attr(dom.surveyIdAttr),
     treesJSON = $map.attr(dom.treesJSONAttr),
+    surveyUrl = $map.attr(dom.surveyUrlAttr),
     noMoreReservations = $map.attr(dom.noMoreReservationsAttr) === 'True',
     mapAnotherPopupContext = {noMoreReservations: noMoreReservations},
     blockfaceMap = mapModule.create({
@@ -66,7 +68,7 @@ $.each($(JSON.parse(treesJSON)), function (__, tree) {
 
 $(dom.abandonIncomplete).on(
     'click', postThen('/survey/release_blockface/', function () {
-        window.location.href = '/survey/#' + blockfaceId;
+        window.location.href = surveyUrl + '#' + blockfaceId;
     }));
 
 $(dom.submitIncomplete).on('click', postThen('/survey/flag/', mapAnotherPopup.show));

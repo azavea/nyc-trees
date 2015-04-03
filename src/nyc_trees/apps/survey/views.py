@@ -416,6 +416,11 @@ def _get_map_another_popup_context(request):
     return {'noMoreReservations': not more_reservations_exist}
 
 
+def survey_detail_from_event(request, event_slug, survey_id):
+    _validate_event_and_group(request, event_slug)
+    return survey_detail(request, survey_id)
+
+
 def survey_detail(request, survey_id):
     survey = Survey.objects.get(id=survey_id)
     with connection.cursor() as cursor:

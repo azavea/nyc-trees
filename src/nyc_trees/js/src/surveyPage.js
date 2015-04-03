@@ -458,8 +458,12 @@ function submitSurveyWithTrees() {
             data: JSON.stringify(data)
         })
         .done(function(content) {
+            // make sure not to take the hashstring along for the ride
+            var href = window.location.origin +
+                    window.location.pathname +
+                    'confirm/' + content.survey_id + '/';
             hasUnsavedData = false;
-            window.location.href = '/survey/confirm/' + content.survey_id + '/';
+            window.location.href = href;
         })
         .fail(function(jqXHR, textStatus, errorThrown) {
             toastr.warning('Double-check your survey and try resubmitting it.', 'Something went wrong...');

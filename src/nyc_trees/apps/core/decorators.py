@@ -95,12 +95,15 @@ def user_must_be_individual_mapper(view_fn):
     return wrapper
 
 
-def update_with(d):
+def update_with(callable_or_dict):
     def outer(view_fn):
         @wraps(view_fn)
         def inner(request, *args, **kwargs):
             ctx = view_fn(request, *args, **kwargs)
-            ctx.update(d)
+            if callable(callable_or_dict):
+                ctx.update(callable_or_dict(request, *args, **kwargs))
+            else:
+                ctx.update(callable_or_dict)
             return ctx
         return inner
     return outer
