@@ -141,7 +141,8 @@ class EventList(object):
                 (_RECOMMENDED, lambda qs: (
                     qs
                     .exclude(EventList.Filters.get_rsvp_q(request.user))
-                    .filter(EventList.Filters.get_recommended_q(request.user)))),
+                    .filter(
+                        EventList.Filters.get_recommended_q(request.user)))),
             ]),
         }
         return filtersets.get(name, {})
