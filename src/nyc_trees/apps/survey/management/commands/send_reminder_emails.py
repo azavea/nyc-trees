@@ -6,6 +6,8 @@ from __future__ import division
 import operator
 import smtplib
 
+import time
+
 from datetime import timedelta
 
 from boto.ses.exceptions import SESError
@@ -22,8 +24,14 @@ from apps.survey.models import BlockfaceReservation
 from apps.mail.views import send_reservation_reminder
 
 _COMMAND_NAME = 'apps.survey.management.commands.send_reminder_emails'
-_ALREADY_SENT_MESSAGE = ('WARNING: Reservation emails sent already today. '
+_ALREADY_SENT_MESSAGE = ('WARNING: reservation emails sent already today. '
                          'Doing nothing!')
+
+_RESERVATIONS = 'reservations'
+_REMAINING_RETRIES = 'remaining_retries'
+_RETRY_COUNT = 4
+
+_DONE = -1
 
 
 class Command(BaseCommand):
@@ -60,25 +68,56 @@ class Command(BaseCommand):
                                  canceled_at__isnull=True,
                                  expires_at__lte=soon))
 
-        user_reservations = {}
-
-        for reservation in expiring_soon:
-            user_data = user_reservations.get(reservation.user_id, [])
-            user_data.append(reservation)
-            user_reservations[reservation.user_id] = user_data
-
-        if not user_reservations:
+        if not expiring_soon:
             self._log("no emails sent")
             return
 
-        for user_id, reservations in user_reservations.items():
-            try:
-                send_reservation_reminder(user_id, reservations=reservations)
-            except (smtplib.SMTPException, SESError):
-                continue
-            self._log("Email sent to user_id: '%s'" % user_id)
-            ids = map(operator.attrgetter('id'), reservations)
-            (BlockfaceReservation
-             .objects
-             .filter(id__in=ids)
-             .update(reminder_sent_at=now()))
+        users = {}
+        for reservation in expiring_soon:
+            user_data = users.get(reservation.user_id, {})
+            user_reservations = user_data.get(_RESERVATIONS, [])
+            user_reservations.append(reservation)
+            user_data[_RESERVATIONS] = user_reservations
+            user_data[_REMAINING_RETRIES] = _RETRY_COUNT
+            users[reservation.user_id] = user_data
+
+        remaining_retries = True
+        while remaining_retries:
+            remaining_retries = False
+            for user_id, user_data in users.items():
+                user_remaining_retries = user_data[_REMAINING_RETRIES]
+
+                if user_remaining_retries == 0:
+                    self._log("reached maximum retries for: %s ... SKIPPING"
+                              % user_id)
+                    continue
+                elif user_remaining_retries == _DONE:
+                    continue
+
+                # sleep to avoid hitting request-per-second limits in AWS
+                # given that we have plenty of time for this tasks to run
+                time.sleep(0.5)
+
+                reservations = user_data[_RESERVATIONS]
+                ids = map(operator.attrgetter('id'), reservations)
+
+                try:
+                    send_reservation_reminder(
+                        user_id, reservations=reservations)
+                except (smtplib.SMTPException, SESError):
+                    user_remaining_retries -= 1
+                    self._log("triggering a retry for: %s - %s remaining"
+                              % (user_id, user_remaining_retries))
+                    user_data[_REMAINING_RETRIES] = user_remaining_retries
+                    if user_remaining_retries > 0:
+                        remaining_retries = True
+                    continue
+
+                (BlockfaceReservation
+                 .objects
+                 .filter(id__in=ids)
+                 .update(reminder_sent_at=now()))
+                self._log("email sent to user_id: '%s'" % user_id)
+
+                user_remaining_retries = _DONE
+                user_data[_REMAINING_RETRIES] = user_remaining_retries
