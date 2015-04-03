@@ -237,6 +237,9 @@ class ReservationsQuerySet(models.QuerySet):
             .filter(expires_at__gt=now()) \
             .filter(blockface__is_available=True)
 
+    def remaining_for(self, user):
+        return self.filter(user=user).current().count()
+
 
 class BlockfaceReservation(NycModel, models.Model):
     user = models.ForeignKey(User)

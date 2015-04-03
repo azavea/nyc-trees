@@ -266,11 +266,14 @@ def _validate_event_and_group(request, event_slug):
 
 
 def start_survey(request):
+    reservations_for_user = (
+        BlockfaceReservation.objects.remaining_for(request.user))
     return {
         'layer': get_context_for_reservations_layer(request),
         'bounds': _user_reservation_bounds(request.user),
         'choices': _get_survey_choices(),
-        'teammates': teammates_for_individual_mapping(request.user)
+        'teammates': teammates_for_individual_mapping(request.user),
+        'no_more_reservations': reservations_for_user <= 1,
     }
 
 
@@ -324,7 +327,6 @@ def submit_survey(request):
         return create_result
     else:
         ctx.update(create_result)
-        ctx.update(_get_map_another_popup_context(request))
         return ctx
 
 
@@ -404,36 +406,33 @@ def flag_survey(request, survey_id):
     survey.is_flagged = True
     survey.clean_and_save()
     ctx = {'success': True}
-    ctx.update(_get_map_another_popup_context(request))
     return ctx
 
 
-def _get_map_another_popup_context(request):
-    more_reservations_exist = (request.user
-                               .blockfacereservation_set
-                               .current()
-                               .exists())
-    return {'noMoreReservations': not more_reservations_exist}
-
-
-def survey_detail_from_event(request, event_slug, survey_id):
-    _validate_event_and_group(request, event_slug)
-    return survey_detail(request, survey_id)
-
-
-def survey_detail(request, survey_id):
+def _survey_detail(request, survey_id):
     survey = Survey.objects.get(id=survey_id)
     with connection.cursor() as cursor:
         cursor.execute(_SURVEY_DETAIL_QUERY, [survey_id])
         trees = [tree[0] for tree in cursor]
-    ctx = {
+    return {
         'survey_id': survey_id,
         'blockface_id': survey.blockface_id,
         'trees': json.dumps(trees),
         'layer': get_context_for_reservations_layer(request),
         'bounds': _user_reservation_bounds(request.user),
     }
-    ctx.update(_get_map_another_popup_context(request))
+
+
+def survey_detail_from_event(request, event_slug, survey_id):
+    _validate_event_and_group(request, event_slug)
+    return _survey_detail(request, survey_id)
+
+
+def survey_detail(request, survey_id):
+    ctx = _survey_detail(request, survey_id)
+    reservations_for_user = (
+        BlockfaceReservation.objects.remaining_for(request.user))
+    ctx.update({'no_more_reservations': reservations_for_user == 0})
     return ctx
 
 

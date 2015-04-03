@@ -11,7 +11,6 @@ var $ = require('jquery'),
         mapSelector: '#map',
         surveyIdAttr: 'data-survey-id',
         blockfaceIdAttr: 'data-blockface-id',
-        noMoreReservationsAttr: 'data-no-more-reservations',
         treesJSONAttr: 'data-trees-json',
         surveyUrlAttr: 'data-survey-url',
         abandonIncomplete: '#survey-detail-abandon-incomplete',
@@ -24,8 +23,6 @@ var $ = require('jquery'),
     surveyId = $map.attr(dom.surveyIdAttr),
     treesJSON = $map.attr(dom.treesJSONAttr),
     surveyUrl = $map.attr(dom.surveyUrlAttr),
-    noMoreReservations = $map.attr(dom.noMoreReservationsAttr) === 'True',
-    mapAnotherPopupContext = {noMoreReservations: noMoreReservations},
     blockfaceMap = mapModule.create({
         legend: false,
         search: false,
@@ -73,6 +70,4 @@ $(dom.abandonIncomplete).on(
 
 $(dom.submitIncomplete).on('click', postThen('/survey/flag/', mapAnotherPopup.show));
 
-$(dom.submitComplete).on('click', function () {
-    mapAnotherPopup.show(mapAnotherPopupContext);
-});
+$(dom.submitComplete).on('click', mapAnotherPopup.show);

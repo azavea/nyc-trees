@@ -5,16 +5,18 @@ var $ = require('jquery');
 var dom = {
     mapAnotherPopup: '#map-another-popup',
     possibleContent: '[data-class="map-another-possible"]',
-    impossibleContent: '[data-class="map-another-impossible"]'
+    impossibleContent: '[data-class="map-another-impossible"]',
+    noMoreReservationsAttr: 'data-no-more-reservations'
 };
 
 module.exports = {
-    show: function(responseContent) {
-        var $el = $(dom.mapAnotherPopup);
+    show: function() {
+        var $el = $(dom.mapAnotherPopup),
+            noMoreReservations = $el.attr(dom.noMoreReservationsAttr) === 'True';
 
         $el.modal('show');
 
-        if (responseContent.noMoreReservations) {
+        if (noMoreReservations) {
             $el.find(dom.possibleContent).addClass('hidden');
             $el.find(dom.impossibleContent).removeClass('hidden');
         } else {

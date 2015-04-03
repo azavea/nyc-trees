@@ -481,7 +481,7 @@ function dismissAndPrompt(modalId) {
     return function(content) {
         $(modalId).modal('hide');
         hasUnsavedData = false;
-        mapAnotherPopup.show(content);
+        mapAnotherPopup.show();
     };
 }
 
