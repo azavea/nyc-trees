@@ -1,6 +1,7 @@
 {
   "variables": {
     "version": "{{env `GIT_COMMIT`}}",
+    "postgresql_password": "{{env `NYC_TREES_DB_PASSWORD`}}",
     "aws_region": "us-east-1",
     "aws_instance_type": "m3.large",
     "aws_ssh_username": "ubuntu",
@@ -90,7 +91,7 @@
       "playbook_dir": "ansible",
       "inventory_file": "ansible/inventory/packer-tile-server",
       "extra_arguments": [
-        "--extra-vars 'tiler_deploy_branch={{user `version`}}'"
+        "--extra-vars 'tiler_deploy_branch={{user `version`}} postgresql_password={{user `postgresql_password`}}'"
       ],
       "only": [
         "nyc-trees-tiler"
@@ -102,7 +103,7 @@
       "playbook_dir": "ansible",
       "inventory_file": "ansible/inventory/packer-app-server",
       "extra_arguments": [
-        "--extra-vars 'app_deploy_branch={{user `version`}}'"
+        "--extra-vars 'app_deploy_branch={{user `version`}} postgresql_password={{user `postgresql_password`}}'"
       ],
       "only": [
         "nyc-trees-app"
