@@ -50,7 +50,7 @@ urlpatterns = patterns(
         name='blockface_reservations_confirmation_page'),
 
     # Note: this must be kept in sync with the hardcoded url in
-    # js/src/reservationPage.js
+    # js/src/mapUtil.js
     url(r'^(?P<blockface_id>\d+)/$', blockface,
         name='blockface'),
 
