@@ -258,6 +258,13 @@ def blockface(request, blockface_id):
     }
 
 
+def _validate_event_and_group(request, event_slug):
+    event = get_object_or_404(Event, group=request.group, slug=event_slug)
+    if not user_is_checked_in_to_event(request.user, event):
+        return HttpResponseForbidden('User not checked-in to this event')
+    return event
+
+
 def start_survey(request):
     return {
         'layer': get_context_for_reservations_layer(request),
@@ -269,11 +276,9 @@ def start_survey(request):
 
 def start_survey_from_event(request, event_slug):
     group = request.group
-    event = get_object_or_404(Event, group=group, slug=event_slug)
+    event = _validate_event_and_group(request, event_slug)
     if not event.in_progress():
         return HttpResponseForbidden('Event not currently in-progress')
-    if not user_is_checked_in_to_event(request.user, event):
-        return HttpResponseForbidden('User not checked-in to this event')
 
     return {
         'layer': get_context_for_territory_survey_layer(request, group.id),
@@ -324,10 +329,7 @@ def submit_survey(request):
 
 
 def submit_survey_from_event(request, event_slug):
-    event = get_object_or_404(Event, group=request.group, slug=event_slug)
-    if not user_is_checked_in_to_event(request.user, event):
-        return HttpResponseForbidden('User not checked-in to this event')
-
+    event = _validate_event_and_group(request, event_slug)
     return _create_survey_and_trees(request, event)
 
 
