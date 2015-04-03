@@ -30,12 +30,6 @@ progress_page_blockface_popup = route(
 # RESERVATION ROUTES
 #####################################
 
-reservations = route(
-    GET=do(
-        login_required,
-        render_template('survey/reservations.html'),
-        v.reservations_page))
-
 printable_reservations_map = route(
     GET=do(
         login_required,
@@ -46,16 +40,6 @@ reserve_blockface_page = route(
     GET=individual_mapper_do(
         render_template('survey/reserve_blockface.html'),
         v.reserve_blockfaces_page))
-
-reserved_blockface_popup = route(
-    GET=individual_mapper_do(
-        render_template('survey/partials/reserved_blockface_popup.html'),
-        v.reserved_blockface_popup))
-
-cancel_reservation = route(
-    GET=individual_mapper_do(
-        json_api_call,
-        v.cancel_reservation))
 
 reserve_blockfaces = individual_mapper_do(
     render_template('survey/blockface_cart.html'),

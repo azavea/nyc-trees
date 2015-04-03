@@ -116,14 +116,6 @@ def progress_page_blockface_popup(request, blockface_id):
     }
 
 
-def cancel_reservation(request, blockface_id):
-    update_time = now()
-    _query_reservation(request.user, blockface_id) \
-        .update(canceled_at=update_time, updated_at=update_time)
-
-    return get_context_for_reservations_layer(request)
-
-
 def _query_reservation(user, blockface_id):
     return BlockfaceReservation.objects \
         .filter(blockface_id=blockface_id, user=user) \
@@ -133,17 +125,6 @@ def _query_reservation(user, blockface_id):
 def blockface_cart_page(request):
     return {
         'blockface_ids': request.POST['ids']
-    }
-
-
-def reservations_page(request):
-    return {
-        'legend_entries': [
-            {'css_class': 'reserved', 'label': 'Reserved by you'},
-            {'css_class': 'unavailable', 'label': 'Not reserved by you'},
-        ],
-        'layer': get_context_for_reservations_layer(request),
-        'bounds': _user_reservation_bounds(request.user)
     }
 
 
@@ -207,15 +188,6 @@ def reserve_blockfaces_page(request):
             {'css_class': 'in-cart', 'label': 'In your cart'},
         ],
         'help_shown': _was_help_shown(request, 'reservations_page_help_shown')
-    }
-
-
-def reserved_blockface_popup(request, blockface_id):
-    blockface = get_object_or_404(Blockface, id=blockface_id)
-    reservation = _query_reservation(request.user, blockface_id)[0]
-    return {
-        'blockface': blockface,
-        'reservation': reservation
     }
 
 

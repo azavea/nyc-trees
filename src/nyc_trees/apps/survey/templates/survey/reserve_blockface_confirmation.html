@@ -20,7 +20,7 @@
       but we could only reserve {{ blockfaces_reserved }} block{{ blockfaces_reserved|pluralize }} for you.
     </p>
 
-    <p>Check the <a href="{% url 'reserve_blockface_page' %}">Reservations Page</a> to see which block edges you have reserved.</p>
+    <p>Check the <a href="{% url 'reservations' %}">Reservations Page</a> to see which block edges you have reserved.</p>
     {% endif %}
     {% if blockfaces_cancelled %}
     <p>
@@ -34,7 +34,3 @@
     <a class="btn btn-primary" href="{% url 'survey' %}">Start Mapping</a>
 
 {% endblock main %}
-
-{% block page_js %}
-    <script type="text/javascript" src="{{ "js/reservationConfirmationPage.js"|static_url }}"></script>
-{% endblock page_js %}
