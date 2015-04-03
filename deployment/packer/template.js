@@ -1,6 +1,7 @@
 {
   "variables": {
     "version": "{{env `GIT_COMMIT`}}",
+    "branch": "{{env `GIT_BRANCH`}}",
     "postgresql_password": "{{env `NYC_TREES_DB_PASSWORD`}}",
     "aws_region": "us-east-1",
     "aws_instance_type": "m3.large",
@@ -22,6 +23,7 @@
       "tags": {
         "Name": "nyc-trees-monitoring",
         "Version": "{{user `version`}}",
+        "Branch": "{{user `branch`}}",
         "Created": "{{ isotime }}",
         "Service": "Monitoring",
         "Environment": "Staging"
@@ -41,6 +43,7 @@
       "tags": {
         "Name": "nyc-trees-tiler",
         "Version": "{{user `version`}}",
+        "Branch": "{{user `branch`}}",
         "Created": "{{ isotime }}",
         "Service": "Tiler",
         "Environment": "Staging"
@@ -60,6 +63,7 @@
       "tags": {
         "Name": "nyc-trees-app",
         "Version": "{{user `version`}}",
+        "Branch": "{{user `branch`}}",
         "Created": "{{ isotime }}",
         "Service": "Application",
         "Environment": "Staging"
