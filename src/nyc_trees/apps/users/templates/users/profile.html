@@ -76,3 +76,7 @@
 {% block page_js %}
     <script type="text/javascript" src="{{ "js/userProfile.js"|static_url }}"></script>
 {% endblock page_js %}
+
+{% block extra_content %}
+{% include 'home/partials/species_modal.html' with species_by_name=counts.species_by_name %}
+{% endblock %}

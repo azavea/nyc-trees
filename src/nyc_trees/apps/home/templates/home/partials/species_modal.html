@@ -1,0 +1,23 @@
+<div class="modal fade" id="species-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Species</h4>
+      </div>
+      <div class="modal-body">
+        {% if species_by_name %}
+          <ul class="list-unstyled">
+          {% for common_name, count in species_by_name %}
+            <li><strong class="color--primary">{{ count }}</strong> {{ common_name }}</li>
+          {% endfor %}
+        {% else %}
+          <p>No trees have been surveyed yet.</p>
+        {% endif %}
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>

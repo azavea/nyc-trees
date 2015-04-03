@@ -123,11 +123,17 @@ $hero-box-side-padding: 3rem;
 }
 
 .progress-circle {
+  display: block;
+  cursor: pointer;
   border: 4px solid;
   border-radius: 50%;
   height: 0;
   padding-bottom: 92%;
   width: 100%;
+
+  &:hover .progress-circle-label {
+      text-decoration: underline;
+  }
 }
 
 .progress-circle-container {
