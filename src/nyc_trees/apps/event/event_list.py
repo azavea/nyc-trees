@@ -6,6 +6,7 @@ from __future__ import division
 from collections import OrderedDict
 
 from urllib import urlencode
+from django.db.models import Q
 from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
 
@@ -16,16 +17,93 @@ from apps.users.models import Follow
 from apps.event.models import Event, EventRegistration
 
 
-_ALL, _MAPPING, _TRAINING = 'all', 'mapping', 'training'
-_CURRENT, _PAST = 'current', 'past'
+class Filter(object):
+    def __init__(self, name,
+                 empty_template=None,
+                 empty_template_url=None,
+                 should_show=None):
+
+        # name is used as a string key that gets compared to
+        # data sent in via the querystring
+        self.name = name
+
+        # a text string to show the user when there are no values
+        # for this filter. Must take 0 or 1 '%s' arguments.
+        self.empty_template = empty_template or 'No Events'
+
+        # if `empty_template_url` is not None, then empty_template
+        # should take one '%s' argument, which will be the redirect
+        # url.
+        self.empty_template_url = empty_template_url
+
+        # pass in predicate function to enable conditional visibility
+        # of this filter
+        self.should_show = should_show or (lambda request: True)
+
+    def get_empty_markup(self):
+        if self.empty_template_url:
+            return self.empty_template % reverse(self.empty_template_url)
+        else:
+            return self.empty_template
+
+_ALL = Filter('all')
+_MAPPING = Filter('mapping')
+_TRAINING = Filter('training')
+_CURRENT = Filter('current')
+_PAST = Filter('past')
+_RECOMMENDED = Filter('recommended',
+                      ('None of the groups you follow have scheduled events. '
+                       'You can <a href="%s">find groups to follow here</a>.'),
+                      'group_list_page')
+_ATTENDING = Filter('attending',
+                    ('You are not registered to attend any events. '
+                     'You can <a href="%s">find events here</a>.'),
+                    'events_list_page')
+_RECOMMENDED = Filter(
+    'recommended',
+    ('None of the groups you follow have scheduled events. '
+     'You can <a href="%s">find groups to follow here</a>.'),
+    'group_list_page')
 
 
 class _Filters(object):
-    ALL = _ALL
-    MAPPING = _MAPPING
-    TRAINING = _TRAINING
-    CURRENT = _CURRENT
-    PAST = _PAST
+    ALL = _ALL.name
+    MAPPING = _MAPPING.name
+    TRAINING = _TRAINING.name
+    CURRENT = _CURRENT.name
+    PAST = _PAST.name
+    ATTENDING = _ATTENDING.name
+    RECOMMENDED = _RECOMMENDED.name
+
+    def __getitem__(self, name):
+        for f in [_ALL, _MAPPING, _TRAINING, _CURRENT,
+                  _PAST, _ATTENDING, _RECOMMENDED]:
+            if f.name == name:
+                return f
+        else:
+            return None
+
+    @staticmethod
+    def get_rsvp_q(user):
+        event_registrations = (EventRegistration
+                               .objects
+                               .filter(user_id=user.pk)
+                               .values_list('event_id', flat=True))
+        return Q(pk__in=event_registrations)
+
+    @staticmethod
+    def get_recommended_q(user):
+        group_follows = (Follow
+                         .objects
+                         .filter(user_id=user.pk)
+                         .values_list('group_id', flat=True))
+
+        predicate = Q(group__in=group_follows)
+
+        if not getattr(user, 'field_training_complete', False):
+            predicate &= Q(includes_training=True)
+
+        return predicate
 
 
 class EventList(object):
@@ -36,10 +114,11 @@ class EventList(object):
     """
     trainingFilters = 'training_filter'
     chronoFilters = 'chrono_filters'
-    Filters = _Filters
+    userFilters = 'user_filters'
+    Filters = _Filters()
 
     @staticmethod
-    def get_filterset(name):
+    def get_filterset(name, request):
         right_now = now()
         filtersets = {
             EventList.trainingFilters: OrderedDict([
@@ -54,6 +133,15 @@ class EventList(object):
                 (_PAST, lambda qs: (qs
                                     .filter(ends_at__lt=right_now)
                                     .order_by('-begins_at'))),
+            ]),
+            EventList.userFilters: OrderedDict([
+                (_ATTENDING, lambda qs: (
+                    qs
+                    .filter(EventList.Filters.get_rsvp_q(request.user)))),
+                (_RECOMMENDED, lambda qs: (
+                    qs
+                    .exclude(EventList.Filters.get_rsvp_q(request.user))
+                    .filter(EventList.Filters.get_recommended_q(request.user)))),
             ]),
         }
         return filtersets.get(name, {})
@@ -140,11 +228,6 @@ class EventList(object):
         """
         return self.qs_builder(*args, **kwargs)
 
-    def _get_active_filter_fn(self):
-        return (self
-                .get_filterset(self.filterset_name)
-                .get(self.active_filter))
-
     #########################################
     # methods for exposing url endpoints
     #########################################
@@ -186,7 +269,11 @@ class EventList(object):
 
         event_list = self.configure(**request.GET.dict())
 
-        filter_fn = event_list._get_active_filter_fn()
+        filterset = event_list.get_filterset(
+            event_list.filterset_name, request)
+
+        filter_fn = filterset.get(self.Filters[event_list.active_filter])
+
         if filter_fn:
             qs = filter_fn(qs)
 
@@ -199,13 +286,14 @@ class EventList(object):
             load_more_url = event_list._control_url(
                 show_all=True, *args, **kwargs)
 
-        filterset = event_list.get_filterset(event_list.filterset_name)
-        filters = ([{'name': k,
-                     'active': k == event_list.active_filter,
+        filters = ([{'name': k.name,
+                     'active': k.name == event_list.active_filter,
+                     'no_result_markup': k.get_empty_markup(),
                      'url': (event_list
-                             .configure(active_filter=k)
+                             .configure(active_filter=k.name)
                              ._control_url(show_all=False, *args, **kwargs))}
-                    for k in filterset])
+                    for k in filterset.keys()
+                    if k.should_show(request)])
 
         context = {
             'filters': filters,

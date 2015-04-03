@@ -38,16 +38,14 @@
                     </section>
 
                     {% if user.online_training_complete %}
-                        {% if immediate_events.event_infos %}
-                            <section class="events">
-                                <div class="home-container">
-                                    <h4 class="section-heading">This week's events</h4>
-                                    <div data-class="event-list-container">
-                                        {% include "event/partials/event_list.html" with event_list=immediate_events %}
-                                    </div>
+                        <section class="events">
+                            <div class="home-container">
+                                <h4 class="section-heading">Events</h4>
+                                <div data-class="event-list-container">
+                                    {% include "event/partials/event_list.html" with event_list=all_events %}
                                 </div>
-                            </section>
-                        {% endif %}
+                            </div>
+                        </section>
                         {% include "users/partials/activity.html" %}
 
                     {% else %}
