@@ -279,7 +279,9 @@ def start_survey_from_event(request, event_slug):
         'layer': get_context_for_territory_survey_layer(request, group.id),
         'location': [event.location.y, event.location.x],
         'choices': _get_survey_choices(),
-        'teammates': teammates_for_event(group, event, request.user)
+        'teammates': teammates_for_event(group, event, request.user),
+        'group_slug': group.slug,
+        'event_slug': event.slug,
     }
 
 
@@ -427,6 +429,13 @@ def survey_detail(request, survey_id):
         'bounds': _user_reservation_bounds(request.user),
     }
     ctx.update(_get_map_another_popup_context(request))
+
+    # if this survey came from an event, the necessary data is passed
+    # along to customize the url in the 'map another' popup
+    if 'event_slug' in request.GET and 'group_slug' in request.GET:
+        ctx.update({'event_slug': request.GET['event_slug'],
+                    'group_slug': request.GET['group_slug']})
+
     return ctx
 
 
