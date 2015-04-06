@@ -127,6 +127,9 @@
 }
 
 @media (min-width: $screen-sm) {
+  .map-sidebar .modal-dialog {
+    width: auto;
+  }
   .location-search-container {
     top: 1rem;
     left: 35rem;
