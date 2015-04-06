@@ -57,7 +57,8 @@ blockfaceMap.addLayer(drawLayer);
 
 mapUtil.fetchBlockface(blockfaceId).done(function(blockface) {
     blockfaceMap.fitBounds(blockface.bounds);
-    drawLayer.addData(JSON.parse(blockface.geojson));
+    drawLayer.addData(JSON.parse(blockface.geojson)).bringToBack();
+    drawLayer.setStyle(mapUtil.styledStreetConfirmation);
 });
 
 $.each($(JSON.parse(treesJSON)), function (__, tree) {
