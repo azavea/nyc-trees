@@ -12,7 +12,8 @@ module.exports = {
     SATELLITE: SATELLITE,
     create: create,
     addTileLayer: addTileLayer,
-    addGridLayer: addGridLayer
+    addGridLayer: addGridLayer,
+    fitBounds: fitBounds
 };
 
 function create(options) {

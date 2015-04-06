@@ -19,7 +19,6 @@ from django.shortcuts import get_object_or_404
 from django.utils.timezone import now
 
 from apps.core.models import Group
-from apps.core.views import map_legend
 from apps.core.helpers import user_is_group_admin
 
 from apps.event.models import Event
@@ -53,8 +52,25 @@ with open(_SURVEY_DETAIL_QUERY_FILE, 'r') as f:
 
 
 def progress_page(request):
-    context = map_legend(request)
-    context['layer'] = get_context_for_progress_layer(request)
+    context = {
+        'legend_entries': [
+            {'mode': 'all', 'css_class': 'mapped', 'label': 'Mapped'},
+            {'mode': 'all', 'css_class': 'not-mapped', 'label': 'Not mapped'},
+            {'mode': 'my', 'css_class': 'mapped', 'label': 'Mapped by you'},
+            {'mode': 'my', 'css_class': 'not-mapped',
+             'label': 'Not mapped by you'},
+        ],
+        'layer_all': get_context_for_progress_layer(request, 'progress_all'),
+        'layer_my': get_context_for_progress_layer(request, 'progress_my'),
+    }
+    if request.user.is_authenticated():
+        blocks = (request.user.survey_set
+                  .distinct('blockface')
+                  .values_list('blockface_id', flat=True))
+        if len(blocks) > 0:
+            blockfaces = Blockface.objects.filter(id__in=blocks).collect()
+            context['bounds'] = list(blockfaces.extent)
+
     return context
 
 

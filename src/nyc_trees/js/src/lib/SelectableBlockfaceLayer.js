@@ -85,7 +85,7 @@ function getStyle(map) {
     };
 }
 
-// Note: this must be kept in sync with src/tiler/style/progress.mss
+// Note: this must be kept in sync with src/tiler/style/*.mss
 // Line widths are purposefully 2 pixels wider than the tiler styling
 function getLineWidth(zoom) {
     if (zoom >= 19) {

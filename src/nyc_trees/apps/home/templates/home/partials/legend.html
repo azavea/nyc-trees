@@ -17,7 +17,7 @@
                 </div>
                 <h5>Legend</h5>
                 {% for entry in legend_entries %}
-                    <div>
+                    <div class="entry" data-mode="{{ entry.mode }}">
                         <div class="swatch {{ entry.css_class }}"></div>
                         {{ entry.label }}
                     </div>

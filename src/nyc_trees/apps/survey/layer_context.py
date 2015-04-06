@@ -13,11 +13,11 @@ from models import (Group, Blockface, Survey, Territory, BlockfaceReservation)
 from apps.users.models import TrustedMapper
 
 
-def get_context_for_progress_layer(request):
+def get_context_for_progress_layer(request, layer_name):
     models = [Blockface, Survey, Territory, BlockfaceReservation]
     if request.user.is_authenticated():
         models.append(TrustedMapper)
-    return _get_context_for_layer("progress", models, request)
+    return _get_context_for_layer(layer_name, models, request)
 
 
 def get_context_for_reservable_layer(request):
