@@ -22,6 +22,12 @@
 
     <p>Check the <a href="{% url 'reserve_blockface_page' %}">Reservations Page</a> to see which block edges you have reserved.</p>
     {% endif %}
+    {% if blockfaces_cancelled %}
+    <p>
+      Per your request, {{ blockfaces_cancelled }} of your block edge
+      reservation{{ blockfaces_cancelled|pluralize }} were cancelled.
+    </p>
+    {% endif %}
 
     <p>These blocks will be reserved for you until <b>{{ expiration_date|date }}</b>.</p>
 

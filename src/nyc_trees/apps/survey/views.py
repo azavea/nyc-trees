@@ -243,8 +243,10 @@ def confirm_blockface_reservations(request):
         .current() \
         .values_list('blockface_id', flat=True)
 
-    expiration_date = now() + settings.RESERVATION_TIME_PERIOD
-    reservations = []
+    right_now = now()
+    expiration_date = right_now + settings.RESERVATION_TIME_PERIOD
+
+    new_reservations = []
 
     for blockface in blockfaces:
         territory = _get_territory(blockface)
@@ -254,14 +256,18 @@ def confirm_blockface_reservations(request):
              (territory is None or
               territory.group_id in user_trusted_group_ids or
               territory.group_id in user_admin_group_ids))):
-            reservations.append(BlockfaceReservation(
+            new_reservations.append(BlockfaceReservation(
                 blockface=blockface,
                 user=request.user,
                 is_mapping_with_paper=is_mapping_with_paper,
                 expires_at=expiration_date
             ))
 
-    BlockfaceReservation.objects.bulk_create(reservations)
+    cancelled_reservations = _get_reservations_to_cancel(ids, request.user)
+
+    cancelled_reservations.update(canceled_at=right_now, updated_at=right_now)
+
+    BlockfaceReservation.objects.bulk_create(new_reservations)
 
     filename = "reservations_map/%s_%s.pdf" % (
         request.user.username, shortuuid.uuid())
@@ -282,9 +288,11 @@ def confirm_blockface_reservations(request):
               notify_reservation_confirmed.s(request.user.id, blockface_ids))\
             .apply_async()
 
+    num_reserved = len(new_reservations) + len(already_reserved_blockface_ids)
     return {
         'blockfaces_requested': len(ids),
-        'blockfaces_reserved': len(reservations),
+        'blockfaces_reserved': num_reserved,
+        'blockfaces_cancelled': len(cancelled_reservations),
         'expiration_date': expiration_date
     }
 
@@ -294,6 +302,14 @@ def _get_territory(blockface):
         return blockface.territory
     except Territory.DoesNotExist:
         return None
+
+
+def _get_reservations_to_cancel(ids, user):
+    # Whatever blockface IDs were not submitted, should be cancelled
+    return BlockfaceReservation.objects \
+        .filter(user=user) \
+        .exclude(blockface__id__in=ids) \
+        .current()
 
 
 def blockface(request, blockface_id):
