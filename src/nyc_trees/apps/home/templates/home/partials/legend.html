@@ -6,14 +6,22 @@
                     <span aria-hidden="true"><i class="icon-cancel"></i></span>
                 </button>
                 <span>
-                    <h5>Legend</h5>
-                    {% for entry in legend_entries %}
-                        <div>
-                            <div class="swatch {{ entry.css_class }}"></div>
-                            {{ entry.label }}
-                        </div>
-                    {% endfor %}
+                    <h2 class="visible-xs">
+                    {% block legend_title %}
+                    {% endblock %}
+                    </h2>
                 </span>
+                <div>
+                {% block legend_text %}
+                {% endblock %}
+                </div>
+                <h5>Legend</h5>
+                {% for entry in legend_entries %}
+                    <div>
+                        <div class="swatch {{ entry.css_class }}"></div>
+                        {{ entry.label }}
+                    </div>
+                {% endfor %}
             </div>
         </div>
     </div>
