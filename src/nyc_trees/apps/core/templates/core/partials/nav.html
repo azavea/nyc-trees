@@ -3,7 +3,6 @@
 <nav class="nav-side">
     {% if user.is_authenticated %}
     <div class="nav-side-user clearfix">
-        <div class="nav-side-achievement"></div>
         <span>
             <h2><a href="{% url 'user_detail_redirect' %}" class="nav-side-user-name">{{ user.username }}</a></h2>
             <div class="nav-side-options">
