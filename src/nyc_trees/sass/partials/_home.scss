@@ -35,6 +35,12 @@ $hero-box-side-padding: 3rem;
   top: 0;
   height: 100%;
   width: 100%;
+
+  @media (max-width: $screen-sm) {
+    h1 {
+      text-align: center;
+    }
+  }
 }
 
 .hero-background {
