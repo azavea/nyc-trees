@@ -459,6 +459,8 @@ function submitSurveyWithTrees() {
         })
         .done(function(content) {
             // make sure not to take the hashstring along for the ride
+            // Note: this URL needs to be kept in sync with
+            // src/nyc_trees/apps/survey/urls/survey.py
             var href = window.location.origin +
                     window.location.pathname +
                     'confirm/' + content.survey_id + '/';
