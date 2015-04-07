@@ -23,7 +23,8 @@ var Windshaft = require('windshaft'),
     interactivity = {
         territory_survey: 'id,survey_type,restriction,geojson',
         territory_admin: 'id,survey_type,turf_group_id,geojson',
-        progress: 'id,group_id,survey_type,geojson',
+        progress_all: 'id,group_id,survey_type,geojson',
+        progress_my: 'id,group_id,survey_type,geojson',
         reservable: 'id,group_id,group_slug,survey_type,restriction,geojson',
         reservations: 'id,geojson'
     },
@@ -97,9 +98,12 @@ function req2interactivity(req) {
 }
 
 function req2style(req) {
-    return styles.progress();
-    // At the time this was written we have a single stylesheet
-    // for all requests
+    var type =  req.params.type;
+    if (type === 'progress_all' || type === 'progress_my') {
+        return styles.progress({type: type});
+    } else {
+        return styles.default();
+    }
 }
 
 function req2sql(req) {
@@ -120,8 +124,10 @@ function req2sql(req) {
      File: group_bar.sql
      */
     var q = req.query,
+        t =  req.params.type,
+        type = (t === 'progress_all' || t === 'progress_my' ? 'progress' : t),
         queryPrefix = q.group ? 'group_' : q.user ? 'user_' : '',
-        queryName = queryPrefix + req.params.type,
+        queryName = queryPrefix + type,
         context = req2context(req),
         additionalErr = '';
     if (queries[queryName]) {

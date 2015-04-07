@@ -9,21 +9,45 @@
 
     <div class="map-sidebar">
         <div class="map-sidebar-context block">
-            <h2>Progress</h2>
+            <h2>Progress
+                <div class="dropdown pull-right">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        All Users
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                        <li class="text-right" role="presentation">
+                            <a role="menuitem" href="#all"
+                               data-tile-url="{{ layer_all.tile_url }}"
+                               data-grid-url="{{ layer_all.grid_url }}"
+                            >All Users</a>
+                        </li>
+                        {% if request.user.is_authenticated %}
+                        <li class="text-right" role="presentation">
+                            <a role="menuitem" href="#my"
+                               data-tile-url="{{ layer_my.tile_url }}"
+                               data-grid-url="{{ layer_my.grid_url }}"
+                               {% if bounds %}data-bounds="{{ bounds }}"{% endif %}
+                            >My Progress</a>
+                        </li>
+                        {% endif %}
+                        <li class="text-right" role="presentation">
+                            <a role="menuitem" href="#groups">Groups</a>
+                        </li>
+                    </ul>
+                </div>
+            </h2>
             {% include 'survey/partials/progress_legend.html' %}
         </div>
         <div class="action-bar" id="action-bar"></div>
     </div>
 
-  {% include 'home/partials/location_search.html' %}
+    {% include 'home/partials/location_search.html' %}
 
 {% endblock aside %}
 
 {% block main %}
 
-<div id="map" class="map-event"
-     data-tile-url="{{ layer.tile_url }}"
-     data-grid-url="{{ layer.grid_url }}"></div>
+<div id="map" class="map-event"></div>
 
 {% endblock main %}
 

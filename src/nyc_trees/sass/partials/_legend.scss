@@ -1,11 +1,15 @@
 #legend {
+  .entry {
+    line-height: normal;
+    padding: .25em 0;
+  }
   .swatch {
     float: left;
     width: 1em;
     height: 1em;
-    margin-right: 1em;
+    margin-right: .5em;
   }
-  // If you change these colors, also change src/tiler/style/progress.mss
+  // If you change these colors, also change src/tiler/style/default.mss
   .surveyed-by-me {
     background-color: #228F73;
   }
@@ -20,5 +24,12 @@
   }
   .unavailable{
     background-color: #36494E;
+  }
+  // If you change these colors, also change src/tiler/style/progress.mss
+  .mapped {
+    background-color: #228F73;
+  }
+  .not-mapped {
+    background-color: #E55934;
   }
 }
