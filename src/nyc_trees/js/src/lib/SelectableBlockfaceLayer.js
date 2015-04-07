@@ -48,15 +48,15 @@ module.exports = BlockfaceLayer.extend({
 
         grid.on('click', function(e) {
             if (self.clicksEnabled) {
-                self.addBlockface(e.data);
+                self.addBlockface(e.data, e.latlng);
             }
         });
     },
 
-    addBlockface: function(data) {
+    addBlockface: function(data, latlng) {
         if (data && data.geojson) {
             var geom = mapUtil.parseGeoJSON(data.geojson);
-            if (this.options.onAdd(data, geom)) {
+            if (this.options.onAdd(data, geom, latlng)) {
                 this.addData({
                     "type": "Feature",
                     "geometry": geom,

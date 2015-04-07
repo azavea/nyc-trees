@@ -8,26 +8,31 @@
 {% block aside %}
 
   <div class="map-sidebar">
-    <h2>New Reservation</h2>
-    {% include 'survey/partials/reservations_legend.html' %}
-    <div class="action-bar">
-      <div class="row">
-        <div class="col-xs-6">
-            <h1 class="rsvp-count-total pull-left color--primary nomargin" id="current-reservations">{{ reservations.current }}</h1>
-            <div class="rsvp-count-context">
-                 of <span id="total-reservations">{{ reservations.total }}</span><br>
-                <span class="h6 text-uppercase">Reserved</span>
-            </div>
-        </div>
-        <div class="col-xs-6 text-right">
-            <form method="post" action="{% url 'reserve_blockfaces' %}">
-                {% csrf_token %}
-                <input type="hidden" id="reservation-ids" name="ids" />
-                <input type="submit" id="finish-reservations" disabled="disabled" value="Reserve Blocks" class="btn btn-primary" />
-            </form>
-        </div>
+      <h2>New Reservation</h2>
+      {% include 'survey/partials/reservations_legend.html' %}
+      <div class="action-bar">
+          <div id="reservations-cart-action" class="row">
+              <div class="col-xs-5">
+                  <h1 class="rsvp-count-total pull-left color--primary nomargin" id="current-reservations">{{ reservations.current }}</h1>
+                  <div class="rsvp-count-context">
+                      of <span id="total-reservations">{{ reservations.total }}</span><br>
+                      <span class="h6 text-uppercase">Reserved</span>
+                  </div>
+              </div>
+              <div id="reservations-help-text" class="col-xs-7 text-left">
+                  Click on a block edge to add or remove it from your reservations
+              </div>
+              <div id="reservations-finish-section" class="col-xs-7 text-right hidden">
+                  <form method="post" action="{% url 'reserve_blockfaces' %}">
+                      {% csrf_token %}
+                      <input type="hidden" id="reservation-ids" name="ids" />
+                      <input type="submit" id="finish-reservations" disabled="disabled" value="Finish Reservation" class="btn btn-primary" />
+                  </form>
+              </div>
+          </div>
+          <div id="reservations-blockface-action" class="row">
+          </div>
       </div>
-    </div>
   </div>
 
   {% include 'home/partials/location_search.html' %}
@@ -46,6 +51,18 @@
 
 {% block extra_content %}
 {% include "survey/partials/reserve_blockface_modals.html" %}
+
+<script type="html/template" id="reservations-blockface-popup-template">
+    <div class="col-xs-9">
+        Blockface <span data-blockface-id></span>
+        <p>
+            <span data-blockface-status></span>
+        </p>
+    </div>
+    <div class="col-xs-3">
+        <a class="btn btn-primary" data-blockface-id data-blockface-action></a>
+    </div>
+</script>
 {% endblock extra_content %}
 
 {% block page_js %}

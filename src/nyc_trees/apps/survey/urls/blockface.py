@@ -26,6 +26,8 @@ urlpatterns = patterns(
     url(r'^reservations-instructions/$', reservations_instructions,
         name='reservations_instructions'),
 
+    # Note: changes here must be kept in sync with
+    # src/nyc_trees/js/src/reserveBlockfacePage.js
     url(r'^reserved-blockfaces.json$', user_reserved_blockfaces_geojson),
 
     # Note: changes here must be kept in sync with

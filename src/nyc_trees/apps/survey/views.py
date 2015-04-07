@@ -139,7 +139,7 @@ def user_reserved_blockfaces_geojson(request):
 
     def get_formatted_expiration_date(reservation):
         dt = reservation.expires_at.astimezone(est_tz)
-        return dt.strftime('%b %-d %Y')
+        return dt.strftime('%b %-d, %Y')
 
     return [
         {
