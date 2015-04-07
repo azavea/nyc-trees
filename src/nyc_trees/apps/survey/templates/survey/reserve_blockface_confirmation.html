@@ -10,7 +10,7 @@
     <h3>Blocks Reserved</h3>
     {% if blockfaces_requested == blockfaces_reserved %}
 
-    <p>Your block sides were successfully reserved!</p>
+    <p>Your block edges were successfully reserved!</p>
     <p>Check your inbox for your reservation confirmation.  You can start mapping the trees on these blocks whenever you are ready.</p>
 
     {% elif blockfaces_requested > blockfaces_reserved %}
@@ -20,7 +20,7 @@
       but we could only reserve {{ blockfaces_reserved }} block{{ blockfaces_reserved|pluralize }} for you.
     </p>
 
-    <p>Check the <a href="{% url 'reserve_blockface_page' %}">Reservations Page</a> to see which blockfaces you have reserved.</p>
+    <p>Check the <a href="{% url 'reserve_blockface_page' %}">Reservations Page</a> to see which block edges you have reserved.</p>
     {% endif %}
 
     <p>These blocks will be reserved for you until <b>{{ expiration_date|date }}</b>.</p>
