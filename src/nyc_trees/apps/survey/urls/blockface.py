@@ -9,7 +9,7 @@ from apps.survey.routes import (
     reserve_blockface_page, reserve_blockfaces, reservations_instructions,
     blockface, progress_page, blockface_reservations_confirmation_page,
     progress_page_blockface_popup, printable_reservations_map,
-    reservations_map_pdf_poll
+    reservations_map_pdf_poll, user_reserved_blockfaces_geojson
 )
 
 
@@ -25,6 +25,8 @@ urlpatterns = patterns(
 
     url(r'^reservations-instructions/$', reservations_instructions,
         name='reservations_instructions'),
+
+    url(r'^reserved-blockfaces.json$', user_reserved_blockfaces_geojson),
 
     # Note: changes here must be kept in sync with
     # src/nyc_trees/js/src/progressPage.js

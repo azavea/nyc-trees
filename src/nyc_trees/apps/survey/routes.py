@@ -58,6 +58,10 @@ reservations_map_pdf_poll = route(GET=do(login_required,
                                          json_api_call,
                                          v.reservations_map_pdf_poll))
 
+user_reserved_blockfaces_geojson = individual_mapper_do(
+    json_api_call,
+    route(GET=v.user_reserved_blockfaces_geojson))
+
 #####################################
 # SURVEY ROUTES
 #####################################

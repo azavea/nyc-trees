@@ -6,6 +6,7 @@ from __future__ import division
 import os
 import json
 import shortuuid
+from pytz import timezone
 
 from celery import chain
 
@@ -126,6 +127,34 @@ def blockface_cart_page(request):
     return {
         'blockface_ids': request.POST['ids']
     }
+
+
+def user_reserved_blockfaces_geojson(request):
+    reservations = BlockfaceReservation.objects \
+        .select_related('blockface') \
+        .filter(user=request.user) \
+        .current()
+
+    est_tz = timezone('US/Eastern')
+
+    def get_formatted_expiration_date(reservation):
+        dt = reservation.expires_at.astimezone(est_tz)
+        return dt.strftime('%b %-d %Y')
+
+    return [
+        {
+            'type': 'Feature',
+            'geometry': {
+                'type': 'MultiLineString',
+                'coordinates': reservation.blockface.geom.coords
+            },
+            'properties': {
+                'id': reservation.blockface.id,
+                'expires_at': get_formatted_expiration_date(reservation)
+            }
+        }
+        for reservation in reservations
+    ]
 
 
 def reservations_map_pdf_poll(request):
