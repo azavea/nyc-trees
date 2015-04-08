@@ -193,5 +193,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       ansible.groups = ANSIBLE_GROUPS.merge(ANSIBLE_ENV_GROUPS)
       ansible.raw_arguments = ["--timeout=60"]
     end
+
+    app.vm.provider "virtualbox" do |v|
+      v.memory = 1024
+    end
   end
 end
