@@ -6,12 +6,12 @@ from __future__ import division
 from datetime import timedelta
 from django.utils.timezone import now
 
-from libs.sql import get_total_tree_count, get_total_species_count, \
+from libs.sql import get_total_tree_count, get_surveyed_species, \
     get_block_count_past_week
 
 from apps.core.models import User
 
-from apps.event.models import Event
+from apps.event.models import Event, EventRegistration
 from apps.event.event_list import all_events, EventList
 
 from apps.home.training import training_summary
@@ -30,7 +30,7 @@ def home_page(request):
     else:
         context = {
             'user': request.user,
-            'counts': _global_counts()
+            'counts_all': _global_counts()
         }
 
     all_events_list = (
@@ -59,6 +59,10 @@ def _global_counts(past_week=False):
         blocks_percent = '+' + blocks_percent
 
     user_count = User.objects.filter(is_active=True).count()
+    attended_events = EventRegistration.objects.filter(did_attend=True) \
+        .distinct('user_id').count()
+    individual_mappers = User.objects.filter(is_active=True,
+                                             individual_mapper=True).count()
 
     if past_week:
         week_ago = now() - timedelta(days=7)
@@ -73,13 +77,20 @@ def _global_counts(past_week=False):
     tree_count = get_total_tree_count(past_week)
     trees_digits = [digit for digit in "{:07d}".format(tree_count)]
 
+    surveyed_species = get_surveyed_species()
+    # Distinct count, not total amount
+    surveyed_species_count = len(surveyed_species)
+
     global_counts = {
-        'species': get_total_species_count(),
+        'species': surveyed_species_count,
+        'species_by_name': surveyed_species,
         'tree': trees_digits,
         'block': blocks_mapped,
         'block_percent': blocks_percent,
         'user': user_count,
-        'event': event_count
+        'event': event_count,
+        'attended_events': attended_events,
+        'individual_mappers': individual_mappers
         }
     return global_counts
 

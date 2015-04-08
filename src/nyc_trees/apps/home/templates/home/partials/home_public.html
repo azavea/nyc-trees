@@ -1,6 +1,8 @@
 {% load utils %}
 {% load waffle_tags %}
 
+{% url 'progress_page' as progress_page_url %}
+
 <div class="page-home">
 
     <div class="hero">
@@ -60,10 +62,10 @@
                     <div class="home-container clearfix">
                         <div class="progress-circles">
                             {% with xs3col=True %}
-                                {% include "home/partials/circle.html" with label="Blocks" n=counts.block color="primary" %}
-                                {% include "home/partials/circle.html" with label="Complete" n=counts.block_percent color="primary" hide_xs=True %}
-                                {% include "home/partials/circle.html" with label="Users" n=counts.user color="quaternary" %}
-                                {% include "home/partials/circle.html" with label="Species" n=counts.species color="secondary" %}
+                                {% include "home/partials/circle.html" with label="Blocks" n=counts_all.block color="primary" url=progress_page_url %}
+                                {% include "home/partials/circle.html" with label="Complete" n=counts_all.block_percent color="primary" hide_xs=True  url=progress_page_url %}
+                                {% include "home/partials/circle.html" with label="Users" n=counts_all.user color="quaternary" modal="#users-modal" %}
+                                {% include "home/partials/circle.html" with label="Species" n=counts_all.species color="secondary" modal="#species-modal" %}
                             {% endwith %}
                         </div>
                     </div>

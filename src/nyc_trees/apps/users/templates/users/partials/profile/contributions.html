@@ -2,10 +2,12 @@
 
 {% block section_content %}
 
+{% url 'progress_page' as progress_page_url %}
+
 <div class="progress-circles">
-        {% include "home/partials/circle.html" with label="Trees" n=counts.tree color="primary" %}
-        {% include "home/partials/circle.html" with label="Blocks" n=counts.block color="quaternary" %}
-        {% include "home/partials/circle.html" with label="Species" n=counts.species color="secondary" %}
+        {% include "home/partials/circle.html" with label="Trees" n=counts.tree color="primary" url=progress_page_url %}
+        {% include "home/partials/circle.html" with label="Blocks" n=counts.block color="quaternary" url=progress_page_url %}
+        {% include "home/partials/circle.html" with label="Species" n=counts.species color="secondary" modal="#species-modal" %}
 </div>
 
 {% endblock section_content %}

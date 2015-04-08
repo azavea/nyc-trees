@@ -15,11 +15,14 @@ _survey_sql = """
 
 
 def _get_count(sql, params=[]):
+    row = _get_rows(sql, params)[0]
+    return row[0]
+
+
+def _get_rows(sql, params=[]):
     with connection.cursor() as cursor:
         cursor.execute(sql, params)
-        row = cursor.fetchone()
-
-        return row[0]
+        return cursor.fetchall()
 
 
 def get_user_tree_count(user):
@@ -58,31 +61,33 @@ def get_total_tree_count(past_week=False):
     return _get_count(sql)
 
 
-def get_user_species_count(user):
+def get_user_surveyed_species(user):
     sql = _survey_sql + """
-        SELECT COUNT(*) FROM (
-          SELECT DISTINCT ON (tree.species_id) tree.species_id
-          FROM survey_tree AS tree
-          JOIN most_recent_survey
-            ON tree.survey_id = most_recent_survey.id
-          WHERE most_recent_survey.user_id = %s
+        SELECT species.common_name, COUNT(*) AS count
+        FROM most_recent_survey
+        INNER JOIN survey_tree AS tree
+          ON tree.survey_id = most_recent_survey.id
+        INNER JOIN survey_species AS species
+          ON species.id = tree.species_id
+        WHERE most_recent_survey.user_id = %s
             AND tree.species_id IS NOT NULL
-        ) subquery"""
+        GROUP BY species.common_name
+        """
+    return _get_rows(sql, [user.pk])
 
-    return _get_count(sql, [user.pk])
 
-
-def get_total_species_count():
+def get_surveyed_species():
     sql = _survey_sql + """
-        SELECT COUNT(*) FROM (
-          SELECT DISTINCT ON (tree.species_id) tree.species_id
-          FROM survey_tree AS tree
-          JOIN most_recent_survey
-            ON tree.survey_id = most_recent_survey.id
-          WHERE tree.species_id IS NOT NULL
-        ) subquery"""
-
-    return _get_count(sql)
+        SELECT species.common_name, COUNT(*) AS count
+        FROM most_recent_survey
+        INNER JOIN survey_tree AS tree
+          ON tree.survey_id = most_recent_survey.id
+        INNER JOIN survey_species AS species
+          ON species.id = tree.species_id
+        WHERE tree.species_id IS NOT NULL
+        GROUP BY species.common_name
+        """
+    return _get_rows(sql)
 
 
 def get_block_count_past_week():

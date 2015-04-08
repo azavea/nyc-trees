@@ -5,7 +5,7 @@ from __future__ import division
 
 from django.core.urlresolvers import reverse
 
-from libs.sql import get_user_tree_count, get_user_species_count
+from libs.sql import get_user_tree_count, get_user_surveyed_species
 from apps.users.forms import PrivacySettingsForm
 from apps.users.models import achievements
 
@@ -21,7 +21,9 @@ def user_profile_context(user, its_me=True, home_page=True):
 
     block_count = user.survey_set.distinct('blockface').count()
     tree_count = get_user_tree_count(user)
-    species_count = get_user_species_count(user)
+    species_surveyed = get_user_surveyed_species(user)
+    # Distinct count, not total
+    species_count = len(species_surveyed)
     event_count = user.eventregistration_set \
         .filter(did_attend=True) \
         .count()
@@ -56,6 +58,7 @@ def user_profile_context(user, its_me=True, home_page=True):
             'tree': tree_count,
             'tree_digits': tree_digits,
             'species': species_count,
+            'species_by_name': species_surveyed,
             'event': event_count
         },
         'achievements': [achievements[key]
