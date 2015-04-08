@@ -85,6 +85,9 @@ class User(NycModel, AbstractUser):
 
     opt_in_stewardship_info = models.BooleanField(default=False)
 
+    progress_page_help_shown = models.BooleanField(default=False)
+    reservations_page_help_shown = models.BooleanField(default=False)
+
     reservation_ids_in_map_pdf = models.TextField(default='', blank=True)
     reservations_map_pdf_filename = models.CharField(
         max_length=255, default='', blank=True)

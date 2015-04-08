@@ -73,7 +73,10 @@ class NycUserAdmin(UserAdmin):
                                  'training_finished_tree_data',
                                  'training_finished_tree_surroundings',
                                  'training_finished_intro_quiz',
-                                 'training_finished_groups_to_follow')})
+                                 'training_finished_groups_to_follow')}),
+
+        ('Help', {'fields': ('progress_page_help_shown',
+                             'reservations_page_help_shown')})
     )
 
     add_fieldsets = UserAdmin.add_fieldsets + (

@@ -22,6 +22,8 @@ var $ = require('jquery'),
         unavailableBlockfaceModal: '#unavailable-blockface-modal'
     };
 
+require('./lib/mapHelp');
+
 // Extends the leaflet object
 require('leaflet-utfgrid');
 

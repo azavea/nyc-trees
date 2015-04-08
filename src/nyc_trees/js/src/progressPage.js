@@ -6,6 +6,8 @@ var $ = require('jquery'),
     mapModule = require('./map'),
     SelectableBlockfaceLayer = require('./lib/SelectableBlockfaceLayer');
 
+require('./lib/mapHelp');
+
 // Extends the leaflet object
 require('leaflet-utfgrid');
 
