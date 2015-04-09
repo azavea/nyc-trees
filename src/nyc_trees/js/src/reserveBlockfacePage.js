@@ -29,6 +29,9 @@ var $ = require('jquery'),
         requestAccessFailModal: '#request-access-fail-modal',
         unavailableBlockfaceModal: '#unavailable-blockface-modal',
 
+        startSection: '#reservations-start',
+        addRemoveBtn: '#reservations-add-remove',
+
         cartActionBar: '#reservations-cart-action',
         cartHelpText: '#reservations-help-text',
         cartFinishSection: '#reservations-finish-section',
@@ -83,6 +86,7 @@ var progress = new SavedState({
 
 var selectedLayer = new SelectableBlockfaceLayer(reservationMap, grid, {
     onAdd: function(gridData, __, latlng) {
+        onAddRemove();
         if (selectedBlockfacesCount >= blockfaceLimit) {
             $(dom.limitReachedModal).modal('show');
         } else if (gridData.restriction === "none") {
@@ -116,6 +120,7 @@ var cartLayer = new BlockfaceLayer(reservationMap, {
     color: '#FF69B4',
     onEachFeature: function(feature, layer) {
         layer.on('click', function(e) {
+            onAddRemove();
             showPopup(feature.properties.id, e.latlng, 'In Cart', actions.remove);
             blockfaceLayers[feature.properties.id] = layer;
             selectedLayer.addData(feature);
@@ -282,3 +287,10 @@ var blockfaceId = mapUtil.getBlockfaceIdFromUrl();
 mapUtil.fetchBlockface(blockfaceId).done(function(blockface) {
     selectedLayer.addBlockface(blockface);
 });
+
+$(dom.addRemoveBtn).on('click', onAddRemove);
+
+function onAddRemove() {
+    $(dom.startSection).addClass('hidden');
+    $(dom.cartActionBar).removeClass('hidden').addClass('active');
+}
