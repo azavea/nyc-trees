@@ -6,6 +6,14 @@
 
 {% block main %}
     <h3>Confirm</h3>
+    {% if num_reserved > 0 %}
+    <p>You have requested {{ num_reserved }} block edge reservation{{ num_reserved|pluralize }}.</p>
+    {% endif %}
+
+    {% if num_cancelled > 0 %}
+    <p>You are cancelling {{ num_cancelled }} block edge reservation{{ num_cancelled|pluralize }}.</p>
+    {% endif %}
+
     <p>Indicate whether you will be using the app or paper worksheets to collect data on these block edges. Click the “Confirm Blocks” button to finalize your reservation.</p>
 
     <form method="post" action="{% url 'blockface_reservations_confirmation_page' %}">

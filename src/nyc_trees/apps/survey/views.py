@@ -124,8 +124,14 @@ def _query_reservation(user, blockface_id):
 
 
 def blockface_cart_page(request):
+    ids_str = request.POST.get('ids', None)
+    ids = ids_str.split(',') if ids_str else []
+    cancelled_reservations = _get_reservations_to_cancel(ids, request.user)
+
     return {
-        'blockface_ids': request.POST['ids']
+        'blockface_ids': request.POST['ids'],
+        'num_reserved': len(ids),
+        'num_cancelled': cancelled_reservations.count()
     }
 
 
