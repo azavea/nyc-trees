@@ -8,10 +8,10 @@
 {% block aside %}
 
   <div class="map-sidebar">
-      <h2>New Reservation</h2>
+      <h2>Reservations</h2>
       {% include 'survey/partials/reservations_legend.html' %}
-      <div class="action-bar">
-          <div id="reservations-cart-action" class="row">
+      <div class="action-bar reservations-action-bar">
+          <div id="reservations-cart-action" class="reservation-action-item row active">
               <div class="col-xs-5">
                   <h1 class="rsvp-count-total pull-left color--primary nomargin" id="current-reservations">{{ reservations.current }}</h1>
                   <div class="rsvp-count-context">
@@ -30,8 +30,7 @@
                   </form>
               </div>
           </div>
-          <div id="reservations-blockface-action" class="row">
-          </div>
+          <div id="reservations-blockface-action" class="reservation-action-item"></div>
       </div>
   </div>
 
@@ -53,15 +52,17 @@
 {% include "survey/partials/reserve_blockface_modals.html" %}
 
 <script type="html/template" id="reservations-blockface-popup-template">
-    <div class="col-xs-9">
-        Blockface <span data-blockface-id></span>
+<div class="row reservations-popup">
+    <div class="col-xs-7">
+        <h5>Blockface <span data-blockface-id></span></h5>
         <p>
             <span data-blockface-status></span>
         </p>
     </div>
-    <div class="col-xs-3">
+    <div class="col-xs-5">
         <a class="btn btn-primary" data-blockface-id data-blockface-action></a>
     </div>
+</div>
 </script>
 {% endblock extra_content %}
 

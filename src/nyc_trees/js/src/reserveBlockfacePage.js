@@ -145,7 +145,10 @@ function showPopup(blockfaceId, latlng, status, action) {
     // We add the blockface popup in 2 places, as a leaflet popup and as an
     // action bar item
     // CSS media queries will hide one or the other depending on screen size
-    L.popup().setLatLng(latlng).setContent($popup[0]).openOn(reservationMap);
+    L.popup({className: 'reservation-leaflet-popup'})
+        .setLatLng(latlng)
+        .setContent($popup[0])
+        .openOn(reservationMap);
 
     $(dom.blockActionBar).addClass('active').html($popup.clone());
     $(dom.cartActionBar).removeClass('active');
