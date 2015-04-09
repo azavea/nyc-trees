@@ -65,9 +65,10 @@
     width: auto;
     padding-top: .5rem;
   }
-
-  img {
-    max-width: 225px;
+  @media (min-width: $screen-md) {
+    img {
+      max-width: 225px;
+    }
   }
 }
 
