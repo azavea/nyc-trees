@@ -64,10 +64,9 @@
   @media (min-width: $screen-sm) {
     width: auto;
     padding-top: .5rem;
-  }
-  @media (min-width: $screen-md) {
     img {
       max-width: 225px;
+      vertical-align: middle;
     }
   }
 }
