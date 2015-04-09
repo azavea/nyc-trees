@@ -190,6 +190,23 @@
   }
 }
 
+.progress-toggle {
+  padding-right: 3rem;
+  &:after {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    margin-left: 2px;
+    vertical-align: middle;
+    border-top: 4px solid;
+    border-right: 4px solid transparent;
+    border-left: 4px solid transparent;
+    right: 1rem;
+    top: 1.75rem;
+  }
+}
+
 @media (min-width: $screen-sm) {
   .map-sidebar .modal-dialog {
     width: auto;
