@@ -1,30 +1,46 @@
 {% extends "base_reservation.html" %}
-
 {% load utils %}
+
+{% block nav %}
+{% include "core/partials/nav.html" with active_page="reservations" %}
+{% endblock %}
 
 {% block aside %}
 
   <div class="map-sidebar">
-    <h2>New Reservation</h2>
-    {% include 'survey/partials/reservations_legend.html' %}
-    <div class="action-bar">
-      <div class="row">
-        <div class="col-xs-6">
-            <h1 class="rsvp-count-total pull-left color--primary nomargin" id="current-reservations">{{ reservations.current }}</h1>
-            <div class="rsvp-count-context">
-                 of <span id="total-reservations">{{ reservations.total }}</span><br>
-                <span class="h6 text-uppercase">Reserved</span>
-            </div>
-        </div>
-        <div class="col-xs-6 text-right">
-            <form method="post" action="{% url 'reserve_blockfaces' %}">
-                {% csrf_token %}
-                <input type="hidden" id="reservation-ids" name="ids" />
-                <input type="submit" id="finish-reservations" disabled="disabled" value="Reserve Blocks" class="btn btn-primary" />
-            </form>
-        </div>
+      <h2>Reservations</h2>
+      {% include 'survey/partials/reservations_legend.html' %}
+      <div class="action-bar reservations-action-bar">
+          {% if reservations.current > 0 %}
+          <div id="reservations-start" class="row">
+              <a class="btn btn-primary pull-left" href="{% url 'survey' %}">Start Mapping</a>
+              <a id="reservations-add-remove" class="btn btn-primary pull-right" href="javascript:">Add / Remove</a>
+          </div>
+          {% endif %}
+          <div id="reservations-cart-action" class="reservation-action-item row {% if reservations.current == 0 %}active{% else %}hidden{% endif %}">
+              <div class="col-xs-5">
+                  <h1 class="rsvp-count-total pull-left color--primary nomargin" id="current-reservations">{{ reservations.current }}</h1>
+                  <div class="rsvp-count-context">
+                      of <span id="total-reservations">{{ reservations.total }}</span><br>
+                      <span class="h6 text-uppercase">Reserved</span>
+                  </div>
+              </div>
+              <div id="reservations-help-text" class="col-xs-7 text-left">
+                  Click on a block edge to add or remove it from your reservations
+              </div>
+              <div id="reservations-finish-section" class="col-xs-7 text-right hidden">
+                  <form method="post" action="{% url 'reserve_blockfaces' %}">
+                      {% csrf_token %}
+                      <input type="hidden" id="reservation-ids" name="ids" />
+                      <input type="submit" id="finish-reservations" disabled="disabled" value="Finish Reservation" class="btn btn-primary" />
+                  </form>
+              </div>
+          </div>
+          <div id="reservations-blockface-action" class="reservation-action-item">
+              <i id="close-blockface-action" class="icon-left-open-big"></i>
+              <div id="reservations-blockface-popup-container"></div>
+          </div>
       </div>
-    </div>
   </div>
 
   {% include 'home/partials/location_search.html' %}
@@ -36,13 +52,27 @@
 <div id="map" class="map-event"
      data-tile-url="{{ layer.tile_url }}"
      data-grid-url="{{ layer.grid_url }}"
-     data-help-shown="{{ help_shown }}">
-</div>
+     data-help-shown="{{ help_shown }}"
+     {% if bounds %}data-bounds="{{ bounds }}"{% endif %}></div>
 
 {% endblock main %}
 
 {% block extra_content %}
 {% include "survey/partials/reserve_blockface_modals.html" %}
+
+<script type="html/template" id="reservations-blockface-popup-template">
+<div class="row reservations-popup">
+    <div class="col-xs-7">
+        <h5>Blockface <span data-blockface-id></span></h5>
+        <p>
+            <span data-blockface-status></span>
+        </p>
+    </div>
+    <div class="col-xs-5">
+        <a class="btn btn-primary" data-blockface-id data-blockface-action></a>
+    </div>
+</div>
+</script>
 {% endblock extra_content %}
 
 {% block page_js %}

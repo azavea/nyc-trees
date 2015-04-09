@@ -6,6 +6,7 @@ from __future__ import division
 import os
 import json
 import shortuuid
+from pytz import timezone
 
 from celery import chain
 
@@ -116,14 +117,6 @@ def progress_page_blockface_popup(request, blockface_id):
     }
 
 
-def cancel_reservation(request, blockface_id):
-    update_time = now()
-    _query_reservation(request.user, blockface_id) \
-        .update(canceled_at=update_time, updated_at=update_time)
-
-    return get_context_for_reservations_layer(request)
-
-
 def _query_reservation(user, blockface_id):
     return BlockfaceReservation.objects \
         .filter(blockface_id=blockface_id, user=user) \
@@ -131,20 +124,43 @@ def _query_reservation(user, blockface_id):
 
 
 def blockface_cart_page(request):
+    ids_str = request.POST.get('ids', None)
+    ids = ids_str.split(',') if ids_str else []
+    cancelled_reservations = _get_reservations_to_cancel(ids, request.user)
+
     return {
-        'blockface_ids': request.POST['ids']
+        'blockface_ids': request.POST['ids'],
+        'num_reserved': len(ids),
+        'num_cancelled': cancelled_reservations.count()
     }
 
 
-def reservations_page(request):
-    return {
-        'legend_entries': [
-            {'css_class': 'reserved', 'label': 'Reserved by you'},
-            {'css_class': 'unavailable', 'label': 'Not reserved by you'},
-        ],
-        'layer': get_context_for_reservations_layer(request),
-        'bounds': _user_reservation_bounds(request.user)
-    }
+def user_reserved_blockfaces_geojson(request):
+    reservations = BlockfaceReservation.objects \
+        .select_related('blockface') \
+        .filter(user=request.user) \
+        .current()
+
+    est_tz = timezone('US/Eastern')
+
+    def get_formatted_expiration_date(reservation):
+        dt = reservation.expires_at.astimezone(est_tz)
+        return dt.strftime('%b %-d, %Y')
+
+    return [
+        {
+            'type': 'Feature',
+            'geometry': {
+                'type': 'MultiLineString',
+                'coordinates': reservation.blockface.geom.coords
+            },
+            'properties': {
+                'id': reservation.blockface.id,
+                'expires_at': get_formatted_expiration_date(reservation)
+            }
+        }
+        for reservation in reservations
+    ]
 
 
 def reservations_map_pdf_poll(request):
@@ -195,24 +211,18 @@ def reserve_blockfaces_page(request):
 
     return {
         'reservations': {
-            'current': 0,
-            'total': settings.RESERVATIONS_LIMIT - current_reservations_amount
+            'current': current_reservations_amount,
+            'total': settings.RESERVATIONS_LIMIT
         },
         'layer': get_context_for_reservable_layer(request),
+        'bounds': _user_reservation_bounds(request.user),
         'legend_entries': [
             {'css_class': 'available', 'label': 'Available'},
             {'css_class': 'unavailable', 'label': 'Unavailable'},
+            {'css_class': 'reserved', 'label': 'Reserved by you'},
+            {'css_class': 'in-cart', 'label': 'In your cart'},
         ],
         'help_shown': _was_help_shown(request, 'reservations_page_help_shown')
-    }
-
-
-def reserved_blockface_popup(request, blockface_id):
-    blockface = get_object_or_404(Blockface, id=blockface_id)
-    reservation = _query_reservation(request.user, blockface_id)[0]
-    return {
-        'blockface': blockface,
-        'reservation': reservation
     }
 
 
@@ -240,8 +250,10 @@ def confirm_blockface_reservations(request):
         .current() \
         .values_list('blockface_id', flat=True)
 
-    expiration_date = now() + settings.RESERVATION_TIME_PERIOD
-    reservations = []
+    right_now = now()
+    expiration_date = right_now + settings.RESERVATION_TIME_PERIOD
+
+    new_reservations = []
 
     for blockface in blockfaces:
         territory = _get_territory(blockface)
@@ -251,14 +263,18 @@ def confirm_blockface_reservations(request):
              (territory is None or
               territory.group_id in user_trusted_group_ids or
               territory.group_id in user_admin_group_ids))):
-            reservations.append(BlockfaceReservation(
+            new_reservations.append(BlockfaceReservation(
                 blockface=blockface,
                 user=request.user,
                 is_mapping_with_paper=is_mapping_with_paper,
                 expires_at=expiration_date
             ))
 
-    BlockfaceReservation.objects.bulk_create(reservations)
+    cancelled_reservations = _get_reservations_to_cancel(ids, request.user)
+
+    cancelled_reservations.update(canceled_at=right_now, updated_at=right_now)
+
+    BlockfaceReservation.objects.bulk_create(new_reservations)
 
     filename = "reservations_map/%s_%s.pdf" % (
         request.user.username, shortuuid.uuid())
@@ -279,9 +295,11 @@ def confirm_blockface_reservations(request):
               notify_reservation_confirmed.s(request.user.id, blockface_ids))\
             .apply_async()
 
+    num_reserved = len(new_reservations) + len(already_reserved_blockface_ids)
     return {
         'blockfaces_requested': len(ids),
-        'blockfaces_reserved': len(reservations),
+        'blockfaces_reserved': num_reserved,
+        'blockfaces_cancelled': len(cancelled_reservations),
         'expiration_date': expiration_date
     }
 
@@ -291,6 +309,14 @@ def _get_territory(blockface):
         return blockface.territory
     except Territory.DoesNotExist:
         return None
+
+
+def _get_reservations_to_cancel(ids, user):
+    # Whatever blockface IDs were not submitted, should be cancelled
+    return BlockfaceReservation.objects \
+        .filter(user=user) \
+        .exclude(blockface__id__in=ids) \
+        .current()
 
 
 def blockface(request, blockface_id):

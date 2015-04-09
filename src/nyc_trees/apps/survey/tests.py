@@ -156,13 +156,31 @@ class ConfirmBlockfaceReservationTests(SurveyTestCase):
         reservation = BlockfaceReservation.objects.get(blockface=self.block)
         self.assertEqual(self.user.pk, reservation.user_id)
 
-        self.assert_blocks_reserved(1, self.block, self.block2)
+        self.assert_blocks_reserved(2, self.block, self.block2)
 
         self.assertEqual(1, BlockfaceReservation.objects
                          .filter(blockface=self.block).count())
         self.assertEqual(self.user.pk, reservation.user_id)
 
         reservation = BlockfaceReservation.objects.get(blockface=self.block2)
+        self.assertEqual(self.user.pk, reservation.user_id)
+
+    def test_cancelling_blocks(self):
+        self.assert_blocks_reserved(1, self.block)
+
+        reservation = BlockfaceReservation.objects.get(blockface=self.block)
+        self.assertEqual(self.user.pk, reservation.user_id)
+
+        self.assert_blocks_reserved(1, self.block2)
+
+        # Block just passed in is reserved
+        self.assertEqual(1, BlockfaceReservation.objects
+                         .filter(blockface=self.block2).current().count())
+        self.assertEqual(self.user.pk, reservation.user_id)
+
+        # Previously reserved block that was omitted is now cancelled
+        self.assertEqual(0, BlockfaceReservation.objects
+                         .filter(blockface=self.block).current().count())
         self.assertEqual(self.user.pk, reservation.user_id)
 
     def test_reserve_trusted_mapper_blocks(self):

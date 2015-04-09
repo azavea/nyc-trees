@@ -16,10 +16,15 @@
               AND (turf.id IS NULL
                    OR trustedmapper.id IS NOT NULL
                    OR core_group.admin_id = <%= user_id %>)) THEN 'available'
+        -- If a blockface is currently reserved, we should make it look
+        -- 'available'.  We use a GeoJSON layer in the UI for the user's
+        -- reserved blockfaces, and when a blockface is deselected we want to
+        -- be able to reselect it
+        WHEN reservation.user_id IS NOT DISTINCT FROM <%= user_id %> THEN 'available'
         ELSE 'unavailable'
       END AS survey_type,
       CASE
-        WHEN reservation.id IS NOT NULL THEN 'reserved'
+        WHEN reservation.id IS NOT NULL AND reservation.user_id <> <%= user_id %> THEN 'reserved'
         WHEN (core_group.id IS NOT NULL
               AND NOT core_group.allows_individual_mappers) THEN 'unavailable'
         WHEN NOT block.is_available THEN 'unavailable'

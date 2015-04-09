@@ -2,6 +2,7 @@
 
 var $ = require('jquery'),
     L = require('leaflet'),
+    BlockfaceLayer = require('./BlockfaceLayer'),
     mapUtil = require('./mapUtil'),
     zoom = require('./mapUtil').ZOOM,
 
@@ -21,23 +22,20 @@ var $ = require('jquery'),
  * added/removed.
  *
  */
-module.exports = L.GeoJSON.extend({
+module.exports = BlockfaceLayer.extend({
     options: {
         onAdd: $.noop,
         onRemove: $.noop,
-        onAdded: $.noop
+        onAdded: $.noop,
+        color: color
     },
 
     clicksEnabled: true,
 
     initialize: function(map, grid, options) {
-        L.GeoJSON.prototype.initialize.call(this, null, options);
+        BlockfaceLayer.prototype.initialize.call(this, map, options);
 
         var self = this;
-
-        this.options.style = function() {
-            return getStyle(map);
-        };
 
         this.options.onEachFeature = function(feature, layer) {
             self.options.onAdded(feature, layer);
@@ -50,19 +48,15 @@ module.exports = L.GeoJSON.extend({
 
         grid.on('click', function(e) {
             if (self.clicksEnabled) {
-                self.addBlockface(e.data);
+                self.addBlockface(e.data, e.latlng);
             }
-        });
-
-        map.on('zoomend', function() {
-            self.setStyle(getStyle(map));
         });
     },
 
-    addBlockface: function(data) {
+    addBlockface: function(data, latlng) {
         if (data && data.geojson) {
             var geom = mapUtil.parseGeoJSON(data.geojson);
-            if (this.options.onAdd(data, geom)) {
+            if (this.options.onAdd(data, geom, latlng)) {
                 this.addData({
                     "type": "Feature",
                     "geometry": geom,
@@ -72,31 +66,3 @@ module.exports = L.GeoJSON.extend({
         }
     }
 });
-
-function getStyle(map) {
-    return {
-        color: color,
-        fillColor: color,
-        opacity: 1,
-        lineCap: 'round',
-        lineJoin: 'round',
-        clickable: true,
-        weight: getLineWidth(map.getZoom())
-    };
-}
-
-// Note: this must be kept in sync with src/tiler/style/*.mss
-// Line widths are purposefully 2 pixels wider than the tiler styling
-function getLineWidth(zoom) {
-    if (zoom >= 19) {
-        return 18;
-    } else if (zoom === 18) {
-        return 10;
-    } else if (zoom === 17) {
-        return 6;
-    } else if (zoom === 16) {
-        return 4;
-    } else {
-        return 3;
-    }
-}

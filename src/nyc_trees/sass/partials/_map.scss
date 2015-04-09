@@ -145,11 +145,48 @@
   pointer-events: none;
 }
 
+.reservations-popup {
+    width: 250px;
+    a {
+        // Leaflet makes us do this
+        color: #fff !important;
+    }
+}
+
 @media (max-width: $screen-sm - 1) {
   .pageheading-description-detail {
     .tab-status-map-tab & {
       display: none;
     }
+  }
+
+  .reservation-leaflet-popup {
+      display: none;
+  }
+
+  .reservations-popup {
+      width: 100%;
+  }
+
+  .reservation-action-item {
+      position: absolute;
+      left: 0;
+      right: 0;
+      transition: transform 400ms;
+  }
+
+  #reservations-cart-action {
+      transform: translateX(-100%);
+      &.active {
+          transform: translateX(0);
+      }
+  }
+
+  #reservations-blockface-action {
+      transform: translateX(100%);
+      &.active {
+          transform: translateX(0);
+      }
   }
 }
 
@@ -250,5 +287,9 @@
       -o-transform: translate(0, 0) !important;
       transform: translate(0, 0) !important;
     }
+  }
+
+  #reservations-blockface-action {
+      display: none;
   }
 }

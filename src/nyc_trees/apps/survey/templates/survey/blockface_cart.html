@@ -1,11 +1,19 @@
 {% extends "base_two_frames.html" %}
 
 {% block aside %}
-    <h2>New Reservation</h2>
+    <h2>Reservations</h2>
 {% endblock aside %}
 
 {% block main %}
     <h3>Confirm</h3>
+    {% if num_reserved > 0 %}
+    <p>You have requested {{ num_reserved }} block edge reservation{{ num_reserved|pluralize }}.</p>
+    {% endif %}
+
+    {% if num_cancelled > 0 %}
+    <p>You are cancelling {{ num_cancelled }} block edge reservation{{ num_cancelled|pluralize }}.</p>
+    {% endif %}
+
     <p>Indicate whether you will be using the app or paper worksheets to collect data on these block edges. Click the “Confirm Blocks” button to finalize your reservation.</p>
 
     <form method="post" action="{% url 'blockface_reservations_confirmation_page' %}">
@@ -25,7 +33,7 @@
         </label>
         <p>You will be emailed a data collection worksheet to print at home. After you have collected data on the block edges you have reserved, login to the TreesCount! Web App to enter the information online into the Treecorder.</p>
 
-        <a href="{% url 'reserve_blockface_page' %}">Cancel</a>
+        <a href="{% url 'reservations' %}">Cancel</a>
         <input type="submit" value="Confirm Blocks" class="btn btn-primary pull-right" />
     </form>
 {% endblock main %}

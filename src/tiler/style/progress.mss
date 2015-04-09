@@ -8,7 +8,7 @@
 
   line-opacity: 1;
 
-  // Note: this must be kept in sync with src/nyc_trees/js/src/selectableBlockfaceLayer.js
+  // Note: this must be kept in sync with src/nyc_trees/js/src/BlockfaceLayer.js
   line-width: 1;
   [zoom = 16]{ line-width: 2; }
   [zoom = 17]{ line-width: 4; }
