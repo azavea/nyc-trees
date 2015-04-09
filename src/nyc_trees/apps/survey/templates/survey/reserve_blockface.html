@@ -36,8 +36,8 @@
 <div id="map" class="map-event"
      data-tile-url="{{ layer.tile_url }}"
      data-grid-url="{{ layer.grid_url }}"
-     data-help-shown="{{ help_shown }}">
-</div>
+     data-help-shown="{{ help_shown }}"
+     {% if bounds %}data-bounds="{{ bounds }}"{% endif %}></div>
 
 {% endblock main %}
 

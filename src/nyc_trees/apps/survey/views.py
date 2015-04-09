@@ -195,13 +195,16 @@ def reserve_blockfaces_page(request):
 
     return {
         'reservations': {
-            'current': 0,
-            'total': settings.RESERVATIONS_LIMIT - current_reservations_amount
+            'current': current_reservations_amount,
+            'total': settings.RESERVATIONS_LIMIT
         },
         'layer': get_context_for_reservable_layer(request),
+        'bounds': _user_reservation_bounds(request.user),
         'legend_entries': [
             {'css_class': 'available', 'label': 'Available'},
             {'css_class': 'unavailable', 'label': 'Unavailable'},
+            {'css_class': 'reserved', 'label': 'Reserved by you'},
+            {'css_class': 'in-cart', 'label': 'In your cart'},
         ],
         'help_shown': _was_help_shown(request, 'reservations_page_help_shown')
     }
