@@ -37,6 +37,8 @@ var $ = require('jquery'),
         cartFinishSection: '#reservations-finish-section',
 
         blockActionBar: '#reservations-blockface-action',
+        blockActionPopupContainer: '#reservations-blockface-popup-container',
+        blockActionBarClose: '#close-blockface-action',
 
         popupTemplate: '#reservations-blockface-popup-template',
         popupBlockfaceId: '[' + attrs.blockfaceId + ']',
@@ -155,13 +157,17 @@ function showPopup(blockfaceId, latlng, status, action) {
         .setContent($popup[0])
         .openOn(reservationMap);
 
-    $(dom.blockActionBar).addClass('active').html($popup.clone());
+    $(dom.blockActionBar).addClass('active');
+    $(dom.blockActionPopupContainer).html($popup.clone());
     $(dom.cartActionBar).removeClass('active');
 }
+
+$(dom.blockActionBarClose).on('click', closeActionbar);
 
 function closeActionbar() {
     $(dom.blockActionBar).removeClass('active');
     $(dom.cartActionBar).addClass('active');
+    selectedLayer.clearLayers();
 }
 
 reservationMap.on('popupclose', function() {
