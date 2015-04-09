@@ -13,7 +13,8 @@ module.exports = {
     create: create,
     addTileLayer: addTileLayer,
     addGridLayer: addGridLayer,
-    fitBounds: fitBounds
+    fitBounds: fitBounds,
+    getDomMapAttribute: getDomMapAttribute
 };
 
 function create(options) {
@@ -128,7 +129,8 @@ function initLocationSearch($controlsContainer, map) {
 }
 
 function initLegend($controlsContainer, map) {
-    var $button = $('<a class="legend-button" data-toggle="modal" href="#legend" href="javascript:;" title="Legend">?</a>');
+    var $button = $(
+        '<a class="legend-button" data-toggle="modal" href="#legend" href="javascript:;" title="Legend">?</a>');
     $controlsContainer.prepend($button);
 }
 

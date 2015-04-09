@@ -62,9 +62,12 @@ def progress_page(request):
         ],
         'layer_all': get_context_for_progress_layer(request, 'progress_all'),
         'layer_my': get_context_for_progress_layer(request, 'progress_my'),
+        'help_shown': _was_help_shown(request, 'progress_page_help_shown')
     }
-    if request.user.is_authenticated():
-        blocks = (request.user.survey_set
+
+    user = request.user
+    if user.is_authenticated():
+        blocks = (user.survey_set
                   .distinct('blockface')
                   .values_list('blockface_id', flat=True))
         if len(blocks) > 0:
@@ -72,6 +75,30 @@ def progress_page(request):
             context['bounds'] = list(blockfaces.extent)
 
     return context
+
+
+def _was_help_shown(request, help_shown_attr):
+    """
+    help_shown_attr is a user attribute specifying whether help has been
+    shown on a particular page. We also use it as a session attribute
+    for non-logged-in users.
+
+    Calling this function returns the current attribute value, and also
+    sets it to True (so it will only be shown once).
+    """
+    help_shown = request.session.get(help_shown_attr, False)
+    request.session[help_shown_attr] = True
+
+    user = request.user
+    if user.is_authenticated():
+        user_help_shown = getattr(user, help_shown_attr)
+        help_shown = help_shown or user_help_shown
+
+        if not user_help_shown:
+            setattr(user, help_shown_attr, True)
+            user.save()
+
+    return help_shown
 
 
 def progress_page_blockface_popup(request, blockface_id):
@@ -175,7 +202,8 @@ def reserve_blockfaces_page(request):
         'legend_entries': [
             {'css_class': 'available', 'label': 'Available'},
             {'css_class': 'unavailable', 'label': 'Unavailable'},
-        ]
+        ],
+        'help_shown': _was_help_shown(request, 'reservations_page_help_shown')
     }
 
 
