@@ -6,6 +6,15 @@ server {
 
   access_log /var/log/nginx/nyc-trees-app.access.log logstash_json;
 
+  location /static/img/training/ {
+    {% if ['packer'] | is_in(group_names) -%}
+    etag on;
+    expires 2h;
+    {% endif %}
+
+    alias {{ app_static_root }}img/training/;
+  }
+
   location /static/ {
     {% if ['packer'] | is_in(group_names) -%}
     etag on;
