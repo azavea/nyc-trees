@@ -100,7 +100,7 @@ srtext) values ( 102718, 'esri', 102718, '+proj=lcc
 The borough shapefiles can be loaded into the database with ``shp2pgsql``:
 
 ```
-shp2pgsql -s 102718:4326 -g geom ManhattanSegments_Compiled.shp > psql -d nyc_trees
+shp2pgsql -s 102718:4326 -g geom ManhattanSegments_Compiled.shp | psql -d nyc_trees
 ```
 
 The borough blockfaces can be appended to the ``survey_blockface`` table with the following SQL:
@@ -160,4 +160,4 @@ In addition, other [scripts](scripts/) exist if you want to test just one of the
 
 ## Deployment
 
-For more details around the Amazon Web Services deployment process, please see the deployment [README](deployment/README.md).
+For more details around the Amazon Web Services deployment process, please see the deployment [README](deployment/README.md).d
