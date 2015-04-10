@@ -15,8 +15,12 @@ var $ = require('jquery'),
     pageCount = $subpages.length,
     currentPage = 0;
 
-function showSubpage($subpage, index) {
-    var $exercise = $subpage.children('form');
+function showSubpage() {
+    var $subpage = $($subpages[currentPage]),
+        $exercise = $subpage.children('form'),
+        index = currentPage;
+
+    $subpages.hide();
 
     // fully initialize the subpage for viewing, including cleaning up
     // elements that may have been put out of order by previous actions
@@ -89,8 +93,7 @@ function evaluateExerciseInput (event) {
 
 function showPageOrStep() {
     if (currentPage < pageCount) {
-        $subpages.hide();
-        showSubpage($($subpages[currentPage]), currentPage);
+        showSubpage();
     } else {
         window.location.href = $nextButton.attr('data-href');
     }
