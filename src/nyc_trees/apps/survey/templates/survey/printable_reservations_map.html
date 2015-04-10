@@ -4,7 +4,8 @@
 {% block body %}
     <div id="map" class="map-pdf"
          data-tile-url="{{ layer.tile_url }}"
-         {% if bounds %}data-bounds="{{ bounds }}"{% endif %}>
+         {% if bounds %}data-bounds="{{ bounds }}"{% endif %}
+         data-endpoints="{{ endpoints }}">
     </div>
 {% endblock body %}
 

@@ -100,5 +100,3 @@ def get_block_count_past_week():
              > now() at time zone 'utc' - INTERVAL '7 days'"""
 
     return _get_count(sql)
-
-
