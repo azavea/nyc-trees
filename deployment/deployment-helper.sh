@@ -14,7 +14,7 @@ function get_latest_ubuntu_ami() {
   # 4. Sort by date in reverse
   # 5. Take the top row
   # 6. Take the 8th column
-  curl -s "http://cloud-images.ubuntu.com/query/trusty/server/daily.txt" \
+  curl -s "http://cloud-images.ubuntu.com/query/trusty/server/released.current.txt" \
     | egrep "ebs-ssd\s+amd64\s+${AWS_DEFAULT_REGION}" \
     | grep "hvm" \
     | sort -k4 -r \
