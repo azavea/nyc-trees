@@ -16,7 +16,7 @@
                 </div>
             </div>
         </div>
-        <div class="event-details col-xs-6">
+        <div class="event-details col-xs-7">
                 {% if event_list.user_can_edit_group %}
                 <a href="{{ event.get_absolute_url }}">{{ event.title }}</a>
                 {% else %}
@@ -25,9 +25,9 @@
             <div class="event-detail">{{ event.begins_at|date:"f A" }} at {{ event.address }}</div>
             <div class="event-detail">{{ event.group.name }}</div>
             <div class="event-detail">{{ event.training_summary }}</div>
-            {% if info.user_is_registered %}<div class="event-detail"><b>+ RSVP</b></div>{% endif %}
+            {% if info.user_is_registered %}<div class="event-detail"><b>You are RSVPed!</b></div>{% endif %}
         </div>
-        <div class="event-action col-xs-3">
+        <div class="event-action col-xs-2">
             {% if event_list.user_can_edit_group %}
             <div class="dropdown text-right">
                 <button class="btn btn-default dropdown-toggle"
