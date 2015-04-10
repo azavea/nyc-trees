@@ -17,7 +17,12 @@ psql -c "CREATE EXTENSION IF NOT EXISTS postgis;"
 # Run migrations
 envdir /etc/nyc-trees.d/env /opt/app/manage.py migrate
 # Load block face data
-envdir /etc/nyc-trees.d/env /opt/app/manage.py loaddata $DIR/../../src/nyc_trees/apps/survey/fixtures/blockface.json
+
+for i in `seq 1 7`;
+do
+    envdir /etc/nyc-trees.d/env /opt/app/manage.py loaddata $DIR/../../src/nyc_trees/apps/survey/fixtures/blockface_$i.json
+done
+
 # Load species data
 envdir /etc/nyc-trees.d/env /opt/app/manage.py loaddata $DIR/../../src/nyc_trees/apps/survey/fixtures/species.json
 
