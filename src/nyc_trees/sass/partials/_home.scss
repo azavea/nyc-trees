@@ -103,6 +103,8 @@ $hero-box-side-padding: 3rem;
 
 .main-home, .main-dashboard {
   margin-top: -3rem;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .page-home, .page-dashboard {
@@ -119,7 +121,7 @@ $hero-box-side-padding: 3rem;
 }
 
 .section-appeal-text {
-  padding: 2rem 4rem;
+  padding-top: 1.5rem;
 }
 
 .progress-circle {
@@ -175,30 +177,23 @@ $hero-box-side-padding: 3rem;
   font-size: $font-size-h5;
 }
 
-.home-small {
-  max-width: 60rem;
-  margin-right: auto;
-  margin-left: auto;
-}
-
 .section-appeal {
   margin-top: -1rem;
+}
+
+.page-dashboard {
+  .ticker {
+    padding-top: 1rem;
+    text-align: center;
+  }
 }
 
 @media (min-width: $screen-sm) {
   .section-appeal {
     margin-top: auto;
   }
-  .page-home, .page-dashboard {
-    section {
-      margin: 5rem auto 0;
-      margin-left: $grid-gutter-width/-2;
-      margin-right: $grid-gutter-width/-2;
-      padding: 0 1.5rem 5rem;
-    }
-  }
   .section-appeal-text {
-    padding-top: 0;
+    padding: 0 4rem 2rem;
   }
   .home-description {
     font-size: $font-size-h4;
@@ -226,5 +221,46 @@ $hero-box-side-padding: 3rem;
   }
   .progress-circle-label {
     font-size: $font-size-h5;
+  }
+}
+
+@media (min-width: $screen-md) {
+  .page-dashboard {
+    .ticker {
+      padding-top: 3rem;
+    }
+  }
+  .page-home, .page-dashboard {
+    section {
+      margin: 5rem auto 0;
+      margin-left: $grid-gutter-width/-2;
+      margin-right: $grid-gutter-width/-2;
+      padding: 0 1.5rem 5rem;
+    }
+  }
+  .main-dashboard {
+    background-color: transparent;
+    section {
+      background-color: #fff;
+      margin: 5rem auto 0;
+      padding-top: 5rem;
+    }
+  }
+  .dashboard-columns {
+    -webkit-column-count: 2;
+    -webkit-column-gap: 3rem;
+    section {
+      display: inline-block;
+      padding: 3rem;
+      width: 100%;
+      margin-top: 0;
+      margin-top: 3rem;
+    }
+    .item {
+      display: block !important;
+    }
+    .showmore {
+      display: none !important;
+    }
   }
 }
