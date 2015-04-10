@@ -11,9 +11,11 @@ var $ = require('jquery'),
     $nextButton = $(dom.nextButton),
     $previousButton = $(dom.previousButton),
     $acceptFeedbackButton = $(dom.acceptFeedbackButton),
+    hash = window.location.hash,
     $subpages = $container.children('div'),
     pageCount = $subpages.length,
-    currentPage = 0;
+    currentPage = 0,
+    $currentPage;
 
 function showSubpage() {
     var $subpage = $($subpages[currentPage]),
@@ -118,4 +120,22 @@ $acceptFeedbackButton.on('click', showPageOrStep);
 
 if (pageCount > 0) {
     showPageOrStep();
+}
+
+// ids can be put on any element at or below the outermost
+// subpage div and then linked to using the hash string
+// if subpage children have the id, then the page will
+// scroll to that element
+// (tested in chrome and firefox)
+if (hash !== "") {
+    if ($container.find(hash).length > 0) {
+        for (; currentPage < $subpages.length; currentPage++) {
+            $currentPage = $($subpages[currentPage]);
+            if ($currentPage.is(hash) ||
+                $currentPage.find(hash).length > 0) {
+                showSubpage();
+                break;
+            }
+        }
+    }
 }
