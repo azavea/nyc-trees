@@ -11,12 +11,18 @@ var $ = require('jquery'),
     $nextButton = $(dom.nextButton),
     $previousButton = $(dom.previousButton),
     $acceptFeedbackButton = $(dom.acceptFeedbackButton),
+    hash = window.location.hash,
     $subpages = $container.children('div'),
     pageCount = $subpages.length,
-    currentPage = 0;
+    currentPage = 0,
+    $currentPage;
 
-function showSubpage($subpage, index) {
-    var $exercise = $subpage.children('form');
+function showSubpage() {
+    var $subpage = $($subpages[currentPage]),
+        $exercise = $subpage.children('form'),
+        index = currentPage;
+
+    $subpages.hide();
 
     // fully initialize the subpage for viewing, including cleaning up
     // elements that may have been put out of order by previous actions
@@ -89,8 +95,7 @@ function evaluateExerciseInput (event) {
 
 function showPageOrStep() {
     if (currentPage < pageCount) {
-        $subpages.hide();
-        showSubpage($($subpages[currentPage]), currentPage);
+        showSubpage();
     } else {
         window.location.href = $nextButton.attr('data-href');
     }
@@ -115,4 +120,22 @@ $acceptFeedbackButton.on('click', showPageOrStep);
 
 if (pageCount > 0) {
     showPageOrStep();
+}
+
+// ids can be put on any element at or below the outermost
+// subpage div and then linked to using the hash string
+// if subpage children have the id, then the page will
+// scroll to that element
+// (tested in chrome and firefox)
+if (hash !== "") {
+    if ($container.find(hash).length > 0) {
+        for (; currentPage < $subpages.length; currentPage++) {
+            $currentPage = $($subpages[currentPage]);
+            if ($currentPage.is(hash) ||
+                $currentPage.find(hash).length > 0) {
+                showSubpage();
+                break;
+            }
+        }
+    }
 }
