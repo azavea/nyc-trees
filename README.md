@@ -135,6 +135,35 @@ the appropriate data, then exporting the fixture:
 ./scripts/manage.sh dumpdata survey.Blockface > src/nyc_trees/apps/survey/fixtures/blockface.json
 ```
 
+When all 5 boroughs have been added, the resulting fixture is too
+large for the ``loaddata`` command. The fixture needs to be split into
+chunks. This process is not fully automated.
+
+This pipline will take a fixture created with ``dumpdata`` on stdin
+and output one object per line.
+
+```
+# convert a JSON array to linewise objects with trailing commas
+# embedded newline is IMPORTANT
+# sed -e 's/ *$//' trims whitespace
+sed -e 's/{"fields/\
+{"fields/g' |  sed -e '$s/]$/,/' | sed -e 's/ *$//' | tail -n +2
+```
+
+The ``split`` program can chunk up the resulting file
+
+```
+split -l 20000 blockface-linewise.json
+```
+
+This pipeline will take a file containing linewise objects and convert
+it to a valid JSON array. Each of the files created by the split
+command should be run through this pipeline to create usable fixtures.
+
+```
+# wrap linewise trailing comma objects with array
+sed -e '1s/^/[/' | sed -e '$s/,$/]/'
+```
 
 ## Testing
 

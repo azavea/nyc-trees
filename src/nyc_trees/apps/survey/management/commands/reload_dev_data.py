@@ -30,5 +30,7 @@ class Command(BaseCommand):
 
         self.stdout.write('Importing blockface fixture')
 
-        call_command(
-            'loaddata', '/opt/app/apps/survey/fixtures/blockface.json')
+        for i in range(1, 8):
+            call_command(
+                'loaddata',
+                '/opt/app/apps/survey/fixtures/blockface_%d.json' % i)
