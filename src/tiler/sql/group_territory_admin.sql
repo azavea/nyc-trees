@@ -2,9 +2,6 @@
   block.id,
   block.geom,
   turf.group_id AS turf_group_id,
-  <% if (is_utf_grid) { %>
-  ST_AsGeoJSON(block.geom) AS geojson,
-  <% } %>
   CASE
     WHEN block.is_available THEN
       CASE

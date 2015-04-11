@@ -54,15 +54,21 @@ module.exports = BlockfaceLayer.extend({
     },
 
     addBlockface: function(data, latlng) {
-        if (data && data.geojson) {
-            var geom = mapUtil.parseGeoJSON(data.geojson);
-            if (this.options.onAdd(data, geom, latlng)) {
-                this.addData({
-                    "type": "Feature",
-                    "geometry": geom,
-                    "properties": data
-                });
-            }
+        var self = this;
+        if (!data || !data.id) {
+            return;
         }
+        mapUtil.fetchBlockface(data.id).then(function(blockfaceData) {
+            if (blockfaceData && blockfaceData.geojson) {
+                var geom = mapUtil.parseGeoJSON(blockfaceData.geojson);
+                if (self.options.onAdd(data, geom, latlng)) {
+                    self.addData({
+                        "type": "Feature",
+                        "geometry": geom,
+                        "properties": data
+                    });
+                }
+            }
+        });
     }
 });

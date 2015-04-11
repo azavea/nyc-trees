@@ -21,12 +21,12 @@ var Windshaft = require('windshaft'),
     styles = files('./style'),
 
     interactivity = {
-        territory_survey: 'id,survey_type,restriction,geojson',
-        territory_admin: 'id,survey_type,turf_group_id,geojson',
-        progress_all: 'id,group_id,survey_type,geojson',
-        progress_my: 'id,group_id,survey_type,geojson',
-        reservable: 'id,group_id,group_slug,survey_type,restriction,geojson',
-        reservations: 'id,geojson'
+        territory_survey: 'id,survey_type,restriction',
+        territory_admin: 'id,survey_type,turf_group_id',
+        progress_all: 'id,group_id,survey_type',
+        progress_my: 'id,group_id,survey_type',
+        reservable: 'id,group_id,group_slug,survey_type,restriction',
+        reservations: 'id'
     },
 
     config = {
