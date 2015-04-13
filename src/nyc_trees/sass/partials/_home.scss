@@ -181,6 +181,11 @@ $hero-box-side-padding: 3rem;
   margin-top: -1rem;
 }
 
+.species-modal-content {
+    max-height: 300px;
+    overflow: auto;
+}
+
 .page-dashboard {
   .ticker {
     padding-top: 1rem;

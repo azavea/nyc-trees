@@ -72,6 +72,7 @@ def get_user_surveyed_species(user):
         WHERE most_recent_survey.user_id = %s
             AND tree.species_id IS NOT NULL
         GROUP BY species.common_name
+        ORDER BY count DESC
         """
     return _get_rows(sql, [user.pk])
 
@@ -100,5 +101,3 @@ def get_block_count_past_week():
              > now() at time zone 'utc' - INTERVAL '7 days'"""
 
     return _get_count(sql)
-
-
