@@ -18,15 +18,17 @@ from django.utils.timezone import now
 
 from apps.core.models import User, Group
 from apps.core.test_utils import (make_request, make_event, make_tree,
-                                  make_survey, make_species)
+                                  make_survey, make_species,
+                                  complete_online_training, survey_defaults)
 
 from apps.event.models import EventRegistration
 from apps.event.routes import event_registration, check_in_user_to_event
 
-from apps.survey.models import Blockface, Territory
+from apps.survey.models import Blockface, Territory, Survey
 
 from apps.users.models import (Follow, Achievement, achievements,
-                               AchievementDefinition, TrustedMapper)
+                               AchievementDefinition, TrustedMapper,
+                               update_achievements)
 from apps.users.views.user import user_detail as user_detail_view
 from apps.users.views.group import group_detail as group_detail_view
 
@@ -63,10 +65,6 @@ class UsersTestCase(TestCase):
             allows_individual_mappers=True
         )
         Follow.objects.create(group=self.group, user=self.user)
-        self.achievement = Achievement.objects.create(
-            user=self.user,
-            achievement_id=AchievementDefinition.FINISH_TRAINING
-        )
 
 
 class ProfileTemplateTests(UsersTestCase):
@@ -136,11 +134,15 @@ class ProfileTemplateTests(UsersTestCase):
                                     them_count=1)
 
     def test_achievements_section_contents(self):
+        self.achievement = Achievement.objects.create(
+            user=self.user,
+            achievement_id=AchievementDefinition.ONLINE_TRAINING
+        )
         self._assert_visible_only_to_me(
-            achievements[AchievementDefinition.FINISH_TRAINING].name)
+            achievements[AchievementDefinition.ONLINE_TRAINING].name)
         self._update_user(achievements_are_public=True)
         self._assert_visible_to_all(
-            achievements[AchievementDefinition.FINISH_TRAINING].name)
+            achievements[AchievementDefinition.ONLINE_TRAINING].name)
 
     def test_contributions_section_visibility(self):
         self._assert_visible_only_to_me('Contributions', count=2)
@@ -411,14 +413,6 @@ class IndividualMapperTests(UsersTestCase):
                                           username=self.user.username)
         self.assertTrue('data-verb="DELETE"' in response.content)
 
-    def _complete_online_training(self):
-        self.user.training_finished_getting_started = True
-        self.user.training_finished_the_mapping_method = True
-        self.user.training_finished_tree_data = True
-        self.user.training_finished_tree_surroundings = True
-        self.user.training_finished_intro_quiz = True
-        self.user.clean_and_save()
-
     # This test asserts that an email is sent when RSVPing to an
     # event. Because the email is sent via a Celery task, we use
     # CELERY_ALWAYS_EAGER to force synchronous execution and ensure
@@ -433,7 +427,7 @@ class IndividualMapperTests(UsersTestCase):
         self.assertRaises(PermissionDenied,
                           self._rsvp_to_event, self.training_event)
 
-        self._complete_online_training()
+        complete_online_training(self.user)
 
         self.user = User.objects.get(id=self.user.id)
         self.assertTrue(self.user.online_training_complete)
@@ -548,3 +542,57 @@ class AnonUserTests(UsersTestCase):
 
     def test_group_detail_visible(self):
         self._test_does_not_throw(group_detail, self.group.slug)
+
+
+class AchievementTests(UsersTestCase):
+    def setUp(self):
+        super(AchievementTests, self).setUp()
+
+    def _assertAchievements(self, expected_ids):
+        update_achievements(self.user)
+        achieved_ids = set([a.achievement_id
+                            for a in self.user.achievement_set.all()])
+        self.assertEqual(set(expected_ids), achieved_ids)
+
+    def testGroupFollows(self):
+        self._assertAchievements([])
+        for i in range(0, 5):
+            group = Group.objects.create(name=str(i), slug=str(i))
+            Follow.objects.create(group=group, user=self.user)
+        self._assertAchievements([AchievementDefinition.FOLLOW_GROUPS])
+
+    def testOnlineTraining(self):
+        self._assertAchievements([])
+        complete_online_training(self.user)
+        self._assertAchievements([AchievementDefinition.ONLINE_TRAINING])
+
+    def testTrainingEvent(self):
+        self._assertAchievements([])
+        self.user.field_training_complete = True
+        self._assertAchievements([AchievementDefinition.TRAINING_EVENT])
+
+    def testMappingEvent(self):
+        self._assertAchievements([])
+        for i in range(0, 2):
+            event = make_event(self.group, title=unicode(i))
+            EventRegistration.objects.create(event=event, user=self.user,
+                                             did_attend=True)
+        self._assertAchievements([AchievementDefinition.MAPPING_EVENT])
+
+    def test50Blocks(self):
+        self._assertAchievements([])
+        geom = MultiLineString(LineString(((0, 0), (1, 1))))
+        blocks = [Blockface(geom=geom) for i in range(0, 100)]
+        Blockface.objects.bulk_create(blocks)
+
+        surveys = []
+        s = survey_defaults()
+        for b in Blockface.objects.all():
+            s.update(user=self.user, blockface=b)
+            surveys.append(Survey(**s))
+        Survey.objects.bulk_create(surveys)
+
+        self._assertAchievements([AchievementDefinition.MAP_50,
+                                  AchievementDefinition.MAP_100])
+
+
