@@ -27,7 +27,7 @@
   font-weight: $headings-font-weight;
 
   @media (max-width: $screen-phone) {
-    font-size: $font-size-h5; 
+    font-size: $font-size-h5;
     line-height: 1.8;
   }
 }
@@ -36,8 +36,12 @@
   padding: .5rem;
   text-align: center;
   @media (max-width: $screen-phone) {
-    padding: 0;  
+    padding: 0;
   }
+}
+
+.event-action {
+  padding-left: 0;
 }
 
 @media (max-width: $screen-phone) {
