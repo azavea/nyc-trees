@@ -48,13 +48,13 @@ $hero-box-side-padding: 3rem;
   position: relative;
   display: inline-block;
   font-family: $headings-special-font-family;
-  max-width: 12.5%;
+  max-width: 15.5%;
   font-size: 180%;
   height: 5.7rem;
   width: 3.4rem;
   @media (min-width: $screen-sm) {
     height: 8rem;
-    width: 5rem;
+    width: 5.9rem;
     font-size: $font-size-h1;
   }
 }
@@ -103,6 +103,8 @@ $hero-box-side-padding: 3rem;
 
 .main-home, .main-dashboard {
   margin-top: -3rem;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .page-home, .page-dashboard {
@@ -119,7 +121,7 @@ $hero-box-side-padding: 3rem;
 }
 
 .section-appeal-text {
-  padding: 2rem 4rem;
+  padding-top: 1.5rem;
 }
 
 .progress-circle {
@@ -175,30 +177,44 @@ $hero-box-side-padding: 3rem;
   font-size: $font-size-h5;
 }
 
-.home-small {
-  max-width: 60rem;
-  margin-right: auto;
-  margin-left: auto;
-}
-
 .section-appeal {
   margin-top: -1rem;
+}
+
+.page-dashboard {
+  .ticker {
+    padding-top: 1rem;
+    text-align: center;
+  }
+}
+
+@media (max-width: $screen-sm - 1) {
+  .page-dashboard {
+    .hero-content {
+      padding: 0;
+    }
+    .hero-box {
+      position: relative;
+    }
+    .hero {
+      height: auto;
+      padding-bottom: 2rem;
+    }
+  }
+}
+
+.ticker-label {
+  font-weight: normal;
+  color: #aaa;
+  text-transform: uppercase;
 }
 
 @media (min-width: $screen-sm) {
   .section-appeal {
     margin-top: auto;
   }
-  .page-home, .page-dashboard {
-    section {
-      margin: 5rem auto 0;
-      margin-left: $grid-gutter-width/-2;
-      margin-right: $grid-gutter-width/-2;
-      padding: 0 1.5rem 5rem;
-    }
-  }
   .section-appeal-text {
-    padding-top: 0;
+    padding: 0 4rem 2rem;
   }
   .home-description {
     font-size: $font-size-h4;
@@ -209,6 +225,9 @@ $hero-box-side-padding: 3rem;
   }
   .hero {
     height: 45rem !important;
+    .page-dashboard & {
+      height: 28rem !important
+    }
   }
   .hero-content {
     margin-left: $grid-gutter-width/-2;
@@ -226,5 +245,53 @@ $hero-box-side-padding: 3rem;
   }
   .progress-circle-label {
     font-size: $font-size-h5;
+  }
+}
+
+@media (min-width: $screen-md) {
+  .page-dashboard {
+    .ticker {
+      padding-top: 3rem;
+    }
+  }
+  .page-home, .page-dashboard {
+    section {
+      margin: 5rem auto 0;
+      margin-left: $grid-gutter-width/-2;
+      margin-right: $grid-gutter-width/-2;
+      padding: 0 1.5rem 5rem;
+    }
+  }
+  .main-dashboard {
+    background-color: transparent;
+    section {
+      background-color: #fff;
+      margin: 5rem auto 0;
+      padding-top: 5rem;
+    }
+  }
+  .dashboard-columns {
+    -webkit-column-count: 2;
+       -moz-column-count: 2;
+            column-count: 2;
+    -webkit-column-gap: 3rem;
+       -moz-column-gap: 3rem;
+            column-gap: 3rem;
+    .column-static {
+      position: static;
+    }
+    section {
+      display: inline-block;
+      padding: 3rem;
+      width: 100%;
+      margin-top: 0;
+      margin-top: 3rem;
+    }
+    .item {
+      display: block !important;
+    }
+    .showmore {
+      display: none !important;
+    }
   }
 }

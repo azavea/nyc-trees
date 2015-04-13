@@ -7,20 +7,16 @@
 <div class="page-dashboard">
 
     <div class="hero">
-        <div class="hero-background" style="background-image: url({{ "img/hero-background.jpg"|static_url }})">
+        <div class="hero-background hidden-xs" style="background-image: url({{ "img/hero-background.jpg"|static_url }})">
         </div>
         <div class="hero-box">
             <div class="container">
                 <div class="row">
-                    <div class="col-sm-6 col-sm-push-6">
+                    <div class="col-sm-12 col-md-6 col-md-push-6">
                         <div class="hero-content">
                             <h1 class="hero-heading">Welcome back,
                             volun<span class="color--primary">treer!</span></h1>
                             {% flag full_access %}
-                                <p class="hero-text">In the past week, <span class="color--primary">405 trees</span> in <span class="color--primary">12 blocks</span> have been added. We're <span class="color--primary">43%</span> of the way to our goal!</p>
-                                <div class="text-right">
-                                    <a class="hero-link hero-text text-center color--secondary h4" href="{% url 'progress_page' %}">Show me the map →</a>
-                                </div>
                             {% endflag %}
                         </div>
                     </div>
@@ -34,7 +30,7 @@
             <main class="col-sm-12 main-dashboard">
                 {% flag full_access %}
                     <section class="section-home">
-                        <div class="home-container home-small">
+                        <div class="home-container clearfix">
                             <h4 class="section-heading">Progress</h4>
                             <ul class="nav nav-tabs nav-tabs--filter">
                                 <li class="active">
@@ -49,46 +45,65 @@
                             </ul>
                             <div class="tab-content">
                                 <div class="tab-pane active" id="all-time">
-                                    {% include "home/partials/circle.html" with label="Blocks" n=counts_all.block color="primary" url=progress_page_url %}
-                                    {% include "home/partials/circle.html" with label="Complete" n=counts_all.block_percent color="quaternary" url=progress_page_url %}
-                                    {% include "home/partials/circle.html" with label="Users" n=counts_all.user color="secondary" modal="#users-modal" %}
-                                    {% include "home/partials/ticker.html" with n=counts_all.tree %}
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            {% include "home/partials/circle.html" with label="Blocks" n=counts_all.block color="primary" url=progress_page_url %}
+                                            {% include "home/partials/circle.html" with label="Complete" n=counts_all.block_percent color="primary" url=progress_page_url %}
+                                            {% include "home/partials/circle.html" with label="Users" n=counts_all.user color="primary" modal="#users-modal" %}
+                                        </div>
+                                        <div class="col-md-6">
+                                            {% include "home/partials/ticker.html" with n=counts_all.tree %}
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="tab-pane" id="past-week">
-                                    {% include "home/partials/circle.html" with label="Blocks" n=counts_week.block color="primary" url=progress_page_url %}
-                                    {% include "home/partials/circle.html" with label="Complete" n=counts_week.block_percent color="quaternary" url=progress_page_url %}
-                                    {% include "home/partials/circle.html" with label="Events" n=counts_week.event color="secondary" url=events_page_url %}
-                                    {% include "home/partials/ticker.html" with n=counts_week.tree %}
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            {% include "home/partials/circle.html" with label="Blocks" n=counts_week.block color="primary" url=progress_page_url %}
+                                            {% include "home/partials/circle.html" with label="Complete" n=counts_week.block_percent color="primary" url=progress_page_url %}
+                                            {% include "home/partials/circle.html" with label="Events" n=counts_week.event color="primary" url=events_page_url %}
+                                        </div>
+                                        <div class="col-md-6">
+                                            {% include "home/partials/ticker.html" with n=counts_week.tree %}
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="tab-pane" id="my-trees">
-                                    {% include "home/partials/circle.html" with label="Blocks" n=counts.block color="primary" url=progress_page_url %}
-                                    {% include "home/partials/circle.html" with label="Species" n=counts.species color="quaternary" modal="#species-modal" %}
-                                    {% include "home/partials/circle.html" with label="Events" n=counts.event color="secondary" url=events_page_url %}
-                                    {% include "home/partials/ticker.html" with n=counts.tree_digits %}
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            {% include "home/partials/circle.html" with label="Blocks" n=counts.block color="primary" url=progress_page_url %}
+                                            {% include "home/partials/circle.html" with label="Species" n=counts.species color="primary" modal="#species-modal" %}
+                                            {% include "home/partials/circle.html" with label="Events" n=counts.event color="primary" url=events_page_url %}
+                                        </div>
+                                        <div class="col-md-6">
+                                            {% include "home/partials/ticker.html" with n=counts.tree_digits %}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div>trees mapped</div>
                         </div>
                     </section>
 
-                    {% if user.online_training_complete %}
-                        <section class="events">
-                            <div class="home-container">
-                                <h4 class="section-heading">Events</h4>
-                                <div data-class="event-list-container">
-                                    {% include "event/partials/event_list.html" with event_list=all_events %}
+                    <div class="dashboard-columns">
+                        {% if user.online_training_complete %}
+                            <section class="events">
+                                <div class="home-container">
+                                    <h4 class="section-heading">Events</h4>
+                                    <div data-class="event-list-container">
+                                        {% include "event/partials/event_list.html" with event_list=all_events %}
+                                    </div>
                                 </div>
-                            </div>
-                        </section>
-                        {% include "users/partials/activity.html" %}
+                            </section>
+                            {% include "users/partials/activity.html" %}
+                        {% else %}
+                            <section class="trainings">
+                                <div class="home-container">
+                                    {% include "home/partials/training.html" %}
+                                </div>
+                            </section>
+                        {% endif %}
+                    </div>
 
-                    {% else %}
-                        <section class="trainings">
-                            <div class="home-container">
-                                {% include "home/partials/training.html" %}
-                            </div>
-                        </section>
-                    {% endif %}
                 {% else %}
                     <section class="soft-launch">
                         {% with title="" section_id="soft-launch" public=False %}

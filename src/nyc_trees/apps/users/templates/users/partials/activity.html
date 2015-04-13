@@ -12,8 +12,8 @@
     {% endif %}
 
     {% if show_contributions %}
-    <section class="contributions clearfix">
-        <div class="home-small">
+    <section class="contributions">
+        <div>
             {% with title=contributions_title section_id="contributions" public=user.contributions_are_public %}
                 {% include "users/partials/profile/contributions.html"%}
             {% endwith %}
@@ -21,18 +21,18 @@
     </section>
     {% endif %}
 
-    {% if show_reservations %}
-    <section class="reservations">
-        {% with title="Reservations" section_id="reservations" public=False %}
-            {% include "users/partials/profile/reservations.html"%}
-        {% endwith %}
-    </section>
-    {% endif %}
-
     {% if show_groups and follows.follows %}
     <section class="groups">
         {% with title="Groups" section_id="groups" public=user.group_follows_are_public %}
             {% include "users/partials/profile/groups.html" %}
+        {% endwith %}
+    </section>
+    {% endif %}
+
+    {% if show_reservations %}
+    <section class="reservations">
+        {% with title="Reservations" section_id="reservations" public=False %}
+            {% include "users/partials/profile/reservations.html"%}
         {% endwith %}
     </section>
     {% endif %}

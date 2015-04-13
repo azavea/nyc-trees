@@ -32,12 +32,11 @@
                 <section class="section-about">
                     <div class="home-container home-description">
                         <div class="row">
-                            <div class="col-xs-4 text-center">
-                                <img class="section-about-logo"
-                                     src="{{ "img/logo-nycparks.png"|static_url }}"
+                            <div class="col-xs-3 col-sm-4 text-center">
+                                <img src="{{ "img/logo-nycparks.png"|static_url }}"
                                      srcset="{{ "img/logo-nycparks@2x.png"|static_url }} 2x">
                             </div>
-                            <div class="col-xs-8">
+                            <div class="col-xs-9 col-sm-8">
                                 Join the Counter Culture!
                                 This year, NYC Parks is counting and mapping all the beautiful street trees that grace our city, and we need your help!
                                 Sign up to become a volun<b>treer</b> for TreesCount! 2015 and play a key role in the future of our urban forest!
@@ -54,8 +53,8 @@
                 {% flag full_access %}
                 <section class="section-ticker text-center">
                     <div class="home-container">
-                        <h2>Help us count our <span class="color--primary">street trees</span>!</h2>
-                        {% include "home/partials/ticker.html" with n=counts.tree %}
+                        <h2>Help us count our <span class="color--primary">street&nbsp;trees</span>!</h2>
+                        {% include "home/partials/ticker.html" with n=counts_all.tree %}
                     </div>
                 </section>
                 <section class="section-progress text-center">
