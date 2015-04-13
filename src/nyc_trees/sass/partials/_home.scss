@@ -48,13 +48,13 @@ $hero-box-side-padding: 3rem;
   position: relative;
   display: inline-block;
   font-family: $headings-special-font-family;
-  max-width: 12.5%;
+  max-width: 15.5%;
   font-size: 180%;
   height: 5.7rem;
   width: 3.4rem;
   @media (min-width: $screen-sm) {
     height: 8rem;
-    width: 5rem;
+    width: 5.9rem;
     font-size: $font-size-h1;
   }
 }
@@ -201,6 +201,12 @@ $hero-box-side-padding: 3rem;
       padding-bottom: 2rem;
     }
   }
+}
+
+.ticker-label {
+  font-weight: normal;
+  color: #aaa;
+  text-transform: uppercase;
 }
 
 @media (min-width: $screen-sm) {
