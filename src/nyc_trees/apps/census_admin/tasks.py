@@ -10,6 +10,7 @@ import json
 import shutil
 import zipfile
 from io import BytesIO
+from collections import namedtuple
 
 import fiona
 from celery import task
@@ -22,6 +23,7 @@ from django.db import connection
 
 
 from apps.survey.models import Blockface
+from apps.event.models import Event
 
 
 if getattr(settings, 'PRIVATE_AWS_STORAGE_BUCKET_NAME', None):
@@ -37,6 +39,21 @@ TREES_QUERY_FILE = os.path.join(os.path.dirname(__file__), 'trees.sql')
 
 with open(TREES_QUERY_FILE, 'r') as f:
     TREES_QUERY = f.read()
+
+
+Mapping = namedtuple('Mapping', ['shp_record', 'type', 'column'])
+
+
+def _datetime_attr(col):
+    return lambda row: row[col].strftime('%Y-%m-%d %H:%M:%S')
+
+
+def _boolean_attr(col):
+    return lambda row: 'T' if row[col] else 'F'
+
+
+def _json_attr(col):
+    return lambda row: row[col].json
 
 
 @task
@@ -58,99 +75,84 @@ def zip_dumps(file_lists, dump_id):
 
 @task
 def dump_trees_to_shapefile(dump_id):
-    tmp_dir = tempfile.mkdtemp()
-    shp_file = os.path.join(tmp_dir, 'trees.shp')
-
     with connection.cursor() as cursor:
         cursor.execute(TREES_QUERY)
 
-        crs = {'no_defs': True,
-               'ellps': 'WGS84',
-               'datum': 'WGS84',
-               'proj': 'longlat'}
+        mappings = [
+            Mapping('tree_id', 'int', 1),
+            Mapping('survey_id', 'int', 2),
+            Mapping('species_id', 'int', 3),
+            Mapping('dist_tree', 'float', 4),
+            Mapping('dist_end', 'float', 5),
+            Mapping('tree_circ', 'int', 6),
+            Mapping('stump_diam', 'int', 7),
+            Mapping('curb_loc', 'str', 8),
+            Mapping('status', 'str', 9),
+            Mapping('speci_cert', 'str', 10),
+            Mapping('health', 'str', 11),
+            Mapping('steward', 'str', 12),
+            Mapping('guards', 'str', 13),
+            Mapping('sidewalk', 'str', 14),
+            Mapping('problems', 'str:130', 15),
+            Mapping('created_at', 'str', _datetime_attr(16)),
+            Mapping('updated_at', 'str', _datetime_attr(17)),
+        ]
 
-        schema = {
-            'geometry': 'Point',
-            'properties': [
-                ('tree_id', 'int'),
-                ('survey_id', 'int'),
-                ('species_id', 'int'),
-                ('dist_tree', 'float'),
-                ('dist_end', 'float'),
-                ('tree_circ', 'int'),
-                ('stump_diam', 'int'),
-                ('curb_loc', 'str'),
-                ('status', 'str'),
-                ('speci_cert', 'str'),
-                ('health', 'str'),
-                ('steward', 'str'),
-                ('guards', 'str'),
-                ('sidewalk', 'str'),
-                ('problems', 'str:130'),
-                ('created_at', 'str'),
-                ('updated_at', 'str'),
-            ]
-        }
+        rows = cursor.fetchall()
 
-        with fiona.open(shp_file, 'w', driver='ESRI Shapefile', crs=crs,
-                        schema=schema) as shp:
-
-            for row in cursor.fetchall():
-                # Note: The column order here needs to match the column order
-                # specified in trees.sql
-                rec = {
-                    'geometry': json.loads(row[0]),
-                    'properties': {
-                        'tree_id': row[1],
-                        'survey_id': row[2],
-                        'species_id': row[3],
-                        'dist_tree': row[4],
-                        'dist_end': row[5],
-                        'tree_circ': row[6],
-                        'stump_diam': row[7],
-                        'curb_loc': row[8],
-                        'status': row[9],
-                        'speci_cert': row[10],
-                        'health': row[11],
-                        'steward': row[12],
-                        'guards': row[13],
-                        'sidewalk': row[14],
-                        'problems': row[15],
-                        'created_at': row[16].strftime('%Y-%m-%d %H:%M:%S'),
-                        'updated_at': row[17].strftime('%Y-%m-%d %H:%M:%S'),
-                    }
-                }
-                shp.write(rec)
-
-    paths = []
-    with open(shp_file, 'r') as f:
-        paths.append(_storage.save('dump/%s/trees.shp' % dump_id, f))
-
-    with open(os.path.join(tmp_dir, 'trees.dbf'), 'r') as f:
-        paths.append(_storage.save('dump/%s/trees.dbf' % dump_id, f))
-
-    with open(os.path.join(tmp_dir, 'trees.prj'), 'r') as f:
-        paths.append(_storage.save('dump/%s/trees.prj' % dump_id, f))
-
-    with open(os.path.join(tmp_dir, 'trees.cpg'), 'r') as f:
-        paths.append(_storage.save('dump/%s/trees.cpg' % dump_id, f))
-
-    with open(os.path.join(tmp_dir, 'trees.shx'), 'r') as f:
-        paths.append(_storage.save('dump/%s/trees.shx' % dump_id, f))
-
-    shutil.rmtree(tmp_dir)
-
-    return paths
+    return _dump_to_shapefile(dump_id, mappings, rows, filename='trees',
+                              geom=0, geom_type='Point')
 
 
 @task
 def dump_blockface_to_shapefile(dump_id):
-    tmp_dir = tempfile.mkdtemp()
-    shp_file = os.path.join(tmp_dir, 'blockface.shp')
-
     blockfaces = Blockface.objects.all().values(
         'id', 'geom', 'is_available', 'expert_required', 'updated_at'
     )
+
+    mappings = [
+        Mapping('block_id', 'int', 'id'),
+        Mapping('is_avail', 'str', _boolean_attr('is_available')),
+        Mapping('expert_req', 'str', _boolean_attr('expert_required')),
+        Mapping('updated_at', 'str', _datetime_attr('updated_at')),
+    ]
+
+    return _dump_to_shapefile(dump_id, mappings, blockfaces,
+                              filename='blockface', geom=_json_attr('geom'),
+                              geom_type='MultiLineString')
+
+
+@task
+def dump_events_to_shapefile(dump_id):
+    mappings = [
+        Mapping('event_id', 'int', 'id'),
+        Mapping('group_id', 'int', 'group_id'),
+        Mapping('title', 'str:255', 'title'),
+        Mapping('slug', 'str', 'slug'),
+        Mapping('desc', 'str:1000', 'description'),
+        Mapping('loc_desc', 'str:1000', 'location_description'),
+        Mapping('con_email', 'str', 'contact_email'),
+        Mapping('con_name', 'str:255', 'contact_name'),
+        Mapping('begins_at', 'str', _datetime_attr('begins_at')),
+        Mapping('ends_at', 'str', _datetime_attr('ends_at')),
+        Mapping('address', 'str:1000', 'address'),
+        Mapping('max_rsvps', 'int', 'max_attendees'),
+        Mapping('training', 'str', _boolean_attr('includes_training')),
+        Mapping('canceled', 'str', _boolean_attr('is_canceled')),
+        Mapping('private', 'str', _boolean_attr('is_private')),
+        Mapping('created_at', 'str', _datetime_attr('created_at')),
+        Mapping('updated_at', 'str', _datetime_attr('updated_at')),
+    ]
+
+    events = Event.objects.all().values()
+
+    return _dump_to_shapefile(dump_id, mappings, events, filename='event',
+                              geom=_json_attr('location'), geom_type='Point')
+
+
+def _dump_to_shapefile(dump_id, mappings, rows, filename, geom, geom_type):
+    tmp_dir = tempfile.mkdtemp()
+    shp_file = os.path.join(tmp_dir, '%s.shp' % filename)
 
     crs = {'no_defs': True,
            'ellps': 'WGS84',
@@ -158,46 +160,43 @@ def dump_blockface_to_shapefile(dump_id):
            'proj': 'longlat'}
 
     schema = {
-        'geometry': 'MultiLineString',
+        'geometry': geom_type,
         'properties': [
-            ('block_id', 'int'),
-            ('is_avail', 'str'),
-            ('expert_req', 'str'),
-            ('updated_at', 'str'),
+            (mapping.shp_record, mapping.type)
+            for mapping in mappings
         ]
     }
+
+    def get_val(row, column):
+        if callable(column):
+            return column(row)
+
+        return row[column]
 
     with fiona.open(shp_file, 'w', driver='ESRI Shapefile', crs=crs,
                     schema=schema) as shp:
 
-        for row in blockfaces:
+        for row in rows:
             rec = {
-                'geometry': json.loads(row['geom'].json),
+                'geometry': json.loads(get_val(row, geom)),
                 'properties': {
-                    'block_id': row['id'],
-                    'is_avail': 'T' if row['is_available'] else 'F',
-                    'expert_req': 'T' if row['expert_required'] else 'F',
-                    'updated_at': row['updated_at'].strftime(
-                        '%Y-%m-%d %H:%M:%S'),
+                    mapping.shp_record: get_val(row, mapping.column)
+                    for mapping in mappings
                 }
             }
             shp.write(rec)
 
     paths = []
-    with open(shp_file, 'r') as f:
-        paths.append(_storage.save('dump/%s/blockface.shp' % dump_id, f))
 
-    with open(os.path.join(tmp_dir, 'blockface.dbf'), 'r') as f:
-        paths.append(_storage.save('dump/%s/blockface.dbf' % dump_id, f))
+    for ext in ['shp', 'dbf', 'prj', 'cpg', 'shx']:
+        tmp_file = os.path.join(tmp_dir, '%(filename)s.%(ext)s' % {
+            'filename': filename, 'ext': ext})
 
-    with open(os.path.join(tmp_dir, 'blockface.prj'), 'r') as f:
-        paths.append(_storage.save('dump/%s/blockface.prj' % dump_id, f))
-
-    with open(os.path.join(tmp_dir, 'blockface.cpg'), 'r') as f:
-        paths.append(_storage.save('dump/%s/blockface.cpg' % dump_id, f))
-
-    with open(os.path.join(tmp_dir, 'blockface.shx'), 'r') as f:
-        paths.append(_storage.save('dump/%s/blockface.shx' % dump_id, f))
+        with open(tmp_file, 'r') as f:
+            paths.append(_storage.save(
+                'dump/%(dump_id)s/%(filename)s.%(ext)s' % {
+                    'dump_id': dump_id, 'filename': filename, 'ext': ext
+                }, f))
 
     shutil.rmtree(tmp_dir)
 
