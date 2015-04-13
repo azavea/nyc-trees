@@ -1,9 +1,5 @@
 {% extends "groups/list.html" %}
 
-{% block list_footer %}
-<hr>
-<div>
-  <a class="btn btn-link" href="{% url 'groups_to_follow_mark_progress' %}">Skip</a>
-  <a class="btn btn-primary pull-right" href="{% url 'groups_to_follow_mark_progress' %}">Continue</a>
-</div>
-{% endblock list_footer %}
+{% block extra_description %}
+<p>Visit a group's info page and follow them to get information and RSVP to an event occurring near you.</p>
+{% endblock extra_description %}

@@ -20,6 +20,8 @@
               mapping events across the city. Follow them to get
               information and RSVP to an event occurring near you.
             </p>
+            {% block extra_description %}
+            {% endblock %}
         </div>
     </div>
 </div>
@@ -70,8 +72,6 @@
 </div>
 {% endif %}
 
-{% block list_footer %}
-{% endblock list_footer %}
 {% endblock main %}
 
 {% block page_js %}

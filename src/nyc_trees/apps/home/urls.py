@@ -29,6 +29,11 @@ urlpatterns = patterns(
     url(r'^jobs/(?P<job_id>\d+)/$', r.retrieve_job_status,
         name='retrieve_job_status'),
 
+    # `groups_to_follow` is managed out of band from the training workflow,
+    # it is only merged in as part of the presentation layer.
+    url(r'^training/groups_to_follow/$',
+        tr.groups_to_follow, name='groups_to_follow'),
+
     url(r'^training/$', **training_summary.pure_kwargs()),                                             # NOQA
     url(r'^training/pure/getting_started/', **getting_started.pure_kwargs()),                          # NOQA
     url(r'^training/pure/the_mapping_method/', **the_mapping_method.pure_kwargs()),                    # NOQA
