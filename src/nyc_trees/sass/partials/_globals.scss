@@ -168,7 +168,23 @@ aside {
 }
 
 .nomargin {
-  margin: 0;
+  margin: 0 !important;
+}
+
+.nomargin--top {
+  margin-top: 0 !important;
+}
+
+.nomargin--bottom {
+  margin-bottom: 0 !important;
+}
+
+.nopadding--top {
+  padding-top: 0 !important;
+}
+
+.nopadding--bottom {
+  padding-bottom: 0 !important;
 }
 
 .rightarrow {
