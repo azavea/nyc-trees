@@ -319,6 +319,10 @@ aside {
   }
 }
 
+.event-detail i {
+  padding-right: 0.5rem;
+}
+
 @media (max-width: $screen-md) and (min-width: $screen-sm) {
   html {
     font-size: 72.5%;

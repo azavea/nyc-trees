@@ -2,14 +2,45 @@
 <a href="{{ event.get_absolute_url }}" class="event block item rightarrow">
     <div class="row">
         {% include 'event/partials/event_calendar.html' %}
-        <div class="event-details col-xs-6">
+        <div class="event-details col-xs-7">
             <h5 class="event-detail event-detail--title">{{ event.title }}</h5>
-            <div class="event-detail">{{ event.begins_at|date:"f A" }} at {{ event.address }}</div>
-            <div class="event-detail">{{ event.group.name }}</div>
-            <div class="event-detail">{{ event.training_summary }}</div>
-            {% if info.user_is_registered %}<div class="event-detail"><b>+ RSVP</b></div>{% endif %}
+            <table>
+                <tr class="event-detail">
+                    <td>
+                        <i class="icon-user"></i>
+                    </td>
+                    <td>
+                        {{ event.group.name }}
+                    </td>
+                </tr>
+                <tr class="event-detail">
+                    <td>
+                        <i class="icon-clock"></i>
+                    </td>
+                    <td>
+                        {{ event.begins_at|date:"f A" }}
+                    </td>
+                </tr>
+                <tr class="event-detail">
+                    <td>
+                        <i class="icon-globe"></i>
+                    </td>
+                    <td>
+                        {{ event.address }}
+                    </td>
+                </tr>
+                <tr class="event-detail">
+                    <td>
+                        <i class="icon-leaf"></i>
+                    </td>
+                    <td>
+                        {{ event.training_summary }}
+                    </td>
+                </tr>
+            </table>
+            {% if info.user_is_registered %}<div class="event-detail"><b>You are RSVPed!</b></div>{% endif %}
         </div>
-        <div class="event-action col-xs-3"></div>
+        <div class="event-action col-xs-2"></div>
     </div>
 </a>
 {% endwith %}
