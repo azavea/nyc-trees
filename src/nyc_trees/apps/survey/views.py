@@ -488,8 +488,7 @@ def _survey_detail(request, survey_id):
         'survey_id': survey_id,
         'blockface_id': survey.blockface_id,
         'trees': json.dumps(trees),
-        'layer': get_context_for_reservations_layer(request),
-        'bounds': _user_reservation_bounds(request.user),
+        'bounds': list(survey.blockface.geom.extent),
     }
 
 
