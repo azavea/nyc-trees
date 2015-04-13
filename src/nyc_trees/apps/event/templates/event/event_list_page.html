@@ -36,15 +36,17 @@
   <div class="tab-content">
     <div class="tab-pane active" id="list">
       <section>
-        {# TODO: make event_list return a totally empty context to avoid introspection #}
-        <h4>Your Events this week</h4>
-        <div data-class="event-list-container">
-        {% if immediate_events.event_infos %}
-          {% include "event/partials/event_list.html" with event_list=immediate_events %}
-        {% else %}
-          <p class="no-data">You are not attending any events yet.</p>
+        {% if user.is_authenticated %}
+          {# TODO: make event_list return a totally empty context to avoid introspection #}
+          <h4>Your Events this week</h4>
+          <div data-class="event-list-container">
+          {% if immediate_events.event_infos %}
+            {% include "event/partials/event_list.html" with event_list=immediate_events %}
+          {% else %}
+            <p class="no-data">You are not attending any events yet.</p>
+          {% endif %}
+          </div>
         {% endif %}
-        </div>
 
         {# TODO: make event_list return a totally empty context to avoid introspection #}
         <h4>Browse events</h4>
