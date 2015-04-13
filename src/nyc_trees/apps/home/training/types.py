@@ -219,9 +219,8 @@ class Question(object):
     choices - iterable<string>
     answer - SingleAnswer or MultipleAnswer object
     """
-    def __init__(self, text,
-                 correct_markup, incorrect_markup,
-                 choices, answer):
+    def __init__(self, text, choices, answer,
+                 correct_markup="", incorrect_markup=""):
         assert len(choices) > 0
         for ans in answer.answers:
             assert ans >= 0
