@@ -219,12 +219,16 @@ class Question(object):
     choices - iterable<string>
     answer - SingleAnswer or MultipleAnswer object
     """
-    def __init__(self, text, choices, answer):
+    def __init__(self, text,
+                 correct_markup, incorrect_markup,
+                 choices, answer):
         assert len(choices) > 0
         for ans in answer.answers:
             assert ans >= 0
             assert ans < len(choices)
         self.text = unicode(text)
+        self.correct_markup = correct_markup
+        self.incorrect_markup = incorrect_markup
         self.choices = list(choices)
         self.answer = answer
 
