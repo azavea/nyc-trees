@@ -84,14 +84,15 @@ def _global_counts(past_week=False):
     global_counts = {
         'species': surveyed_species_count,
         'species_by_name': surveyed_species,
-        'tree': trees_digits,
+        'tree': tree_count,
+        'tree_digits': trees_digits,
         'block': blocks_mapped,
         'block_percent': blocks_percent,
         'user': user_count,
         'event': event_count,
         'attended_events': attended_events,
         'individual_mappers': individual_mappers
-        }
+    }
     return global_counts
 
 
