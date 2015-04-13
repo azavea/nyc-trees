@@ -131,10 +131,13 @@ var dom = {
     grid = mapModule.addGridLayer(blockfaceMap),
 
     selectedLayer = new SelectableBlockfaceLayer(blockfaceMap, grid, {
-        onAdd: function(gridData, geom) {
-            var latLngs = mapUtil.getLatLngs(geom);
+        onAdd: function() {
+            return true;
+        },
+        onAdded: function(feature, layer) {
+            var latLngs = mapUtil.getLatLngs(feature.geometry);
 
-            blockfaceId = gridData.id;
+            blockfaceId = feature.properties.id;
 
             selectedLayer.clearLayers();
             endPointLayers.clearLayers();
