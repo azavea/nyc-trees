@@ -133,6 +133,7 @@ class Event(NycModel, models.Model):
 
     class Meta:
         unique_together = (("group", "slug"), ("group", "title"))
+        ordering = ['-begins_at']
 
 
 class EventRegistration(NycModel, models.Model):

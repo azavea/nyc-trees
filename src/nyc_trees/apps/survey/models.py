@@ -69,6 +69,7 @@ class Species(NycModel, models.Model):
 
     class Meta:
         unique_together = ("scientific_name", "cultivar", "common_name")
+        ordering = ['common_name', 'scientific_name', 'cultivar']
 
 
 CURB_CHOICES = (
