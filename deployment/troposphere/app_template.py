@@ -175,7 +175,7 @@ t.add_resource(cw.Alarm(
     AlarmActions=[Ref(notification_arn_param)],
     Statistic='Sum',
     Period=300,
-    Threshold='5',
+    Threshold='20',
     EvaluationPeriods=1,
     ComparisonOperator='GreaterThanThreshold',
     MetricName='HTTPCode_Backend_4XX',

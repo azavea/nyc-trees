@@ -257,7 +257,7 @@ t.add_resource(cw.Alarm(
     AlarmActions=[Ref(notification_arn_param)],
     Statistic='Average',
     Period=60,
-    Threshold='1',
+    Threshold='10',
     EvaluationPeriods=1,
     ComparisonOperator='GreaterThanThreshold',
     MetricName='DiskQueueDepth',
