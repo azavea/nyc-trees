@@ -250,11 +250,11 @@ class MyEventsNowTestCase(UsersTestCase):
         return events
 
     def assert_included(self, start_delta, end_delta, **kwargs):
-        events = self._get_my_events_now(start_delta, end_delta, **kwargs)
+        _, events = self._get_my_events_now(start_delta, end_delta, **kwargs)
         self.assertEqual(len(events), 1)
 
     def assert_excluded(self, start_delta, end_delta, **kwargs):
-        events = self._get_my_events_now(start_delta, end_delta, **kwargs)
+        _, events = self._get_my_events_now(start_delta, end_delta, **kwargs)
         self.assertEqual(len(events), 0)
 
     def test_included_if_starting_now(self):

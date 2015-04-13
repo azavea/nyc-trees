@@ -13,9 +13,15 @@ from apps.users.views.user import USER_SETTINGS_PRIVACY_TAB_ID
 def my_events_now(request):
     user = request.user
     if user.is_authenticated():
-        events = EventRegistration.my_events_now(user)
-        if len(events) > 0:
-            return {'my_events_now': events}
+        registered_events = EventRegistration.my_events_now(user)
+        attended_events, non_attended_events = registered_events
+        all_current_events = attended_events + non_attended_events
+        return {
+            # Events user has not been checked-in to yet.
+            'my_events_now': non_attended_events,
+            # All upcoming and in-progress events.
+            'my_events_now_all': all_current_events
+        }
     return {}
 
 
