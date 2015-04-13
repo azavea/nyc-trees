@@ -417,7 +417,6 @@ class IndividualMapperTests(UsersTestCase):
         self.user.training_finished_tree_data = True
         self.user.training_finished_tree_surroundings = True
         self.user.training_finished_intro_quiz = True
-        self.user.training_finished_groups_to_follow = True
         self.user.clean_and_save()
 
     # This test asserts that an email is sent when RSVPing to an

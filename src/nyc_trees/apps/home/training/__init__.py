@@ -31,18 +31,13 @@ intro_quiz = ViewTrainingStep(r.intro_quiz,
                               'intro_quiz',
                               'Intro Quiz', '30 minutes')
 
-groups_to_follow = ViewTrainingStep(r.groups_to_follow,
-                                    'groups_to_follow',
-                                    'Groups To Follow', '5 minutes')
-
 training_summary = TrainingGateway('training_summary',
                                    r.training_list_page,
                                    [getting_started,
                                     the_mapping_method,
                                     tree_data,
                                     tree_surroundings,
-                                    intro_quiz,
-                                    groups_to_follow])
+                                    intro_quiz])
 
 
 # The keys represent the quiz_slug part of urls.
