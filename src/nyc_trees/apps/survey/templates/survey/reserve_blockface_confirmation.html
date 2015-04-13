@@ -16,8 +16,8 @@
     {% elif blockfaces_requested > blockfaces_reserved %}
 
     <p>
-      You requested {{ blockfaces_requested }} block{{blockfaces_requested|pluralize }},
-      but we could only reserve {{ blockfaces_reserved }} block{{ blockfaces_reserved|pluralize }} for you.
+      You requested {{ blockfaces_requested }} block edge{{blockfaces_requested|pluralize }},
+      but we could only reserve {{ blockfaces_reserved }} block edge{{ blockfaces_reserved|pluralize }} for you.
     </p>
 
     <p>Check the <a href="{% url 'reservations' %}">Reservations Page</a> to see which block edges you have reserved.</p>

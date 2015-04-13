@@ -1,8 +1,8 @@
 {% extends "mail/base_email.txt" %}
 {% block content %}
-Your blockface reservations are confirmed!
+Your block edge reservations are confirmed!
 
-The following blockfaces have been confirmed:
+The following block edges have been confirmed:
 {% for blockface in blockfaces %}
 * {{ blockface.id }}
 {% endfor %}
