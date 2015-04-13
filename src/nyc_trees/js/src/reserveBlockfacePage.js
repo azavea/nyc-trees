@@ -131,7 +131,7 @@ var cartLayer = new BlockfaceLayer(reservationMap, {
 });
 
 // Keep this URL in sync with src/nyc_trees/apps/survey/urls/blockface.py
-$.getJSON("/blockface/reserved-blockfaces.json", function(data) {
+$.getJSON("/blockedge/reserved-blockedges.json", function(data) {
     $.each(data, function(__, blockface) {
         selectedBlockfaces[blockface.properties.id] = blockface;
         reservedLayer.addData(blockface);

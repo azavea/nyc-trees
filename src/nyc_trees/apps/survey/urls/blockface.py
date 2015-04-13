@@ -13,7 +13,7 @@ from apps.survey.routes import (
 )
 
 
-# These URLs have the prefix 'blockface/'
+# These URLs have the prefix 'blockedge/'
 urlpatterns = patterns(
     '',
     url(r'^progress/$', progress_page, name='progress_page'),
@@ -28,11 +28,11 @@ urlpatterns = patterns(
 
     # Note: changes here must be kept in sync with
     # src/nyc_trees/js/src/reserveBlockfacePage.js
-    url(r'^reserved-blockfaces.json$', user_reserved_blockfaces_geojson),
+    url(r'^reserved-blockedges.json$', user_reserved_blockfaces_geojson),
 
     # Note: changes here must be kept in sync with
     # src/nyc_trees/js/src/progressPage.js
-    url(r'^(?P<blockface_id>\d+)/progress-page-blockface-popup/$',
+    url(r'^(?P<blockface_id>\d+)/progress-page-blockedge-popup/$',
         progress_page_blockface_popup, name='progress_blockface_popup'),
 
     url(r'^checkout/$', reserve_blockfaces, name='reserve_blockfaces'),

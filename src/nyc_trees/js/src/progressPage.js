@@ -68,8 +68,8 @@ function onModeChanged(e) {
                 // Note: this must be kept in sync with
                 // src/nyc_trees/apps/survey/urls/blockface.py
                 var url =
-                        '/blockface/' + gridData.id +
-                        '/progress-page-blockface-popup/?survey_type=' + gridData.survey_type;
+                        '/blockedge/' + gridData.id +
+                        '/progress-page-blockedge-popup/?survey_type=' + gridData.survey_type;
                 if (gridData.group_id) {
                     url += '&group_id=' + gridData.group_id;
                 }
