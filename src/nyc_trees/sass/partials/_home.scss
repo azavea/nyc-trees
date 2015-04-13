@@ -188,6 +188,21 @@ $hero-box-side-padding: 3rem;
   }
 }
 
+@media (max-width: $screen-sm - 1) {
+  .page-dashboard {
+    .hero-content {
+      padding: 0;
+    }
+    .hero-box {
+      position: relative;
+    }
+    .hero {
+      height: auto;
+      padding-bottom: 2rem;
+    }
+  }
+}
+
 @media (min-width: $screen-sm) {
   .section-appeal {
     margin-top: auto;
@@ -204,6 +219,9 @@ $hero-box-side-padding: 3rem;
   }
   .hero {
     height: 45rem !important;
+    .page-dashboard & {
+      height: 28rem !important
+    }
   }
   .hero-content {
     margin-left: $grid-gutter-width/-2;

@@ -7,20 +7,16 @@
 <div class="page-dashboard">
 
     <div class="hero">
-        <div class="hero-background" style="background-image: url({{ "img/hero-background.jpg"|static_url }})">
+        <div class="hero-background hidden-xs" style="background-image: url({{ "img/hero-background.jpg"|static_url }})">
         </div>
         <div class="hero-box">
             <div class="container">
                 <div class="row">
-                    <div class="col-sm-6 col-sm-push-6">
+                    <div class="col-sm-12 col-md-6 col-md-push-6">
                         <div class="hero-content">
                             <h1 class="hero-heading">Welcome back,
                             volun<span class="color--primary">treer!</span></h1>
                             {% flag full_access %}
-                                <p class="hero-text">In the past week, <span class="color--primary">405 trees</span> in <span class="color--primary">12 blocks</span> have been added. We're <span class="color--primary">43%</span> of the way to our goal!</p>
-                                <div class="text-right">
-                                    <a class="hero-link hero-text text-center color--secondary h4" href="{% url 'progress_page' %}">Show me the map →</a>
-                                </div>
                             {% endflag %}
                         </div>
                     </div>
