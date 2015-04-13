@@ -1,8 +1,9 @@
 <form method="POST" id="event-form">
-    <fieldset>
         {% csrf_token %}
 
         {{ form.non_field_errors }}
+
+        <fieldset class="h4 color--primary">Event details</fieldset>
 
         <div class="field">
             {{ form.title.label_tag }}
@@ -93,6 +94,12 @@
             {{ form.max_attendees }}
         </div>
 
+        <hr>
+
+        <a href="javascript:;" id="use-my-contact-info" class="pull-right">Use my contact information</a>
+
+        <fieldset class="h4 color--primary">Contact person</fieldset>
+
         <div class="field">
             {{ form.contact_email.label_tag }}
             {{ form.contact_email.errors }}
@@ -109,7 +116,6 @@
             <input type="hidden" id="user-contact-name"
                    value="{{ request.user.first_name }} {{request.user.last_name }}" />
             <input type="hidden" id="user-contact-email" value="{{ request.user.email }}" />
-            <a href="javascript:;" id="use-my-contact-info">Use my contact information</a>
         </div>
 
         <div class="pull-right">
@@ -117,5 +123,4 @@
         </div>
         <a class="btn btn-link" href="{% url 'group_edit' group_slug=group.slug %}">Cancel</a>
 
-    </fieldset>
 </form>
