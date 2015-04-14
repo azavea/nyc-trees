@@ -48,7 +48,7 @@ class TrainingGateway(AbstractTrainingNode):
     application should talk to the training workflow. Where possible,
     TrainingStep objects should not be referenced directly.
     """
-    def __init__(self, name, view, steps):
+    def __init__(self, name, view, steps, on_user_completion=None):
         # read the step array and link the end nodes into
         # a cycle through the training gateway
         first_step, last_step = steps[0], steps[-1]
@@ -67,6 +67,8 @@ class TrainingGateway(AbstractTrainingNode):
             steps[i].previous_step = steps[i-1]
             steps[i].next_step = steps[i+1]
         last_step.next_step = self
+
+        last_step.extra_user_actions = on_user_completion
 
         self.name = name
         self.view = view
@@ -116,6 +118,7 @@ class AbstractTrainingStep(AbstractTrainingNode):
         self.duration = duration
         self.next_step = None
         self.previous_step = None
+        self.extra_user_actions = None
 
     def pure_url(self):
         return reverse(_PURE_URL_NAME_TEMPLATE % self.name)
@@ -127,7 +130,8 @@ class AbstractTrainingStep(AbstractTrainingNode):
         name = _MARK_PROGRESS_URL_NAME_TEMPLATE % self.name
         view = do(
             require_visitability(self),
-            mark_user(_TRAINING_FINISHED_BOOLEAN_FIELD_TEMPLATE % self.name),
+            mark_user(_TRAINING_FINISHED_BOOLEAN_FIELD_TEMPLATE % self.name,
+                      self.extra_user_actions),
             require_visitability(self.next_step),
             self.next_step.view)
         return {'name': name, 'view': view}
