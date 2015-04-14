@@ -57,6 +57,11 @@ var Windshaft = require('windshaft'),
             port: statsdPort
         },
 
+        // ISO date formatting is not respected here. There is a Logstash
+        // filter downstream that converts `timestamp` into `@timestamp`
+        // with the proper formatting.
+        log_format: '{ "timestamp": ":date[iso]", "@fields": { "remote_addr": ":remote-addr", "body_bytes_sent": ":res[content-length]", "request_time": ":response-time", "status": ":status", "request": ":method :url HTTP/:http-version", "request_method": ":method", "http_referrer": ":referrer", "http_user_agent": ":user-agent" } }',
+
         enable_cors: true,
 
         mapnik: {
