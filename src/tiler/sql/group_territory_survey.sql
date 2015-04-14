@@ -1,9 +1,6 @@
 (SELECT
   block.id,
   block.geom,
-  <% if (is_utf_grid) { %>
-  ST_AsGeoJSON(block.geom) AS geojson,
-  <% } %>
   CASE
     WHEN (block.is_available AND reservation.id IS NULL) THEN 'available'
     ELSE 'unavailable'

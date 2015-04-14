@@ -8,12 +8,15 @@ var $ = require('jquery'),
 
     color = '#FFEB3B';
 
-/* Adds a geojson layer to the given map, based on the geojson data of a UtfGrid.
- * The UtfGrid must have a "geojson" property as a data attribute.
+/* Adds a geojson layer to the given map.
  *
  * Geojson fatures are added to the map when their corresponding
  * features are clicked in the UtfGrid, and they are removed when the geojson
  * feature is clicked.
+ *
+ * Depends on a UtfGrid with an "id" property. A GeoJSON represention of the
+ * selected blockface is fetched via AJAX, using the ID to construct the
+ * fetch URL.
  *
  * Accepts two callbacks: onAdd and onRemove, which are called prior to adding
  * or removing geojson features.
@@ -54,15 +57,21 @@ module.exports = BlockfaceLayer.extend({
     },
 
     addBlockface: function(data, latlng) {
-        if (data && data.geojson) {
-            var geom = mapUtil.parseGeoJSON(data.geojson);
-            if (this.options.onAdd(data, geom, latlng)) {
-                this.addData({
-                    "type": "Feature",
-                    "geometry": geom,
-                    "properties": data
-                });
-            }
+        var self = this;
+        if (!data || !data.id) {
+            return;
+        }
+        if (self.options.onAdd(data, latlng)) {
+            mapUtil.fetchBlockface(data.id).then(function(blockfaceData) {
+                if (blockfaceData && blockfaceData.geojson) {
+                    var geom = mapUtil.parseGeoJSON(blockfaceData.geojson);
+                    self.addData({
+                        "type": "Feature",
+                        "geometry": geom,
+                        "properties": data
+                    });
+                }
+            });
         }
     }
 });
