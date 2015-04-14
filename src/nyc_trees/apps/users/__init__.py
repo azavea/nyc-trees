@@ -19,7 +19,7 @@ def user_profile_context(user, its_me=True, home_page=True):
                             .order_by('created_at')
                             .values_list('achievement_id', flat=True))
 
-    block_count = user.survey_set.distinct('blockface').count()
+    block_count = user.blocks_mapped_count
     tree_count = get_user_tree_count(user)
     species_surveyed = get_user_surveyed_species(user)
     # Distinct count, not total

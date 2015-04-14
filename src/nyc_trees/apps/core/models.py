@@ -156,6 +156,10 @@ class User(NycModel, AbstractUser):
             not user_is_trusted_mapper(self, group)
 
     @property
+    def blocks_mapped_count(self):
+        return self.survey_set.distinct('blockface').count()
+
+    @property
     def reservations_map_pdf_url(self):
         return url_if_cooked(self.reservations_map_pdf_filename)
 
