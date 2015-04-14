@@ -8,6 +8,7 @@ from apps.home.training.types import (FlatPageTrainingStep,
                                       Quiz, Question, SingleAnswer,
                                       MultipleAnswer)
 from apps.home.training import routes as r
+from apps.mail.views import send_online_training_complete
 
 from quiz_strings import QuizStrings as QS
 
@@ -33,13 +34,15 @@ intro_quiz = ViewTrainingStep(r.intro_quiz,
                               'intro_quiz',
                               'Explore Your Knowledge', '30 minutes')
 
-training_summary = TrainingGateway('training_summary',
-                                   r.training_list_page,
-                                   [getting_started,
-                                    the_mapping_method,
-                                    tree_data,
-                                    tree_surroundings,
-                                    intro_quiz])
+training_summary = TrainingGateway(
+    'training_summary',
+    r.training_list_page,
+    [getting_started,
+     the_mapping_method,
+     tree_data,
+     tree_surroundings,
+     intro_quiz],
+    on_user_completion=send_online_training_complete)
 
 
 # The keys represent the quiz_slug part of urls.
