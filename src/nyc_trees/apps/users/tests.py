@@ -594,5 +594,3 @@ class AchievementTests(UsersTestCase):
 
         self._assertAchievements([AchievementDefinition.MAP_50,
                                   AchievementDefinition.MAP_100])
-
-

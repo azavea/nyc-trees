@@ -20,7 +20,8 @@ class AchievementDefinition(object):
     badge - path for a static image file
     achieved - a function which takes a user and returns a boolean
     """
-    def __init__(self, name, description, description_achieved, badge, achieved):
+    def __init__(self, name, description, description_achieved, badge,
+                 achieved):
         assert isinstance(name, basestring)
         assert isinstance(description, basestring)
         assert isinstance(description_achieved, basestring)
