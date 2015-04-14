@@ -1,9 +1,9 @@
 /* If you change these colors, also change src/nyc_trees/sass/partials/_legend.scss */
 @surveyed-by-me: #228F73;
 @surveyed-by-others: #8BC34A;
-@available: #A8C1B6;
-@reserved: #E55934;
-@unavailable: #36494E;
+@available: #36b5db;
+@reserved: #e55934;
+@unavailable: #aaa;
 
 #survey_blockface {
   line-join: round;
