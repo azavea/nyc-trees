@@ -188,19 +188,35 @@ def _reservation_ids(user):
 
 
 def printable_reservations_page(request):
+    blockfaces = _user_reservations(request.user)
+
+    endpoints = set()
+    for blockface in blockfaces:
+        coords = blockface.geom.coords[0]
+        endpoints.add(coords[0])
+        endpoints.add(coords[-1])
+    # make list of [lat,lng] coordinates for leaflet convenience
+    endpoints = [[e[1], e[0]] for e in endpoints]
+
     return {
         'layer': get_context_for_printable_reservations_layer(request),
-        'bounds': _user_reservation_bounds(request.user)
+        'bounds': list(blockfaces.collect().extent) if blockfaces else None,
+        'endpoints': endpoints
     }
 
 
 def _user_reservation_bounds(user):
+    blockfaces = _user_reservations(user)
+    return list(blockfaces.collect().extent) if blockfaces else None
+
+
+def _user_reservations(user):
     reservations = BlockfaceReservation.objects \
         .filter(user=user) \
         .current() \
         .values_list('blockface_id', flat=True)
-    blockfaces = Blockface.objects.filter(id__in=reservations).collect()
-    return list(blockfaces.extent) if blockfaces else None
+    blockfaces = Blockface.objects.filter(id__in=reservations)
+    return blockfaces
 
 
 def reserve_blockfaces_page(request):
