@@ -17,6 +17,10 @@ var Windshaft = require('windshaft'),
     statsdHost = process.env.NYC_TREES_STATSD_HOST || 'localhost',
     statsdPort = process.env.NYC_TREES_STATSD_PORT || 8125,
 
+    // See http://wiki.openstreetmap.org/wiki/Meta_tiles for a discussion of metatiles.
+    // 4 is the default set in https://github.com/CartoDB/Windshaft/blob/42218bc480bedaa6b5e1b7d60478ea8afdce2d87/lib/windshaft/renderers/mapnik/factory.js#L26
+    mapnikMetatileCount = process.env.NYC_TREES_METATILE_COUNT || 4,
+
     queries = files('./sql'),
     styles = files('./style'),
 
@@ -54,6 +58,10 @@ var Windshaft = require('windshaft'),
         },
 
         enable_cors: true,
+
+        mapnik: {
+            metatile: mapnikMetatileCount
+        },
 
         req2params: function(req, callback) {
             try {
