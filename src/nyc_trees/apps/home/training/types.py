@@ -3,10 +3,16 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
+from functools import wraps
+
 from django.core.urlresolvers import reverse
+from django.http import Http404
+
 from django_tinsel.utils import decorate as do
+
 from apps.home.training.routes import make_flatpage_route
 from apps.home.training.decorators import mark_user, require_visitability
+from apps.users.models import TrainingResult
 
 _PURE_URL_NAME_TEMPLATE = '%s_pure'
 _MARK_PROGRESS_URL_NAME_TEMPLATE = '%s_mark_progress'
@@ -169,15 +175,44 @@ class ViewTrainingStep(AbstractTrainingStep):
         self.view = view
 
 
+class QuizTrainingStep(ViewTrainingStep):
+    def __init__(self, quiz, view, *args, **kwargs):
+        super(QuizTrainingStep, self).__init__(view, *args, **kwargs)
+        self.quiz = quiz
+
+    def require_training_result(self, view_fn):
+        @wraps(view_fn)
+        def wrapper(request, *args, **kwargs):
+            training_results = (TrainingResult.objects
+                                .filter(user=request.user,
+                                        module_name=self.quiz.slug,
+                                        score__gte=self.quiz.passing_score))
+            if not training_results.exists():
+                raise Http404()
+            else:
+                return view_fn(request, *args, **kwargs)
+        return wrapper
+
+    def mark_kwargs(self):
+        ctx = super(QuizTrainingStep, self).mark_kwargs()
+        new_view = self.require_training_result(ctx['view'])
+        ctx['view'] = new_view
+        return ctx
+
+
 class Quiz(object):
     """
+    slug - string; an internally available reference to the slug used to
+           access this quiz from the outside world via the global `quizzes`
+           dict.
     title - string
     questions - iterable<Question>
     passing_score - int; Number of correct answers needed to pass the quiz
     """
-    def __init__(self, title, questions, passing_score):
+    def __init__(self, slug, title, questions, passing_score):
         assert len(questions) > 0
         assert passing_score <= len(questions)
+        self.slug = unicode(slug)
         self.title = unicode(title)
         self.questions = list(questions)
         self.passing_score = int(passing_score)
