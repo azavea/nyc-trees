@@ -20,7 +20,13 @@ The following variables must be in scope:
         <a href="{{ event_edit_url }}"
            class="btn btn-secondary"><i class="icon-cog"></i>Edit</a>
     {% endif %}
-    {% if can_rsvp %}
+    {% if is_rsvped %}
+        <a id="rsvp"
+           href="#"
+           data-verb="DELETE"
+           data-url="{{ rsvp_url }}"
+           class="btn btn-switch btn-rsvp active">Attending</a>
+    {% elif can_rsvp %}
         {% if not user.is_authenticated %}
             <a id="rsvp"
                href="{% url "login" %}?next={{ event.get_absolute_url }}"
@@ -33,12 +39,6 @@ The following variables must be in scope:
             <a id="rsvp"
                href="{% url "training_instructions" %}"
                class="btn btn-switch btn-rsvp">RSVP</a>
-        {% elif is_rsvped %}
-            <a id="rsvp"
-               href="#"
-               data-verb="DELETE"
-               data-url="{{ rsvp_url }}"
-               class="btn btn-switch btn-rsvp active">Attending</a>
         {% else %}
             <a id="rsvp"
                href="#"
