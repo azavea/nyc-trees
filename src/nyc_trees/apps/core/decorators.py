@@ -100,7 +100,13 @@ def update_with(callable_or_dict):
         @wraps(view_fn)
         def inner(request, *args, **kwargs):
             ctx = view_fn(request, *args, **kwargs)
-            if callable(callable_or_dict):
+            if not isinstance(ctx, dict):
+                # if it's already been lifted from a context
+                # to an http object, it's usually because an
+                # error or redirect happened before instead
+                # in that case, just pass it through
+                pass
+            elif callable(callable_or_dict):
                 ctx.update(callable_or_dict(request, *args, **kwargs))
             else:
                 ctx.update(callable_or_dict)
