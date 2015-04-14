@@ -9,6 +9,8 @@ from apps.home.training.types import (FlatPageTrainingStep,
                                       MultipleAnswer)
 from apps.home.training import routes as r
 
+from quiz_strings import QuizStrings as QS
+
 # This package attempts to keep all the particulars of training encapsulated,
 # such that you can modify how things are wired together in this file without
 # digging into the implementation. There are some key exceptions to this:
@@ -29,7 +31,7 @@ tree_surroundings = FlatPageTrainingStep('tree_surroundings',
 
 intro_quiz = ViewTrainingStep(r.intro_quiz,
                               'intro_quiz',
-                              'Intro Quiz', '30 minutes')
+                              'Explore Your Knowledge', '30 minutes')
 
 training_summary = TrainingGateway('training_summary',
                                    r.training_list_page,
@@ -43,24 +45,49 @@ training_summary = TrainingGateway('training_summary',
 # The keys represent the quiz_slug part of urls.
 quizzes = {
     'intro_quiz': Quiz(
-        title='Introduction Quiz',
-        passing_score=2,
+        title='Explore Your Knowledge',
+        passing_score=7,
         questions=(
             Question(
-                text='Lorem ipsum dolor sit amet, consectetur '
-                     'adipiscing elit?',
-                answer=MultipleAnswer(0, 2),
-                choices=('Answer A', 'Answer B', 'Answer C')),
+                text=QS.q1_text,
+                correct_markup=QS.q1_correct_markup,
+                incorrect_markup=QS.q1_incorrect_markup,
+                answer=MultipleAnswer(0, 1, 2),
+                choices=(QS.q1_c1, QS.q1_c2, QS.q1_c3, QS.q1_c4)),
             Question(
-                text='Lorem ipsum dolor sit amet, consectetur '
-                     'adipiscing elit?',
-                answer=SingleAnswer(1),
-                choices=('Answer A', 'Answer B', 'Answer C')),
+                text=QS.q2_text,
+                correct_markup=QS.q2_correct_markup,
+                incorrect_markup=QS.q2_incorrect_markup,
+                answer=MultipleAnswer(0, 1, 2),
+                choices=(QS.q2_c1, QS.q2_c2, QS.q2_c3)),
             Question(
-                text='Lorem ipsum dolor sit amet, consectetur '
-                     'adipiscing elit?',
+                text=QS.q3_text,
+                correct_markup=QS.q3_correct_markup,
+                incorrect_markup=QS.q3_incorrect_markup,
+                answer=SingleAnswer(0),
+                choices=(QS.q3_c1, QS.q3_c2)),
+            Question(
+                text=QS.q4_text,
+                correct_markup=QS.q4_correct_markup,
+                incorrect_markup=QS.q4_incorrect_markup,
+                answer=SingleAnswer(3),
+                choices=(QS.q4_c1, QS.q4_c2, QS.q4_c3, QS.q4_c4)),
+            Question(
+                text=QS.q5_text,
+                correct_markup=QS.q5_correct_markup,
+                incorrect_markup=QS.q5_incorrect_markup,
                 answer=SingleAnswer(2),
-                choices=('Answer A', 'Answer B', 'Answer C')),
-        )
-    )
-}
+                choices=(QS.q5_c1, QS.q5_c2, QS.q5_c3, QS.q5_c4)),
+            Question(
+                text=QS.q6_text,
+                correct_markup=QS.q6_correct_markup,
+                incorrect_markup=QS.q6_incorrect_markup,
+                answer=SingleAnswer(0),
+                choices=(QS.q6_c1, QS.q6_c2)),
+            Question(
+                text=QS.q7_text,
+                correct_markup=QS.q7_correct_markup,
+                incorrect_markup=QS.q7_incorrect_markup,
+                answer=SingleAnswer(0),
+                choices=(QS.q7_c1, QS.q7_c2, QS.q7_c3)),
+        ))}

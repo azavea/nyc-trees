@@ -59,6 +59,12 @@
             <li>{{ ans }}</li>
         {% endfor %}
         </ul>
+        {% if item.is_correct %}
+            <p>{{ item.question.correct_markup|safe }}</p>
+        {% else %}
+            <p>{{ item.question.incorrect_markup|safe }}</p>
+        {% endif %}
+
     </div>
 </div>
 {% endfor %}
