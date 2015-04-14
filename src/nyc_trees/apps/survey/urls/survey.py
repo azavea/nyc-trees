@@ -32,6 +32,6 @@ urlpatterns = patterns(
 
     url(r'^flag/(?P<survey_id>\d+)/$', flag_survey, name='flag_survey'),
 
-    url(r'^release_blockface/(?P<survey_id>\d+)/$',
+    url(r'^release_blockedge/(?P<survey_id>\d+)/$',
         release_blockface, name='release_blockface'),
 )

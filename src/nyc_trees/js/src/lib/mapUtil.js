@@ -33,7 +33,7 @@ function fetchBlockface(blockfaceId) {
     } else {
         // NOTE: This has a hard coded url that must be kept in sync with
         // apps/survey/urls/blockface.py
-        $.getJSON('/blockface/' + blockfaceId + '/', function(blockface) {
+        $.getJSON('/blockedge/' + blockfaceId + '/', function(blockface) {
             var e = blockface.extent,
                 sw = L.latLng(e[1], e[0]),
                 ne = L.latLng(e[3], e[2]),

@@ -86,7 +86,7 @@ function getGroupUnmappedTerritory(onSuccess, polygon) {
     })
         .done(onSuccess)
         .fail(function () {
-            toastr.error("Failed to retrieve blockfaces");
+            toastr.error("Failed to retrieve block edges");
         })
         .always(enableUserActions);
 }
@@ -232,7 +232,7 @@ function saveTerritory() {
     })
         .done(initAllLayers)
         .fail(function () {
-            toastr.error("Failed to save blockfaces");
+            toastr.error("Failed to save block edges");
         })
         .always(enableUserActions);
 }

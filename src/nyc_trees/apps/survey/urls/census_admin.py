@@ -22,20 +22,20 @@ urlpatterns = patterns(
     url(r'^territory/$', r.admin_territory_page,
         name='admin_territory_page'),
 
-    url(r'^blockface-partial/$',
+    url(r'^blockedge-partial/$',
         census_admin_do(route(GET=admin_blockface_partial)),
         name='admin_blockface_partial'),
 
-    url(r'^blockface/(?P<blockface_id>\d+)/$',
+    url(r'^blockedge/(?P<blockface_id>\d+)/$',
         census_admin_do(route(GET=admin_blockface_detail_page)),
         name='admin_blockface_detail_page'),
 
-    url(r'^blockface/(?P<blockface_id>\d+)/extend-reservation/$',
+    url(r'^blockedge/(?P<blockface_id>\d+)/extend-reservation/$',
         census_admin_do(route(
             POST=admin_extend_blockface_reservation)),
         name='admin_extend_blockface_reservation'),
 
-    url(r'^blockface/(?P<blockface_id>\d+)/set-available/$',
+    url(r'^blockedge/(?P<blockface_id>\d+)/set-available/$',
         census_admin_do(route(POST=admin_blockface_available)),
         name='admin_blockface_available'),
 )

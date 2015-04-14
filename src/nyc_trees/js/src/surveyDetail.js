@@ -65,7 +65,7 @@ $.each($(JSON.parse(treesJSON)), function (__, tree) {
 });
 
 $(dom.abandonIncomplete).on(
-    'click', postThen('/survey/release_blockface/', function () {
+    'click', postThen('/survey/release_blockedge/', function () {
         // Note: this URL needs to be kept in sync with
         // src/nyc_trees/apps/survey/urls/survey.py
         window.location.href = surveyUrl + '#' + blockfaceId;
