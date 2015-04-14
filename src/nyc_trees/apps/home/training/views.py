@@ -45,11 +45,6 @@ def complete_quiz(request):
 
     passed_quiz = (score >= quiz.passing_score)
 
-    passed_quiz_bool = 'training_finished_%s' % quiz_slug
-    if passed_quiz and getattr(user, passed_quiz_bool) is False:
-        setattr(user, passed_quiz_bool, True)
-        user.save()
-
     return {
         'quiz': quiz,
         'quiz_slug': quiz_slug,
