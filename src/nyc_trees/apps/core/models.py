@@ -159,6 +159,9 @@ class User(NycModel, AbstractUser):
     def reservations_map_pdf_url(self):
         return url_if_cooked(self.reservations_map_pdf_filename)
 
+    class Meta:
+        ordering = ['username']
+
 
 def _generate_image_filename(group, filename):
     return 'group_images/{}/{}'.format(group.slug, filename)
@@ -192,6 +195,9 @@ class Group(NycModel, models.Model):
 
     def get_absolute_url(self):
         return reverse('group_detail', kwargs={'group_slug': self.slug})
+
+    class Meta:
+        ordering = ['name']
 
 
 class TaskRun(models.Model):
