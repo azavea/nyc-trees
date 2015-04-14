@@ -1,10 +1,9 @@
 {% if user.online_training_complete %}
 <h3>Training Complete!</h3>
-<p>Visit <a href="{% url 'home_page' %}">the dashboard</a> to explore the site and start mapping!</p>
+<p>Visit <a href="{% url 'home_page' %}">the dashboard</a> to explore the site and start mapping! You can also visit the Groups page to learn more about mapping opportunities and follow groups for event information.</p>
 {% else %}
 <h3>You're almost there! Continue your training.</h3>
 {% endif %}
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu congue lorem, id feugiat tortor. Aliquam ante elit, sodales eget porttitor vel, commodo et felis.</p>
 
 {% for step_info in training_steps %}
 <a {% if step_info.is_visitable %}href="{{ step_info.step.pure_url }}"{% endif %}
@@ -24,3 +23,21 @@
     </div>
 </a>
 {% endfor %}
+{% if user.online_training_complete %}
+<a href="{% url 'groups_to_follow' %}"
+   class="training block item">
+    <div class="row">
+        <div class="col-xs-8">
+            <h5>Groups to Follow</h5>
+            <div class="h6">5 minutes</div>
+        </div>
+        <div class="col-xs-4 text-right">
+          {% if user.training_finished_groups_to_follow %}
+              <i class="icon-check h4"></i>
+          {% else %}
+              <button class="btn-primary btn">Go</button>
+          {% endif %}
+        </div>
+    </div>
+</a>
+{% endif %}

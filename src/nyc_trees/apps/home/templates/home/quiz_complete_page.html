@@ -66,7 +66,7 @@
 <hr/>
 
 {% if passed_quiz %}
-    <p><a href="{% url 'groups_to_follow_pure' %}" class="btn btn-primary">Finish</a></p>
+    <p><a href="{% url 'intro_quiz_mark_progress' %}" class="btn btn-primary">Finish</a></p>
 {% else %}
     <p><a href="{% url 'intro_quiz_pure' %}"
           class="btn btn-secondary btn-mobile--max">Try Again</a></p>

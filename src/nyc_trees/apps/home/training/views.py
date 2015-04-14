@@ -6,14 +6,7 @@ from __future__ import division
 from django.db import transaction
 
 from apps.home.training.utils import get_quiz_or_404
-from apps.users.views.group import group_list_page
 from apps.users.models import TrainingResult
-
-
-def groups_to_follow(request):
-    ctx = group_list_page(request)
-    ctx.update({'chunk_size': 2})
-    return ctx
 
 
 def training_list_page(request):
