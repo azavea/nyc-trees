@@ -47,9 +47,7 @@ class EventListTest(EventTestCase):
         request = make_request(user=self.user)
         ctx = events_list_page(request)
         self.assertEqual(len(ctx['all_events']['event_infos']), 1)
-        self.assertEqual(len(ctx['immediate_events']['event_infos']), 1)
-        self.assertFalse(
-            ctx['immediate_events']['event_infos'][0]['user_is_registered'])
+        self.assertEqual(len(ctx['immediate_events']['event_infos']), 0)
 
     def test_following_user_registered(self):
         EventRegistration.objects.create(user=self.user,

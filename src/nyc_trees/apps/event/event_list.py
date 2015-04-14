@@ -331,9 +331,9 @@ def immediate_events(request):
               .order_by('begins_at'))
 
     if user.is_authenticated():
-        follows = Follow.objects.filter(user_id=user.id)
-        groups = follows.values_list('group', flat=True)
-        immediate_events = nowish.filter(group_id__in=groups)
+        events = (EventRegistration.objects.filter(user=user)
+                  .values_list('event_id', flat=True))
+        immediate_events = nowish.filter(id__in=events)
     else:
         immediate_events = nowish.none()
 
