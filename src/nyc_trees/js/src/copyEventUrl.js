@@ -8,6 +8,6 @@ var dom = {
 
 $(dom.copyEventUrl).click(function (e) {
     var eventUrl = $(e.target).data('event-url');
-    window.prompt('Please copy the selected text:', eventUrl);
+    window.prompt('Please manually copy the selected text:', eventUrl);
 });
 
