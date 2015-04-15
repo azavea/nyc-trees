@@ -11,13 +11,13 @@ from django.utils.timezone import now
 
 from apps.core.models import TaskRun
 from apps.census_admin.tasks import (dump_model, dump_trees_to_shapefile,
-                                     dump_blockface_to_shapefile, zip_dumps)
+                                     dump_blockface_to_shapefile, zip_dumps,
+                                     dump_events_to_shapefile)
 
 TASK_NAME = 'dump_db'
 
 MODELS = ['apps.core.models.User',
           'apps.core.models.Group',
-          'apps.event.models.Event',
           'apps.event.models.EventRegistration',
           'apps.survey.models.BlockfaceReservation',
           'apps.survey.models.Species',
@@ -54,7 +54,8 @@ class Command(BaseCommand):
 
         dump_model_tasks = [dump_model.s(fqn, dump_id) for fqn in MODELS]
         dump_model_tasks += [dump_trees_to_shapefile.s(dump_id),
-                             dump_blockface_to_shapefile.s(dump_id)]
+                             dump_blockface_to_shapefile.s(dump_id),
+                             dump_events_to_shapefile.s(dump_id)]
 
         dump_tasks = chord(dump_model_tasks, zip_dumps.s(dump_id))
         dump_tasks.apply_async()
