@@ -46,7 +46,8 @@
 
                     <fieldset>
 
-                        {{ form.non_field_errors }}
+                        {% include "core/partials/non_field_errors.html" %}
+
                         <div class="block item">
                             {{ form.description.errors }}
                             {{ form.description.label_tag }}

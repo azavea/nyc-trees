@@ -14,7 +14,7 @@
             Forgot your username? Enter the Email address you used to register
             with TreesCount! and click the “Send” button below.
         </p>
-        {{ form.non_field_errors }}
+        {% include "core/partials/non_field_errors.html" %}
         <p>
           <div class="fieldWrapper">
             {{ form.email.errors }}
