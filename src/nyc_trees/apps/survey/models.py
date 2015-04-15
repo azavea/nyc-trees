@@ -31,6 +31,9 @@ class Territory(NycModel, models.Model):
     def __unicode__(self):
         return '%s -> %s' % (self.group, self.blockface_id)
 
+    class Meta:
+        verbose_name_plural = "Territories"
+
 
 class Survey(NycModel, models.Model):
     # We do not anticipate deleting a Blockface, but we definitely
@@ -70,6 +73,7 @@ class Species(NycModel, models.Model):
     class Meta:
         unique_together = ("scientific_name", "cultivar", "common_name")
         ordering = ['common_name', 'scientific_name', 'cultivar']
+        verbose_name_plural = "Species"
 
 
 CURB_CHOICES = (

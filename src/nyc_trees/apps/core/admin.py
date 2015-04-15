@@ -3,14 +3,27 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
+from waffle.models import Sample, Switch
+
+from django.conf import settings
 from django.core.exceptions import ValidationError
 
 from django.contrib import admin
 from django.contrib.gis.admin import OSMGeoAdmin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
+from django.contrib.auth.models import Group as AuthGroup
+from django.contrib.sites.models import Site
 
 from apps.core.models import User, Group
+
+
+admin.site.unregister(AuthGroup)
+
+if not settings.DEBUG:
+    admin.site.unregister(Site)
+    admin.site.unregister(Sample)
+    admin.site.unregister(Switch)
 
 
 @admin.register(Group)
