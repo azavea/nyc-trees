@@ -3,9 +3,9 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
-from django.db import models
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import AbstractUser, UserManager
+from django.contrib.gis.db import models
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.utils.text import slugify
@@ -189,6 +189,9 @@ class Group(NycModel, models.Model):
     is_active = models.BooleanField(default=True)
     allows_individual_mappers = models.BooleanField(default=False)
     affiliation = models.CharField(max_length=255, default='', blank=True)
+    border = models.PolygonField(null=True, blank=True)
+
+    objects = models.GeoManager()
 
     def __unicode__(self):
         return self.name

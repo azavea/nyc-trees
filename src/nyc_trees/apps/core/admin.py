@@ -6,6 +6,7 @@ from __future__ import division
 from django.core.exceptions import ValidationError
 
 from django.contrib import admin
+from django.contrib.gis.admin import OSMGeoAdmin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 
@@ -13,7 +14,7 @@ from apps.core.models import User, Group
 
 
 @admin.register(Group)
-class GroupAdmin(admin.ModelAdmin):
+class GroupAdmin(OSMGeoAdmin):
     prepopulated_fields = {"slug": ("name",)}
 
 
