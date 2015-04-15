@@ -90,4 +90,22 @@ quizzes = {
                 incorrect_markup=QS.q7_incorrect_markup,
                 answer=SingleAnswer(0),
                 choices=(QS.q7_c1, QS.q7_c2, QS.q7_c3)),
+            Question(
+                text=QS.q8_text,
+                correct_markup=QS.q8_correct_markup,
+                incorrect_markup=QS.q8_incorrect_markup,
+                answer=SingleAnswer(2),
+                choices=(QS.q8_c1, QS.q8_c2, QS.q8_c3)),
+            Question(
+                text=QS.q9_text,
+                correct_markup=QS.q9_correct_markup,
+                incorrect_markup=QS.q9_incorrect_markup,
+                answer=SingleAnswer(0),
+                choices=(QS.q9_c1, QS.q9_c2, QS.q9_c3, QS.q9_c4)),
+            Question(
+                text=QS.q10_text,
+                correct_markup=QS.q10_correct_markup,
+                incorrect_markup=QS.q10_incorrect_markup,
+                answer=SingleAnswer(1),
+                choices=(QS.q10_c1, QS.q10_c2, QS.q10_c3)),
         ))}

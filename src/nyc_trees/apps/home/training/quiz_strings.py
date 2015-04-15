@@ -37,6 +37,16 @@ _orientation = """
    target="_blank">Orientation.</a>
 """
 
+_evidence_of_stewardship = """
+<a href="/training/pure/tree_surroundings/#evidence-of-stewardship"
+   target="_blank">Evidence of Stewardship.</a>
+"""
+
+_what_if_im_not_sure = """
+<a href="/training/pure/tree_data/#what-if-im-not-sure"
+   target="_blank">What if I'm not sure?</a>
+"""
+
 
 class QuizStrings(object):
 
@@ -70,6 +80,7 @@ class QuizStrings(object):
     q2_text = """
     How do you map a street tree that is offset from the curb
     in an alternating pattern? Select all that apply.
+    <img src="/static/img/training/Stagger-Offset/stagger-offset.png"/>
     """
 
     q2_c1 = "Find the tree center and record the distance."
@@ -109,7 +120,10 @@ class QuizStrings(object):
     # QUESTION 4                                                 #
     ##############################################################
 
-    q4_text = "What is the diameter of a tree stump?"
+    q4_text = """
+    What is the diameter of a tree stump?
+    <img src="/static/img/training/Stump/stump.png"/>
+    """
 
     q4_c1 = "The distance from the center of the tree to the bark."
     q4_c2 = "Half the distance around the trunk of the tree."
@@ -188,3 +202,70 @@ class QuizStrings(object):
     q7_incorrect_markup = """
     Incorrect. Review %s
     """ % _orientation
+
+    ##############################################################
+    # QUESTION 8                                                 #
+    ##############################################################
+
+    q8_text = """
+    <img src="/static/img/training/Poor-health-one/poor-health-one.png"/>
+    One reason we can tell this tree is in poor health is:
+    """
+
+    q8_c1 = "The branches are not broken."
+    q8_c2 = "It is short."
+    q8_c3 = "The canopy is very sparse."
+
+    q8_correct_markup = """
+    Correct: Leaves with brown spots and holes, broken branches,
+    and significant damage to the trunk and bark are signs of a
+    tree in poor health. See: %s
+    """ % _perceptions_of_tree_health
+
+    q8_incorrect_markup = """
+    Incorrect. Review %s
+    """ % _perceptions_of_tree_health
+
+    ##############################################################
+    # QUESTION 9                                                 #
+    ##############################################################
+
+    q9_text = "Which Tree Steward signs should be counted?"
+
+    q9_c1 = "Curb your dog signs."
+    q9_c2 = "Parking signs."
+    q9_c3 = "Signs stapled to the tree."
+    q9_c4 = "Business flyers."
+
+    q9_correct_markup = """
+    Correct: Signs that explain the care or importance of street trees
+    are evidence of Stewardship. Signs placed by a business or the city
+    and signs attached directed onto the tree are not. See: %s
+    """ % _evidence_of_stewardship
+
+    q9_incorrect_markup = """
+    Incorrect. Review %s
+    """ % _evidence_of_stewardship
+
+    ##############################################################
+    # QUESTION 10                                                 #
+    ##############################################################
+
+    q10_text = """
+    What do you do when you are uncertain of the tree species you have chosen?
+    """
+
+    q10_c1 = "Take your best guess."
+    q10_c2 = "Take your best guess and select “No”."
+    q10_c3 = "Take your best guess and select “Yes”."
+
+    q10_correct_markup = """
+    Correct: If you are confident you can select Yes when you ID the tree.
+    However, when you have doubt in your choice, it is important and perfectly
+    acceptable to select Maybe or even No if you are really unsure.
+    See: %s
+    """ % _what_if_im_not_sure
+
+    q10_incorrect_markup = """
+    Incorrect. Review %s
+    """ % _what_if_im_not_sure

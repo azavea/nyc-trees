@@ -43,7 +43,7 @@
     <div class="panel panel-warning">
 {% endif %}
     <div class="panel-heading">
-        {{ forloop.counter }}. {{ item.question.text }}
+        {{ forloop.counter }}. {{ item.question.text|safe }}
     </div>
     <div class="panel-body">
         <p>
