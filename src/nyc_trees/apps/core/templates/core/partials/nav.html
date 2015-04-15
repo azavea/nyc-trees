@@ -15,8 +15,8 @@
     {% endif %}
     <ul class="nav-side-list">
         {% flag full_access %}
-            {% if my_events_now|length == 1 %}
-                {% with event=my_events_now.0 %}
+            {% if my_events_now_all|length > 0 %}
+                {% with event=my_events_now_all.0 %}
                     <li><a href="{{ event.get_user_checkin_url }}">Start Mapping</a></li>
                 {% endwith %}
             {% endif %}

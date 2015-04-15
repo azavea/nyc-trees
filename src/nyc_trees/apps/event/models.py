@@ -152,17 +152,18 @@ class EventRegistration(NycModel, models.Model):
     @classmethod
     def my_events_now(cls, user):
         """
-        Return events for which user has RSVPd but not checked in,
-        with times:  start-1h < now < end
+        Return a tuple of (attended events, non-attended events) for upcoming
+        and in-progress events for which the user has RSVPd.
         """
         now = timezone.now()
         registrations = EventRegistration.objects \
             .filter(user=user,
-                    did_attend=False,
                     event__begins_at__lte=now + STARTING_SOON_WINDOW,
                     event__ends_at__gt=now) \
             .prefetch_related('event')
-        return [r.event for r in registrations]
+        attended = [r.event for r in registrations if r.did_attend]
+        non_attended = [r.event for r in registrations if not r.did_attend]
+        return attended, non_attended
 
     def __unicode__(self):
         return "'%s' registration for '%s'" % (self.user.username,
