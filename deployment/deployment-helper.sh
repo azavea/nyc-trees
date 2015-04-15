@@ -123,13 +123,21 @@ toggle_tile_server_stack() {
 }
 
 function get_latest_internal_ami() {
+  AWS_IMAGES=$(aws ec2 describe-images --owner self)
+
+  # No images are owned by requesting user; look for images
+  # this user can launch.
+  if [[ -z $AWS_IMAGES ]]; then
+    AWS_IMAGES=$(aws ec2 describe-images --executable-users self)
+  fi
+
   # 1. Get list of AMIs owned by this account
   # 2. Filter by type (only argument to this function)
   # 3. Filter again for the IMAGES row
   # 4. Sort by AMI name (contains a date created timestamp)
   # 5. Take the top row
   # 6. Take the 4th column
-  aws ec2 describe-images --owners self \
+  echo "${AWS_IMAGES}" \
     | grep "${1}" \
     | grep IMAGES \
     | sort -k8 -r \
