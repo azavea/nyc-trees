@@ -1,6 +1,14 @@
+{% load utils %}
+
 {% if user.online_training_complete %}
-<h3>Training Complete!</h3>
-<p>Visit <a href="{% url 'home_page' %}">the dashboard</a> to explore the site and start mapping! You can also visit the Groups page to learn more about mapping opportunities and follow groups for event information.</p>
+<h3>Online Training Complete!</h3>
+<p>Visit <a href="{% url 'home_page' %}">the dashboard</a> to explore the site and start mapping!</p>
+
+<p>You can also visit the Groups page to learn more about mapping opportunities and follow groups for event information.</p>
+
+<p>The next step after completing online training is to sign up for a training event where you will practice what you've learned in the field! <a href="{% url 'events_list_page' %}?active_filter=training">Sign up for training events here.</a></p>
+
+<p>You can also download a PDF of the training materials <a href="{{ "training/training.pdf"|static_url }}">here.</a></p>
 {% else %}
 <h3>You're almost there! Continue your training.</h3>
 {% endif %}
