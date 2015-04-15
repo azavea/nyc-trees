@@ -102,3 +102,22 @@
     }
   }
 }
+
+.event-time {
+  &:last-child:before {
+    content: 'to';
+    position: absolute;
+    left: -7px;
+    top: 8px;
+    font-size: 1.3rem;
+  }
+
+  @media (max-width: $screen-tablet) {
+    &:last-child {
+      margin-top: 20px;
+      &:before {
+        display: none;
+      }
+    }
+  }
+}

@@ -21,11 +21,19 @@
             <label>Time</label>
             {{ form.begins_at_time.errors }}
             {{ form.ends_at_time.errors }}
-            <div style="display: inline-block;">
-                {{ form.begins_at_time }}
-            </div><span>  to  </span>
-            <div style="display: inline-block;">
-                {{ form.ends_at_time }}
+            <div class="row">
+                <div class="col-sm-6 col-md-6 col-lg-6 event-time">
+                    <div class="input-group">
+                        <div class="input-group-addon">Start</div>
+                        {{ form.begins_at_time }}
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-6 col-lg-6 event-time">
+                    <div class="input-group">
+                        <div class="input-group-addon">End</div>
+                        {{ form.ends_at_time }}
+                    </div>
+                </div>
             </div>
         </div>
 
