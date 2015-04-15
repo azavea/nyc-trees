@@ -72,10 +72,19 @@
   left: 0;
 }
 
+.map-pdf-container {
+  width: 7.0in;
+  height: 9.3in;
+  position: relative;
+}
+
 .map-pdf {
   /* Should be 7.5 x 10, but adjusted to fit with PhantomJS */
-  width: 7.0in;
-  height: 9.3in
+  position: absolute;
+  top: 1.5in;
+  bottom: 0;
+  right: 0;
+  left: 0;
 }
 
 .map-pdf-header {
@@ -83,7 +92,16 @@
   z-index: $zindex-modal + 1;
   margin-bottom: 3pt;
   font-size: 12pt;
-  background: white;
+  background: #fff !important;
+  -webkit-print-color-adjust: exact;
+  height: 1.5in;
+  padding: .25in 0;
+}
+
+.map-pdf-subtext {
+  font-size: 11pt;
+  color: #888 !important;
+  -webkit-print-color-adjust: exact;
 }
 
 .map-sidebar-context {

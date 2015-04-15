@@ -2,15 +2,17 @@
 {% load utils %}
 
 {% block body %}
-    <div class="map-pdf-header">
-        <div>TreesCount! 2015 Reservations Map</div>
-        <div>For more information about your block edge reservations,</div>
-        <div>visit http://treescount.nycgovparks.org/blockedge.</div>
-    </div>
-    <div id="map" class="map-pdf"
-         data-tile-url="{{ layer.tile_url }}"
-         {% if bounds %}data-bounds="{{ bounds }}"{% endif %}
-         data-endpoints="{{ endpoints }}">
+    <div class="map-pdf-container">
+        <div class="map-pdf-header">
+            <h3>TreesCount! 2015 Reservations Map</h3>
+            <p class="map-pdf-subtext">For more information about your block edge reservations,<br>
+            visit http://treescount.nycgovparks.org/blockedge/reserve.</p>
+        </div>
+        <div id="map" class="map-pdf"
+             data-tile-url="{{ layer.tile_url }}"
+             {% if bounds %}data-bounds="{{ bounds }}"{% endif %}
+             data-endpoints="{{ endpoints }}">
+        </div>
     </div>
 {% endblock body %}
 
