@@ -17,7 +17,7 @@ class Blockface(NycModel, models.Model):
     geom = models.MultiLineStringField()
     is_available = models.BooleanField(default=True)
     expert_required = models.BooleanField(default=False)
-
+    source = models.CharField(max_length=255, default='unknown')
     objects = models.GeoManager()
 
     def __unicode__(self):

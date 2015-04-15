@@ -3,6 +3,8 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
+from glob import glob
+
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from django.db import transaction
@@ -28,9 +30,9 @@ class Command(BaseCommand):
         BlockfaceReservation.objects.all().delete()
         Blockface.objects.all().delete()
 
-        self.stdout.write('Importing blockface fixture')
+        self.stdout.write('Importing blockface fixtures')
 
-        for i in range(1, 8):
-            call_command(
-                'loaddata',
-                '/opt/app/apps/survey/fixtures/blockface_%d.json' % i)
+        blockface_fixtures = glob(
+            '/opt/app/apps/survey/fixtures/blockface_*.json')
+        for fixture in blockface_fixtures:
+            call_command('loaddata', fixture)

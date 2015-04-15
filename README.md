@@ -112,6 +112,7 @@ INSERT INTO survey_blockface (
   created_at,
   updated_at,
   expert_required,
+  source,
   geom
 )
 (
@@ -120,6 +121,7 @@ SELECT
   now() at time zone 'utc',
   now() at time zone 'utc',
   CASE WHEN expertmapp = 1 THEN TRUE ELSE FALSE END,
+  'bronx',
   geom
 FROM bronx_compiled
 WHERE geom IS NOT NULL
@@ -127,43 +129,31 @@ WHERE geom IS NOT NULL
 
 ```
 
-On deployment the blockfaces are loaded from the
-``src/nyc_trees/apps/survey/fixtures/blockface.json`` fixture. This fixture is maintained by filling the ``survey_blockface`` table with
-the appropriate data, then exporting the fixture:
+On deployment the blockfaces are loaded from files named
+``blockface_*.json`` in the ``src/nyc_trees/apps/survey/fixtures/``
+directory. These fixtures are maintained by filling the
+``survey_blockface`` table with the appropriate data, then exporting
+the fixture:
 
 ```
-./scripts/manage.sh dumpdata survey.Blockface > src/nyc_trees/apps/survey/fixtures/blockface.json
+./scripts/manage.sh dumpdata survey.Blockface > src/nyc_trees/apps/survey/fixtures/blockface_500000_bronx.json
 ```
 
-When all 5 boroughs have been added, the resulting fixture is too
-large for the ``loaddata`` command. The fixture needs to be split into
-chunks. This process is not fully automated.
+Using a single fixture for all the blockfaces causes memory errors in
+``DEBUG_MODE``, so we generate fixtures for each individual borough by
+emptying the blockface table, adjusting the ID sequence, importing a
+borough, dumping a fixture, then repeating for the other boroughs.
 
-This pipline will take a fixture created with ``dumpdata`` on stdin
-and output one object per line.
+The largest borough has just over 50000 blockfaces, so by manipulating
+the blockface ID seqence allows use to have 6 digit IDs for every
+blockface where the 6th digit represents the borough.
 
-```
-# convert a JSON array to linewise objects with trailing commas
-# embedded newline is IMPORTANT
-# sed -e 's/ *$//' trims whitespace
-sed -e 's/{"fields/\
-{"fields/g' |  sed -e '$s/]$/,/' | sed -e 's/ *$//' | tail -n +2
-```
+``SELECT setval('survey_blockface_id_seq', 99999);
+-- Load Manhattan, which starts at 100000
+SELECT setval('survey_blockface_id_seq', 199999);
+-- Load Brooklyn, which starts at 200000
+-- etc.``
 
-The ``split`` program can chunk up the resulting file
-
-```
-split -l 20000 blockface-linewise.json
-```
-
-This pipeline will take a file containing linewise objects and convert
-it to a valid JSON array. Each of the files created by the split
-command should be run through this pipeline to create usable fixtures.
-
-```
-# wrap linewise trailing comma objects with array
-sed -e '1s/^/[/' | sed -e '$s/,$/]/'
-```
 
 ## Testing
 
