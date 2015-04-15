@@ -8,6 +8,7 @@ import floppyforms.__future__ as forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
+from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.template import loader
 from django.utils.encoding import force_bytes
@@ -38,6 +39,11 @@ class NycRegistrationForm(RegistrationFormUniqueEmail):
         label='I am over 13 years old',
         required=False
     )
+
+    def clean_username(self):
+        if self.cleaned_data['username'].lower() in User.reserved_usernames:
+            raise ValidationError('This username is not available.')
+        return super(NycRegistrationForm, self).clean_username()
 
 
 class UsernameOrEmailPasswordResetForm(forms.Form):

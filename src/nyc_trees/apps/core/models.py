@@ -100,6 +100,12 @@ class User(NycModel, AbstractUser):
                       'contributions_are_public': 'contributions',
                       'achievements_are_public': 'achievements'}
 
+    # Please keep in sync with special `/user/*` endpoints.
+    # Ref: src/nyc_trees/apps/users/urls/user.py
+    reserved_usernames = ('profile',
+                          'settings',
+                          'achievements')
+
     def clean(self):
         if ((User.objects.exclude(pk=self.pk)
              .filter(email__iexact=self.email).exists())):
