@@ -66,10 +66,14 @@
     {% endblock extra_content %}
 
     {% block footer %}
-        <footer class="visible-xs">
-            <div class="container">
-                <img class="section-about-logo pull-left" src="{{ 'img/logo-nycparks.png'|static_url }}" srcset="{{ 'img/logo-nycparks@2x.png'|static_url }} 2x">
-                <p>A project of New York City <strong>Department of Parks &amp; Recreation</strong></p>
+        <footer>
+            <div class="container text-center">
+                <div class="row">
+                    <div>
+                        <img class="section-about-logo" src="{{ 'img/logo-nycparks.png'|static_url }}" srcset="{{ 'img/logo-nycparks@2x.png'|static_url }} 2x">
+                        <p>A project of New York City <strong>Department&nbsp;of&nbsp;Parks&nbsp;&amp;&nbsp;Recreation</strong></p>
+                    </div>
+                </div>
             </div>
         </footer>
     {% endblock footer %}

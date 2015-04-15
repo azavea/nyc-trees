@@ -1,4 +1,9 @@
 footer {
   background-color: $gray-lightest;
   padding: 2rem 0;
+  @media (min-width: $screen-md) {
+    padding: 5rem 0 4rem;
+  }
 }
+
+
