@@ -11,6 +11,14 @@ input {
   }
 }
 
+filter {
+  if [type] == "windshaft" {
+    date {
+      match => [ "timestamp", "E, dd MMM yyyy HH:mm:ss z" ]
+    }
+  }
+}
+
 output {
   elasticsearch {
     embedded => false
