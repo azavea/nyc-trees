@@ -360,3 +360,6 @@ SOFT_LAUNCH_REGEXES = [
 ]
 
 RESERVATION_REMINDER_WINDOW = 3
+
+ADMIN_OPENLAYERS_URL = 'https://cdnjs.cloudflare.com/ajax/libs/openlayers/'\
+                       '2.13.1/OpenLayers.js'
