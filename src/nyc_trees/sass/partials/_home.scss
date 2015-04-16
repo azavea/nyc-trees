@@ -132,9 +132,9 @@ $hero-box-side-padding: 3rem;
   height: 0;
   padding-bottom: 92%;
   width: 100%;
-
-  &:hover .progress-circle-label {
-      text-decoration: underline;
+  @include transition(.2s ease-in-out color);
+  &:hover {
+    color: darken($brand-primary, 20%) !important;
   }
 }
 
