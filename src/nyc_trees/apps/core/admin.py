@@ -29,6 +29,7 @@ if not settings.DEBUG:
 @admin.register(Group)
 class GroupAdmin(OSMGeoAdmin):
     prepopulated_fields = {"slug": ("name",)}
+    openlayers_url = settings.ADMIN_OPENLAYERS_URL
 
 
 class NycUserChangeForm(UserChangeForm):
