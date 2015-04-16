@@ -10,13 +10,14 @@
                 Your message has been sent to {{ rsvp_count }} recipient(s).
             {% else %}
                 <h4 class="section-heading">Recipients</h4>
-                <span>{{ rsvp_count }}</span> RSVPS
                 {% if rsvp_count > 0 %}
+                    <span>{{ rsvp_count }}</span> RSVPS
                     <a href="{% url 'event_admin_check_in_page' group_slug=group.slug event_slug=event.slug%}">See all</a>
+                    <p>This form will allow you to contact your event registrants, either before the event or up to 7 days after the event. <i>Note that only event attendees who have opted into emails will receive these updates!! Do not use this to update your event details – edit the event details directly instead.</i></p>
                     {% include "core/partials/email_form.html" %}
                 {% else %}
                     {# There is no one to email! #}
-                    <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+                    <p>There are no volun<b>treers</b> RSVPed for your event. Please try again when there is at least 1 volun<b>treer</b> RSVPed.</p>
                 {% endif %}
             {% endif %}
             </section>

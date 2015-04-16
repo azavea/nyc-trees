@@ -61,6 +61,7 @@ def progress_page(request):
             {'mode': 'my', 'css_class': 'not-mapped',
              'label': 'Not mapped by you'},
         ],
+        'legend_mode': 'all',
         'layer_all': get_context_for_progress_layer(request, 'progress_all'),
         'layer_my': get_context_for_progress_layer(request, 'progress_my'),
         'help_shown': _was_help_shown(request, 'progress_page_help_shown')
