@@ -11,9 +11,11 @@ from pytz import timezone
 from celery import chain
 
 from django.conf import settings
+from django.contrib.gis.geos import GeometryCollection
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.db import transaction, connection
+from django.db.models import Prefetch
 from django.http import (HttpResponse, HttpResponseForbidden,
                          HttpResponseBadRequest)
 from django.shortcuts import get_object_or_404
@@ -38,8 +40,10 @@ from apps.survey.models import (BlockfaceReservation, Blockface, Territory,
 from apps.survey.layer_context import (
     get_context_for_reservations_layer, get_context_for_reservable_layer,
     get_context_for_progress_layer, get_context_for_territory_survey_layer,
-    get_context_for_printable_reservations_layer)
-from apps.survey.helpers import (teammates_for_event,
+    get_context_for_printable_reservations_layer,
+    get_context_for_territory_layer
+)
+from apps.survey.helpers import (teammates_for_event, group_percent_completed,
                                  teammates_for_individual_mapping)
 
 from libs.pdf_maps import create_and_save_pdf
@@ -162,6 +166,43 @@ def user_reserved_blockfaces_geojson(request):
         }
         for reservation in reservations
     ]
+
+
+def group_borders_geojson(request):
+    groups = Group.objects.filter(is_active=True) \
+        .prefetch_related(
+            Prefetch('territory_set', to_attr="turf",
+                     queryset=Territory.objects.select_related('blockface')))
+
+    def get_tile_url(id):
+        return get_context_for_territory_layer(request, id)['tile_url']
+
+    return [
+        {
+            'type': 'Feature',
+            'geometry': {
+                'type': 'MultiPolygon',
+                'coordinates': list(group.border.coords)
+            },
+            'properties': {
+                'tileUrl': get_tile_url(group.id),
+                'popupUrl': reverse('group_popup',
+                                    kwargs={'group_slug': group.slug}),
+                'bounds': GeometryCollection(
+                    [territory.blockface.geom
+                     for territory in group.turf]).extent
+            }
+        }
+        for group in groups
+        if group.border and group.turf
+    ]
+
+
+def group_popup(request):
+    return {
+        'group': request.group,
+        'completed': group_percent_completed(request.group)
+    }
 
 
 def reservations_map_pdf_poll(request):

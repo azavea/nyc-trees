@@ -19,6 +19,7 @@ var progressMap = mapModule.create({
     tileLayer = null,
     grid = null,
     selectedLayer = null,
+    geojsonLayer = null,
 
     dom = {
         modeDropdown: '.dropdown',
@@ -27,7 +28,8 @@ var progressMap = mapModule.create({
         legendEntries: '[data-mode]',
         actionBar: '#action-bar'
     },
-    $actionBar = $(dom.actionBar);
+    $actionBar = $(dom.actionBar),
+    $mode = null;
 
 $(dom.modeChoice).click(onModeChanged);
 
@@ -35,7 +37,10 @@ loadLayers($(dom.modeChoice).first());
 
 function onModeChanged(e) {
     e.preventDefault();
-    var $mode = $(e.currentTarget);
+    if ($mode !== null && $mode[0] === e.currentTarget) {
+        return;
+    }
+    $mode = $(e.currentTarget);
 
     // Shown chosen mode on dropdown button
     $mode.parents(dom.modeDropdown).find(dom.modeButton).text($mode.text());
@@ -51,6 +56,7 @@ function onModeChanged(e) {
 function loadLayers($mode) {
     var tileUrl = $mode.data('tile-url'),
         gridUrl = $mode.data('grid-url'),
+        geojsonUrl = $mode.data('geojson-url'),
         bounds = $mode.data('bounds');
 
     // Clear action bar
@@ -59,8 +65,15 @@ function loadLayers($mode) {
     // Replace layers
     if (tileLayer) {
         progressMap.removeLayer(tileLayer);
+    }
+    if (grid) {
         progressMap.removeLayer(grid);
+    }
+    if (selectedLayer) {
         progressMap.removeLayer(selectedLayer);
+    }
+    if (geojsonLayer) {
+        progressMap.removeLayer(geojsonLayer);
     }
     if (tileUrl) {
         tileLayer = mapModule.addTileLayer(progressMap, tileUrl);
@@ -88,5 +101,26 @@ function loadLayers($mode) {
         if (bounds) {
             mapModule.fitBounds(progressMap, bounds);
         }
+    }
+    if (geojsonUrl) {
+        $.getJSON(geojsonUrl, function(geojson) {
+            geojsonLayer = L.geoJson(geojson, {
+                style: function() {
+                    return {
+                        color: '#36b5db',
+                        weight: 3,
+                    };
+                },
+                onEachFeature: function(feature, layer) {
+                    layer.on('click', function showGroupBlockfaces() {
+                        progressMap.removeLayer(tileLayer);
+                        tileLayer = mapModule.addTileLayer(progressMap, feature.properties.tileUrl);
+                        mapModule.fitBounds(progressMap, feature.properties.bounds);
+                        $actionBar.load(feature.properties.popupUrl);
+                    });
+                }
+            });
+            geojsonLayer.addTo(progressMap);
+        });
     }
 }
