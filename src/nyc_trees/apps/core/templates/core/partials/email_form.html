@@ -1,7 +1,7 @@
 <form method="POST">
     <fieldset>
         {% csrf_token %}
-        {{ form.non_field_errors }}
+        {% include "core/partials/non_field_errors.html" %}
         <div class="block item">
             {{ form.subject.errors }}
             {{ form.subject.label_tag }}
