@@ -128,7 +128,17 @@ class ProfileTemplateTests(UsersTestCase):
     def test_achievements_section_visibility(self):
         self._assert_visible_only_to_me('<section class="achievements">',
                                         count=1)
+
+        # The achievements section is only publicly visible when that user
+        # has earned an achievement
         self._update_user(achievements_are_public=True)
+        self._assert_visible_only_to_me('<section class="achievements">',
+                                        count=1)
+
+        self.achievement = Achievement.objects.create(
+            user=self.user,
+            achievement_id=AchievementDefinition.ONLINE_TRAINING
+        )
         self._assert_visible_to_all('<section class="achievements">',
                                     me_count=1,
                                     them_count=1)
