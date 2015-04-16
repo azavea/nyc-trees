@@ -195,7 +195,7 @@ class Group(NycModel, models.Model):
     is_active = models.BooleanField(default=True)
     allows_individual_mappers = models.BooleanField(default=False)
     affiliation = models.CharField(max_length=255, default='', blank=True)
-    border = models.PolygonField(null=True, blank=True)
+    border = models.MultiPolygonField(null=True, blank=True)
 
     objects = models.GeoManager()
 

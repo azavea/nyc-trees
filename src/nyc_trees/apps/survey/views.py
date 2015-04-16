@@ -181,7 +181,7 @@ def group_borders_geojson(request):
         {
             'type': 'Feature',
             'geometry': {
-                'type': 'Polygon',
+                'type': 'MultiPolygon',
                 'coordinates': list(group.border.coords)
             },
             'properties': {
