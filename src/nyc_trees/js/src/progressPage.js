@@ -24,28 +24,34 @@ var progressMap = mapModule.create({
         modeDropdown: '.dropdown',
         modeButton: '.btn',
         modeChoice: '.dropdown li a',
-        legendEntries: '.entry',
+        legendEntries: '[data-mode]',
         actionBar: '#action-bar'
     },
     $actionBar = $(dom.actionBar);
 
 $(dom.modeChoice).click(onModeChanged);
 
-$(dom.modeChoice).first().trigger('click');
+loadLayers($(dom.modeChoice).first());
 
 function onModeChanged(e) {
-    var $mode = $(e.currentTarget),
-        tileUrl = $mode.data('tile-url'),
-        gridUrl = $mode.data('grid-url'),
-        bounds = $mode.data('bounds');
+    e.preventDefault();
+    var $mode = $(e.currentTarget);
 
     // Shown chosen mode on dropdown button
     $mode.parents(dom.modeDropdown).find(dom.modeButton).text($mode.text());
 
     // Show appropriate legend entries
     var mode = $mode.attr('href').slice(1);  // strip leading #
-    $(dom.legendEntries).hide();
-    $('[data-mode=' + mode + ']').show();
+    $(dom.legendEntries).addClass('hidden');
+    $('[data-mode=' + mode + ']').removeClass('hidden');
+
+    loadLayers($mode);
+}
+
+function loadLayers($mode) {
+    var tileUrl = $mode.data('tile-url'),
+        gridUrl = $mode.data('grid-url'),
+        bounds = $mode.data('bounds');
 
     // Clear action bar
     $actionBar.empty();

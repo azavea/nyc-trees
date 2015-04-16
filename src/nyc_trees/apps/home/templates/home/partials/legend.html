@@ -17,7 +17,7 @@
                 </div>
                 <h5>Legend</h5>
                 {% for entry in legend_entries %}
-                    <div class="entry" data-mode="{{ entry.mode }}">
+                    <div class="entry {% if entry.mode != legend_mode %}hidden{% endif%}" data-mode="{{ entry.mode }}">
                         <div class="swatch {{ entry.css_class }}"></div>
                         {{ entry.label }}
                     </div>
