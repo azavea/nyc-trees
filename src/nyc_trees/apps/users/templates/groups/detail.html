@@ -80,29 +80,11 @@
     </section>
     <section class="contributions">
         <h4 class="section-heading">Contributions</h4>
-        <div class="contribution block item">
-            <div class="row">
-                <div class="contribution-label col-xs-6"><i class="icon-globe"></i>Trees</div>
-                <div class="contribution-number col-xs-6">{{ counts.tree }}</div>
-            </div>
-        </div>
-        <div class="contribution block item">
-            <div class="row">
-                <div class="contribution-label col-xs-6"><i class="icon-flow-tree"></i>Mapped in Area</div>
-                <div class="contribution-number col-xs-6">{{ counts.block }}</div>
-            </div>
-        </div>
-        <div class="contribution block item">
-            <div class="row">
-                <div class="contribution-label col-xs-6"><i class="icon-tag"></i>Events Held</div>
-                <div class="contribution-number col-xs-6">{{ counts.event }}</div>
-            </div>
-        </div>
-        <div class="contribution block item">
-            <div class="row">
-                <div class="contribution-label col-xs-6"><i class="icon-user"></i>Event Attendees</div>
-                <div class="contribution-number col-xs-6">{{ counts.attendees }}</div>
-            </div>
+        <div class="block nopadding--top clearfix">
+            {% include "home/partials/circle.html" with label="Trees" n=3 color="primary" url=progress_page_url %}
+            {% include "home/partials/circle.html" with label="Blocks" n=counts.block color="primary" url=progress_page_url %}
+            {% include "home/partials/circle.html" with label="Events " n=counts.event color="primary" modal="#users-modal" %}
+            {% include "home/partials/circle.html" with label="Attendees" n=counts.event color="primary" modal="#users-modal" %}
         </div>
     </section>
     <section class="events" id="{{ group_events_id }}">
