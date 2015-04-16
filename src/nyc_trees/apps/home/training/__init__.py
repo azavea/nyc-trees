@@ -8,7 +8,6 @@ from apps.home.training.types import (FlatPageTrainingStep,
                                       Quiz, Question, SingleAnswer,
                                       MultipleAnswer)
 from apps.home.training import routes as r
-from apps.mail.views import send_online_training_complete
 
 from quiz_strings import QuizStrings as QS
 
@@ -113,5 +112,4 @@ training_summary = TrainingGateway(
      the_mapping_method,
      tree_data,
      tree_surroundings,
-     intro_quiz],
-    on_user_completion=send_online_training_complete)
+     intro_quiz])

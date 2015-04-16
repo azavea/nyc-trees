@@ -8,6 +8,8 @@ from django.db import transaction
 from apps.home.training.utils import get_quiz_or_404
 from apps.users.models import TrainingResult
 
+from apps.mail.views import send_online_training_complete
+
 
 def training_list_page(request):
     from apps.home.training import training_summary
@@ -35,7 +37,15 @@ def complete_quiz(request):
     correct_answers = list(quiz.correct_answers(answers))
     quiz_summary = list(_quiz_summary(quiz, answers))
 
-    result, created = TrainingResult.objects.get_or_create(
+    # set the quiz as finished upon *reaching* success confirmation,
+    # not clicking 'Finish'. We're breaking the pattern of the training
+    # tracking workflow here intentionally, to avoid someone finishing
+    # the quiz and not receiving credit.
+    #
+    # note that both the TrainingResult creation and the user boolean
+    # flipping are required for this step to be considered done.
+
+    result, training_result_created = TrainingResult.objects.get_or_create(
         user_id=user.id,
         module_name=quiz_slug)
 
@@ -44,6 +54,17 @@ def complete_quiz(request):
     result.save()
 
     passed_quiz = (score >= quiz.passing_score)
+
+    passed_quiz_bool = 'training_finished_%s' % quiz_slug
+    if passed_quiz and getattr(user, passed_quiz_bool) is False:
+        first_time_passing = True
+        setattr(user, passed_quiz_bool, True)
+        user.save()
+    else:
+        first_time_passing = False
+
+    if first_time_passing and training_result_created:
+        send_online_training_complete(user)
 
     return {
         'quiz': quiz,
