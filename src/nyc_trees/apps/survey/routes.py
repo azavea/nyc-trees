@@ -26,6 +26,12 @@ progress_page_blockface_popup = route(
         render_template('survey/partials/progress_page_blockface_popup.html'),
         v.progress_page_blockface_popup))
 
+group_borders_geojson = route(GET=json_api_call(v.group_borders_geojson))
+
+group_popup = route(GET=do(group_request,
+                           render_template('survey/partials/group_popup.html'),
+                           v.group_popup))
+
 #####################################
 # RESERVATION ROUTES
 #####################################

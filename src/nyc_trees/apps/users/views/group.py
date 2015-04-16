@@ -29,7 +29,8 @@ from apps.mail.views import notify_group_mapping_approved
 from apps.users.models import Follow, TrustedMapper
 from apps.users.forms import GroupSettingsForm
 
-from apps.survey.models import Territory, Survey, Blockface
+from apps.survey.helpers import group_percent_completed
+from apps.survey.models import Territory, Blockface
 from apps.survey.layer_context import (get_context_for_territory_layer,
                                        get_context_for_territory_admin_layer)
 
@@ -97,21 +98,6 @@ def group_detail(request):
     follow_count = Follow.objects.filter(group=group).count()
     tree_count = get_group_tree_count(group)
 
-    group_blocks = Territory.objects \
-        .filter(group=group) \
-        .values_list('blockface_id', flat=True)
-
-    group_blocks_count = group_blocks.count()
-
-    if group_blocks_count > 0:
-        completed_blocks = Survey.objects \
-            .filter(blockface_id__in=group_blocks) \
-            .distinct('blockface')
-        block_percent = "{:.1%}".format(
-            float(completed_blocks.count()) / float(group_blocks.count()))
-    else:
-        block_percent = "0.0%"
-
     events_held = Event.objects.filter(group=group, ends_at__lt=now())
     num_events_held = events_held.count()
 
@@ -119,6 +105,8 @@ def group_detail(request):
         .filter(event__in=events_held) \
         .filter(did_attend=True) \
         .count()
+
+    block_percent = group_percent_completed(group)
 
     return {
         'group': group,

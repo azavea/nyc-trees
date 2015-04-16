@@ -31,7 +31,9 @@
                         </li>
                         {% endif %}
                         <li class="text-right" role="presentation">
-                            <a role="menuitem" href="#groups">Groups</a>
+                            <a role="menuitem" href="#group"
+                               data-geojson-url="{% url 'group_borders' %}"
+                            >Groups</a>
                         </li>
                     </ul>
                 </div>

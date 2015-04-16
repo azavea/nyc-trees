@@ -232,6 +232,12 @@ class GroupDetailViewTests(UsersTestCase):
 
         make_survey(self.user, block1)
 
+        # Until the blockface is no longer avialable, it doesn't count
+        self._assert_count_equals('block', '0.0%')
+
+        block1.is_available = False
+        block1.save()
+
         self._assert_count_equals('block', '50.0%')
 
     def test_tree_count(self):

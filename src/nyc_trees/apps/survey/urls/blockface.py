@@ -9,7 +9,8 @@ from apps.survey.routes import (
     reserve_blockface_page, reserve_blockfaces, reservations_instructions,
     blockface, progress_page, blockface_reservations_confirmation_page,
     progress_page_blockface_popup, printable_reservations_map,
-    reservations_map_pdf_poll, user_reserved_blockfaces_geojson
+    reservations_map_pdf_poll, user_reserved_blockfaces_geojson,
+    group_borders_geojson, group_popup
 )
 
 
@@ -47,4 +48,9 @@ urlpatterns = patterns(
 
     url(r'^map-poll/$', reservations_map_pdf_poll,
         name='reservations_map_pdf_poll'),
+
+    url(r'^group-popup/(?P<group_slug>[\w-]+)/$', group_popup,
+        name='group_popup'),
+
+    url(r'^group-borders.json$', group_borders_geojson, name='group_borders')
 )
