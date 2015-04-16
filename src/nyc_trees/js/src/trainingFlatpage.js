@@ -22,6 +22,8 @@ function showSubpage() {
         $exercise = $subpage.children('form'),
         index = currentPage;
 
+    window.scrollTo(0, 0);
+
     $subpages.hide();
 
     // fully initialize the subpage for viewing, including cleaning up
