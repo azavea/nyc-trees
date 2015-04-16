@@ -32,3 +32,11 @@ def send_reservation_reminder(user_id, **kwargs):
     return send_to(user, MessageType.RESERVATION_REMINDER,
                    reservations_url=reservations_url,
                    **kwargs)
+
+
+def send_online_training_complete(user):
+    events_url = urljoin(
+        'https://%s' % Site.objects.get_current().domain,
+        reverse('events_list_page'))
+    send_to(user, MessageType.ONLINE_TRAINING_COMPLETE,
+            events_url=events_url)

@@ -1,0 +1,2 @@
+{% extends "mail/base_email.txt" %}
+{% block content %}Congratulations on completing the online training for TreesCount! 2015. Please sign up for an in-person training event at {{ events_url }} and help us reach our goal of mapping every street tree in New York City!{% endblock content %}

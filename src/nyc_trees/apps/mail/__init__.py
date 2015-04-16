@@ -8,3 +8,4 @@ class MessageType(object):
     GROUP_MAPPING_APPROVED = 'group_mapping_approved'
     RESERVATION_REMINDER = 'reservation_reminder'
     NEW_RESERVATIONS_CONFIRMED = 'new_reservations_confirmed'
+    ONLINE_TRAINING_COMPLETE = 'online_training_complete'

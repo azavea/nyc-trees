@@ -35,6 +35,14 @@
     question{{ quiz.questions|length|pluralize }} correctly.</p>
 
 <p>Your best score so far was <span class="color--primary">{{ best_score }}/{{ quiz.questions|length }}</span>.</p>
+
+{% if passed_quiz %}
+    <p><a href="{% url 'intro_quiz_mark_progress' %}" class="btn btn-primary">Finish</a></p>
+{% else %}
+    <p><a href="{% url 'intro_quiz_pure' %}"
+          class="btn btn-secondary btn-mobile--max">Try Again</a></p>
+{% endif %}
+
 <hr />
 {% for item in quiz_summary %}
 {% if item.is_correct %}
@@ -70,13 +78,6 @@
 {% endfor %}
 
 <hr/>
-
-{% if passed_quiz %}
-    <p><a href="{% url 'intro_quiz_mark_progress' %}" class="btn btn-primary">Finish</a></p>
-{% else %}
-    <p><a href="{% url 'intro_quiz_pure' %}"
-          class="btn btn-secondary btn-mobile--max">Try Again</a></p>
-{% endif %}
 
 {% endblock main %}
 
