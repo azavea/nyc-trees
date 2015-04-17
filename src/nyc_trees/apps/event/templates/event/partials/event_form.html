@@ -62,8 +62,8 @@
             </div>
         </div>
 
-        <input type="hidden" name="lat" value="{{ event.location.y }}">
-        <input type="hidden" name="lng" value="{{ event.location.x }}">
+        <input type="hidden" name="lat" value="{{ form.location.value.y }}">
+        <input type="hidden" name="lng" value="{{ form.location.value.x }}">
 
         {{ form.location.errors }}
         <div id="map-small" class="map-small"></div>

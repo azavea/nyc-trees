@@ -78,8 +78,7 @@ def _process_event_form(form, request, event=None):
 
 
 def add_event_page(request):
-    # TODO: Remove initial location after adding client-side geocoding
-    form = EventForm(initial={'location': Point(0, 0)})
+    form = EventForm()
     return {
         'form': form,
         'group': request.group
@@ -231,8 +230,6 @@ def edit_event_page(request, event_slug):
     tz = get_current_timezone()
     event = get_object_or_404(Event, group=request.group, slug=event_slug)
     form_context = {
-        # TODO: Remove initial location after adding client-side geocoding
-        'location': Point(0, 0),
         'date': event.begins_at.astimezone(tz),
         'begins_at_time': event.begins_at.astimezone(tz),
         'ends_at_time': event.ends_at.astimezone(tz)
