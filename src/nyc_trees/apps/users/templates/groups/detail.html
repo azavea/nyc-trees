@@ -21,7 +21,7 @@
                 {# TODO: Show a default image if group.image is null #}
                 {% if group.image %}
                 <div class="group-branding">
-                    <img src="{{group.image.url}}"/>
+                    <div class="group-image" style="background-image: url({{group.image.url}});"></div>
                 </div>
                 {% endif %}
             </div>
