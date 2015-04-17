@@ -175,20 +175,30 @@
       position: absolute;
       left: 0;
       right: 0;
-      transition: transform 400ms;
+      transition: all 400ms;
+      -ms-transition: all 400ms;
+      -webkit-transition: all 400ms;
   }
 
   #reservations-cart-action {
-      transform: translateX(-100%);
+      transform: translate(-100%);
+      -ms-transform: translate(-100%);
+      -webkit-transform: translate(-100%);
       &.active {
-          transform: translateX(0);
+          transform: translate(0);
+          -ms-transform: translate(0);
+          -webkit-transform: translate(0);
       }
   }
 
   #reservations-blockface-action {
-      transform: translateX(100%);
+      transform: translate(100%);
+      -ms-transform: translate(100%);
+      -webkit-transform: translate(100%);
       &.active {
-          transform: translateX(0);
+          transform: translate(0);
+          -ms-transform: translate(0);
+          -webkit-transform: translate(0);
       }
   }
 }
