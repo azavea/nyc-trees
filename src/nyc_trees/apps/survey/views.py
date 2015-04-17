@@ -12,7 +12,7 @@ from celery import chain
 
 from django.conf import settings
 from django.contrib.gis.geos import GeometryCollection
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, PermissionDenied
 from django.core.urlresolvers import reverse
 from django.db import transaction, connection
 from django.db.models import Prefetch
@@ -389,7 +389,7 @@ def blockface(request, blockface_id):
 def _validate_event_and_group(request, event_slug):
     event = get_object_or_404(Event, group=request.group, slug=event_slug)
     if not user_is_checked_in_to_event(request.user, event):
-        return HttpResponseForbidden('User not checked-in to this event')
+        raise PermissionDenied('User not checked-in to this event')
     return event
 
 
