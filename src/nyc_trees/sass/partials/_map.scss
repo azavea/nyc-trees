@@ -2,7 +2,7 @@
   padding-bottom: 0 !important;
   .tab-status-map-tab &, .page-new-reservation & {
     position: static;
-    height: 7rem;
+    height: 7.1rem;
     @media (max-height: $screen-xs-height) and (max-width: $screen-sm) {
       height: 4rem;
       font-size: 12px;
@@ -59,7 +59,9 @@
   }
   & > .event {
     padding: 0;
-
+  }
+  &:empty {
+    visibility: hidden;
   }
   @media (max-height: $screen-xs-height) and (max-width: $screen-sm) {
     height: 7rem;
