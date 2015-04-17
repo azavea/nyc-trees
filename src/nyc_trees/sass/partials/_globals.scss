@@ -35,20 +35,9 @@ body {
   background-color: #fff;
   overflow-x: hidden;
   width: 100%;
-  transition: all 500ms $transition;
   position: relative;
   font-feature-settings: "kern" 1;
   text-rendering: geometricPrecision;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -moz-box;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: column;
-  -moz-box-orient: vertical;
-  -moz-box-direction: normal;
-  flex-direction: column;
   min-height: 100%;
   @media (min-width: $screen-sm) {
     background-color: $body-bg;

@@ -4,7 +4,7 @@
     }
 
     .map-sidebar {
-        max-height: 75%;
+        max-height: 75vh;
         overflow: auto;
         overflow-x: hidden;
         box-shadow: 0 1px 2px rgba(black, .2);
@@ -13,7 +13,7 @@
 
 .map-survey {
     position: fixed;
-    top: 5.6rem;
+    top: $navbar-height;
     bottom: 0;
     left: 0;
     right: 0;
@@ -45,7 +45,7 @@
         }
 
         &.expanded {
-            top: 5.6rem;
+            top: $navbar-height;
             overflow: scroll;
             bottom: 0;
             display: block;
@@ -53,7 +53,7 @@
             padding: 0;
         }
     }
-    
+
     // Select2 dropdown styling
     .select2-container a.select2-choice {
       background: none;
