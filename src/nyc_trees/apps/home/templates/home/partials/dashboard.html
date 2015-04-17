@@ -45,9 +45,11 @@
                                 <div class="tab-pane active" id="all-time">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            {% include "home/partials/circle.html" with label="Blocks" n=counts_all.block color="primary" url=progress_page_url %}
-                                            {% include "home/partials/circle.html" with label="Complete" n=counts_all.block_percent color="primary" url=progress_page_url %}
-                                            {% include "home/partials/circle.html" with label="Users" n=counts_all.user color="primary" modal="#users-modal" %}
+                                            <div class="progress-circles">
+                                                {% include "home/partials/circle.html" with label="Blocks" n=counts_all.block color="primary" url=progress_page_url %}
+                                                {% include "home/partials/circle.html" with label="Complete" n=counts_all.block_percent color="primary" url=progress_page_url %}
+                                                {% include "home/partials/circle.html" with label="Users" n=counts_all.user color="primary" modal="#users-modal" %}
+                                            </div>
                                         </div>
                                         <div class="col-md-6">
                                             {% include "home/partials/ticker.html" with n=counts_all.tree %}
@@ -57,9 +59,11 @@
                                 <div class="tab-pane" id="past-week">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            {% include "home/partials/circle.html" with label="Blocks" n=counts_week.block color="primary" url=progress_page_url %}
-                                            {% include "home/partials/circle.html" with label="Complete" n=counts_week.block_percent color="primary" url=progress_page_url %}
-                                            {% include "home/partials/circle.html" with label="Events" n=counts_week.event color="primary" url=events_page_url %}
+                                            <div class="progress-circles">
+                                                {% include "home/partials/circle.html" with label="Blocks" n=counts_week.block color="primary" url=progress_page_url %}
+                                                {% include "home/partials/circle.html" with label="Complete" n=counts_week.block_percent color="primary" url=progress_page_url %}
+                                                {% include "home/partials/circle.html" with label="Events" n=counts_week.event color="primary" url=events_page_url %}
+                                            </div>
                                         </div>
                                         <div class="col-md-6">
                                             {% include "home/partials/ticker.html" with n=counts_week.tree %}
@@ -69,9 +73,11 @@
                                 <div class="tab-pane" id="my-trees">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            {% include "home/partials/circle.html" with label="Blocks" n=counts.block color="primary" url=progress_page_url %}
-                                            {% include "home/partials/circle.html" with label="Species" n=counts.species color="primary" modal="#species-modal" %}
-                                            {% include "home/partials/circle.html" with label="Events" n=counts.event color="primary" url=events_page_url %}
+                                            <div class="progress-circles">
+                                                {% include "home/partials/circle.html" with label="Blocks" n=counts.block color="primary" url=progress_page_url %}
+                                                {% include "home/partials/circle.html" with label="Species" n=counts.species color="primary" modal="#species-modal" %}
+                                                {% include "home/partials/circle.html" with label="Events" n=counts.event color="primary" url=events_page_url %}
+                                            </div>
                                         </div>
                                         <div class="col-md-6">
                                             {% include "home/partials/ticker.html" with n=counts.tree_digits %}

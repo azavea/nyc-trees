@@ -157,6 +157,10 @@ $hero-box-side-padding: 3rem;
 .progress-circles {
   margin-left: $grid-gutter-width/-2;
   margin-right: $grid-gutter-width/-2;
+  @media (max-width: $screen-xs) {
+    margin-left: -.4rem;
+    margin-right: -.4rem;
+  }
 }
 
 .progress-circle-content {
@@ -171,6 +175,9 @@ $hero-box-side-padding: 3rem;
 
 .col-circle {
   padding: 1rem;
+  @media (max-width: $screen-xs) {
+    padding: .4rem;
+  }
 }
 
 .home-description {
@@ -224,7 +231,7 @@ $hero-box-side-padding: 3rem;
   .home-description {
     font-size: $font-size-h4;
   }
-  .progress-circles {
+  .page-home .progress-circles {
     margin-left: auto;
     margin-right: auto;
   }
