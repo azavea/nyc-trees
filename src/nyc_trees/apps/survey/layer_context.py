@@ -3,57 +3,72 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
+import urllib
+
 from calendar import timegm
 from datetime import datetime
 
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from django.utils.timezone import make_aware, utc
 
 from models import (Group, Blockface, Survey, Territory, BlockfaceReservation)
 from apps.users.models import TrustedMapper
 
 
-def get_context_for_progress_layer(request, layer_name):
+def get_context_for_progress_layer():
     models = [Blockface, Survey, Territory, BlockfaceReservation]
-    if request.user.is_authenticated():
-        models.append(TrustedMapper)
-    return _get_context_for_layer(layer_name, models, request)
+    return _get_context_for_layer("progress", models)
 
 
+@login_required
+def get_context_for_user_progress_layer(request):
+    models = [Blockface, Survey, Territory, BlockfaceReservation,
+              TrustedMapper]
+    return _get_context_for_layer("user_progress", models,
+                                  {'user': request.user.pk})
+
+
+@login_required
 def get_context_for_reservable_layer(request):
     models = [Group, Blockface, Territory, BlockfaceReservation, TrustedMapper]
-    return _get_context_for_layer("reservable", models, request)
+    return _get_context_for_layer("user_reservable", models,
+                                  {'user': request.user.pk})
 
 
+@login_required
 def get_context_for_reservations_layer(request):
     models = [Blockface, BlockfaceReservation]
-    return _get_context_for_layer("reservations", models, request)
+    return _get_context_for_layer("user_reservations", models,
+                                  {'user': request.user.pk})
 
 
+@login_required
 def get_context_for_printable_reservations_layer(request):
     models = [Blockface, BlockfaceReservation]
-    return _get_context_for_layer("reservations_print", models, request)
+    return _get_context_for_layer("user_reservations_print", models,
+                                  {'user': request.user.pk})
 
 
-def get_context_for_territory_layer(request, group_id):
+def get_context_for_territory_layer(group_id):
     models = [Blockface, Territory]
-    params = '?group=%s' % group_id
-    return _get_context_for_layer("territory", models, request, params)
+    return _get_context_for_layer("group_territory", models,
+                                  {'group': group_id})
 
 
-def get_context_for_territory_survey_layer(request, group_id):
+def get_context_for_territory_survey_layer(group_id):
     models = [Blockface, Territory, BlockfaceReservation]
-    params = '?group=%s' % group_id
-    return _get_context_for_layer("territory_survey", models, request, params)
+    return _get_context_for_layer("group_territory_survey", models,
+                                  {'group': group_id})
 
 
-def get_context_for_territory_admin_layer(request, group_id):
+def get_context_for_territory_admin_layer(group_id):
     models = [Blockface, Territory, BlockfaceReservation]
-    params = '?group=%s' % group_id
-    return _get_context_for_layer("territory_admin", models, request, params)
+    return _get_context_for_layer("group_territory_admin", models,
+                                  {'group': group_id})
 
 
-def _get_context_for_layer(layer_name, models, request, params=''):
+def _get_context_for_layer(layer_name, models, params=None):
     tiler_url_format = \
         "%(tiler_url)s/%(cache_buster)s/%(db)s/%(type)s/{z}/{x}/{y}"
 
@@ -64,12 +79,14 @@ def _get_context_for_layer(layer_name, models, request, params=''):
         'type': layer_name
     }
 
-    if params == '' and request.user.is_authenticated():
-        params = '?user=%s' % request.user.pk
+    if params:
+        query = '?' + urllib.urlencode(params)
+    else:
+        query = ''
 
     context = {
-        'tile_url': tile_url + '.png' + params,
-        'grid_url': tile_url + '.grid.json' + params,
+        'tile_url': tile_url + '.png' + query,
+        'grid_url': tile_url + '.grid.json' + query,
     }
 
     return context

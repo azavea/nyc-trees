@@ -122,7 +122,7 @@ def group_detail(request):
             'follows': follow_count
         },
         'group_events_id': GROUP_EVENTS_ID,
-        'layer': get_context_for_territory_layer(request, request.group.id),
+        'layer': get_context_for_territory_layer(request.group.id),
         'territory_bounds': _group_territory_bounds(request.group),
         'render_follow_button_without_count': request.POST.get(
             'render_follow_button_without_count', False)
@@ -314,7 +314,7 @@ def _update_event_maps(request, group):
 def _make_blockface_and_tiler_urls_result(request, blockfaces, group_id):
     result = {
         'blockDataList': _make_blockface_data_result(blockfaces),
-        'tilerUrls': get_context_for_territory_admin_layer(request, group_id)
+        'tilerUrls': get_context_for_territory_admin_layer(group_id)
     }
     return result
 

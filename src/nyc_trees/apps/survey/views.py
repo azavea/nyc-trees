@@ -41,7 +41,7 @@ from apps.survey.layer_context import (
     get_context_for_reservations_layer, get_context_for_reservable_layer,
     get_context_for_progress_layer, get_context_for_territory_survey_layer,
     get_context_for_printable_reservations_layer,
-    get_context_for_territory_layer
+    get_context_for_territory_layer, get_context_for_user_progress_layer
 )
 from apps.survey.helpers import (teammates_for_event, group_percent_completed,
                                  teammates_for_individual_mapping)
@@ -66,13 +66,14 @@ def progress_page(request):
              'label': 'Not mapped by you'},
         ],
         'legend_mode': 'all',
-        'layer_all': get_context_for_progress_layer(request, 'progress_all'),
-        'layer_my': get_context_for_progress_layer(request, 'progress_my'),
+        'layer_all': get_context_for_progress_layer(),
         'help_shown': _was_help_shown(request, 'progress_page_help_shown')
     }
 
     user = request.user
     if user.is_authenticated():
+        context['layer_my'] = get_context_for_user_progress_layer(request)
+
         blocks = (user.survey_set
                   .distinct('blockface')
                   .values_list('blockface_id', flat=True))
@@ -175,7 +176,7 @@ def group_borders_geojson(request):
                      queryset=Territory.objects.select_related('blockface')))
 
     def get_tile_url(id):
-        return get_context_for_territory_layer(request, id)['tile_url']
+        return get_context_for_territory_layer(id)['tile_url']
 
     return [
         {
@@ -412,7 +413,7 @@ def start_survey_from_event(request, event_slug):
         return HttpResponseForbidden('Event not currently in-progress')
 
     return {
-        'layer': get_context_for_territory_survey_layer(request, group.id),
+        'layer': get_context_for_territory_survey_layer(group.id),
         'location': [event.location.y, event.location.x],
         'choices': _get_survey_choices(),
         'teammates': teammates_for_event(group, event, request.user)
