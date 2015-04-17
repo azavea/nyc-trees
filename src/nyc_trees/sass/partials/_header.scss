@@ -109,17 +109,11 @@
   bottom: 0;
   background-color: $nav-side-color;
   width: 30rem;
-  -webkit-transform: translateX(-30rem);
-  -moz-transform: translateX(-30rem);
-  -ms-transform: translateX(-30rem);
-  transform: translateX(-30rem);
+  left: -30rem;
   z-index: 1;
   transition: all 400ms $transition;
   .menu-active & {
-    -webkit-transform: translateX(0);
-    -moz-transform: translateX(0);
-    -ms-transform: translateX(0);
-    transform: translateX(0);
+    left: 0;
     box-shadow: 0px 1rem 6rem 0px #0A0B0B;
   }
 }
@@ -127,24 +121,24 @@
 .right-content {
   padding-top: $navbar-height;
   position: relative;
-  -webkit-box-flex: 1;
-  -webkit-flex: 1;
-  -moz-box-flex: 1;
-  flex: 1 1 auto;
+  left: 0;
+  top: 0;
   transition: all 400ms $transition;
 }
 
 .menu-active .right-content, .menu-active footer, .menu-active .main-header, .menu-active .overlay-menued {
-  -webkit-transform: translateX(30rem);
-  -moz-transform: translateX(30rem);
-  -ms-transform: translateX(30rem);
-  transform: translateX(30rem);
+  left: 30rem;
+  transition: all 400ms $transition;
 }
 
 .main-header {
   position: fixed;
   left: 0;
   right: 0;
+  top: 0;
+  overflow: hidden;
+  height: $navbar-height;
+  width: 100vw;
   z-index: $zindex-main-header;
   transition: all 400ms $transition;
 }
