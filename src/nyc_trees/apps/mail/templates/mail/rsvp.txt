@@ -1,10 +1,12 @@
 {% extends "mail/base_email.txt" %}
 {% block content %}
-We have received your RSVP to {{ event.title }}, hosted by {{ event.group.name }}. Here are the details:
+Thank you for signing up for a TreesCount! 2015 event!
 
-When: {{ event.begins_at|date:"l, F jS fA" }} to {{ event.ends_at|date:"fA" }}
+We have received your RSVP to {{ event.title }}, hosted by {{ event.group.name }}. Here are the event details:
+
+When: {{ event.begins_at|date:"l, F jS — f A" }}
 Where: {{ event.address }}{% if event.location_description %} — {{event.location_description }}{% endif %}
-Contact: {{ event.contact_name }} {{ event.contact_email }}
+Contact: {{ event.contact_name }} — {{ event.contact_email }}
 
 You can view the full details of the event, cancel your reservation, or
 check-in when the event starts by following this link: {{ event_url }}
