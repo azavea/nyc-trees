@@ -109,18 +109,45 @@ def _was_help_shown(request, help_shown_attr):
 
 
 def progress_page_blockface_popup(request, blockface_id):
-    survey_type = request.GET.get('survey_type')
+    blockface = get_object_or_404(Blockface, id=blockface_id)
+
     group_id = request.GET.get('group_id', None)
     group = get_object_or_404(Group, id=group_id) if group_id else None
 
     is_active = (group is None or group.is_active or
                  user_is_group_admin(request.user, group))
 
+    survey_type = _get_survey_type(blockface, request.user, group)
+
     return {
         'survey_type': survey_type,
         'group': group,
         'is_active': is_active
     }
+
+
+def _get_survey_type(blockface, user, group):
+    reserved_by_user = BlockfaceReservation.objects \
+        .filter(blockface=blockface, user=user).current().exists()
+
+    if reserved_by_user:
+        return 'reserved'
+
+    try:
+        latest_survey = Survey.objects \
+            .filter(blockface=blockface) \
+            .latest('created_at')
+        if user.pk in {latest_survey.user_id, latest_survey.teammate_id}:
+            return 'surveyed-by-me'
+        else:
+            return 'surveyed-by-others'
+    except Survey.DoesNotExist:
+        pass
+
+    if group is None and blockface.is_available:
+        return 'available'
+
+    return 'unavailable'
 
 
 def _query_reservation(user, blockface_id):

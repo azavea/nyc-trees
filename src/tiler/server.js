@@ -27,8 +27,8 @@ var Windshaft = require('windshaft'),
     interactivity = {
         group_territory_survey: 'id,survey_type,restriction',
         group_territory_admin: 'id,survey_type,turf_group_id',
-        progress: 'id,group_id,survey_type',
-        user_progress: 'id,group_id,survey_type',
+        progress: 'id,group_id',
+        user_progress: 'id,group_id',
         user_reservable: 'id,group_id,group_slug,survey_type,restriction',
         user_reservations: 'id'
     },
@@ -113,7 +113,7 @@ function req2interactivity(req) {
 function req2style(req) {
     var type =  req.params.type;
     if (type === 'progress' || type === 'user_progress') {
-        return styles.progress({type: type});
+        return styles.progress();
     } else {
         return styles.default();
     }

@@ -17,14 +17,13 @@ from apps.users.models import TrustedMapper
 
 
 def get_context_for_progress_layer():
-    models = [Blockface, Survey, Territory, BlockfaceReservation]
+    models = [Blockface, Survey, Territory]
     return _get_context_for_layer("progress", models)
 
 
 @login_required
 def get_context_for_user_progress_layer(request):
-    models = [Blockface, Survey, Territory, BlockfaceReservation,
-              TrustedMapper]
+    models = [Blockface, Survey, Territory]
     return _get_context_for_layer("user_progress", models,
                                   {'user': request.user.pk})
 
