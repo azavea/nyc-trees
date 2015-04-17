@@ -24,7 +24,7 @@ from apps.users import user_profile_context
 def home_page(request):
     if request.user.is_authenticated():
         context = user_profile_context(request.user)
-        context['training_steps'] = training_summary.get_context(request.user)
+        context.update(training_summary.get_context(request.user))
         context['counts_all'] = _global_counts()
         context['counts_week'] = _global_counts(past_week=True)
     else:

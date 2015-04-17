@@ -8,11 +8,20 @@
 
 <p>The next step after completing online training is to sign up for a training event where you will practice what you've learned in the field! <a href="{% url 'events_list_page' %}?active_filter=training">Sign up for training events here.</a></p>
 
-<p>You can also download a PDF of the training materials <a href="{{ "training/training.pdf"|static_url }}">here.</a></p>
-{% else %}
+{% elif is_started %}
 <h3>You're almost there!</h3>
 <p>Continue your training and help us make trees count!</p>
+
+{% else %}
+<h3>Become a trained volun<span class="color--primary">treer</span> today!</h3>
+{% if user.is_authenticated %}
+<p>Click Start to begin your voluntreer training. Once you complete all sections, you can sign up for an event to use what you've learned to map trees!</p>
 {% endif %}
+
+{% endif %}
+
+<p>You can also download a PDF of the training materials <a href="{{ "training/training.pdf"|static_url }}">here.</a></p>
+
 
 {% for step_info in training_steps %}
 <a {% if step_info.is_visitable %}href="{{ step_info.step.pure_url }}"{% endif %}

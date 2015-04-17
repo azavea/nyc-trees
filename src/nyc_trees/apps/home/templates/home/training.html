@@ -10,8 +10,10 @@
   <p class="pageheading-description-detail">
     {% if user.online_training_complete %}
     Congratulations on becoming a trained volun<strong>treer</strong>!
-    {% else %}
+    {% elif is_started %}
     You're almost there! Continue your training to become a mapper.
+    {% else %}
+    Can we count on you? Get started on your training today and help us make trees count!
     {% endif %}
   </p>
 
