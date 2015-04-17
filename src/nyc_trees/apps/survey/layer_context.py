@@ -28,6 +28,11 @@ def get_context_for_user_progress_layer(request):
                                   {'user': request.user.pk})
 
 
+def get_context_for_group_progress_layer():
+    models = [Blockface, Survey, Territory]
+    return _get_context_for_layer("group_progress", models)
+
+
 @login_required
 def get_context_for_reservable_layer(request):
     models = [Group, Blockface, Territory, BlockfaceReservation, TrustedMapper]

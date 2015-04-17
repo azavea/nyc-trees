@@ -41,7 +41,7 @@ from apps.survey.layer_context import (
     get_context_for_reservations_layer, get_context_for_reservable_layer,
     get_context_for_progress_layer, get_context_for_territory_survey_layer,
     get_context_for_printable_reservations_layer,
-    get_context_for_territory_layer, get_context_for_user_progress_layer
+    get_context_for_group_progress_layer, get_context_for_user_progress_layer
 )
 from apps.survey.helpers import (teammates_for_event, group_percent_completed,
                                  teammates_for_individual_mapping)
@@ -64,6 +64,10 @@ def progress_page(request):
             {'mode': 'my', 'css_class': 'mapped', 'label': 'Mapped by you'},
             {'mode': 'my', 'css_class': 'not-mapped',
              'label': 'Not mapped by you'},
+            {'mode': 'group', 'css_class': 'mapped',
+             'label': 'Mapped by this group'},
+            {'mode': 'group', 'css_class': 'not-mapped',
+             'label': 'Not mapped'},
         ],
         'legend_mode': 'all',
         'layer_all': get_context_for_progress_layer(),
@@ -202,8 +206,9 @@ def group_borders_geojson(request):
             Prefetch('territory_set', to_attr="turf",
                      queryset=Territory.objects.select_related('blockface')))
 
-    def get_tile_url(id):
-        return get_context_for_territory_layer(id)['tile_url']
+    base_group_layer_context = get_context_for_group_progress_layer()
+    base_group_tile_url = base_group_layer_context['tile_url']
+    base_group_grid_url = base_group_layer_context['grid_url']
 
     return [
         {
@@ -213,7 +218,8 @@ def group_borders_geojson(request):
                 'coordinates': list(group.border.coords)
             },
             'properties': {
-                'tileUrl': get_tile_url(group.id),
+                'tileUrl': '%s?group=%s' % (base_group_tile_url, group.id),
+                'gridUrl': '%s?group=%s' % (base_group_grid_url, group.id),
                 'popupUrl': reverse('group_popup',
                                     kwargs={'group_slug': group.slug}),
                 'bounds': GeometryCollection(

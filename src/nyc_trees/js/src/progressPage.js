@@ -77,26 +77,9 @@ function loadLayers($mode) {
     }
     if (tileUrl) {
         tileLayer = mapModule.addTileLayer(progressMap, tileUrl);
-
         grid = mapModule.addGridLayer(progressMap, gridUrl);
 
-        selectedLayer = new SelectableBlockfaceLayer(progressMap, grid, {
-            onAdd: function(gridData) {
-                selectedLayer.clearLayers();
-
-                // Note: this must be kept in sync with
-                // src/nyc_trees/apps/survey/urls/blockface.py
-                var url =
-                        '/blockedge/' + gridData.id + '/progress-page-blockedge-popup/';
-
-                if (gridData.group_id) {
-                    url += '?group_id=' + gridData.group_id;
-                }
-                $actionBar.load(url);
-                return true;
-            }
-        });
-        progressMap.addLayer(selectedLayer);
+        createSelectableLayer();
 
         if (bounds) {
             mapModule.fitBounds(progressMap, bounds);
@@ -114,7 +97,13 @@ function loadLayers($mode) {
                 onEachFeature: function(feature, layer) {
                     layer.on('click', function showGroupBlockfaces() {
                         progressMap.removeLayer(tileLayer);
+                        progressMap.removeLayer(grid);
+
                         tileLayer = mapModule.addTileLayer(progressMap, feature.properties.tileUrl);
+                        grid = mapModule.addGridLayer(progressMap, feature.properties.gridUrl);
+
+                        createSelectableLayer();
+
                         mapModule.fitBounds(progressMap, feature.properties.bounds);
                         $actionBar.load(feature.properties.popupUrl);
                     });
@@ -123,4 +112,23 @@ function loadLayers($mode) {
             geojsonLayer.addTo(progressMap);
         });
     }
+}
+
+function createSelectableLayer() {
+    selectedLayer = new SelectableBlockfaceLayer(progressMap, grid, {
+        onAdd: function(gridData) {
+            selectedLayer.clearLayers();
+
+            // Note: this must be kept in sync with
+            // src/nyc_trees/apps/survey/urls/blockface.py
+            var url = '/blockedge/' + gridData.id + '/progress-page-blockedge-popup/';
+
+            if (gridData.group_id) {
+                url += '?group_id=' + gridData.group_id;
+            }
+            $actionBar.load(url);
+            return true;
+        }
+    });
+    progressMap.addLayer(selectedLayer);
 }
