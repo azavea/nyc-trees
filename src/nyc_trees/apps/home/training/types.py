@@ -89,6 +89,10 @@ class TrainingGateway(AbstractTrainingNode):
     def is_complete(self, user):
         return all([step.is_complete(user) for step in self.steps])
 
+    def is_started(self, user):
+        return (user.is_authenticated() and
+                any([step.is_complete(user) for step in self.steps]))
+
     def is_visitable(self, user):
         return True
 
@@ -110,7 +114,8 @@ class TrainingGateway(AbstractTrainingNode):
                                    'is_next': is_next})
             last_was_complete = is_complete
 
-        return training_steps
+        return {'is_started': self.is_started(user),
+                'training_steps': training_steps}
 
     def mark_kwargs(self):
         raise ValueError('Gateways do not have a progress boolean')

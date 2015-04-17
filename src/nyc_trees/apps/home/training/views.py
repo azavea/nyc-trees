@@ -13,7 +13,7 @@ from apps.mail.views import send_online_training_complete
 
 def training_list_page(request):
     from apps.home.training import training_summary
-    return {'training_steps': training_summary.get_context(request.user)}
+    return training_summary.get_context(request.user)
 
 
 def intro_quiz(request):
