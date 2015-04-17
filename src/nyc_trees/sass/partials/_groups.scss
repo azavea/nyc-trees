@@ -1,20 +1,20 @@
 .group-branding {
   width: 100px;
   height: 100px;
-  border-radius: 50%;
+  border-radius: $border-radius-base;
   overflow: hidden;
   border: 1px solid #ddd;
   white-space: nowrap;
   position: relative;
   z-index: 1;
-  img {
-    position: relative;
-    display: block;
-    transform: translate(0, -50%);
-    -webkit-transform: translate(0, -50%);
-    top: 50%;
-    max-height: 100%;
-    margin: auto;
+  .group-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: cover;
+    background-position: center;
   }
 }
 
