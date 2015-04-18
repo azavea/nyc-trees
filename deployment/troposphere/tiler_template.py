@@ -1,4 +1,5 @@
-from troposphere import Template, Parameter, Ref, Tags, Output, GetAtt, ec2
+from troposphere import Template, Parameter, Ref, Tags, Output, GetAtt, Base64, \
+    ec2
 
 import template_utils as utils
 import troposphere.autoscaling as asg
@@ -214,6 +215,12 @@ tile_server_auto_scaling_group = t.add_resource(asg.AutoScalingGroup(
     'asgTileServer',
     AvailabilityZones=map(lambda x: 'us-east-1%s' % x,
                           utils.EC2_AVAILABILITY_ZONES),
+    BlockDeviceMappings=[
+        {
+            "DeviceName": "/dev/sdb",
+            "VirtualName": "ephemeral0"
+        }
+    ],
     Cooldown=300,
     DesiredCapacity=2,
     HealthCheckGracePeriod=600,
@@ -231,6 +238,7 @@ tile_server_auto_scaling_group = t.add_resource(asg.AutoScalingGroup(
             asg.EC2_INSTANCE_TERMINATE_ERROR
         ]
     ),
+    UserData=Base64(utils.read_file('cloud-config/tiler.yml')),
     VPCZoneIdentifier=Ref(private_subnets_param),
     Tags=[
         asg.Tag('Name', 'TileServer', True),

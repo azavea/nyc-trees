@@ -5,9 +5,10 @@ server {
   access_log /var/log/nginx/nyc-trees-tiler.access.log logstash_json;
 
   location / {
-    {% if ['packer'] | is_in(group_names) -%}
-    expires max;
-    {% endif %}
+    proxy_cache {{ nginx_cache_keys_zone | regex_replace('^(.*):.*$', '\\1') }};
+    proxy_cache_bypass $http_cache_control;
+
+    add_header X-Proxy-Cache $upstream_cache_status;
 
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header Host $http_host;

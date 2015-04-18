@@ -1,0 +1,2 @@
+proxy_cache_path {{ nginx_cache_path }} levels={{ nginx_cache_levels }} keys_zone={{ nginx_cache_keys_zone }} inactive={{ nginx_cache_inactive }} max_size={{ nginx_cache_max_size }};
+proxy_cache_key "$scheme$proxy_host$request_uri";

@@ -1,0 +1,6 @@
+#cloud-config
+
+runcmd:
+ - [ mkdir, -p, "/mnt/nginx" ]
+ - [ chown, www-data, "/mnt/nginx" ]
+ - [ chgrp, www-data, "/mnt/nginx" ]

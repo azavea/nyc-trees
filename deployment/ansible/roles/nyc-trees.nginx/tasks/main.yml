@@ -4,3 +4,15 @@
             dest=/etc/nginx/conf.d/log-format.conf
   notify:
     - Restart Nginx
+
+- name: Create Nginx proxy cache path
+  file: path={{ nginx_cache_path }}
+        owner=www-data
+        group=www-data
+        state=directory
+
+- name: Configure Nginx proxy cache
+  template: src=proxy-cache.conf.j2
+            dest=/etc/nginx/conf.d/proxy-cache.conf
+  notify:
+    - Restart Nginx

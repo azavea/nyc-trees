@@ -68,6 +68,15 @@ def get_nat_ami_mapping():
     return {region: {'AMI': get_image_id(region)} for region in EC2_REGIONS}
 
 
+def read_file(file_name):
+    """Reads an entire file and returns it as a string
+    Arguments
+    :param file_name: A path to a file
+    """
+    with open(file_name, 'r') as f:
+        return f.read()
+
+
 def validate_cloudformation_template(template_body):
     """Validates the JSON of a CloudFormation template produced by Troposphere
 

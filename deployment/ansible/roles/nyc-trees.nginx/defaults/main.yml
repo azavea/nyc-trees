@@ -1,0 +1,8 @@
+---
+# /mnt is fast ephemeral storage on most m3.* class
+# instance types. Put Nginx cache in here to avoid EBS.
+nginx_cache_path: "/mnt/nginx"
+nginx_cache_levels: "1:2"
+nginx_cache_keys_zone: "the_zone:10m"
+nginx_cache_inactive: "60m"
+nginx_cache_max_size: "2g"

@@ -83,6 +83,13 @@ var Windshaft = require('windshaft'),
             } catch(err) {
                 callback(err, null);
             }
+        },
+        afterTileRender: function(req, res, tile, headers, callback) {
+            // The value for max-age here is equivalent to the maximum
+            // value for Expires in Nginx. Setting Cache-Control here
+            // allows the Nginx cache and CloudFront to cache tiles.
+            _.extend(headers, {"Cache-Control": "public,max-age=315360000"});
+            callback(null, tile, headers);
         }
     };
 
