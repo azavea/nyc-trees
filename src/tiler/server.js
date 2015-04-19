@@ -52,6 +52,8 @@ var Windshaft = require('windshaft'),
             port: redisPort
         },
 
+        useProfiler: (process.env.NYC_TREES_PROFILE_TILER == "true"),
+
         statsd: {
             host: statsdHost,
             port: statsdPort

@@ -2,6 +2,7 @@
 tiler_home: /opt/tiler
 tiler_config_home: /etc/nyc-trees.d/env
 tiler_deploy_branch: "master"
+tiler_use_profiler: "false"
 
 tiler_config:
   - { file: "NYC_TREES_DB_USER", content: "{{ postgresql_username }}" }
@@ -11,6 +12,7 @@ tiler_config:
   - { file: "NYC_TREES_STATSD_HOST", content: "{{ statsite_host }}" }
   - { file: "NYC_TREES_CACHE_HOST", content: "{{ redis_host }}" }
   - { file: "NYC_TREES_CACHE_PORT", content: "{{ redis_port }}" }
+  - { file: "NYC_TREES_PROFILE_TILER", content: "{{ tiler_use_profiler }}" }
 
 tiler_log: /var/log/nyc-trees-tiler.log
 tiler_log_rotate_count: 5
