@@ -71,13 +71,13 @@ toggle_app_server_stack() {
   AWS_APP_STACK_OUTPUTS=$(get_stack_outputs "NYCTrees${1}AppServers")
 
   AWS_ELB_APP_ENDPOINT=$(echo $AWS_APP_STACK_OUTPUTS | grep "AppServerLoadBalancerEndpoint" | cut -d' ' -f2)
-  AWS_ELB_HOSTED_ZONE_ID=$(echo $AWS_APP_STACK_OUTPUTS | grep "AppServerLoadBalancerHostedZoneNameID" | cut -d' ' -f4)
+  AWS_ELB_APP_HOSTED_ZONE_ID=$(echo $AWS_APP_STACK_OUTPUTS | grep "AppServerLoadBalancerHostedZoneNameID" | cut -d' ' -f4)
 
   # Build parameters argument
   AWS_STACK_PARAMS="ParameterKey=PublicHostedZone,ParameterValue=${AWS_PUBLIC_HOSTED_ZONE}"
   AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=AppSSLCertificateId,ParameterValue=${AWS_SSL_CERTIFICATE_ID}"
   AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=AppServerAliasTarget,ParameterValue=${AWS_ELB_APP_ENDPOINT}"
-  AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=AppServerLoadBalancerHostedZoneNameID,ParameterValue=${AWS_ELB_HOSTED_ZONE_ID}"
+  AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=AppServerLoadBalancerHostedZoneNameID,ParameterValue=${AWS_ELB_APP_HOSTED_ZONE_ID}"
 
   if echo "${AWS_STACKS}" | grep -q "NYCTreesAppHostedZone"; then
     aws cloudformation update-stack \
@@ -101,10 +101,13 @@ toggle_tile_server_stack() {
 
   AWS_VPC_ID=$(echo "${AWS_VPC_STACK_OUTPUTS}" | grep "VpcId" | cut -f2)
   AWS_ELB_TILE_ENDPOINT=$(echo $AWS_TILE_STACK_OUTPUTS | grep "TileServerLoadBalancerEndpoint" | cut -d' ' -f2)
-  AWS_PRIVATE_HOSTED_ZONE_ID=$(aws route53 list-hosted-zones | grep -B1 "${AWS_VPC_ID}" | grep -v "${AWS_VPC_ID}" | cut -f3 | cut -d'/' -f3)  
+  AWS_ELB_TILE_HOSTED_ZONE_ID=$(echo $AWS_TILE_STACK_OUTPUTS | grep "TileServerLoadBalancerHostedZoneNameID" | cut -d' ' -f4)
+  AWS_PRIVATE_HOSTED_ZONE_ID=$(aws route53 list-hosted-zones | grep -B1 "${AWS_VPC_ID}" | grep -v "${AWS_VPC_ID}" | cut -f3 | cut -d'/' -f3)
 
   # Build parameters argument
-  AWS_STACK_PARAMS="ParameterKey=TileServerAliasTarget,ParameterValue=${AWS_ELB_TILE_ENDPOINT}"
+  AWS_STACK_PARAMS="ParameterKey=PublicHostedZone,ParameterValue=${AWS_PUBLIC_HOSTED_ZONE}"
+  AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=TileServerAliasTarget,ParameterValue=${AWS_ELB_TILE_ENDPOINT}"
+  AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=TileServerLoadBalancerHostedZoneNameID,ParameterValue=${AWS_ELB_TILE_HOSTED_ZONE_ID}"
   AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=PrivateHostedZoneId,ParameterValue=${AWS_PRIVATE_HOSTED_ZONE_ID}"
 
   if echo "${AWS_STACKS}" | grep -q "NYCTreesTileHostedZone"; then
