@@ -8,7 +8,12 @@ var $ = require('jquery'),
     mapUtil = require('./lib/mapUtil'),
     SelectableBlockfaceLayer = require('./lib/SelectableBlockfaceLayer'),
     valIsEmpty = require('./lib/valIsEmpty'),
-    mapAnotherPopup = require('./mapAnotherPopup');
+    mapAnotherPopup = require('./mapAnotherPopup'),
+
+    statePrompter = require('./lib/statePrompter').init({
+        warning: 'Are you sure you want to cancel mapping this block?',
+        question: ''
+    });
 
 // Extends the leaflet object
 require('leaflet-utfgrid');
@@ -160,9 +165,9 @@ var dom = {
 
     isMappedFromStartOfLine = null,
 
-    hasUnsavedData = true,
-
     clicksEnabled = true;
+
+statePrompter.lock();
 
 blockfaceMap.addLayer(selectedLayer);
 blockfaceMap.addLayer(endPointLayers);
@@ -193,16 +198,6 @@ $(dom.btnToTeammate).click(function(e) {
 
 mapUtil.fetchBlockface(blockfaceId).done(function(blockface) {
     selectedLayer.addBlockface(blockface);
-});
-
-// Show an "Are you sure" alert when leaving the page, to prevent accidental
-// data-loss
-$(window).on('beforeunload', function(e) {
-    if (hasUnsavedData) {
-        return 'Are you sure you want to cancel mapping this block?';
-    } else {
-        return undefined;
-    }
 });
 
 // There is no attribute for requiring "one or more" of a group of checkboxes to
@@ -467,7 +462,7 @@ function submitSurveyWithTrees() {
             var href = window.location.origin +
                     window.location.pathname +
                     'confirm/' + content.survey_id + '/';
-            hasUnsavedData = false;
+            statePrompter.unlock();
             window.location.href = href;
         })
         .fail(function(jqXHR, textStatus, errorThrown) {
@@ -485,7 +480,7 @@ $(dom.quit).on('click', quitSurvey);
 function dismissAndPrompt(modalId) {
     return function(content) {
         $(modalId).modal('hide');
-        hasUnsavedData = false;
+        statePrompter.unlock();
         mapAnotherPopup.show();
     };
 }
