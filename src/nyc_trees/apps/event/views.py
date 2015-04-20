@@ -251,7 +251,7 @@ def edit_event(request, event_slug):
         return HttpResponseRedirect(
             reverse('event_detail', kwargs={
                 'group_slug': request.group.slug,
-                'event_slug': event_slug
+                'event_slug': event.slug
             }))
     else:
         return {
