@@ -43,7 +43,7 @@ var $ = require('jquery'),
         popupTemplate: '#reservations-blockface-popup-template',
         popupBlockfaceId: '[' + attrs.blockfaceId + ']',
         popupBlockfaceStatus: '[' + attrs.blockfaceStatus + ']',
-        popupAction: '[' + attrs.blockfaceAction + ']',
+        popupAction: '[' + attrs.blockfaceAction + ']'
     },
 
     actions = {
