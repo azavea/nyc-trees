@@ -123,8 +123,8 @@ class EventList(object):
         filtersets = {
             EventList.trainingFilters: OrderedDict([
                 (_ALL, None),
-                (_MAPPING, lambda qs: qs.filter(includes_training=False)),
                 (_TRAINING, lambda qs: qs.filter(includes_training=True)),
+                (_MAPPING, lambda qs: qs.filter(includes_training=False)),
             ]),
             EventList.chronoFilters: OrderedDict([
                 (_CURRENT, lambda qs: (qs
