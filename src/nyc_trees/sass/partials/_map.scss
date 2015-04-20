@@ -1,8 +1,13 @@
 .map-action-sidebar {
-  padding-bottom: 0;
+  padding-bottom: 0 !important;
   .tab-status-map-tab &, .page-new-reservation & {
     position: static;
     height: 7rem;
+    @media (max-height: $screen-xs-height) and (max-width: $screen-sm) {
+      height: 4rem;
+      font-size: 12px;
+      padding-top: 1rem;
+    }
   }
   .dropdown-menu {
     z-index: $zindex-modal + 1;
@@ -16,6 +21,10 @@
     top: 15.9rem;
     right: 0;
     left: 0;
+    @media (max-height: $screen-xs-height) and (max-width: $screen-sm) {
+      top: 12.6rem;
+      bottom: 7rem;
+    }
   }
   .page-new-reservation & {
     position: fixed;
@@ -26,6 +35,10 @@
     @media (min-width: $screen-sm) {
       top: $navbar-height;
       bottom: 0;
+    }
+    @media (max-height: $screen-xs-height) and (max-width: $screen-sm) {
+      top: 8.5rem;
+      bottom: 7rem;
     }
   }
   .nav-tabs {
@@ -39,10 +52,20 @@
   bottom: 0;
   width: 100%;
   height: 8rem;
-  padding: 0 $grid-gutter-width/2;
+  padding: $grid-gutter-width/2 $grid-gutter-width/2;
   z-index: 1;
   .tab-status-list & {
     display: none;
+  }
+  & > .event {
+    padding: 0;
+
+  }
+  @media (max-height: $screen-xs-height) and (max-width: $screen-sm) {
+    height: 7rem;
+    .event-detail {
+      display: none;
+    }
   }
 }
 
@@ -243,10 +266,22 @@
     border-left: 4px solid transparent;
     right: 1rem;
     top: 1.75rem;
+    @media (max-height: $screen-xs-height) and (max-width: $screen-sm) {
+      top: 1rem;
+    }
+  }
+}
+
+.nav-tabs-event {
+  @media (max-height: $screen-xs-height) and (max-width: $screen-sm) {
+    margin-top: -.3rem;
   }
 }
 
 @media (min-width: $screen-sm) {
+  .reservation-action-item {
+    margin: 0 $grid-gutter-width/-2;
+  }
   .map-sidebar .modal-dialog {
     width: auto;
   }
@@ -348,4 +383,23 @@
   #reservations-blockface-action {
       display: none;
   }
+}
+
+#reservations-help-text {
+  line-height: 1.2;
+}
+
+.reservations-left {
+  width: 13%;
+  float: left;
+}
+
+.reservations-right {
+  width: 87%;
+  float: left;
+}
+
+.reservations-padding {
+  padding-left: $grid-gutter-width/2;
+  padding-right: $grid-gutter-width/2;
 }
