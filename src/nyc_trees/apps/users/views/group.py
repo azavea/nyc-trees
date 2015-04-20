@@ -85,7 +85,7 @@ def group_detail(request):
         raise Http404('Must be a group admin to view an inactive group')
 
     event_list = (group_detail_events
-                  .configure(chunk_size=2,
+                  .configure(chunk_size=3,
                              active_filter=EventList.Filters.CURRENT,
                              filterset_name=EventList.chronoFilters)
                   .as_context(request, group_slug=group.slug))
@@ -152,7 +152,7 @@ def edit_group(request, form=None):
     if not form:
         form = GroupSettingsForm(instance=request.group, label_suffix='')
     event_list = (group_edit_events
-                  .configure(chunk_size=2,
+                  .configure(chunk_size=3,
                              active_filter=EventList.Filters.CURRENT,
                              filterset_name=EventList.chronoFilters)
                   .as_context(request, group_slug=group.slug))
