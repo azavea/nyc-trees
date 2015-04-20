@@ -123,10 +123,9 @@ class TrainingGateway(AbstractTrainingNode):
 
 class AbstractTrainingStep(AbstractTrainingNode):
 
-    def __init__(self, name, description, duration):
+    def __init__(self, name, description):
         self.name = name
         self.description = description
-        self.duration = duration
         self.next_step = None
         self.previous_step = None
         self.extra_user_actions = None
