@@ -104,7 +104,7 @@ gulp.task('version', buildTasks, function(cb) {
 });
 
 // Images and fonts need to be copied in order to be versioned and collected
-gulp.task('copy', ['copy-fonts', 'copy-images', 'copy-vendor-images']);
+gulp.task('copy', ['copy-fonts', 'copy-images', 'copy-training-assets', 'copy-vendor-images']);
 
 gulp.task('copy-fonts', function() {
     return gulp.src(['font/**'])
@@ -114,6 +114,11 @@ gulp.task('copy-fonts', function() {
 gulp.task('copy-images', function() {
     return gulp.src(['img/**'])
         .pipe(gulp.dest(intermediaryDir + 'img/'));
+});
+
+gulp.task('copy-training-assets', function() {
+    return gulp.src(['apps/home/static/training/**'])
+        .pipe(gulp.dest(intermediaryDir + 'training/'));
 });
 
 gulp.task('copy-vendor-images', function() {
