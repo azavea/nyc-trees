@@ -1,7 +1,7 @@
 /* If you change these colors, also change src/nyc_trees/sass/partials/_legend.scss */
 @mapped: #8BC34A;
-@not-mapped: #aaa;
-@not-mapped-zoomed-out: #ccc;
+@not-mapped: #85664B;
+@not-mapped-zoomed-out: #85664B;
 
 #survey_blockface {
   line-join: round;
