@@ -91,19 +91,18 @@ quizzes = {
 #     to training steps. modify with care.
 
 getting_started = FlatPageTrainingStep('getting_started',
-                                       'Getting Started', '20 minutes')
+                                       'Getting Started')
 the_mapping_method = FlatPageTrainingStep('the_mapping_method',
-                                          'The Mapping Method', '20 minutes')
+                                          'The Mapping Method')
 tree_data = FlatPageTrainingStep('tree_data',
-                                 'Tree Data', '20 minutes')
+                                 'Tree Data')
 tree_surroundings = FlatPageTrainingStep('tree_surroundings',
-                                         'Tree Surroundings', '40 minutes')
+                                         'Tree Surroundings')
 
 intro_quiz = QuizTrainingStep(quizzes['intro_quiz'],
                               r.intro_quiz,
                               'intro_quiz',
-                              'Explore Your Knowledge',
-                              '30 minutes')
+                              'Explore Your Knowledge')
 
 training_summary = TrainingGateway(
     'training_summary',
