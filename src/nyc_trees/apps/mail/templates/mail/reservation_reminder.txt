@@ -1,11 +1,10 @@
 {% extends "mail/base_email.txt" %}
 {% block content %}
-The following block edge reservations for user '{{ user.username }}' will expire soon:
+{% for expires_at, reservations in reservations_by_date %}
+The following block edge reservations are expiring on {{ expires_at|date:"l, F jS f A" }}:
 {% for reservation in reservations %}
-* 'id: {{ reservation.blockface.id }}' at {{ reservation.expires_at }}
+  * {{ reservation.blockface.id }}
 {% endfor %}
-
-Please visit the reservations page to start mapping:
-
-{{ reservations_url }}
+{% endfor %}
+Visit {{ reservations_url }} to begin mapping your reserved block edges or cancel a block edge reservation.
 {% endblock content %}
