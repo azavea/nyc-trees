@@ -41,7 +41,7 @@ from apps.survey.layer_context import (
     get_context_for_reservations_layer, get_context_for_reservable_layer,
     get_context_for_progress_layer, get_context_for_territory_survey_layer,
     get_context_for_printable_reservations_layer,
-    get_context_for_territory_layer
+    get_context_for_group_progress_layer, get_context_for_user_progress_layer
 )
 from apps.survey.helpers import (teammates_for_event, group_percent_completed,
                                  teammates_for_individual_mapping)
@@ -64,15 +64,20 @@ def progress_page(request):
             {'mode': 'my', 'css_class': 'mapped', 'label': 'Mapped by you'},
             {'mode': 'my', 'css_class': 'not-mapped',
              'label': 'Not mapped by you'},
+            {'mode': 'group', 'css_class': 'mapped',
+             'label': 'Mapped by this group'},
+            {'mode': 'group', 'css_class': 'not-mapped',
+             'label': 'Not mapped'},
         ],
         'legend_mode': 'all',
-        'layer_all': get_context_for_progress_layer(request, 'progress_all'),
-        'layer_my': get_context_for_progress_layer(request, 'progress_my'),
+        'layer_all': get_context_for_progress_layer(),
         'help_shown': _was_help_shown(request, 'progress_page_help_shown')
     }
 
     user = request.user
     if user.is_authenticated():
+        context['layer_my'] = get_context_for_user_progress_layer(request)
+
         blocks = (user.survey_set
                   .distinct('blockface')
                   .values_list('blockface_id', flat=True))
@@ -108,18 +113,45 @@ def _was_help_shown(request, help_shown_attr):
 
 
 def progress_page_blockface_popup(request, blockface_id):
-    survey_type = request.GET.get('survey_type')
+    blockface = get_object_or_404(Blockface, id=blockface_id)
+
     group_id = request.GET.get('group_id', None)
     group = get_object_or_404(Group, id=group_id) if group_id else None
 
     is_active = (group is None or group.is_active or
                  user_is_group_admin(request.user, group))
 
+    survey_type = _get_survey_type(blockface, request.user, group)
+
     return {
         'survey_type': survey_type,
         'group': group,
         'is_active': is_active
     }
+
+
+def _get_survey_type(blockface, user, group):
+    reserved_by_user = BlockfaceReservation.objects \
+        .filter(blockface=blockface, user=user).current().exists()
+
+    if reserved_by_user:
+        return 'reserved'
+
+    try:
+        latest_survey = Survey.objects \
+            .filter(blockface=blockface) \
+            .latest('created_at')
+        if user.pk in {latest_survey.user_id, latest_survey.teammate_id}:
+            return 'surveyed-by-me'
+        else:
+            return 'surveyed-by-others'
+    except Survey.DoesNotExist:
+        pass
+
+    if group is None and blockface.is_available:
+        return 'available'
+
+    return 'unavailable'
 
 
 def _query_reservation(user, blockface_id):
@@ -174,8 +206,9 @@ def group_borders_geojson(request):
             Prefetch('territory_set', to_attr="turf",
                      queryset=Territory.objects.select_related('blockface')))
 
-    def get_tile_url(id):
-        return get_context_for_territory_layer(request, id)['tile_url']
+    base_group_layer_context = get_context_for_group_progress_layer()
+    base_group_tile_url = base_group_layer_context['tile_url']
+    base_group_grid_url = base_group_layer_context['grid_url']
 
     return [
         {
@@ -185,7 +218,8 @@ def group_borders_geojson(request):
                 'coordinates': list(group.border.coords)
             },
             'properties': {
-                'tileUrl': get_tile_url(group.id),
+                'tileUrl': '%s?group=%s' % (base_group_tile_url, group.id),
+                'gridUrl': '%s?group=%s' % (base_group_grid_url, group.id),
                 'popupUrl': reverse('group_popup',
                                     kwargs={'group_slug': group.slug}),
                 'bounds': GeometryCollection(
@@ -412,7 +446,7 @@ def start_survey_from_event(request, event_slug):
         return HttpResponseForbidden('Event not currently in-progress')
 
     return {
-        'layer': get_context_for_territory_survey_layer(request, group.id),
+        'layer': get_context_for_territory_survey_layer(group.id),
         'location': [event.location.y, event.location.x],
         'choices': _get_survey_choices(),
         'teammates': teammates_for_event(group, event, request.user)

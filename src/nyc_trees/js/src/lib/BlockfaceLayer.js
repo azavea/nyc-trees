@@ -45,16 +45,15 @@ function getStyle(map, color) {
 
 // Note: this must be kept in sync with src/tiler/style/*.mss
 // Line widths are purposefully 2 pixels wider than the tiler styling
+// The "Mapped" lines on the progress map never get smaller than 6 pixels,
+// so we never make our selected line smaller than 8 pixels
+// (even for unmapped / non progress page lines)
 function getLineWidth(zoom) {
     if (zoom >= 19) {
         return 18;
     } else if (zoom === 18) {
         return 10;
-    } else if (zoom === 17) {
-        return 6;
-    } else if (zoom === 16) {
-        return 4;
-    } else {
-        return 3;
+    } else if (zoom <= 17) {
+        return 8;
     }
 }

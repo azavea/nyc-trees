@@ -310,7 +310,7 @@ def printable_event_map(request, event_slug):
     event = get_object_or_404(Event, group=request.group, slug=event_slug)
     context = {
         'event': event,
-        'layer': get_context_for_territory_layer(request, request.group.id),
+        'layer': get_context_for_territory_layer(request.group.id),
     }
     return context
 

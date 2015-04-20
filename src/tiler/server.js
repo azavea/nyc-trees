@@ -25,12 +25,13 @@ var Windshaft = require('windshaft'),
     styles = files('./style'),
 
     interactivity = {
-        territory_survey: 'id,survey_type,restriction',
-        territory_admin: 'id,survey_type,turf_group_id',
-        progress_all: 'id,group_id,survey_type',
-        progress_my: 'id,group_id,survey_type',
-        reservable: 'id,group_id,group_slug,survey_type,restriction',
-        reservations: 'id'
+        group_territory_survey: 'id,survey_type,restriction',
+        group_territory_admin: 'id,survey_type,turf_group_id',
+        progress: 'id,group_id',
+        user_progress: 'id,group_id',
+        group_progress: 'id,group_id',
+        user_reservable: 'id,group_id,group_slug,survey_type,restriction',
+        user_reservations: 'id'
     },
 
     config = {
@@ -112,54 +113,22 @@ function req2interactivity(req) {
 
 function req2style(req) {
     var type =  req.params.type;
-    if (type === 'progress_all' || type === 'progress_my') {
-        return styles.progress({type: type});
+    if (type === 'progress' || type === 'user_progress' || type === 'group_progress') {
+        return styles.progress();
     } else {
         return styles.default();
     }
 }
 
 function req2sql(req) {
-    /*
-     This function expects the SQL files loaded into the
-     'queries' object to have a specific naming convention. If
-     a user= or group= query string argument is provided, this function
-     prepends 'user_' or 'group_' to the 'type' parameter to generate the
-     SQL file name. Example:
-
-     URL:  /123456/nyc_trees/foo/1/2/3.png
-     File: foo.sql
-
-     URL:  /123456/nyc_trees/foo/1/2/3.png?user=1
-     File: user_foo.sql
-
-     URL:  /123456/nyc_trees/bar/1/2/3.png?group=2
-     File: group_bar.sql
-     */
-    var q = req.query,
-        t =  req.params.type,
-        type = (t === 'progress_all' || t === 'progress_my' ? 'progress' : t),
-        queryPrefix = q.group ? 'group_' : q.user ? 'user_' : '',
-        queryName = queryPrefix + type,
+    var type =  req.params.type,
         context = req2context(req),
         additionalErr = '';
-    if (queries[queryName]) {
-        return queries[queryName](context);
+    if (queries[type]) {
+        return queries[type](context);
     } else {
-        additionalErr = additionalErr || getAdditionalErr('group', queryName);
-        additionalErr = additionalErr || getAdditionalErr('user', queryName);
-        throw 'No query defined for ' + queryName + '. ' + additionalErr;
+        throw 'No query defined for ' + type + '.';
     }
-}
-
-function getAdditionalErr(prefix, queryName) {
-    var bar = prefix + '_' + queryName,
-        additionalErr = '';
-    if (queries[bar]) {
-        additionalErr = 'There is a tiler query defined for ' + bar +
-            '. Did you forget the ' + prefix + '= query string argument?';
-    }
-    return additionalErr;
 }
 
 Windshaft.Server(config).listen(port);
