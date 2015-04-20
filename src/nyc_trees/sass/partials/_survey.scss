@@ -20,6 +20,9 @@
     @media (max-width: $screen-sm - 1) {
         bottom: 15rem;
     }
+    @media (max-height: $screen-xs-height) and (max-width: $screen-sm) {
+        top: 4.5rem;
+    }
 }
 
 .action-bar-survey {
@@ -51,6 +54,9 @@
             display: block;
             height: auto;
             padding: 0;
+            @media (max-height: $screen-xs-height) and (max-width: $screen-sm) {
+                top: 4.5rem;
+            }
         }
     }
 

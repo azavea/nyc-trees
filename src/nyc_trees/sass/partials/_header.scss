@@ -4,6 +4,10 @@
   color: #fff;
   padding: 1rem 0;
   height: $navbar-height;
+  @media (max-height: $screen-xs-height) and (max-width: $screen-sm) {
+    padding: .5rem 0;
+    height: 4.5rem;
+  }
 }
 
 .nav-right {
@@ -110,7 +114,7 @@
   background-color: $nav-side-color;
   width: 30rem;
   left: -30rem;
-  z-index: 1;
+  z-index: 2;
   transition: all 400ms $transition;
   .menu-active & {
     left: 0;
@@ -124,6 +128,9 @@
   left: 0;
   top: 0;
   transition: all 400ms $transition;
+  @media (max-height: $screen-xs-height) and (max-width: $screen-sm) {
+    padding-top: 4.5rem;
+  }
 }
 
 .menu-active .right-content, .menu-active footer, .menu-active .main-header, .menu-active .overlay-menued {
