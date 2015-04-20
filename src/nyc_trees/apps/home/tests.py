@@ -195,7 +195,7 @@ class HomeTestCase(UsersTestCase):
             self.test.assertContains(self.response, text, count=count)
 
         def assert_training_visible(self, it_is):
-            self._assertContains('Continue your training', it_is)
+            self._assertContains('Click Start', it_is)
 
         def assert_training_finished(self, it_is):
             self._assertContains('Finished Online Training', it_is)
@@ -237,12 +237,7 @@ class HomeTestCase(UsersTestCase):
     def test_untrained_user_content(self):
         response = self._render_homepage(self.user)
         response.assert_about_visible(False)
-        # slamb: I cannot figure out why this test started
-        # to fail. this is confirmed working when tested with
-        # a development server, but fails during the unit test
-        # a whole template fails to be included, for reasons
-        # unknown.
-        # response.assert_training_visible(True)
+        response.assert_training_visible(True)
         response.assert_training_finished(False)
         response.assert_achievements_visible(False)
 
