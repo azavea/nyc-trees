@@ -21,6 +21,8 @@
                                data-grid-url="{{ layer_all.grid_url }}"
                             >All Users</a>
                         </li>
+{% comment %}
+TODO: Uncomment before May 19
                         {% if request.user.is_authenticated %}
                         <li class="text-right" role="presentation">
                             <a role="menuitem" href="#my"
@@ -30,6 +32,7 @@
                             >My Progress</a>
                         </li>
                         {% endif %}
+{% endcomment %}
                         <li class="text-right" role="presentation">
                             <a role="menuitem" href="#group"
                                data-geojson-url="{% url 'group_borders' %}"
