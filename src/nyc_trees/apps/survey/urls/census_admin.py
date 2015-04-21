@@ -19,7 +19,7 @@ from apps.survey.views import (admin_blockface_partial,
 # These URLs have the prefix 'census_admin/'
 urlpatterns = patterns(
     '',
-    url(r'^territory/$', r.admin_territory_page,
+    url(r'^census_zones/$', r.admin_territory_page,
         name='admin_territory_page'),
 
     url(r'^blockedge-partial/$',

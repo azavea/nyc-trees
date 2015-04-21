@@ -610,6 +610,8 @@ def admin_territory_page(request):
              'label': "Others' unmapped territory/reservations"},
             {'css_class': 'surveyed-by-me', 'label': 'Mapped by this group'},
             {'css_class': 'surveyed-by-others', 'label': 'Mapped by others'},
+            {'css_class': 'selected',
+             'label': 'Currently-selected block edges'},
         ]
     }
     return context

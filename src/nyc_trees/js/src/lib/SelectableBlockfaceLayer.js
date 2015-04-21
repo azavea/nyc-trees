@@ -6,6 +6,7 @@ var $ = require('jquery'),
     mapUtil = require('./mapUtil'),
     zoom = require('./mapUtil').ZOOM,
 
+    // If you change this color, also change src/nyc_trees/sass/partials/_legend.scss
     color = '#FFEB3B';
 
 /* Adds a geojson layer to the given map.

@@ -36,4 +36,8 @@
   .not-mapped {
     background-color: #85664B;
   }
+  // If you change this color, also change src/nyc_trees/js/lib/SelectableBlockfaceLayer.js
+  .selected {
+    background-color: #FFEB3B;
+  }
 }
