@@ -4,7 +4,11 @@ var $ = require('jquery'),
     L = require('leaflet'),
     mapModule = require('./map'),
     toastr = require('toastr'),
-    SelectableBlockfaceLayer = require('./lib/SelectableBlockfaceLayer');
+    SelectableBlockfaceLayer = require('./lib/SelectableBlockfaceLayer'),
+    statePrompter = require('./lib/statePrompter').init({
+        warning: 'You have unsaved changes.',
+        question: 'Continue anyway?'
+    });
 
 // Extends the leaflet object
 require('leaflet-utfgrid');
@@ -31,7 +35,6 @@ var dom = {
 
     blockDataListForRevert = null,
     selectedBlockfaces = {},
-    hasUnsavedChanges = false,
     $currentGroupOption = null;
 
 
@@ -47,24 +50,8 @@ territoryMap.on('draw:created', onAreaComplete);
 $(dom.revertButton).click(revertTerritory);
 $(dom.saveButton).click(saveTerritory);
 
-$(window).on('beforeunload', function(e) {
-    if (hasUnsavedChanges) {
-        return 'You have unsaved changes. Continue anyway?';
-    } else {
-        return undefined;
-    }
-});
-
-function okToProceed() {
-    if (hasUnsavedChanges) {
-        return window.confirm('You have unsaved changes. Continue anyway?');
-    } else {
-        return true;
-    }
-}
-
 function onGroupChanged() {
-    if (okToProceed()) {
+    if (statePrompter.canProceed()) {
         getGroupUnmappedTerritory(initAllLayers);
         $currentGroupOption = $(dom.selectedGroupOption);
     } else {
@@ -121,7 +108,7 @@ function initSelectionLayer(blockDataList) {
     }).addTo(territoryMap);
 
     selectBlockfaces(blockDataList);
-    hasUnsavedChanges = false;
+    statePrompter.unlock();
 }
 
 function selectBlockfaces(blockDataList) {
@@ -142,14 +129,14 @@ function deselectBlockfaces(blockDataList) {
         if (layer) {
             selectionLayer.removeLayer(layer);
             delete selectedBlockfaces[blockData.id];
-            hasUnsavedChanges = true;
+            statePrompter.lock();
         }
     });
 }
 
 function onBlockfaceAdded(feature, layer) {
     selectedBlockfaces[feature.properties.id] = layer;
-    hasUnsavedChanges = true;
+    statePrompter.lock();
 }
 
 function onBlockfaceMaybeAdd(gridData) {
@@ -172,7 +159,7 @@ function onBlockfaceMaybeAdd(gridData) {
 
 function onBlockfaceRemove(feature) {
     delete selectedBlockfaces[feature.properties.id];
-    hasUnsavedChanges = true;
+    statePrompter.lock();
     return true;
 }
 
@@ -214,7 +201,7 @@ function toggleAreaControls() {
 }
 
 function revertTerritory() {
-    if (okToProceed()) {
+    if (statePrompter.canProceed()) {
         initSelectionLayer(blockDataListForRevert);
     }
 }
