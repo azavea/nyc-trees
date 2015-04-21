@@ -108,7 +108,7 @@ def _get_last_updated_datetime(Model, params):
         # Unlike the other models we use for cache busters, Territory rows are
         # deleted.  To work around this, we check Group.territory_updated_at
         if Model == Territory:
-            if 'group' in params:
+            if params and 'group' in params:
                 group = Group.objects.get(pk=params['group'])
             else:
                 group = Group.objects.latest('territory_updated_at')
