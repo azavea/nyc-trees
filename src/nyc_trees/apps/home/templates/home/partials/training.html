@@ -8,16 +8,9 @@
 
 <p>The next step after completing online training is to sign up for a training event where you will practice what you've learned in the field! <a href="{% url 'events_list_page' %}?active_filter=training">Sign up for training events here.</a></p>
 
-{% elif is_started %}
-<h3>You're almost there!</h3>
-<p>Continue your training and help us make trees count!</p>
-
 {% else %}
-<h3>Become a trained volun<span class="color--primary">treer</span> today!</h3>
-
-<p>Before you can RSVP to mapping events, you need to be trained to map trees as a volun<b>treer</b>!
-   Click Start below to continue and help make trees count!</p>
-
+<h3>You're almost there! Get started on your training and help us make trees count!</h3>
+<p>Welcome to the TreesCount! 2015 online training! Once you complete these modules, sign up for a training event to use what you've learned to map trees!</p>
 {% endif %}
 
 <p>You can also download a PDF of the training materials <a href="{{ STATIC_URL }}training/training.pdf">here.</a></p>
