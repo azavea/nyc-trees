@@ -11,13 +11,7 @@
       <h2>Reservations</h2>
       {% include 'survey/partials/reservations_legend.html' %}
       <div class="action-bar reservations-action-bar">
-          {% if reservations.current > 0 %}
-          <div id="reservations-start">
-              <a class="btn btn-primary pull-left" href="{% url 'survey' %}">Start Mapping</a>
-              <a id="reservations-add-remove" class="btn btn-primary pull-right" href="javascript:">Add / Remove</a>
-          </div>
-          {% endif %}
-          <div id="reservations-cart-action" class="reservation-action-item {% if reservations.current == 0 %}active{% else %}hidden{% endif %}">
+          <div id="reservations-cart-action" class="reservation-action-item active">
               <div class="col-xs-5">
                   <h1 class="rsvp-count-total pull-left color--primary nomargin" id="current-reservations">{{ reservations.current }}</h1>
                   <div class="rsvp-count-context">
