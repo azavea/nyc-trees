@@ -242,7 +242,8 @@ class GroupDetailViewTests(UsersTestCase):
 
     def test_tree_count(self):
         # We start with 0 trees
-        self._assert_count_equals('tree', 0)
+        self._assert_count_equals('tree_digits',
+                                  ['0', '0', '0', '0', '0', '0', '0'])
 
         block1 = Blockface.objects.create(
             geom=MultiLineString(LineString(((0, 0), (1, 1))))
@@ -254,7 +255,8 @@ class GroupDetailViewTests(UsersTestCase):
         make_tree(survey)
 
         # Once we add a survey, we should see some tree counts
-        self._assert_count_equals('tree', 2)
+        self._assert_count_equals('tree_digits',
+                                  ['0', '0', '0', '0', '0', '0', '2'])
 
         other_survey = make_survey(self.user, block1)
         make_tree(other_survey)
@@ -263,7 +265,8 @@ class GroupDetailViewTests(UsersTestCase):
 
         # Only the most recent survey for each block should be counted,
         # so the count should go to 3, not 5
-        self._assert_count_equals('tree', 3)
+        self._assert_count_equals('tree_digits',
+                                  ['0', '0', '0', '0', '0', '0', '3'])
 
     def test_events_count(self):
         week_ago = now() - timedelta(days=7)

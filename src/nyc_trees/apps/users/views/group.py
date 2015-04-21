@@ -96,7 +96,11 @@ def group_detail(request):
                                                                     group)
 
     follow_count = Follow.objects.filter(group=group).count()
+
+    # In order to show the tree count in a "ticker" we need to break it up
+    # into digits and pad it with zeroes.
     tree_count = get_group_tree_count(group)
+    trees_digits = [digit for digit in "{:07d}".format(tree_count)]
 
     events_held = Event.objects.filter(group=group, ends_at__lt=now())
     num_events_held = events_held.count()
@@ -115,7 +119,7 @@ def group_detail(request):
         'edit_url': reverse('group_edit', kwargs={'group_slug': group.slug}),
         'show_mapper_request': show_mapper_request,
         'counts': {
-            'tree': tree_count,
+            'tree_digits': trees_digits,
             'block': block_percent,
             'event': num_events_held,
             'attendees': num_event_attendees,

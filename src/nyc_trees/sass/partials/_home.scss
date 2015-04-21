@@ -194,11 +194,9 @@ $hero-box-side-padding: 3rem;
     overflow: auto;
 }
 
-.page-dashboard {
-  .ticker {
-    padding-top: 1rem;
-    text-align: center;
-  }
+.ticker {
+  padding-top: 1rem;
+  text-align: center;
 }
 
 @media (max-width: $screen-sm - 1) {
