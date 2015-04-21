@@ -98,6 +98,8 @@ tree_data = FlatPageTrainingStep('tree_data',
                                  'Tree Data')
 tree_surroundings = FlatPageTrainingStep('tree_surroundings',
                                          'Tree Surroundings')
+wrapping_up = FlatPageTrainingStep('wrapping_up',
+                                   'Wrapping Up')
 
 intro_quiz = QuizTrainingStep(quizzes['intro_quiz'],
                               r.intro_quiz,
@@ -111,4 +113,5 @@ training_summary = TrainingGateway(
      the_mapping_method,
      tree_data,
      tree_surroundings,
+     wrapping_up,
      intro_quiz])
