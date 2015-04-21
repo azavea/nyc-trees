@@ -507,6 +507,7 @@ def _mark_survey_blockface_availability(survey, availability):
         raise ValidationError('availability arg must be a boolean value')
 
     survey.blockface.is_available = availability
+    survey.blockface.latest_survey = survey
     survey.blockface.clean_and_save()
 
 
