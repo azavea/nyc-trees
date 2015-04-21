@@ -93,51 +93,22 @@
           {% include "groups/partials/detail_event_list.html" %}
         </div>
     </section>
-    {% if show_mapper_request %}
+    {% if group.allows_individual_mappers %}
     <section>
-        <h4 class="section-heading">Individual Mapping</h4>
-        <p>Volun<b>treers</b> are able to map trees on their own, outside of scheduled events! Click the button below to request individual mapping status within this group&rsquo;s Census Zone. Remember to contact your local loaning hub to check out individual tools and start mapping on your own.</p>
-        <button class="btn btn-primary btn-mobile--max"
-                data-action="request-access"
-                data-group-slug="{{ group.slug }}">Request Individual Mapper Status</button>
+        <form method="POST" action="{% url 'request_mapper_status' group_slug=group.slug %}">
+            {% csrf_token %}
+            <h4 class="section-heading">Individual Mapping</h4>
+            <p>
+                Volun<b>treers</b> are able to map trees on their own, outside of scheduled events!
+                Click the button below to request individual mapping status within this group&rsquo;s Census Zone.
+                Remember to contact your local loaning hub to check out individual tools and start mapping on your own.
+            </p>
+            <button class="btn btn-primary btn-mobile--max">Request Individual Mapper Status</button>
+        </form>
     </section>
     {% endif %}
 
 {% endblock main %}
-
-{% block extra_content %}
-<div class="modal fade" id="request-access-complete-modal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Request Sent</h4>
-            </div>
-            <div class="modal-body">
-                <p>Your request has been sent.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="request-access-fail-modal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Error Sending Request</h4>
-            </div>
-            <div class="modal-body">
-                <p>There was a problem submitting your request. Please try again.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
-            </div>
-        </div>
-    </div>
-</div>
-{% endblock extra_content %}
 
 {% block page_js %}
 <script type="text/javascript" src="{{ "js/group_detail.js"|static_url }}"></script>

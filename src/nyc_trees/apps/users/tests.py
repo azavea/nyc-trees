@@ -486,8 +486,7 @@ class TrustedMapperTests(UsersTestCase):
 
         # User request mapper status
         request = make_request(user=user, method='POST')
-        response = request_mapper_status(request, group_slug=group.slug)
-        self.assertEqual(response.content, '{"success": true}')
+        request_mapper_status(request, group_slug=group.slug)
 
         # Clear the test inbox
         mail.outbox = []
@@ -525,12 +524,10 @@ class TrustedMapperTests(UsersTestCase):
         self.group.allows_individual_mappers = True
         self.group.clean_and_save()
         self.assertFalse(self._is_eligible())
-        self.assertRaises(AssertionError, self._become_trusted_mapper)
 
         self.group.admin = self.other_user
         self.group.clean_and_save()
         self.assertFalse(self._is_eligible())
-        self.assertRaises(AssertionError, self._become_trusted_mapper)
 
         TrustedMapper.objects.all().delete()
         self.assertFalse(self._is_eligible())
@@ -539,9 +536,7 @@ class TrustedMapperTests(UsersTestCase):
         self.assertTrue(self._is_eligible())
 
         self._become_trusted_mapper()
-
         self.assertFalse(self._is_eligible())
-        self.assertRaises(AssertionError, self._become_trusted_mapper)
 
 
 class AnonUserTests(UsersTestCase):

@@ -43,7 +43,8 @@ printable_reservations_map = route(
         v.printable_reservations_page))
 
 reserve_blockface_page = route(
-    GET=individual_mapper_do(
+    GET=do(
+        login_required,
         render_template('survey/reserve_blockface.html'),
         v.reserve_blockfaces_page))
 
