@@ -64,6 +64,7 @@ var dom = {
         distanceToEnd: '#distance_to_end',
         treeForms: '[data-class="tree-form"]',
         collapseButton: '[data-toggle="collapse"]',
+        hideUntilActuation: '[data-hide-until-actuation]',
 
         addTree: '#another-tree',
         submitSurvey: '#submit-survey',
@@ -653,3 +654,10 @@ $('body').on('select2-close', 'select', function() {
         $('.select2-focusser:focus').blur();
     }, 1);
 });
+
+// Even though the 'Tree is Alive' status state is visible by default,
+// we don't want its method of trunk measurement visible until it is
+// confirmed as the selected state state. This prevents the user from
+// being biased toward circumference, which is not the correct method
+// for some statuses.
+$(dom.hideUntilActuation).addClass('hidden');
