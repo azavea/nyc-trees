@@ -15,6 +15,15 @@ server {
     alias {{ app_static_root }}img/training/;
   }
 
+  location /static/training/ {
+    {% if ['packer'] | is_in(group_names) -%}
+    etag on;
+    expires 2h;
+    {% endif %}
+
+    alias {{ app_static_root }}training/;
+  }
+
   location /static/ {
     {% if ['packer'] | is_in(group_names) -%}
     etag on;

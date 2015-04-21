@@ -21,8 +21,7 @@
 
 {% endif %}
 
-<p>You can also download a PDF of the training materials <a href="{{ "training/training.pdf"|static_url }}">here.</a></p>
-
+<p>You can also download a PDF of the training materials <a href="{{ STATIC_URL }}training/training.pdf">here.</a></p>
 
 {% for step_info in training_steps %}
 <a {% if step_info.is_visitable %}href="{{ step_info.step.pure_url }}"{% endif %}
