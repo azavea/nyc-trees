@@ -592,8 +592,8 @@ class AchievementTests(UsersTestCase):
 
     def testMappingEvent(self):
         self._assertAchievements([])
-        for i in range(0, 2):
-            event = make_event(self.group, title=unicode(i))
+        for title in {'Event 1', 'Event 2', 'Event 3'}:
+            event = make_event(self.group, title=title)
             EventRegistration.objects.create(event=event, user=self.user,
                                              did_attend=True)
         self._assertAchievements([AchievementDefinition.MAPPING_EVENT])
