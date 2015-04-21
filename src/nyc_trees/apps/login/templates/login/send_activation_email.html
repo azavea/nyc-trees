@@ -1,0 +1,34 @@
+{% extends "../templates/registration/registration_base.html" %}
+{% load i18n %}
+{% load utils %}
+
+{% block registration_title %}Send Activation Email{% endblock %}
+
+{% block registration_content %}
+<div class="content login-signup">
+  <div class="well login-signup-panel">
+    <form method="POST" id="send-activation-email-form">
+      <fieldset>
+        {% csrf_token %}
+        <p>
+            Need us to send you and account activation email? Enter the Email address you used to register
+            with TreesCount! and click the “Send” button below.
+        </p>
+        {% include "core/partials/non_field_errors.html" %}
+        <p>
+          <div class="fieldWrapper">
+            {{ form.email.errors }}
+            {{ form.email.label_tag }}
+            {{ form.email }}
+          </div>
+        </p>
+        <input type="submit" class="btn btn-primary btn-mobile--max" value="Send" />
+      </fieldset>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block page_js %}
+<script type="text/javascript" src="{{ "js/registrationBase.js"|static_url }}"></script>
+{% endblock page_js %}

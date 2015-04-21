@@ -3,7 +3,6 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.contrib.gis.db import models
 from django.core.exceptions import ValidationError
@@ -33,11 +32,6 @@ class NycUserManager(UserManager):
     def get_by_natural_key(self, username):
         # For login, make username case-insensitive
         return self.get(username__iexact=username)
-
-
-AuthenticationForm.error_messages['invalid_login'] = \
-    'Please enter a correct username and password. ' \
-    'Note that password is case-sensitive.'
 
 
 #######################################

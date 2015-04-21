@@ -19,8 +19,37 @@ from registration.forms import RegistrationFormUniqueEmail
 
 from apps.core.models import User, Group
 
+from django.contrib.auth.forms import AuthenticationForm
+from django.template.loader import render_to_string
+
+
+class NycAuthenticationForm(AuthenticationForm):
+
+    error_messages = {
+        'invalid_login': 'Please enter a correct username and password. '
+                         'Note that password is case-sensitive',
+        'inactive': 'Please click the account activation link you received by '
+                    'email before trying to log in.'
+    }
+
+    def confirm_login_allowed(self, user):
+        # Overrides the base implementation to allow safe HTML content in the
+        # validation error message
+        if not user.is_active:
+            msg = render_to_string(
+                'login/partials/inactive_validation_message.html',
+                {'text': self.error_messages['inactive']})
+            raise forms.ValidationError(
+                mark_safe(msg),
+                code='inactive',
+            )
+
 
 class ForgotUsernameForm(forms.Form):
+    email = forms.EmailField(label='Email address')
+
+
+class SendActivationEmailForm(forms.Form):
     email = forms.EmailField(label='Email address')
 
 

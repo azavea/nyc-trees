@@ -6,7 +6,7 @@ from __future__ import division
 from django.conf.urls import patterns, url, include
 
 from apps.login import routes as r
-
+from apps.login.forms import NycAuthenticationForm
 
 urlpatterns = patterns(
     '',
@@ -29,6 +29,10 @@ urlpatterns = patterns(
     # Shadows django-registration-redux endpoint.
     # Ref: https://github.com/macropin/django-registration/blob/master/registration/backends/default/urls.py # NOQA
     url(r'^register/$', r.register, name='registration_register'),
+
+    url(r'^login/$', 'django.contrib.auth.views.login', {
+        'template_name': 'registration/login.html',
+        'authentication_form': NycAuthenticationForm}),
 
     url(r'^', include('registration.backends.default.urls')),
     url(r'^', include('django.contrib.auth.urls')),
