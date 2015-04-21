@@ -27,9 +27,9 @@ var Windshaft = require('windshaft'),
     interactivity = {
         group_territory_survey: 'id,survey_type,restriction',
         group_territory_admin: 'id,survey_type,turf_group_id',
-        progress: 'id,group_id',
-        user_progress: 'id,group_id',
-        group_progress: 'id,group_id',
+        progress: 'id',
+        user_progress: 'id',
+        group_progress: 'id',
         user_reservable: 'id,group_id,group_slug,survey_type,restriction',
         user_reservations: 'id'
     },
