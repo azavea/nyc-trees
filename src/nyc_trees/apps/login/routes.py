@@ -38,3 +38,15 @@ forgot_username = do(
 forgot_username_sent = do(
     render_template('login/forgot_username_complete.html'),
     v.forgot_username_sent)
+
+send_activation_email = do(
+    render_template('login/send_activation_email.html'),
+    route(GET=v.send_activation_email_page, POST=v.send_activation_email))
+
+activation_email_sent = do(
+    render_template('login/activation_email_sent.html'),
+    v.activation_email_sent)
+
+activated = do(
+    render_template('login/activated.html'),
+    v.activated)
