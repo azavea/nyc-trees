@@ -123,9 +123,6 @@ function createSelectableLayer() {
             // src/nyc_trees/apps/survey/urls/blockface.py
             var url = '/blockedge/' + gridData.id + '/progress-page-blockedge-popup/';
 
-            if (gridData.group_id) {
-                url += '?group_id=' + gridData.group_id;
-            }
             $actionBar.load(url);
             return true;
         }
