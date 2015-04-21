@@ -27,6 +27,17 @@
         <div class="row">
             <main class="col-sm-12 main-dashboard">
                 {% flag full_access %}
+
+                    {% if not user.online_training_complete %}
+                        <div class="home-container">
+                            <section class="trainings">
+                                <div class="home-container">
+                                    {% include "home/partials/training.html" %}
+                                </div>
+                            </section>
+                        </div>
+                    {% endif %}
+
                     <section class="section-home">
                         <div class="home-container clearfix">
                             <h4 class="section-heading">Progress</h4>
@@ -88,8 +99,8 @@
                         </div>
                     </section>
 
-                    <div class="dashboard-columns">
-                        {% if user.online_training_complete %}
+                    {% if user.online_training_complete %}
+                        <div class="dashboard-columns">
                             <section class="events">
                                 <div class="home-container">
                                     <h4 class="section-heading">Events</h4>
@@ -99,14 +110,8 @@
                                 </div>
                             </section>
                             {% include "users/partials/activity.html" %}
-                        {% else %}
-                            <section class="trainings">
-                                <div class="home-container">
-                                    {% include "home/partials/training.html" %}
-                                </div>
-                            </section>
-                        {% endif %}
-                    </div>
+                        </div>
+                    {% endif %}
 
                 {% else %}
                     <section class="soft-launch">
