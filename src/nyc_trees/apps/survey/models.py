@@ -13,7 +13,7 @@ from apps.core.models import User, Group
 from libs.mixins import NycModel
 
 
-class Blockface(NycModel, models.Model):
+class Blockface(models.Model):
     geom = models.MultiLineStringField()
     is_available = models.BooleanField(default=True)
     expert_required = models.BooleanField(default=False)
@@ -24,6 +24,9 @@ class Blockface(NycModel, models.Model):
     latest_survey = models.ForeignKey('Survey', null=True, blank=True,
                                       on_delete=models.PROTECT,
                                       related_name='surveyed_blockface')
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True, db_index=True)
 
     objects = models.GeoManager()
 
