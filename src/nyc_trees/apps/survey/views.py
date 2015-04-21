@@ -322,6 +322,8 @@ def reserve_blockfaces_page(request):
 def confirm_blockface_reservations(request):
     id_string = request.POST['ids']
     ids = id_string.split(',')
+    # Filter empty strings
+    ids = filter(None, ids)
 
     is_mapping_with_paper = request.POST['is_mapping_with_paper'] == 'True'
 
