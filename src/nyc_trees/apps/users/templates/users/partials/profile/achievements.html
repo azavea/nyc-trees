@@ -8,7 +8,7 @@
 
 {# The achievements page is only meaningful for the currently logged in user #}
 {% if viewing_own_profile %}
-    <p>Learn more about TreesCount! 2015 <a href="{% url 'achievements' %}">achievements.</a></p>
+    <p class="block--top">Learn more about TreesCount! 2015 <a href="{% url 'achievements' %}">achievements.</a></p>
 {% endif %}
 
 {% endblock section_content %}

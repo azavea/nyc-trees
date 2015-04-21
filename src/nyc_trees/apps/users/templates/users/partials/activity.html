@@ -14,7 +14,7 @@
     {% if show_contributions %}
     <section class="contributions">
         <div>
-            {% with title=contributions_title section_id="contributions" public=user.contributions_are_public %}
+            {% with title=contributions_title url="contributions" public=user.contributions_are_public %}
                 {% include "users/partials/profile/contributions.html"%}
             {% endwith %}
         </div>
@@ -23,7 +23,8 @@
 
     {% if show_groups and follows.follows %}
     <section class="groups">
-        {% with title="Groups" section_id="groups" public=user.group_follows_are_public %}
+        {% url 'group_list_page' as groups_url %}
+        {% with title="Groups" url=groups_url public=user.group_follows_are_public %}
             {% include "users/partials/profile/groups.html" %}
         {% endwith %}
     </section>
@@ -31,7 +32,8 @@
 
     {% if show_reservations %}
     <section class="reservations">
-        {% with title="Reservations" section_id="reservations" public=False %}
+        {% url 'reservations' as reservations_url %}
+        {% with title="Reservations" url=reservations_url public=False %}
             {% include "users/partials/profile/reservations.html"%}
         {% endwith %}
     </section>
@@ -39,14 +41,15 @@
 
     {% if show_achievements %}
     <section class="achievements">
-        {% with title="Achievements" section_id="achievements" public=user.achievements_are_public %}
-            {% include "users/partials/profile/achievements.html" with section_id="achievements" %}
+        {% url 'achievements' as achievements_url %}
+        {% with title="Achievements" url=achievements_url public=user.achievements_are_public %}
+            {% include "users/partials/profile/achievements.html" %}
         {% endwith %}
     </section>
     {% endif %}
 {% else %}
     <section class="soft-launch">
-        {% with title="Your Profile" section_id="soft-launch" public=False %}
+        {% with title="Your Profile" url=softlaunch_url public=False %}
             {% include "users/partials/profile/soft_launch.html"%}
         {% endwith %}
     </section>
