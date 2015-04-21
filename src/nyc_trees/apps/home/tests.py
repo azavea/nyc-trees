@@ -223,6 +223,7 @@ class HomeTestCase(UsersTestCase):
                   'training_finished_the_mapping_method',
                   'training_finished_tree_data',
                   'training_finished_tree_surroundings',
+                  'training_finished_wrapping_up',
                   'training_finished_intro_quiz']:
             setattr(self.user, f, True)
         self.user.save()
