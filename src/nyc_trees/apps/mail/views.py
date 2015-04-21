@@ -9,6 +9,8 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 from django.contrib.sites.models import Site
 
+from itertools import groupby
+
 from apps.core.models import User
 
 from apps.mail.libs import send_to
@@ -24,13 +26,18 @@ def notify_group_mapping_approved(request, group, username):
                    reservations_url=reservations_url)
 
 
-def send_reservation_reminder(user_id, **kwargs):
+def send_reservation_reminder(user_id, reservations, **kwargs):
     user = get_object_or_404(User, id=user_id)
     reservations_url = urljoin(
         'http://%s' % Site.objects.get_current().domain,
         reverse('reservations'))
+    # Workaround for groupby iterator not being iterated correctly
+    # in Django templates.
+    reservations_by_date = [(k, list(v)) for k, v in
+                            groupby(reservations, lambda r: r.expires_at)]
     return send_to(user, MessageType.RESERVATION_REMINDER,
                    reservations_url=reservations_url,
+                   reservations_by_date=reservations_by_date,
                    **kwargs)
 
 

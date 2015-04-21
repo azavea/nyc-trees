@@ -1,1 +1,1 @@
-Your request to map for {{group.name}} was approved
+Your request to map for {{ group.name }} was approved

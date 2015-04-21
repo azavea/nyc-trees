@@ -366,7 +366,12 @@ def confirm_blockface_reservations(request):
 
     cancelled_reservations.update(canceled_at=right_now, updated_at=right_now)
 
-    BlockfaceReservation.objects.bulk_create(new_reservations)
+    # Workaround for Django limitation which prevents us from obtaining
+    # primary keys for objects created in bulk.
+    for reservation in new_reservations:
+        reservation.save()
+
+    reservation_ids = [r.id for r in new_reservations]
 
     filename = "reservations_map/%s_%s.pdf" % (
         request.user.username, shortuuid.uuid())
@@ -376,15 +381,11 @@ def confirm_blockface_reservations(request):
     url = reverse('printable_reservations_map')
     host = request.get_host()
 
-    blockface_ids = list(BlockfaceReservation.objects
-                         .filter(user=request.user)
-                         .current()
-                         .values_list('blockface_id', flat=True))
-
     if hasattr(request, 'session'):  # prevent test failure
         session_id = request.session.session_key
         chain(create_and_save_pdf.s(session_id, host, url, filename),
-              notify_reservation_confirmed.s(request.user.id, blockface_ids))\
+              notify_reservation_confirmed.s(request.user.id,
+                                             reservation_ids)) \
             .apply_async()
 
     num_reserved = len(new_reservations) + len(already_reserved_blockface_ids)
