@@ -105,5 +105,9 @@ def individual_mapper_instructions(request):
     pass
 
 
+def trusted_mapper_request_sent(request):
+    pass
+
+
 def about_faq_page(request):
     pass

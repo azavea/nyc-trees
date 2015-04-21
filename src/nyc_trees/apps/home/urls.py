@@ -26,6 +26,10 @@ urlpatterns = patterns(
         r.individual_mapper_instructions,
         name='individual_mapper_instructions'),
 
+    url(r'^trusted-mapper-request-sent/$',
+        r.trusted_mapper_request_sent,
+        name='trusted_mapper_request_sent'),
+
     url(r'^jobs/(?P<job_id>\d+)/$', r.retrieve_job_status,
         name='retrieve_job_status'),
 

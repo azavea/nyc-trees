@@ -10,8 +10,8 @@ from django.contrib.gis.geos import Polygon
 from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.db.models import Q
-from django.http import HttpResponseRedirect, HttpResponseForbidden, Http404
-from django.shortcuts import get_object_or_404
+from django.http import HttpResponseRedirect, Http404
+from django.shortcuts import get_object_or_404, redirect
 from django.utils.timezone import now
 
 from libs.data import merge
@@ -20,6 +20,7 @@ from libs.pdf_maps import create_event_map_pdf
 from libs.sql import get_group_tree_count
 
 from apps.core.helpers import (user_is_group_admin,
+                               user_is_trusted_mapper,
                                user_is_eligible_to_become_trusted_mapper)
 from apps.core.decorators import group_request
 from apps.core.models import Group
@@ -92,9 +93,6 @@ def group_detail(request):
     user_is_following = Follow.objects.filter(user_id=request.user.id,
                                               group=group).exists()
 
-    show_mapper_request = user_is_eligible_to_become_trusted_mapper(user,
-                                                                    group)
-
     follow_count = Follow.objects.filter(group=group).count()
 
     # In order to show the tree count in a "ticker" we need to break it up
@@ -117,7 +115,6 @@ def group_detail(request):
         'event_list': event_list,
         'user_is_following': user_is_following,
         'edit_url': reverse('group_edit', kwargs={'group_slug': group.slug}),
-        'show_mapper_request': show_mapper_request,
         'counts': {
             'tree_digits': trees_digits,
             'block': block_percent,
@@ -227,13 +224,13 @@ def _grant_mapping_access(group, username, is_approved):
 
 def request_mapper_status(request):
     user, group = request.user, request.group
-    if not user_is_eligible_to_become_trusted_mapper(user, group):
-        return HttpResponseForbidden()
+    if user_is_trusted_mapper(user, group):
+        return redirect('reservations')
+    elif not user_is_eligible_to_become_trusted_mapper(user, group):
+        return redirect('reservations_instructions')
     mapper, created = TrustedMapper.objects.update_or_create(
         group=group, user=user)
-    return {
-        'success': True
-    }
+    return redirect('trusted_mapper_request_sent')
 
 
 def group_unmapped_territory_geojson(request, group_id):
