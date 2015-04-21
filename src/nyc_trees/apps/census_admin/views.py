@@ -43,17 +43,19 @@ def upload_group_polygons(request):
     except Exception as e:
         return {'error': "Error in JSON structure: " + e.message}
 
+    context = _update_group_polygons(group_data)
+
     if unknown_group_names:
         names = list(unknown_group_names)
         names.sort()
-        return {'unknown_group_names': names}
+        context['unknown_group_names'] = names
 
-    context = _update_group_polygons(group_data)
     return context
 
 
 @transaction.atomic
 def _update_group_polygons(group_data):
+    success = False
     for g in group_data.values():
         group = g['group']
         polygon_points = g['polygons']
@@ -68,8 +70,12 @@ def _update_group_polygons(group_data):
                 polygons = [Polygon(points) for points in polygon_points]
                 group.border = MultiPolygon(polygons)
                 group.clean_and_save()
+                success = True
             except Exception as e:
                 return {'error': ("Error updating polygons for group %s: %s"
                                   % (group.name, e.message))}
 
-    return {'updates': group_data.values()}
+    return {
+        'success': success,
+        'updates': group_data.values(),
+    }

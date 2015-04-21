@@ -24,7 +24,7 @@
         </p>
     </form>
 
-    {% if request.method == 'POST' and not updates %}
+    {% if not success %}
         <h5 style="margin-bottom: 1em">No polygons updated.</h5>
     {% endif %}
 
@@ -35,7 +35,7 @@
     {% endif %}
 
     {% if unknown_group_names %}
-        <p>The following group names did not match an existing group:</p>
+        <h5 style="margin-bottom: 1em">Warning: the following group names did not match an existing group:</h5>
         <ul class="errorlist">
             {% for name in unknown_group_names %}
                 <li>"{{ name }}"</li>
@@ -43,7 +43,7 @@
         </ul>
     {% endif %}
 
-    {% if updates %}
+    {% if success %}
         <h5 style="margin-bottom: 1em">Upload successful. Results:</h5>
         <table class="result-table">
             <tr>
