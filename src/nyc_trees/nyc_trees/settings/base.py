@@ -343,7 +343,7 @@ GEOCODE_FALLBACK_SUFFIX = ', New York, NY'
 RESERVATIONS_LIMIT = 12
 
 # How long blockface reservations will last
-RESERVATION_TIME_PERIOD = timedelta(days=14)
+RESERVATION_TIME_PERIOD = timedelta(days=7)
 
 TILER_URL = '//%s' % environ.get('TILER_HOST', 'localhost')
 
