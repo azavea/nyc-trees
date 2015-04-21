@@ -20,6 +20,10 @@ var $ = require('jquery'),
 $(dom.mapToggle).one('shown.bs.tab', function() {
     geojsonPromise.done(function(geojson) {
         if (geojson.length === 0) {
+            mapModule.create({
+                geolocation: true,
+                search: true,
+            });
             return;
         }
 
