@@ -213,7 +213,8 @@ def events_list_feed(request):
             "long": e.location.x,
             "address": e.address,
         }],
-        'links': [{'link_url': site_domain + e.get_absolute_url()}],
+        'links': [{'link_url':
+                   'https://' + site_domain + e.get_absolute_url()}],
     } for e in events]
 
 
