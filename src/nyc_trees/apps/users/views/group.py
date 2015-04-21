@@ -302,6 +302,11 @@ def _update_territory(group, request):
         .filter(blockface_id__in=ids_to_kill) \
         .delete()
 
+    # Record the current time on the group so we can use that as a cache buster
+    # when making tile requests for the territory table
+    group.territory_updated_at = now()
+    group.clean_and_save()
+
 
 def _update_event_maps(request, group):
     events = Event.objects \

@@ -78,7 +78,7 @@ def _get_context_for_layer(layer_name, models, params=None):
 
     tile_url = tiler_url_format % {
         'tiler_url': settings.TILER_URL,
-        'cache_buster': _get_cache_buster(models),
+        'cache_buster': _get_cache_buster(models, params),
         'db': settings.DATABASES['default']['NAME'],
         'type': layer_name
     }
@@ -96,15 +96,28 @@ def _get_context_for_layer(layer_name, models, params=None):
     return context
 
 
-def _get_cache_buster(models):
-    datetimes = [_get_last_updated_datetime(Model) for Model in models]
+def _get_cache_buster(models, params):
+    datetimes = [_get_last_updated_datetime(Model, params) for Model in models]
 
     max_timestamp = timegm(max(*datetimes).utctimetuple())
     return max_timestamp
 
 
-def _get_last_updated_datetime(Model):
+def _get_last_updated_datetime(Model, params):
     try:
-        return Model.objects.latest('updated_at').updated_at
+        # Unlike the other models we use for cache busters, Territory rows are
+        # deleted.  To work around this, we check Group.territory_updated_at
+        if Model == Territory:
+            if 'group' in params:
+                group = Group.objects.get(pk=params['group'])
+            else:
+                group = Group.objects.latest('territory_updated_at')
+
+            if group.territory_updated_at is not None:
+                return group.territory_updated_at
+            else:
+                return make_aware(datetime.min, utc)
+        else:
+            return Model.objects.latest('updated_at').updated_at
     except Model.DoesNotExist:
         return make_aware(datetime.min, utc)

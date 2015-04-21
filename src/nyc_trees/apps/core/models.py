@@ -196,6 +196,12 @@ class Group(NycModel, models.Model):
     allows_individual_mappers = models.BooleanField(default=False)
     affiliation = models.CharField(max_length=255, default='', blank=True)
     border = models.MultiPolygonField(null=True, blank=True)
+    # Territory is one of the few models used in our tiler queries for which we
+    # expect deletions to regularly occur.  Since the 'updated_at' field won't
+    # change on any Territory rows, we record territory changes on the Group
+    # and check the group when trying to find out the Territory cache buster
+    territory_updated_at = models.DateTimeField(null=True, blank=True,
+                                                db_index=True)
 
     objects = models.GeoManager()
 
