@@ -18,11 +18,11 @@ from django.db import transaction, connection
 from django.db.models import Prefetch
 from django.http import (HttpResponse, HttpResponseForbidden,
                          HttpResponseBadRequest)
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.utils.timezone import now
 
 from apps.core.models import Group
-from apps.core.helpers import user_is_group_admin
+from apps.core.helpers import user_is_group_admin, user_is_individual_mapper
 
 from apps.event.models import Event
 from apps.event.helpers import user_is_checked_in_to_event
@@ -296,6 +296,9 @@ def _user_reservations(user):
 
 
 def reserve_blockfaces_page(request):
+    if not user_is_individual_mapper(request.user):
+        return redirect('reservations_instructions')
+
     current_reservations_amount = BlockfaceReservation.objects \
         .filter(user=request.user) \
         .current() \
