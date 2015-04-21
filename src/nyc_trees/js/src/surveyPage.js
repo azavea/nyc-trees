@@ -11,7 +11,7 @@ var $ = require('jquery'),
     mapAnotherPopup = require('./mapAnotherPopup'),
 
     statePrompter = require('./lib/statePrompter').init({
-        warning: 'Are you sure you want to cancel mapping this block?',
+        warning: 'You have begun mapping this block edge but have not saved your work.',
         question: ''
     });
 
