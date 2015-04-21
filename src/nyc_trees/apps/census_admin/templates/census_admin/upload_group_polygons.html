@@ -7,7 +7,7 @@
 
 {% block aside %}
     <div class="map-sidebar">
-        <h2>Group Polygons</h2>
+        <h2>Partner Group Census Zone Polygons</h2>
     </div>
 {% endblock aside %}
 
@@ -35,7 +35,7 @@
     {% endif %}
 
     {% if unknown_group_names %}
-        <h5 style="margin-bottom: 1em">Warning: the following group names did not match an existing group:</h5>
+        <h5 style="margin-bottom: 1em">Warning: the following group names did not match an existing partner group:</h5>
         <ul class="errorlist">
             {% for name in unknown_group_names %}
                 <li>"{{ name }}"</li>
