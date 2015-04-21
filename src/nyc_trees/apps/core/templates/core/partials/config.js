@@ -2,7 +2,7 @@
 (function(window, Object) {
     window.config = {
         "files": {
-            "dtpPolyfill": "{{ 'js/datetimepicker_polyfill.js'|static_url }}"
+            "dtpPolyfill": "{{ 'js/datetimepicker_polyfill.js'|versioned_static_url }}"
         },
         "urls": {
             "geocode": "{% url 'geocode' %}",

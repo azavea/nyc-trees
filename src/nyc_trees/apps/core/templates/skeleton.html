@@ -6,13 +6,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
         <title>TreesCount! 2015</title>
-        <link rel="apple-touch-icon" href="{{ "img/favicon/apple-touch-icon.png"|static_url }} ">
-        <link rel="icon" type="image/png" href="{{ "img/favicon/android-chrome.png"|static_url }}">
-        <link rel="shortcut icon" href="{{ "img/favicon/favicon.ico"|static_url }} ">
-        <link rel="manifest" href="{{ "img/favicon/manifest.json"|static_url }}">
+        <link rel="apple-touch-icon" href="{{ "img/favicon/apple-touch-icon.png"|versioned_static_url }} ">
+        <link rel="icon" type="image/png" href="{{ "img/favicon/android-chrome.png"|versioned_static_url }}">
+        <link rel="shortcut icon" href="{{ "img/favicon/favicon.ico"|versioned_static_url }} ">
+        <link rel="manifest" href="{{ "img/favicon/manifest.json"|versioned_static_url }}">
         <!-- vendor.css contains styles which override bootstrap styling.  It must come after main.css -->
-        <link rel="stylesheet" href="{{ "css/main.css"|static_url }}">
-        <link rel="stylesheet" href="{{ "css/vendor.css"|static_url }}">
+        <link rel="stylesheet" href="{{ "css/main.css"|versioned_static_url }}">
+        <link rel="stylesheet" href="{{ "css/vendor.css"|versioned_static_url }}">
         <link rel="stylesheet" type="text/css" href="//cloud.typography.com/7429932/717646/css/fonts.css" />
     </head>
     <body>
@@ -23,8 +23,8 @@
         {% include 'core/partials/config.js' %}
     </script>
     {# TODO: Concatenate common.js and base.js #}
-    <script type="text/javascript" src="{{ "js/common.js"|static_url }}"></script>
-    <script type="text/javascript" src="{{ "js/base.js"|static_url }}"></script>
+    <script type="text/javascript" src="{{ "js/common.js"|versioned_static_url }}"></script>
+    <script type="text/javascript" src="{{ "js/base.js"|versioned_static_url }}"></script>
     {% block page_js %}
     {% endblock page_js %}
 </html>
