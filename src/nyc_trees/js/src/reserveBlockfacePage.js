@@ -9,6 +9,11 @@ var $ = require('jquery'),
     BlockfaceLayer = require('./lib/BlockfaceLayer'),
     SavedState = require('./lib/SavedState'),
 
+    statePrompter = require('./lib/statePrompter').init({
+        warning: 'You have unsaved block edge reservations.',
+        question: ''
+    }),
+
     attrs = {
         blockfaceId: 'data-blockface-id',
         blockfaceStatus: 'data-blockface-status',
@@ -229,8 +234,10 @@ function updateForm() {
 
     if ( ! arrayEquals(ids, currentlyReservedIds)) {
         $hiddenInput.val(ids.join());
+        statePrompter.lock();
         $finishButton.prop('disabled', false);
     } else {
+        statePrompter.unlock();
         $finishButton.prop('disabled', true);
     }
 }
@@ -295,6 +302,8 @@ mapUtil.fetchBlockface(blockfaceId).done(function(blockface) {
 });
 
 $(dom.addRemoveBtn).on('click', onAddRemove);
+
+$finishButton.on('click', statePrompter.unlock);
 
 function onAddRemove() {
     $(dom.startSection).addClass('hidden');
