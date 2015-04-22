@@ -389,4 +389,9 @@ aside {
 
 .badge {
   max-width: 5rem;
+  .remaining-achievements & {
+    -webkit-filter: grayscale(100%);
+    filter: grayscale(100%);
+    opacity: .5;
+  }
 }
