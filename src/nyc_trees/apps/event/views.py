@@ -169,7 +169,9 @@ def events_list_page(request):
 
 def future_events_geojson(request):
     events = Event.objects.filter(
-        ends_at__gt=now(), group__is_active=True).select_related('group')
+        ends_at__gt=now(),
+        group__is_active=True,
+        is_private=False).select_related('group')
 
     return [_event_geojson(e) for e in events]
 
