@@ -2,6 +2,7 @@ from troposphere import Template, Parameter, Ref, GetAtt, Join
 
 import template_utils as utils
 import troposphere.route53 as r53
+import troposphere.cloudwatch as cw
 import troposphere.cloudfront as cf
 
 t = Template()
@@ -12,6 +13,11 @@ t.add_description('Tiler hosted zone records for the nyc-trees project.')
 #
 # Parameters
 #
+notification_arn_param = t.add_parameter(Parameter(
+    'GlobalNotificationsARN', Type='String',
+    Description='Physical resource ID of an AWS::SNS::Topic for notifications'
+))
+
 hosted_zone_name_param = t.add_parameter(Parameter(
     'PublicHostedZone', Type='String',
     Default='treescount.azavea.com',
@@ -80,6 +86,56 @@ cloudfront_tile_distribution = t.add_resource(cf.Distribution(
         ),
         Enabled=True
     )
+))
+
+t.add_resource(cw.Alarm(
+    'alarmTileDistributionOrigin4XX',
+    AlarmDescription='Tile distribution origin 4XXs',
+    AlarmActions=[Ref(notification_arn_param)],
+    Statistic='Average',
+    Period=300,
+    Threshold='20',
+    EvaluationPeriods=1,
+    ComparisonOperator='GreaterThanThreshold',
+    MetricName='4xxErrorRate',
+    Namespace='AWS/CloudFront',
+    Dimensions=[
+        cw.MetricDimension(
+            'metricDistributionId',
+            Name='DistributionId',
+            Value=Ref(cloudfront_tile_distribution)
+        ),
+        cw.MetricDimension(
+            'metricRegion',
+            Name='Region',
+            Value='Global'
+        )
+    ]
+))
+
+t.add_resource(cw.Alarm(
+    'alarmTileDistributionOrigin5XX',
+    AlarmDescription='Tile distribution origin 5XXs',
+    AlarmActions=[Ref(notification_arn_param)],
+    Statistic='Average',
+    Period=60,
+    Threshold='0',
+    EvaluationPeriods=1,
+    ComparisonOperator='GreaterThanThreshold',
+    MetricName='5xxErrorRate',
+    Namespace='AWS/CloudFront',
+    Dimensions=[
+        cw.MetricDimension(
+            'metricDistributionId',
+            Name='DistributionId',
+            Value=Ref(cloudfront_tile_distribution)
+        ),
+        cw.MetricDimension(
+            'metricRegion',
+            Name='Region',
+            Value='Global'
+        )
+    ]
 ))
 
 #

@@ -106,6 +106,7 @@ toggle_tile_server_stack() {
 
   # Build parameters argument
   AWS_STACK_PARAMS="ParameterKey=PublicHostedZone,ParameterValue=${AWS_PUBLIC_HOSTED_ZONE}"
+  AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=GlobalNotificationsARN,ParameterValue=${AWS_SNS_TOPIC}"
   AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=TileServerAliasTarget,ParameterValue=${AWS_ELB_TILE_ENDPOINT}"
   AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=TileServerLoadBalancerHostedZoneNameID,ParameterValue=${AWS_ELB_TILE_HOSTED_ZONE_ID}"
   AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=PrivateHostedZoneId,ParameterValue=${AWS_PRIVATE_HOSTED_ZONE_ID}"
