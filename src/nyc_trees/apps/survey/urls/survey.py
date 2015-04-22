@@ -8,7 +8,7 @@ from django.conf.urls import patterns, url
 from apps.survey.routes import (survey, survey_from_event,
                                 flag_survey, survey_detail,
                                 confirm_survey, confirm_survey_from_event,
-                                release_blockface)
+                                release_blockface, redirect_to_treecorder)
 
 
 # These URLs have the prefix 'survey/'
@@ -20,6 +20,8 @@ urlpatterns = patterns(
     url(r'^(?P<group_slug>[\w-]+)/event/(?P<event_slug>[\w-]+)'
         r'/confirm/(?P<survey_id>\d+)/$',
         confirm_survey_from_event, name='confirm_survey_from_event'),
+
+    url(r'^treecorder/$', redirect_to_treecorder, name='treecorder'),
 
     # main endpoint (independent / from event)
     url(r'^$', survey, name='survey'),
