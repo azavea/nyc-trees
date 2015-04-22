@@ -51,70 +51,70 @@ achievements = OrderedDict([
         name='In Pursuit of Mappiness',
         description='Follow 5 Groups',
         description_achieved='Followed 5 Groups',
-        badge='img/placeholder.gif',
+        badge='img/badges/ic_badge_follow.png',
         achieved=lambda user: Follow.objects.filter(user=user).count() >= 5
     )),
     (AchievementDefinition.ONLINE_TRAINING, AchievementDefinition(
         name='Ready, Set, Roll',
         description='Finish Online Training',
         description_achieved='Finished Online Training',
-        badge='img/placeholder.gif',
+        badge='img/badges/ic_badge_online_training.png',
         achieved=lambda user: user.online_training_complete
     )),
     (AchievementDefinition.TRAINING_EVENT, AchievementDefinition(
         name='Certified Mapper',
         description='Attend a Training Event',
         description_achieved='Attended a Training Event',
-        badge='img/placeholder.gif',
+        badge='img/badges/ic_badge_training_event.png',
         achieved=lambda user: user.field_training_complete
     )),
     (AchievementDefinition.MAPPING_EVENT, AchievementDefinition(
         name='Free Mapper',
         description='Attend a Mapping Event',
         description_achieved='Attended a Mapping Event',
-        badge='img/placeholder.gif',
+        badge='img/badges/ic_badge_mapping_event.png',
         achieved=lambda user: user.attended_at_least_two_events()
     )),
     (AchievementDefinition.MAP_50, AchievementDefinition(
         name='Map 50 Block Edges',
         description='Map 50 Block Edges',
         description_achieved='Mapped 50 Block Edges',
-        badge='img/placeholder.gif',
+        badge='img/badges/ic_badge_map_50.png',
         achieved=lambda user: user.blocks_mapped_count >= 50
     )),
     (AchievementDefinition.MAP_100, AchievementDefinition(
         name='Map 100 Block Edges',
         description='Map 100 Block Edges',
         description_achieved='Mapped 100 Block Edges',
-        badge='img/placeholder.gif',
+        badge='img/badges/ic_badge_map_100.png',
         achieved=lambda user: user.blocks_mapped_count >= 100
     )),
     (AchievementDefinition.MAP_200, AchievementDefinition(
         name='Map 200 Block Edges',
         description='Map 200 Block Edges',
         description_achieved='Mapped 200 Block Edges',
-        badge='img/placeholder.gif',
+        badge='img/badges/ic_badge_map_200.png',
         achieved=lambda user: user.blocks_mapped_count >= 200
     )),
     (AchievementDefinition.MAP_400, AchievementDefinition(
         name='Map 400 Block Edges',
         description='Map 400 Block Edges',
         description_achieved='Mapped 400 Block Edges',
-        badge='img/placeholder.gif',
+        badge='img/badges/ic_badge_map_400.png',
         achieved=lambda user: user.blocks_mapped_count >= 400
     )),
     (AchievementDefinition.MAP_1000, AchievementDefinition(
         name='Map 1000 Block Edges',
         description='Map 1000 Block Edges',
         description_achieved='Mapped 1000 Block Edges',
-        badge='img/placeholder.gif',
+        badge='img/badges/ic_badge_map_1000.png',
         achieved=lambda user: user.blocks_mapped_count >= 1000
     )),
     (AchievementDefinition.MAP_MOST, AchievementDefinition(
         name='Map the Most Block Edges in NYC',
         description='Map the Most Block Edges in NYC',
         description_achieved='Mapped the Most Block Edges in NYC',
-        badge='img/placeholder.gif',
+        badge='img/badges/ic_badge_top_mapper.png',
         achieved=lambda user: False  # doesn't need to be live updated
     )),
 ])
