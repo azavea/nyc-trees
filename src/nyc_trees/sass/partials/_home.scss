@@ -198,7 +198,14 @@ $hero-box-side-padding: 3rem;
   text-align: center;
 }
 
+.sponsor {
+  margin: 1.25rem 0 .75rem;
+}
+
 @media (max-width: $screen-sm - 1) {
+  .clearleft {
+    clear: left;
+  }
   .page-dashboard {
     .hero-content {
       padding: 0;
@@ -220,6 +227,30 @@ $hero-box-side-padding: 3rem;
 }
 
 @media (min-width: $screen-sm) {
+  .sponsor {
+    margin: 3.25rem 0 0.75rem;
+  }
+  .sponsor-durst {
+    width: 18%;
+  }
+  .sponsor-azavea {
+    width: 20%;
+  }
+  .sponsor-att {
+    width: 10%;
+  }
+  .sponsor-aws {
+    width: 19%;
+  }
+  .sponsor-nyp {
+    width: 32%;
+  }
+  .sponsor-tk {
+    width: 12%;
+  }
+  .sponsor-histree {
+    width: 22%;
+  }
   .section-appeal {
     margin-top: auto;
   }
