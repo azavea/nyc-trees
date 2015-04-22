@@ -103,7 +103,7 @@
                         <div class="dashboard-columns">
                             <section class="events">
                                 <div class="home-container">
-                                    <h4 class="section-heading">Events</h4>
+                                    <h4 class="section-heading"><a href="{% url 'events_list_page' %}">Events</a></h4>
                                     <div data-class="event-list-container">
                                         {% include "event/partials/event_list.html" with event_list=all_events %}
                                     </div>
