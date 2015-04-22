@@ -57,8 +57,8 @@ def group_list_page(request):
 
 
 @group_request
-def _group_events(request):
-    qs = Event.objects.filter(group=request.group, is_private=False)
+def _all_group_events(request):
+    qs = Event.objects.filter(group=request.group)
     user_can_edit_group = user_is_group_admin(request.user,
                                               request.group)
     extra_context = {'user_can_edit_group': user_can_edit_group,
@@ -66,14 +66,19 @@ def _group_events(request):
     return qs, extra_context
 
 
+def _public_group_events(request, *args, **kwargs):
+    qs, extra_context = _all_group_events(request, *args, **kwargs)
+    return qs.filter(is_private=False), extra_context
+
+
 group_detail_events = EventList(
-    _group_events,
+    _public_group_events,
     name="group_detail_events",
     template_path='groups/partials/detail_event_list.html')
 
 
 group_edit_events = EventList(
-    _group_events,
+    _all_group_events,
     name="group_edit_events",
     template_path='groups/partials/edit_event_list.html')
 
