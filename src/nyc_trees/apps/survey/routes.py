@@ -124,6 +124,9 @@ release_blockface = do(login_required,
 
 blockface = route(GET=do(json_api_call, v.blockface))
 
+redirect_to_treecorder = route(GET=do(login_required,
+                                      v.redirect_to_treecorder))
+
 #####################################
 # ADMIN ROUTES
 #####################################
