@@ -119,5 +119,5 @@ def _get_last_updated_datetime(Model, params):
                 return make_aware(datetime.min, utc)
         else:
             return Model.objects.latest('updated_at').updated_at
-    except Model.DoesNotExist:
+    except (Model.DoesNotExist, Group.DoesNotExist):
         return make_aware(datetime.min, utc)
