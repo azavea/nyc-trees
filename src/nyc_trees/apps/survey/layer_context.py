@@ -17,19 +17,19 @@ from apps.users.models import TrustedMapper
 
 
 def get_context_for_progress_layer():
-    models = [Blockface, Survey, Territory]
+    models = [Blockface]
     return _get_context_for_layer("progress", models)
 
 
 @login_required
 def get_context_for_user_progress_layer(request):
-    models = [Blockface, Survey, Territory]
+    models = [Blockface, Survey]
     return _get_context_for_layer("user_progress", models,
                                   {'user': request.user.pk})
 
 
 def get_context_for_group_progress_layer():
-    models = [Blockface, Survey, Territory]
+    models = [Blockface, Territory]
     return _get_context_for_layer("group_progress", models)
 
 
@@ -99,7 +99,7 @@ def _get_context_for_layer(layer_name, models, params=None):
 def _get_cache_buster(models, params):
     datetimes = [_get_last_updated_datetime(Model, params) for Model in models]
 
-    max_timestamp = timegm(max(*datetimes).utctimetuple())
+    max_timestamp = timegm(max(datetimes).utctimetuple())
     return max_timestamp
 
 
