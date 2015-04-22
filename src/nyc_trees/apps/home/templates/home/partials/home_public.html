@@ -32,7 +32,7 @@
                 <section class="section-about">
                     <div class="home-container home-description">
                         <div class="row">
-                            <div class="col-xs-3 col-sm-4 text-center">
+                            <div class="col-xs-3 col-lg-2 col-lg-offset-1 text-center">
                                 <img src="{{ "img/logo-nycparks.png"|static_url }}"
                                      srcset="{{ "img/logo-nycparks@2x.png"|static_url }} 2x">
                             </div>
@@ -59,7 +59,7 @@
                 </section>
                 <section class="section-progress text-center">
                     <div class="home-container clearfix">
-                        <div class="progress-circles">
+                        <div class="progress-circles col-md-10 nofloat">
                             {% with xs3col=True %}
                                 {% include "home/partials/circle.html" with label="Blocks" n=counts_all.block color="primary" url=progress_page_url %}
                                 {% include "home/partials/circle.html" with label="Complete" n=counts_all.block_percent color="primary" hide_xs=True  url=progress_page_url %}
