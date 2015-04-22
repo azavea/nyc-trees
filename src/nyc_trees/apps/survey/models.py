@@ -13,11 +13,16 @@ from apps.core.models import User, Group
 from libs.mixins import NycModel
 
 
-class Blockface(NycModel, models.Model):
+class Blockface(models.Model):
     geom = models.MultiLineStringField()
     is_available = models.BooleanField(default=True)
     expert_required = models.BooleanField(default=False)
     source = models.CharField(max_length=255, default='unknown')
+
+    # We can't use the NycModel mixin, because we want to add db indexes
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True, db_index=True)
+
     objects = models.GeoManager()
 
     def __unicode__(self):
