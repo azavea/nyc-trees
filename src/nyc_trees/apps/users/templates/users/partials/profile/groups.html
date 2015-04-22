@@ -1,6 +1,7 @@
 {% extends "users/partials/profile/section.html" %}
 
 {% block section_content %}
+<p>TreesCount! Partner Groups are the heart of the 2015 Street Tree Census, having committed to mapping trees across the five boroughs! Find more groups to follow <a href="{{ url }}">here.</a></p>
 
 {% for follow in follows.follows %}
 <a href="{% url 'group_detail' group_slug=follow.group.slug %}"
