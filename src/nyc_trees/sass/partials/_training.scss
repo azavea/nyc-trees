@@ -26,3 +26,51 @@
   padding: $grid-gutter-width/2;
   background-color: #fff;
 }
+
+
+.training-flatpage-container {
+  p {
+    font-size: 14px;
+    line-height: 1.8;
+  }
+  strong {
+    color: lighten($brand-tertiary, 5%);
+  }
+  ul {
+    list-style-type: inherit;
+    padding: 10px 35px;
+    background: lighten($brand-primary, 40%);
+  }
+  ol li {
+    margin-bottom: 1.2rem;
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+  img {
+    max-height: 330px;
+    margin: auto;
+    display: block;
+    margin-top: 0;
+    margin-bottom: 30px;
+    + img {
+      margin-top: -10px;
+      margin-bottom: 30px;
+    }
+  }
+  p + img, li + img {
+    margin-top: -5px;
+  } 
+  figure {
+    display: block;
+    background: rgba($gray-lightest, .5);
+    padding: 10px;
+    margin: -10px 0 0;
+    img {
+      padding: 10px;
+    }
+    + figure {
+      margin-top: 10px;
+    }
+  }
+}
