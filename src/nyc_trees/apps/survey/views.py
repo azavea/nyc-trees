@@ -115,8 +115,9 @@ def _was_help_shown(request, help_shown_attr):
 def progress_page_blockface_popup(request, blockface_id):
     blockface = get_object_or_404(Blockface, id=blockface_id)
 
-    group_id = request.GET.get('group_id', None)
-    group = get_object_or_404(Group, id=group_id) if group_id else None
+    turf = Territory.objects.filter(blockface_id=blockface_id)
+    groups = Group.objects.filter(pk=turf.values_list('group_id', flat=True))
+    group = groups[0] if len(groups) else None
 
     is_active = (group is None or group.is_active or
                  user_is_group_admin(request.user, group))
@@ -511,7 +512,9 @@ def _mark_survey_blockface_availability(survey, availability):
         raise ValidationError('availability arg must be a boolean value')
 
     survey.blockface.is_available = availability
-    survey.blockface.clean_and_save()
+    survey.blockface.latest_survey = survey
+    survey.blockface.full_clean()
+    survey.blockface.save()
 
 
 def release_blockface(request, survey_id):
