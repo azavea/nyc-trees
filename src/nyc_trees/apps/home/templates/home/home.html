@@ -45,4 +45,10 @@
     </div>
   </div>
 </div>
-{% endblock %}
+{% if achievements %}
+    {% for key, achievement in achievements %}
+        {% include "users/partials/achievement_modal.html" %}
+    {% endfor %}
+{% endif %}
+
+{% endblock extra_content %}

@@ -97,10 +97,13 @@ def get_achievements_for_user(user):
                             .values_list('achievement_id', flat=True))
 
     return {
-        'achieved': [achievements[key] for key in achievements.iterkeys()
+        'achieved': [(key, achievements[key])
+                     for key in achievements.iterkeys()
                      if key in user_achievements],
-        'remaining': [achievements[key] for key in achievements.iterkeys()
-                      if key not in user_achievements]
+        'remaining': [(key, achievements[key])
+                      for key in achievements.iterkeys()
+                      if key not in user_achievements],
+        'all': achievements
     }
 
 

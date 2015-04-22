@@ -2,7 +2,7 @@
 
 {% block section_content %}
 
-{% for achievement in achievements %}
+{% for key, achievement in achievements %}
     {% include "users/partials/achievement.html" with description=achievement.description_achieved %}
 {% endfor %}
 

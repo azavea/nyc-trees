@@ -1,0 +1,17 @@
+{% if achievement.reward %}
+<div class="modal fade" id="achievement-reward-{{ key }}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Reward for {{ achievement.name|safe }}</h4>
+            </div>
+            <div class="modal-body">
+                <p>{{ achievement.reward|safe }}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
