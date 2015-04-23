@@ -37,7 +37,7 @@
       <section>
         {% if user.is_authenticated %}
           {# TODO: make event_list return a totally empty context to avoid introspection #}
-          <h4>Your Events this week</h4>
+          <h4>Your events this week</h4>
           <div data-class="event-list-container">
           {% if immediate_events.event_infos %}
             {% include "event/partials/event_list.html" with event_list=immediate_events %}
