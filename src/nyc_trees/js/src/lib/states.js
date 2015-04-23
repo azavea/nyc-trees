@@ -7,9 +7,9 @@ var $ = require('jquery'),
 // Factory functions for various states.
 
 module.exports = {
-    quizProgressState: function(slug) {
+    quizProgressState: function(slug, userId) {
         return new SavedState({
-            key: 'quiz-progress-' + slug,
+            key: 'quiz-progress-' + slug + '-user-' + userId,
             validate: function(state) {
                 if (util.isNullOrUndefined(state)) {
                     throw new Error('Unable to parse serialized state');
@@ -24,9 +24,9 @@ module.exports = {
         });
     },
 
-    quizSubmissionState: function(slug) {
+    quizSubmissionState: function(slug, userId) {
         return new SavedState({
-            key: 'quiz-submission-' + slug,
+            key: 'quiz-submission-' + slug + '-user-' + userId,
             validate: function(state) {
                 if (!$.isArray(state)) {
                     throw new Error('Expected `state` to be an array');
