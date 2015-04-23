@@ -1,1 +1,1 @@
-Your request to map for {{ group.name }} was approved
+{% autoescape off %}Your request to map for {{ group.name }} was approved{% endautoescape %}
