@@ -225,14 +225,21 @@ def group_borders_geojson(request):
                 'gridUrl': '%s?group=%s' % (base_group_grid_url, group.id),
                 'popupUrl': reverse('group_popup',
                                     kwargs={'group_slug': group.slug}),
-                'bounds': GeometryCollection(
-                    [territory.blockface.geom
-                     for territory in group.turf]).extent
+                'bounds': _group_bounds(group)
             }
         }
         for group in groups
-        if group.border and group.turf
+        if group.border
     ]
+
+def _group_bounds(group):
+    if group.turf:
+        bounds = GeometryCollection(
+            [territory.blockface.geom
+             for territory in group.turf]).extent
+    else:
+        bounds = group.border.extent
+    return bounds
 
 
 def group_popup(request):
