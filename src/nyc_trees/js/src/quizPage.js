@@ -15,8 +15,9 @@ var dom = {
     activeQuestion: '.quiz .active.question'
 };
 
-var slug = $(dom.quizSlug).data('quiz-slug'),
-    progress = states.quizProgressState(slug),
+var userId = $(dom.quizSlug).data('user-id'),
+    slug = $(dom.quizSlug).data('quiz-slug'),
+    progress = states.quizProgressState(slug, userId),
     submission = states.quizSubmissionState(slug),
     correctAnswers = submission.load() || [];
 
