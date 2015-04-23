@@ -228,10 +228,11 @@ def group_borders_geojson(request):
                 'bounds': GeometryCollection(
                     [territory.blockface.geom
                      for territory in group.turf]).extent
+                if group.turf else group.border.extent
             }
         }
         for group in groups
-        if group.border and group.turf
+        if group.border
     ]
 
 
