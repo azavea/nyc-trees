@@ -131,17 +131,20 @@ def progress_page_blockface_popup(request, blockface_id):
 
 
 def _get_survey_type(blockface, user, group):
-    reserved_by_user = BlockfaceReservation.objects \
-        .filter(blockface=blockface, user=user).current().exists()
+    if user.is_authenticated():
+        reserved_by_user = BlockfaceReservation.objects \
+            .filter(blockface=blockface, user=user).current().exists()
 
-    if reserved_by_user:
-        return 'reserved'
+        if reserved_by_user:
+            return 'reserved'
 
     try:
         latest_survey = Survey.objects \
             .filter(blockface=blockface) \
             .latest('created_at')
-        if user.pk in {latest_survey.user_id, latest_survey.teammate_id}:
+
+        if user.is_authenticated() and user.pk in {
+           latest_survey.user_id, latest_survey.teammate_id}:
             return 'surveyed-by-me'
         else:
             return 'surveyed-by-others'
@@ -225,10 +228,11 @@ def group_borders_geojson(request):
                 'bounds': GeometryCollection(
                     [territory.blockface.geom
                      for territory in group.turf]).extent
+                if group.turf else group.border.extent
             }
         }
         for group in groups
-        if group.border and group.turf
+        if group.border
     ]
 
 

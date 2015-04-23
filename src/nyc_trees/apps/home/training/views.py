@@ -67,6 +67,7 @@ def complete_quiz(request):
         send_online_training_complete(user)
 
     return {
+        'user': request.user,
         'quiz': quiz,
         'quiz_slug': quiz_slug,
         'quiz_summary': quiz_summary,

@@ -21,6 +21,7 @@
 {% block main %}
 
 <input type="hidden" name="quiz-slug" value="{{ quiz_slug }}" />
+<input type="hidden" name="user-id" value="{{ user.id }}" />
 <input type="hidden" name="correct-answers" value="{{ correct_answers|join:"," }}" />
 
 <h3>
