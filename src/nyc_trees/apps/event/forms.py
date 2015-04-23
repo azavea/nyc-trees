@@ -57,6 +57,13 @@ class EventForm(ModelForm):
         right_now = now().astimezone(est_tz)
         today = right_now.date()
 
+        # If the Event title or is_private fields change, we need to clear
+        # the slug field to let the model's .clean() recreate it.
+        if ((self.instance.title != cleaned_data['title'] or
+             self.instance.is_private != cleaned_data['is_private'])):
+            cleaned_data['slug'] = None
+            self.instance.slug = None
+
         if 'date' in cleaned_data:
             cleaned_date = cleaned_data['date']
 

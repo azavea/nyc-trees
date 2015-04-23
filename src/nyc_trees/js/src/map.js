@@ -33,6 +33,7 @@ function create(options) {
         mapOptions.scrollWheelZoom = false;
         mapOptions.doubleClickZoom = false;
         mapOptions.boxZoom = false;
+        mapOptions.tap = false;
     }
 
     var map = L.map(options.domId, mapOptions),

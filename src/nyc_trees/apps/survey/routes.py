@@ -26,6 +26,12 @@ progress_page_blockface_popup = route(
         render_template('survey/partials/progress_page_blockface_popup.html'),
         v.progress_page_blockface_popup))
 
+group_borders_geojson = route(GET=json_api_call(v.group_borders_geojson))
+
+group_popup = route(GET=do(group_request,
+                           render_template('survey/partials/group_popup.html'),
+                           v.group_popup))
+
 #####################################
 # RESERVATION ROUTES
 #####################################
@@ -37,7 +43,8 @@ printable_reservations_map = route(
         v.printable_reservations_page))
 
 reserve_blockface_page = route(
-    GET=individual_mapper_do(
+    GET=do(
+        login_required,
         render_template('survey/reserve_blockface.html'),
         v.reserve_blockfaces_page))
 
@@ -116,6 +123,9 @@ release_blockface = do(login_required,
                        route(POST=do(json_api_call, v.release_blockface)))
 
 blockface = route(GET=do(json_api_call, v.blockface))
+
+redirect_to_treecorder = route(GET=do(login_required,
+                                      v.redirect_to_treecorder))
 
 #####################################
 # ADMIN ROUTES

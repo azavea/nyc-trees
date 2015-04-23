@@ -10,12 +10,11 @@
   <div class="map-sidebar">
     <h2>Events</h2>
     <p class="pageheading-description-detail">
-      Take a look at upcoming events and find your next tree mapping
-      project.
+      Check out our upcoming TreesCount! events and sign up to map street trees with fellow volun<strong>treers</strong>!
     </p>
-    <p class="pageheading-description-detail">Click to view as a list or find an event nearby using the map!</p>
+    <p class="pageheading-description-detail">Click to view as a list or find an event nearby using the map.</p>
     <div id="action-bar" class="action-bar">
-      Select an event to view details
+      Select an event to view additional details
     </div>
     <div class="row">
       <ul class="nav nav-tabs nav-tabs-event" id="nav-tabs-event">
@@ -38,7 +37,7 @@
       <section>
         {% if user.is_authenticated %}
           {# TODO: make event_list return a totally empty context to avoid introspection #}
-          <h4>Your Events this week</h4>
+          <h4>Your events this week</h4>
           <div data-class="event-list-container">
           {% if immediate_events.event_infos %}
             {% include "event/partials/event_list.html" with event_list=immediate_events %}

@@ -24,7 +24,7 @@ from apps.users import user_profile_context
 def home_page(request):
     if request.user.is_authenticated():
         context = user_profile_context(request.user)
-        context['training_steps'] = training_summary.get_context(request.user)
+        context.update(training_summary.get_context(request.user))
         context['counts_all'] = _global_counts()
         context['counts_week'] = _global_counts(past_week=True)
     else:
@@ -51,10 +51,11 @@ def _global_counts(past_week=False):
     else:
         blocks_mapped = Survey.objects.all().distinct('blockface_id').count()
     if blocks_mapped > 0:
-        blocks_percent = "{:.0%}".format(
-            float(blocks_mapped) / float(blocks_total))
+        fraction_mapped = float(blocks_mapped) / float(blocks_total)
+        fmt = "{:.0%}" if fraction_mapped >= .1 else "{:.1%}"
+        blocks_percent = fmt.format(fraction_mapped)
     else:
-        blocks_percent = "0%"
+        blocks_percent = "0.0%"
     if past_week:
         blocks_percent = '+' + blocks_percent
 
@@ -101,6 +102,10 @@ def retrieve_job_status(request):
 
 
 def individual_mapper_instructions(request):
+    pass
+
+
+def trusted_mapper_request_sent(request):
     pass
 
 

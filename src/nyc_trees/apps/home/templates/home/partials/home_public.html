@@ -32,7 +32,7 @@
                 <section class="section-about">
                     <div class="home-container home-description">
                         <div class="row">
-                            <div class="col-xs-3 col-sm-4 text-center">
+                            <div class="col-xs-3 col-lg-2 col-lg-offset-1 text-center">
                                 <img src="{{ "img/logo-nycparks.png"|static_url }}"
                                      srcset="{{ "img/logo-nycparks@2x.png"|static_url }} 2x">
                             </div>
@@ -59,7 +59,7 @@
                 </section>
                 <section class="section-progress text-center">
                     <div class="home-container clearfix">
-                        <div class="progress-circles">
+                        <div class="progress-circles col-md-10 nofloat">
                             {% with xs3col=True %}
                                 {% include "home/partials/circle.html" with label="Blocks" n=counts_all.block color="primary" url=progress_page_url %}
                                 {% include "home/partials/circle.html" with label="Complete" n=counts_all.block_percent color="primary" hide_xs=True  url=progress_page_url %}
@@ -83,18 +83,46 @@
                         </div>
                     </div>
                 </section>
-                <!-- Hide sponsor section until logos are available
                     <section class="section-sponsors">
                         <div class="home-container">
-                            <h3 class="color--primary text--normal">Our sponsors</h3>
-                            <img src="http://placehold.it/120x120">
-                            <img src="http://placehold.it/120x120">
-                            <img src="http://placehold.it/120x120">
-                            <img src="http://placehold.it/120x120">
-                            <img src="http://placehold.it/120x120">
+                            <h3 class="color--primary text--normal">Presenting Sponsors</h3>
+                            <div class="row">
+                                <div class="sponsor col-xs-6 col-md-4">
+                                    <img src="{{ "img/sponsors/sponsors-bmw.png"|static_url }}">
+                                </div>
+                                <div class="sponsor col-xs-5 col-md-3">
+                                    <img src="{{ "img/sponsors/sponsors-wholefoods.png"|static_url }}">
+                                </div>
+                            </div>
+                            <hr>
+                            <h3 class="color--primary text--normal">Partners and Sponsors</h3>
+                            <div class="row">
+                                <div class="sponsor sponsor-durst col-xs-6">
+                                    <img src="{{ "img/sponsors/sponsors-durst.png"|static_url }}">
+                                </div>
+                                <div class="sponsor sponsor-azavea col-xs-6">
+                                    <img src="{{ "img/sponsors/sponsors-azavea.png"|static_url }}">
+                                </div>
+                                <div class="sponsor sponsor-att col-xs-4 col-xs-offset-1 clearleft">
+                                    <img src="{{ "img/sponsors/sponsors-att.png"|static_url }}">
+                                </div>
+                                <div class="sponsor sponsor-aws col-xs-6">
+                                    <img src="{{ "img/sponsors/sponsors-aws.png"|static_url }}">
+                                </div>
+                                <div class="sponsor sponsor-nyp col-xs-10">
+                                    <img src="{{ "img/sponsors/sponsors-nyp.png"|static_url }}">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="sponsor sponsor-histree col-xs-6">
+                                    <img src="{{ "img/sponsors/sponsors-histree.png"|static_url }}">
+                                </div>
+                                <div class="sponsor sponsor-tk col-xs-4 col-xs-offset-1">
+                                    <img src="{{ "img/sponsors/sponsors-treekit.png"|static_url }}">
+                                </div>
+                            </div>
                         </div>
                     </section>
-                -->
             </main>
         </div>
     </div>

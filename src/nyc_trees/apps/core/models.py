@@ -3,7 +3,6 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.contrib.gis.db import models
 from django.core.exceptions import ValidationError
@@ -33,11 +32,6 @@ class NycUserManager(UserManager):
     def get_by_natural_key(self, username):
         # For login, make username case-insensitive
         return self.get(username__iexact=username)
-
-
-AuthenticationForm.error_messages['invalid_login'] = \
-    'Please enter a correct username and password. ' \
-    'Note that password is case-sensitive.'
 
 
 #######################################
@@ -80,6 +74,7 @@ class User(NycModel, AbstractUser):
     training_finished_the_mapping_method = models.BooleanField(default=False)
     training_finished_tree_data = models.BooleanField(default=False)
     training_finished_tree_surroundings = models.BooleanField(default=False)
+    training_finished_wrapping_up = models.BooleanField(default=False)
     training_finished_intro_quiz = models.BooleanField(default=False)
     training_finished_groups_to_follow = models.BooleanField(default=False)
 
@@ -99,6 +94,12 @@ class User(NycModel, AbstractUser):
                       'group_follows_are_public': 'group follows',
                       'contributions_are_public': 'contributions',
                       'achievements_are_public': 'achievements'}
+
+    # Please keep in sync with special `/user/*` endpoints.
+    # Ref: src/nyc_trees/apps/users/urls/user.py
+    reserved_usernames = ('profile',
+                          'settings',
+                          'achievements')
 
     def clean(self):
         if ((User.objects.exclude(pk=self.pk)
@@ -189,7 +190,13 @@ class Group(NycModel, models.Model):
     is_active = models.BooleanField(default=True)
     allows_individual_mappers = models.BooleanField(default=False)
     affiliation = models.CharField(max_length=255, default='', blank=True)
-    border = models.PolygonField(null=True, blank=True)
+    border = models.MultiPolygonField(null=True, blank=True)
+    # Territory is one of the few models used in our tiler queries for which we
+    # expect deletions to regularly occur.  Since the 'updated_at' field won't
+    # change on any Territory rows, we record territory changes on the Group
+    # and check the group when trying to find out the Territory cache buster
+    territory_updated_at = models.DateTimeField(null=True, blank=True,
+                                                db_index=True)
 
     objects = models.GeoManager()
 

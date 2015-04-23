@@ -10,7 +10,7 @@ from apps.home.training import routes as tr
 from apps.home.training import (training_summary, getting_started,
                                 the_mapping_method,
                                 tree_data, tree_surroundings,
-                                intro_quiz)
+                                wrapping_up, intro_quiz)
 
 flatpage_view = 'django.contrib.flatpages.views.flatpage'
 
@@ -26,6 +26,10 @@ urlpatterns = patterns(
         r.individual_mapper_instructions,
         name='individual_mapper_instructions'),
 
+    url(r'^trusted-mapper-request-sent/$',
+        r.trusted_mapper_request_sent,
+        name='trusted_mapper_request_sent'),
+
     url(r'^jobs/(?P<job_id>\d+)/$', r.retrieve_job_status,
         name='retrieve_job_status'),
 
@@ -39,12 +43,14 @@ urlpatterns = patterns(
     url(r'^training/pure/the_mapping_method/', **the_mapping_method.pure_kwargs()),                    # NOQA
     url(r'^training/pure/tree_data/', **tree_data.pure_kwargs()),                                      # NOQA
     url(r'^training/pure/tree_surroundings/', **tree_surroundings.pure_kwargs()),                      # NOQA
+    url(r'^training/pure/wrapping_up/', **wrapping_up.pure_kwargs()),                                  # NOQA
     url(r'^training/pure/intro_quiz/', **intro_quiz.pure_kwargs()),                                    # NOQA
 
     # getting_started does not have a mark endpoint because it has no trackable previous step          # NOQA
     url(r'^training/progress/the_mapping_method/', **the_mapping_method.previous_step.mark_kwargs()),  # NOQA
     url(r'^training/progress/tree_data/', **tree_data.previous_step.mark_kwargs()),                    # NOQA
     url(r'^training/progress/tree_surroundings/', **tree_surroundings.previous_step.mark_kwargs()),    # NOQA
+    url(r'^training/progress/wrapping_up/', **wrapping_up.previous_step.mark_kwargs()),                # NOQA
     url(r'^training/progress/intro_quiz/$', **intro_quiz.previous_step.mark_kwargs()),                 # NOQA
     url(r'^training/progress/$', **training_summary.previous_step.mark_kwargs()),                      # NOQA
 

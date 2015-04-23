@@ -9,9 +9,11 @@
   <h2>Training</h2>
   <p class="pageheading-description-detail">
     {% if user.online_training_complete %}
-    {# when we receive text for this, remove this comment and put it here #}
-    {% else %}
+    Congratulations on becoming a trained volun<strong>treer</strong>!
+    {% elif is_started %}
     You're almost there! Continue your training to become a mapper.
+    {% else %}
+    Can we count on you? Get started on your training today and help us make trees count!
     {% endif %}
   </p>
 

@@ -35,21 +35,10 @@ body {
   background-color: #fff;
   overflow-x: hidden;
   width: 100%;
-  transition: all 500ms $transition;
   position: relative;
   font-feature-settings: "kern" 1;
   text-rendering: geometricPrecision;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -moz-box;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: column;
-  -moz-box-orient: vertical;
-  -moz-box-direction: normal;
-  flex-direction: column;
-  min-height: 100vh;
+  min-height: 100%;
   @media (min-width: $screen-sm) {
     background-color: $body-bg;
   }
@@ -168,7 +157,23 @@ aside {
 }
 
 .nomargin {
-  margin: 0;
+  margin: 0 !important;
+}
+
+.nomargin--top {
+  margin-top: 0 !important;
+}
+
+.nomargin--bottom {
+  margin-bottom: 0 !important;
+}
+
+.nopadding--top {
+  padding-top: 0 !important;
+}
+
+.nopadding--bottom {
+  padding-bottom: 0 !important;
 }
 
 .rightarrow {
@@ -207,6 +212,13 @@ aside {
         background-color: $primary-light;
       }
     }
+  }
+}
+
+.pageheading-details.block {
+  @media (max-height: $screen-xs-height) and (max-width: $screen-sm) {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
   }
 }
 
@@ -260,6 +272,7 @@ aside {
       border: 0 !important;
       padding-left: 0;
       text-transform: uppercase;
+      outline: none;
     }
   }
 }
@@ -329,6 +342,12 @@ aside {
   }
 }
 
+@media (max-width: $screen-sm) {
+  html {
+    font-size: 60%;
+  }
+}
+
 @media (min-width: $screen-md) {
   .two-frames {
     aside {
@@ -351,4 +370,33 @@ aside {
       padding-top: 0;
     }
   }
+}
+
+@media (max-height: $screen-xs-height) and (max-width: $screen-sm) {
+  .pageheading-details {
+    h2 {
+      font-size: 1.8rem;
+    }
+    .dropdown-toggle {
+      padding: 0 2.8rem 0 1rem;
+      margin-top: -.4rem;
+    }
+  }
+}
+
+.nofloat {
+  float: none;
+}
+
+.badge {
+  max-width: 5rem;
+  .remaining-achievements & {
+    -webkit-filter: grayscale(100%);
+    filter: grayscale(100%);
+    opacity: .5;
+  }
+}
+
+.achievement-sponsor {
+  color: #bbb;
 }

@@ -1,9 +1,9 @@
 <div class="col-xs-4 col-circle{% if xs3col %} col-sm-3{% endif %}{% if hide_xs %} hidden-xs{% endif %}">
     <a class="progress-circle color--{{ color }}"
-        {% if url %}
-            href="{{ url }}"
-        {% elif modal %}
+        {% if modal %}
             data-toggle="modal" data-target="{{ modal }}"
+        {% elif url %}
+            href="{{ url }}"
         {% endif %}>
         <div class="progress-circle-content">
             <div class="progress-circle-number">{{ n }}</div>

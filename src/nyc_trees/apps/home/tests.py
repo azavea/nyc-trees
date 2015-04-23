@@ -114,11 +114,13 @@ class QuizTestCase(TestCase):
     def test_quiz_assertions(self):
         # Must be at least one question
         with self.assertRaises(AssertionError):
-            Quiz(title='Test quiz', passing_score=0, questions=[])
+            Quiz(title='Test quiz', slug='test_quiz',
+                 passing_score=0, questions=[])
 
         # Passing score must be <= number of questions
         with self.assertRaises(AssertionError):
-            Quiz(title='Test quiz', passing_score=2, questions=['A'])
+            Quiz(title='Test quiz', slug='test_quiz',
+                 passing_score=2, questions=['A'])
 
     def test_question_assertions(self):
         # Must be at least one choice
@@ -148,6 +150,7 @@ class QuizTestCase(TestCase):
 
     def test_quiz_score(self):
         quiz = Quiz(
+            slug='test_quiz',
             title='Test quiz',
             passing_score=1,
             questions=(
@@ -192,7 +195,10 @@ class HomeTestCase(UsersTestCase):
             self.test.assertContains(self.response, text, count=count)
 
         def assert_training_visible(self, it_is):
-            self._assertContains('Continue your training', it_is)
+            self._assertContains('Click Start', it_is)
+
+        def assert_training_finished(self, it_is):
+            self._assertContains('Finished Online Training', it_is)
 
         def assert_about_visible(self, it_is):
             self._assertContains(
@@ -217,6 +223,7 @@ class HomeTestCase(UsersTestCase):
                   'training_finished_the_mapping_method',
                   'training_finished_tree_data',
                   'training_finished_tree_surroundings',
+                  'training_finished_wrapping_up',
                   'training_finished_intro_quiz']:
             setattr(self.user, f, True)
         self.user.save()
@@ -225,12 +232,14 @@ class HomeTestCase(UsersTestCase):
         response = self._render_homepage()
         response.assert_about_visible(True)
         response.assert_training_visible(False)
+        response.assert_training_finished(False)
         response.assert_progress_visible(True)
 
     def test_untrained_user_content(self):
         response = self._render_homepage(self.user)
         response.assert_about_visible(False)
         response.assert_training_visible(True)
+        response.assert_training_finished(False)
         response.assert_achievements_visible(False)
 
     def test_online_trained_user_content(self):
@@ -238,4 +247,5 @@ class HomeTestCase(UsersTestCase):
         response = self._render_homepage(self.user)
         response.assert_about_visible(False)
         response.assert_training_visible(False)
+        response.assert_training_finished(True)
         response.assert_achievements_visible(True)

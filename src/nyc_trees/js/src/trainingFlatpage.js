@@ -22,6 +22,8 @@ function showSubpage() {
         $exercise = $subpage.children('form'),
         index = currentPage;
 
+    window.scrollTo(0, 0);
+
     $subpages.hide();
 
     // fully initialize the subpage for viewing, including cleaning up
@@ -44,6 +46,12 @@ function showSubpage() {
 
     $exercise.children(dom.question).show();
     $exercise.siblings().show();
+
+    // images should *not* be placed inside question forms unless they
+    // are placed inside a question div. However, this is a safeguard
+    // because the spec is not crystal clear and failing to show images
+    // on question reload could be difficult to discover during testing
+    $exercise.children('img').show();
 
     $exercise.children(dom.answer).each(function (__, member) {
         var $member = $(member),

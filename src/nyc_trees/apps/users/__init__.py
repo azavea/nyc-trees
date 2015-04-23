@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse
 
 from libs.sql import get_user_tree_count, get_user_surveyed_species
 from apps.users.forms import PrivacySettingsForm
-from apps.users.models import achievements
+from apps.users.models import achievements, update_achievements
 
 
 _FOLLOWED_GROUP_CHUNK_SIZE = 2
@@ -15,10 +15,6 @@ _RESERVATION_CHUNK_SIZE = 2
 
 
 def user_profile_context(user, its_me=True, home_page=True):
-    user_achievements = set(user.achievement_set
-                            .order_by('created_at')
-                            .values_list('achievement_id', flat=True))
-
     block_count = user.blocks_mapped_count
     tree_count = get_user_tree_count(user)
     species_surveyed = get_user_surveyed_species(user)
@@ -36,11 +32,14 @@ def user_profile_context(user, its_me=True, home_page=True):
 
     contributions_title = 'Your Contributions' if its_me else 'Contributions'
 
+    earned_achievements = get_achievements_for_user(user)['achieved']
+
     context = {
         'user': user,
         'viewing_own_profile': its_me,
         'show_username': can_show_full_name(user, its_me),
-        'show_achievements': its_me or user.achievements_are_public,
+        'show_achievements': its_me or (len(earned_achievements) > 0 and
+                                        user.achievements_are_public),
         'show_contributions': (not home_page and
                                (its_me or user.contributions_are_public)),
         'contributions_title': contributions_title,
@@ -61,8 +60,7 @@ def user_profile_context(user, its_me=True, home_page=True):
             'species_by_name': species_surveyed,
             'event': event_count
         },
-        'achievements': [achievements[key]
-                         for key in user_achievements if key in achievements]
+        'achievements': earned_achievements
     }
     return context
 
@@ -90,6 +88,23 @@ def get_privacy_categories(form):
         make_category('Contributions', 'contributions_are_public'),
         make_category('Achievements', 'achievements_are_public'),
     ]
+
+
+def get_achievements_for_user(user):
+    update_achievements(user)
+    user_achievements = set(user.achievement_set
+                            .order_by('created_at')
+                            .values_list('achievement_id', flat=True))
+
+    return {
+        'achieved': [(key, achievements[key])
+                     for key in achievements.iterkeys()
+                     if key in user_achievements],
+        'remaining': [(key, achievements[key])
+                      for key in achievements.iterkeys()
+                      if key not in user_achievements],
+        'all': achievements
+    }
 
 
 def _get_list_section_context(key, qs, chunk_size):

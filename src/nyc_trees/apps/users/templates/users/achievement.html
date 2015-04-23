@@ -1,5 +1,39 @@
-{% extends "base.html" %}
+{% extends "base_two_frames.html" %}
 
-{% block content %}
-{# TODO #}
-{% endblock content %}
+{% block nav %}
+{% include "core/partials/nav.html" with active_page="achievements" %}
+{% endblock %}
+
+{% block aside %}
+<div class="pageheading-description block">
+    <h2>Achievements</h2>
+    <p class="pageheading-description-detail">
+      Track your progress in becoming a master
+      mapper! Earn badges and become eligible for
+      prizes the more block edges you map!</p>
+</div>
+{% endblock aside %}
+
+{% block main %}
+<section class="user-achievements">
+    <h3 class="color--primary">Earned</h3>
+    {% for key, achievement in achievements.achieved %}
+        {% include "users/partials/achievement.html" with description=achievement.description_achieved %}
+    {% empty %}
+        <p>You haven't unlocked any achievements yet!</p>
+    {% endfor %}
+</section>
+
+<section class="remaining-achievements">
+    <h3 class="color--primary">In Progress</h3>
+    {% for key, achievement in achievements.remaining %}
+        {% include "users/partials/achievement.html" with description=achievement.description %}
+    {% endfor %}
+</section>
+{% endblock main %}
+
+{% block extra_content %}
+    {% for key, achievement in achievements.all.iteritems %}
+        {% include "users/partials/achievement_modal.html" %}
+    {% endfor %}
+{% endblock extra_content %}

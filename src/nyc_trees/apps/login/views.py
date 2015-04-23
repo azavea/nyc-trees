@@ -6,14 +6,20 @@ from __future__ import division
 import django.contrib.auth.views as contrib_auth
 
 from django.conf import settings
+from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.template.loader import render_to_string
 from django.shortcuts import redirect
 
+from registration.models import RegistrationProfile
+
+from django_statsd.clients import statsd
+
 from apps.core.models import User
 from apps.login.forms import (ForgotUsernameForm,
                               UsernameOrEmailPasswordResetForm,
-                              OptionalInfoForm)
+                              OptionalInfoForm,
+                              SendActivationEmailForm)
 
 
 def logout(request):
@@ -79,3 +85,48 @@ def save_optional_info(request):
         }
     form.save()
     return redirect('home_page')
+
+
+def send_activation_email_page(request):
+    if request.method == 'GET':
+        form = SendActivationEmailForm()
+    else:
+        form = SendActivationEmailForm(request.POST)
+    return {'form': form}
+
+
+def send_activation_email(request):
+    form = SendActivationEmailForm(request.POST)
+    if not form.is_valid():
+        return send_activation_email_page(request)
+
+    email = form.cleaned_data['email']
+    users = User.objects.filter(email=email)
+
+    # Don't reveal if we don't have that email, to prevent email harvesting
+    if len(users) == 1:
+        user = users[0]
+        if user.is_active:
+            return redirect('activated')
+
+        site = Site.objects.get_current()
+
+        try:
+            registration_profile = RegistrationProfile.objects.get(user=user)
+            registration_profile.send_activation_email(site)
+            statsd.incr('email.message.types.resend_activation')
+        except RegistrationProfile.DoesNotExist:
+            # TODO: Generate a Registration Profile and send the email.
+            # This is not likely to happen, because any user created through
+            # Django registration should have a profile
+            pass
+
+    return redirect('activation_email_sent')
+
+
+def activation_email_sent(request):
+    return {}
+
+
+def activated(request):
+    return {}

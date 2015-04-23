@@ -3,10 +3,16 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
+from functools import wraps
+
 from django.core.urlresolvers import reverse
+from django.http import Http404
+
 from django_tinsel.utils import decorate as do
+
 from apps.home.training.routes import make_flatpage_route
 from apps.home.training.decorators import mark_user, require_visitability
+from apps.users.models import TrainingResult
 
 _PURE_URL_NAME_TEMPLATE = '%s_pure'
 _MARK_PROGRESS_URL_NAME_TEMPLATE = '%s_mark_progress'
@@ -48,7 +54,7 @@ class TrainingGateway(AbstractTrainingNode):
     application should talk to the training workflow. Where possible,
     TrainingStep objects should not be referenced directly.
     """
-    def __init__(self, name, view, steps):
+    def __init__(self, name, view, steps, on_user_completion=None):
         # read the step array and link the end nodes into
         # a cycle through the training gateway
         first_step, last_step = steps[0], steps[-1]
@@ -68,6 +74,8 @@ class TrainingGateway(AbstractTrainingNode):
             steps[i].next_step = steps[i+1]
         last_step.next_step = self
 
+        last_step.extra_user_actions = on_user_completion
+
         self.name = name
         self.view = view
         self.steps = steps
@@ -80,6 +88,10 @@ class TrainingGateway(AbstractTrainingNode):
 
     def is_complete(self, user):
         return all([step.is_complete(user) for step in self.steps])
+
+    def is_started(self, user):
+        return (user.is_authenticated() and
+                any([step.is_complete(user) for step in self.steps]))
 
     def is_visitable(self, user):
         return True
@@ -102,7 +114,8 @@ class TrainingGateway(AbstractTrainingNode):
                                    'is_next': is_next})
             last_was_complete = is_complete
 
-        return training_steps
+        return {'is_started': self.is_started(user),
+                'training_steps': training_steps}
 
     def mark_kwargs(self):
         raise ValueError('Gateways do not have a progress boolean')
@@ -110,12 +123,12 @@ class TrainingGateway(AbstractTrainingNode):
 
 class AbstractTrainingStep(AbstractTrainingNode):
 
-    def __init__(self, name, description, duration):
+    def __init__(self, name, description):
         self.name = name
         self.description = description
-        self.duration = duration
         self.next_step = None
         self.previous_step = None
+        self.extra_user_actions = None
 
     def pure_url(self):
         return reverse(_PURE_URL_NAME_TEMPLATE % self.name)
@@ -127,7 +140,8 @@ class AbstractTrainingStep(AbstractTrainingNode):
         name = _MARK_PROGRESS_URL_NAME_TEMPLATE % self.name
         view = do(
             require_visitability(self),
-            mark_user(_TRAINING_FINISHED_BOOLEAN_FIELD_TEMPLATE % self.name),
+            mark_user(_TRAINING_FINISHED_BOOLEAN_FIELD_TEMPLATE % self.name,
+                      self.extra_user_actions),
             require_visitability(self.next_step),
             self.next_step.view)
         return {'name': name, 'view': view}
@@ -165,15 +179,44 @@ class ViewTrainingStep(AbstractTrainingStep):
         self.view = view
 
 
+class QuizTrainingStep(ViewTrainingStep):
+    def __init__(self, quiz, view, *args, **kwargs):
+        super(QuizTrainingStep, self).__init__(view, *args, **kwargs)
+        self.quiz = quiz
+
+    def require_training_result(self, view_fn):
+        @wraps(view_fn)
+        def wrapper(request, *args, **kwargs):
+            training_results = (TrainingResult.objects
+                                .filter(user=request.user,
+                                        module_name=self.quiz.slug,
+                                        score__gte=self.quiz.passing_score))
+            if not training_results.exists():
+                raise Http404()
+            else:
+                return view_fn(request, *args, **kwargs)
+        return wrapper
+
+    def mark_kwargs(self):
+        ctx = super(QuizTrainingStep, self).mark_kwargs()
+        new_view = self.require_training_result(ctx['view'])
+        ctx['view'] = new_view
+        return ctx
+
+
 class Quiz(object):
     """
+    slug - string; an internally available reference to the slug used to
+           access this quiz from the outside world via the global `quizzes`
+           dict.
     title - string
     questions - iterable<Question>
     passing_score - int; Number of correct answers needed to pass the quiz
     """
-    def __init__(self, title, questions, passing_score):
+    def __init__(self, slug, title, questions, passing_score):
         assert len(questions) > 0
         assert passing_score <= len(questions)
+        self.slug = unicode(slug)
         self.title = unicode(title)
         self.questions = list(questions)
         self.passing_score = int(passing_score)

@@ -1,7 +1,7 @@
 /* If you change these colors, also change src/nyc_trees/sass/partials/_legend.scss */
 @mapped: #8BC34A;
-@not-mapped: #aaa;
-@not-mapped-zoomed-out: #ccc;
+@not-mapped: #85664B;
+@not-mapped-zoomed-out: #85664B;
 
 #survey_blockface {
   line-join: round;
@@ -16,28 +16,11 @@
   [zoom = 18]{ line-width: 8; }
   [zoom = 19]{ line-width: 16; }
 
-  [survey_type = 'surveyed-by-me'] {
+  [is_mapped = 'T'] {
     line-color: @mapped;
-    [zoom <= 16]{ line-width: 6; }
+    [zoom <= 17]{ line-width: 6; }
   }
-  [survey_type = 'surveyed-by-others'] {
-    line-color: <% if (type === 'progress_all') { %> @mapped <% } else { %> @not-mapped <% } %>;
-    [zoom <= 16]{ line-width: 6; }
-  }
-
-  [survey_type = 'available'] {
-    line-color: @not-mapped;
-    [zoom <= 15]{
-      line-color: @not-mapped-zoomed-out;
-    }
-  }
-  [survey_type = 'reserved'] {
-    line-color: @not-mapped;
-    [zoom <= 15]{
-      line-color: @not-mapped-zoomed-out;
-    }
-  }
-  [survey_type = 'unavailable'] {
+  [is_mapped = 'F'] {
     line-color: @not-mapped;
     [zoom <= 15]{
       line-color: @not-mapped-zoomed-out;

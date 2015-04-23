@@ -4,15 +4,15 @@
 {% block aside %}
 
     <div class="map-sidebar">
-        <h2>Group Territory</h2>
-        <div>Select a group to modify its territory.</div>
+        <h2>Partner Group Census Zones</h2>
+        <p>Select a partner group to modify its census zone.</p>
         <select id="select-group">
             {% for group in groups %}
                 <option value="{{ group.id }}">{{ group.name }}</option>
             {% endfor %}
         </select>
         <div style="margin:8px 0 12px 0">
-            <div>Add and remove blocks by clicking them, or by drawing an area:</div>
+            <p>Add and remove blocks by clicking them or by drawing an area:</p>
             <button class="btn btn-default js-area js-area-add"
                     title="Start drawing an area, enclosing blocks to add to group's territory">
                 Draw to add

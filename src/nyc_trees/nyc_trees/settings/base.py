@@ -343,7 +343,7 @@ GEOCODE_FALLBACK_SUFFIX = ', New York, NY'
 RESERVATIONS_LIMIT = 12
 
 # How long blockface reservations will last
-RESERVATION_TIME_PERIOD = timedelta(days=14)
+RESERVATION_TIME_PERIOD = timedelta(days=7)
 
 TILER_URL = '//%s' % environ.get('TILER_HOST', 'localhost')
 
@@ -360,3 +360,6 @@ SOFT_LAUNCH_REGEXES = [
 ]
 
 RESERVATION_REMINDER_WINDOW = 3
+
+ADMIN_OPENLAYERS_URL = 'https://cdnjs.cloudflare.com/ajax/libs/openlayers/'\
+                       '2.13.1/OpenLayers.js'

@@ -12,7 +12,6 @@ from django.core.files.storage import default_storage
 from django.core.mail import EmailMessage
 from django.template.loader import get_template
 from django.template import Context
-from django.utils.timezone import now
 
 from django_statsd.clients import statsd
 
@@ -54,7 +53,6 @@ def send_to(user, message_type, *args, **kwargs):
         'from_email': from_email,
         'subject': subject,
         'body_text': body_text,
-        'sent_at': now()
     }
 
 

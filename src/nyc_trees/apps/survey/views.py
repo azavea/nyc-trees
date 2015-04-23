@@ -11,18 +11,20 @@ from pytz import timezone
 from celery import chain
 
 from django.conf import settings
-from django.core.exceptions import ValidationError
+from django.contrib.gis.geos import GeometryCollection
+from django.core.exceptions import ValidationError, PermissionDenied
 from django.core.urlresolvers import reverse
 from django.db import transaction, connection
+from django.db.models import Prefetch
 from django.http import (HttpResponse, HttpResponseForbidden,
                          HttpResponseBadRequest)
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.utils.timezone import now
 
 from apps.core.models import Group
-from apps.core.helpers import user_is_group_admin
+from apps.core.helpers import user_is_group_admin, user_is_individual_mapper
 
-from apps.event.models import Event
+from apps.event.models import Event, EventRegistration
 from apps.event.helpers import user_is_checked_in_to_event
 
 from apps.mail.tasks import notify_reservation_confirmed
@@ -38,8 +40,10 @@ from apps.survey.models import (BlockfaceReservation, Blockface, Territory,
 from apps.survey.layer_context import (
     get_context_for_reservations_layer, get_context_for_reservable_layer,
     get_context_for_progress_layer, get_context_for_territory_survey_layer,
-    get_context_for_printable_reservations_layer)
-from apps.survey.helpers import (teammates_for_event,
+    get_context_for_printable_reservations_layer,
+    get_context_for_group_progress_layer, get_context_for_user_progress_layer
+)
+from apps.survey.helpers import (teammates_for_event, group_percent_completed,
                                  teammates_for_individual_mapping)
 
 from libs.pdf_maps import create_and_save_pdf
@@ -60,14 +64,20 @@ def progress_page(request):
             {'mode': 'my', 'css_class': 'mapped', 'label': 'Mapped by you'},
             {'mode': 'my', 'css_class': 'not-mapped',
              'label': 'Not mapped by you'},
+            {'mode': 'group', 'css_class': 'mapped',
+             'label': 'Mapped by this group'},
+            {'mode': 'group', 'css_class': 'not-mapped',
+             'label': 'Not mapped'},
         ],
-        'layer_all': get_context_for_progress_layer(request, 'progress_all'),
-        'layer_my': get_context_for_progress_layer(request, 'progress_my'),
+        'legend_mode': 'all',
+        'layer_all': get_context_for_progress_layer(),
         'help_shown': _was_help_shown(request, 'progress_page_help_shown')
     }
 
     user = request.user
     if user.is_authenticated():
+        context['layer_my'] = get_context_for_user_progress_layer(request)
+
         blocks = (user.survey_set
                   .distinct('blockface')
                   .values_list('blockface_id', flat=True))
@@ -103,18 +113,48 @@ def _was_help_shown(request, help_shown_attr):
 
 
 def progress_page_blockface_popup(request, blockface_id):
-    survey_type = request.GET.get('survey_type')
+    blockface = get_object_or_404(Blockface, id=blockface_id)
+
     group_id = request.GET.get('group_id', None)
     group = get_object_or_404(Group, id=group_id) if group_id else None
 
     is_active = (group is None or group.is_active or
                  user_is_group_admin(request.user, group))
 
+    survey_type = _get_survey_type(blockface, request.user, group)
+
     return {
         'survey_type': survey_type,
         'group': group,
         'is_active': is_active
     }
+
+
+def _get_survey_type(blockface, user, group):
+    if user.is_authenticated():
+        reserved_by_user = BlockfaceReservation.objects \
+            .filter(blockface=blockface, user=user).current().exists()
+
+        if reserved_by_user:
+            return 'reserved'
+
+    try:
+        latest_survey = Survey.objects \
+            .filter(blockface=blockface) \
+            .latest('created_at')
+
+        if user.is_authenticated() and user.pk in {
+           latest_survey.user_id, latest_survey.teammate_id}:
+            return 'surveyed-by-me'
+        else:
+            return 'surveyed-by-others'
+    except Survey.DoesNotExist:
+        pass
+
+    if group is None and blockface.is_available:
+        return 'available'
+
+    return 'unavailable'
 
 
 def _query_reservation(user, blockface_id):
@@ -161,6 +201,46 @@ def user_reserved_blockfaces_geojson(request):
         }
         for reservation in reservations
     ]
+
+
+def group_borders_geojson(request):
+    groups = Group.objects.filter(is_active=True) \
+        .prefetch_related(
+            Prefetch('territory_set', to_attr="turf",
+                     queryset=Territory.objects.select_related('blockface')))
+
+    base_group_layer_context = get_context_for_group_progress_layer()
+    base_group_tile_url = base_group_layer_context['tile_url']
+    base_group_grid_url = base_group_layer_context['grid_url']
+
+    return [
+        {
+            'type': 'Feature',
+            'geometry': {
+                'type': 'MultiPolygon',
+                'coordinates': list(group.border.coords)
+            },
+            'properties': {
+                'tileUrl': '%s?group=%s' % (base_group_tile_url, group.id),
+                'gridUrl': '%s?group=%s' % (base_group_grid_url, group.id),
+                'popupUrl': reverse('group_popup',
+                                    kwargs={'group_slug': group.slug}),
+                'bounds': GeometryCollection(
+                    [territory.blockface.geom
+                     for territory in group.turf]).extent
+                if group.turf else group.border.extent
+            }
+        }
+        for group in groups
+        if group.border
+    ]
+
+
+def group_popup(request):
+    return {
+        'group': request.group,
+        'completed': group_percent_completed(request.group)
+    }
 
 
 def reservations_map_pdf_poll(request):
@@ -220,6 +300,9 @@ def _user_reservations(user):
 
 
 def reserve_blockfaces_page(request):
+    if not user_is_individual_mapper(request.user):
+        return redirect('reservations_instructions')
+
     current_reservations_amount = BlockfaceReservation.objects \
         .filter(user=request.user) \
         .current() \
@@ -246,6 +329,8 @@ def reserve_blockfaces_page(request):
 def confirm_blockface_reservations(request):
     id_string = request.POST['ids']
     ids = id_string.split(',')
+    # Filter empty strings
+    ids = filter(None, ids)
 
     is_mapping_with_paper = request.POST['is_mapping_with_paper'] == 'True'
 
@@ -290,7 +375,12 @@ def confirm_blockface_reservations(request):
 
     cancelled_reservations.update(canceled_at=right_now, updated_at=right_now)
 
-    BlockfaceReservation.objects.bulk_create(new_reservations)
+    # Workaround for Django limitation which prevents us from obtaining
+    # primary keys for objects created in bulk.
+    for reservation in new_reservations:
+        reservation.save()
+
+    reservation_ids = [r.id for r in new_reservations]
 
     filename = "reservations_map/%s_%s.pdf" % (
         request.user.username, shortuuid.uuid())
@@ -300,15 +390,11 @@ def confirm_blockface_reservations(request):
     url = reverse('printable_reservations_map')
     host = request.get_host()
 
-    blockface_ids = list(BlockfaceReservation.objects
-                         .filter(user=request.user)
-                         .current()
-                         .values_list('blockface_id', flat=True))
-
     if hasattr(request, 'session'):  # prevent test failure
         session_id = request.session.session_key
         chain(create_and_save_pdf.s(session_id, host, url, filename),
-              notify_reservation_confirmed.s(request.user.id, blockface_ids))\
+              notify_reservation_confirmed.s(request.user.id,
+                                             reservation_ids)) \
             .apply_async()
 
     num_reserved = len(new_reservations) + len(already_reserved_blockface_ids)
@@ -347,8 +433,37 @@ def blockface(request, blockface_id):
 def _validate_event_and_group(request, event_slug):
     event = get_object_or_404(Event, group=request.group, slug=event_slug)
     if not user_is_checked_in_to_event(request.user, event):
-        return HttpResponseForbidden('User not checked-in to this event')
+        raise PermissionDenied('User not checked-in to this event')
     return event
+
+
+def redirect_to_treecorder(request):
+    user = request.user
+
+    # We assume you can't have RSVPed to events without completing training
+    attended_events, unattended_events = EventRegistration.my_events_now(user)
+
+    if attended_events:
+        event = attended_events[0]
+        return redirect('survey_from_event',
+                        group_slug=event.group.slug, event_slug=event.slug)
+    elif unattended_events:
+        event = unattended_events[0]
+        return redirect('event_user_check_in_page',
+                        group_slug=event.group.slug, event_slug=event.slug)
+
+    # Need to check indivdual mapper status first, to allow census admins to
+    # "skip" a users online training via the admin site easily
+    if user.individual_mapper:
+        if user.blockfacereservation_set.current().exists():
+            return redirect('survey')
+        else:
+            return redirect('reservations')
+
+    if not user.training_complete:
+        return redirect('training_instructions')
+
+    return redirect('reservations_instructions')
 
 
 def start_survey(request):
@@ -370,7 +485,7 @@ def start_survey_from_event(request, event_slug):
         return HttpResponseForbidden('Event not currently in-progress')
 
     return {
-        'layer': get_context_for_territory_survey_layer(request, group.id),
+        'layer': get_context_for_territory_survey_layer(group.id),
         'location': [event.location.y, event.location.x],
         'choices': _get_survey_choices(),
         'teammates': teammates_for_event(group, event, request.user)
@@ -429,7 +544,8 @@ def _mark_survey_blockface_availability(survey, availability):
         raise ValidationError('availability arg must be a boolean value')
 
     survey.blockface.is_available = availability
-    survey.blockface.clean_and_save()
+    survey.blockface.full_clean()
+    survey.blockface.save()
 
 
 def release_blockface(request, survey_id):
@@ -533,6 +649,8 @@ def admin_territory_page(request):
              'label': "Others' unmapped territory/reservations"},
             {'css_class': 'surveyed-by-me', 'label': 'Mapped by this group'},
             {'css_class': 'surveyed-by-others', 'label': 'Mapped by others'},
+            {'css_class': 'selected',
+             'label': 'Currently-selected block edges'},
         ]
     }
     return context

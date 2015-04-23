@@ -21,6 +21,7 @@
 {% block main %}
 
 <input type="hidden" name="quiz-slug" value="{{ quiz_slug }}" />
+<input type="hidden" name="user-id" value="{{ user.id }}" />
 <input type="hidden" name="correct-answers" value="{{ correct_answers|join:"," }}" />
 
 <h3>
@@ -35,6 +36,14 @@
     question{{ quiz.questions|length|pluralize }} correctly.</p>
 
 <p>Your best score so far was <span class="color--primary">{{ best_score }}/{{ quiz.questions|length }}</span>.</p>
+
+{% if passed_quiz %}
+    <p><a href="{% url 'intro_quiz_mark_progress' %}" class="btn btn-primary">Finish</a></p>
+{% else %}
+    <p><a href="{% url 'intro_quiz_pure' %}"
+          class="btn btn-secondary btn-mobile--max">Try Again</a></p>
+{% endif %}
+
 <hr />
 {% for item in quiz_summary %}
 {% if item.is_correct %}
@@ -43,7 +52,7 @@
     <div class="panel panel-warning">
 {% endif %}
     <div class="panel-heading">
-        {{ forloop.counter }}. {{ item.question.text }}
+        {{ forloop.counter }}. {{ item.question.text|safe }}
     </div>
     <div class="panel-body">
         <p>
@@ -70,13 +79,6 @@
 {% endfor %}
 
 <hr/>
-
-{% if passed_quiz %}
-    <p><a href="{% url 'intro_quiz_mark_progress' %}" class="btn btn-primary">Finish</a></p>
-{% else %}
-    <p><a href="{% url 'intro_quiz_pure' %}"
-          class="btn btn-secondary btn-mobile--max">Try Again</a></p>
-{% endif %}
 
 {% endblock main %}
 

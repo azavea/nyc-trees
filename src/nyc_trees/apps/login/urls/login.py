@@ -18,4 +18,16 @@ urlpatterns = patterns(
     url(r'^forgot-username/sent/$',
         r.forgot_username_sent,
         name='forgot_username_sent'),
+
+    url(r'^send-activation-email/$',
+        r.send_activation_email,
+        name='send_activation_email'),
+
+    url(r'^send-activation-email/sent/$',
+        r.activation_email_sent,
+        name='activation_email_sent'),
+
+    url(r'^send-activation-email/activated/$',
+        r.activated,
+        name='activated')
 )

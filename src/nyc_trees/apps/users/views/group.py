@@ -10,8 +10,8 @@ from django.contrib.gis.geos import Polygon
 from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.db.models import Q
-from django.http import HttpResponseRedirect, HttpResponseForbidden, Http404
-from django.shortcuts import get_object_or_404
+from django.http import HttpResponseRedirect, Http404
+from django.shortcuts import get_object_or_404, redirect
 from django.utils.timezone import now
 
 from libs.data import merge
@@ -20,6 +20,7 @@ from libs.pdf_maps import create_event_map_pdf
 from libs.sql import get_group_tree_count
 
 from apps.core.helpers import (user_is_group_admin,
+                               user_is_trusted_mapper,
                                user_is_eligible_to_become_trusted_mapper)
 from apps.core.decorators import group_request
 from apps.core.models import Group
@@ -29,7 +30,8 @@ from apps.mail.views import notify_group_mapping_approved
 from apps.users.models import Follow, TrustedMapper
 from apps.users.forms import GroupSettingsForm
 
-from apps.survey.models import Territory, Survey, Blockface
+from apps.survey.helpers import group_percent_completed
+from apps.survey.models import Territory, Blockface
 from apps.survey.layer_context import (get_context_for_territory_layer,
                                        get_context_for_territory_admin_layer)
 
@@ -55,8 +57,8 @@ def group_list_page(request):
 
 
 @group_request
-def _group_events(request):
-    qs = Event.objects.filter(group=request.group, is_private=False)
+def _all_group_events(request):
+    qs = Event.objects.filter(group=request.group)
     user_can_edit_group = user_is_group_admin(request.user,
                                               request.group)
     extra_context = {'user_can_edit_group': user_can_edit_group,
@@ -64,14 +66,19 @@ def _group_events(request):
     return qs, extra_context
 
 
+def _public_group_events(request, *args, **kwargs):
+    qs, extra_context = _all_group_events(request, *args, **kwargs)
+    return qs.filter(is_private=False), extra_context
+
+
 group_detail_events = EventList(
-    _group_events,
+    _public_group_events,
     name="group_detail_events",
     template_path='groups/partials/detail_event_list.html')
 
 
 group_edit_events = EventList(
-    _group_events,
+    _all_group_events,
     name="group_edit_events",
     template_path='groups/partials/edit_event_list.html')
 
@@ -84,33 +91,19 @@ def group_detail(request):
         raise Http404('Must be a group admin to view an inactive group')
 
     event_list = (group_detail_events
-                  .configure(chunk_size=2,
+                  .configure(chunk_size=3,
                              active_filter=EventList.Filters.CURRENT,
                              filterset_name=EventList.chronoFilters)
                   .as_context(request, group_slug=group.slug))
     user_is_following = Follow.objects.filter(user_id=request.user.id,
                                               group=group).exists()
 
-    show_mapper_request = user_is_eligible_to_become_trusted_mapper(user,
-                                                                    group)
-
     follow_count = Follow.objects.filter(group=group).count()
+
+    # In order to show the tree count in a "ticker" we need to break it up
+    # into digits and pad it with zeroes.
     tree_count = get_group_tree_count(group)
-
-    group_blocks = Territory.objects \
-        .filter(group=group) \
-        .values_list('blockface_id', flat=True)
-
-    group_blocks_count = group_blocks.count()
-
-    if group_blocks_count > 0:
-        completed_blocks = Survey.objects \
-            .filter(blockface_id__in=group_blocks) \
-            .distinct('blockface')
-        block_percent = "{:.1%}".format(
-            float(completed_blocks.count()) / float(group_blocks.count()))
-    else:
-        block_percent = "0.0%"
+    trees_digits = [digit for digit in "{:07d}".format(tree_count)]
 
     events_held = Event.objects.filter(group=group, ends_at__lt=now())
     num_events_held = events_held.count()
@@ -120,21 +113,22 @@ def group_detail(request):
         .filter(did_attend=True) \
         .count()
 
+    block_percent = group_percent_completed(group)
+
     return {
         'group': group,
         'event_list': event_list,
         'user_is_following': user_is_following,
         'edit_url': reverse('group_edit', kwargs={'group_slug': group.slug}),
-        'show_mapper_request': show_mapper_request,
         'counts': {
-            'tree': tree_count,
+            'tree_digits': trees_digits,
             'block': block_percent,
             'event': num_events_held,
             'attendees': num_event_attendees,
             'follows': follow_count
         },
         'group_events_id': GROUP_EVENTS_ID,
-        'layer': get_context_for_territory_layer(request, request.group.id),
+        'layer': get_context_for_territory_layer(request.group.id),
         'territory_bounds': _group_territory_bounds(request.group),
         'render_follow_button_without_count': request.POST.get(
             'render_follow_button_without_count', False)
@@ -164,7 +158,7 @@ def edit_group(request, form=None):
     if not form:
         form = GroupSettingsForm(instance=request.group, label_suffix='')
     event_list = (group_edit_events
-                  .configure(chunk_size=2,
+                  .configure(chunk_size=3,
                              active_filter=EventList.Filters.CURRENT,
                              filterset_name=EventList.chronoFilters)
                   .as_context(request, group_slug=group.slug))
@@ -235,13 +229,13 @@ def _grant_mapping_access(group, username, is_approved):
 
 def request_mapper_status(request):
     user, group = request.user, request.group
-    if not user_is_eligible_to_become_trusted_mapper(user, group):
-        return HttpResponseForbidden()
+    if user_is_trusted_mapper(user, group):
+        return redirect('reservations')
+    elif not user_is_eligible_to_become_trusted_mapper(user, group):
+        return redirect('reservations_instructions')
     mapper, created = TrustedMapper.objects.update_or_create(
         group=group, user=user)
-    return {
-        'success': True
-    }
+    return redirect('trusted_mapper_request_sent')
 
 
 def group_unmapped_territory_geojson(request, group_id):
@@ -314,6 +308,11 @@ def _update_territory(group, request):
         .filter(blockface_id__in=ids_to_kill) \
         .delete()
 
+    # Record the current time on the group so we can use that as a cache buster
+    # when making tile requests for the territory table
+    group.territory_updated_at = now()
+    group.clean_and_save()
+
 
 def _update_event_maps(request, group):
     events = Event.objects \
@@ -326,7 +325,7 @@ def _update_event_maps(request, group):
 def _make_blockface_and_tiler_urls_result(request, blockfaces, group_id):
     result = {
         'blockDataList': _make_blockface_data_result(blockfaces),
-        'tilerUrls': get_context_for_territory_admin_layer(request, group_id)
+        'tilerUrls': get_context_for_territory_admin_layer(group_id)
     }
     return result
 

@@ -7,11 +7,13 @@ from django.conf.urls import patterns, url
 from apps.users.routes import user as r
 
 # These URLs have the prefix 'user/'
+# NOTE: When adding special `/user/*` endpoints, please remember to update
+# `User.reserved_usernames` to prevent URL ambiguity.
 urlpatterns = patterns(
     '',
     url(r'^profile/$', r.user_detail_redirect, name='user_detail_redirect'),
 
-    url(r'settings/$', r.user_profile_settings, name='user_profile_settings'),
+    url(r'^settings/$', r.user_profile_settings, name='user_profile_settings'),
 
     url(r'^achievements/$', r.achievements, name='achievements'),
 

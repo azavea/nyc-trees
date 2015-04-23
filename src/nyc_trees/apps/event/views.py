@@ -78,8 +78,7 @@ def _process_event_form(form, request, event=None):
 
 
 def add_event_page(request):
-    # TODO: Remove initial location after adding client-side geocoding
-    form = EventForm(initial={'location': Point(0, 0)})
+    form = EventForm()
     return {
         'form': form,
         'group': request.group
@@ -170,7 +169,9 @@ def events_list_page(request):
 
 def future_events_geojson(request):
     events = Event.objects.filter(
-        ends_at__gt=now(), group__is_active=True).select_related('group')
+        ends_at__gt=now(),
+        group__is_active=True,
+        is_private=False).select_related('group')
 
     return [_event_geojson(e) for e in events]
 
@@ -214,7 +215,8 @@ def events_list_feed(request):
             "long": e.location.x,
             "address": e.address,
         }],
-        'links': [{'link_url': site_domain + e.get_absolute_url()}],
+        'links': [{'link_url':
+                   'https://' + site_domain + e.get_absolute_url()}],
     } for e in events]
 
 
@@ -231,8 +233,6 @@ def edit_event_page(request, event_slug):
     tz = get_current_timezone()
     event = get_object_or_404(Event, group=request.group, slug=event_slug)
     form_context = {
-        # TODO: Remove initial location after adding client-side geocoding
-        'location': Point(0, 0),
         'date': event.begins_at.astimezone(tz),
         'begins_at_time': event.begins_at.astimezone(tz),
         'ends_at_time': event.ends_at.astimezone(tz)
@@ -254,7 +254,7 @@ def edit_event(request, event_slug):
         return HttpResponseRedirect(
             reverse('event_detail', kwargs={
                 'group_slug': request.group.slug,
-                'event_slug': event_slug
+                'event_slug': event.slug
             }))
     else:
         return {
@@ -310,7 +310,7 @@ def printable_event_map(request, event_slug):
     event = get_object_or_404(Event, group=request.group, slug=event_slug)
     context = {
         'event': event,
-        'layer': get_context_for_territory_layer(request, request.group.id),
+        'layer': get_context_for_territory_layer(request.group.id),
     }
     return context
 

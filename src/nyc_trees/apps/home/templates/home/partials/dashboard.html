@@ -16,6 +16,7 @@
                         <div class="hero-content">
                             <h1 class="hero-heading">Welcome back,
                             volun<span class="color--primary">treer!</span></h1>
+                            <p>Play a key role in the future of our urban forest! Sign up for a mapping event or make a block edge reservation to map more trees across NYC!</p>
                         </div>
                     </div>
                 </div>
@@ -27,9 +28,21 @@
         <div class="row">
             <main class="col-sm-12 main-dashboard">
                 {% flag full_access %}
+
+                    {% if not user.online_training_complete %}
+                        <div class="home-container">
+                            <section class="trainings">
+                                <div class="home-container">
+                                    {% include "home/partials/training.html" %}
+                                </div>
+                            </section>
+                        </div>
+                    {% endif %}
+
                     <section class="section-home">
                         <div class="home-container clearfix">
                             <h4 class="section-heading">Progress</h4>
+                            <p>See the progress you and other volun<b>treers</b> have made in helping us count our street trees!</p>
                             <ul class="nav nav-tabs nav-tabs--filter">
                                 <li class="active">
                                     <a data-toggle="tab" href="#all-time">All Time</a>
@@ -45,9 +58,11 @@
                                 <div class="tab-pane active" id="all-time">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            {% include "home/partials/circle.html" with label="Blocks" n=counts_all.block color="primary" url=progress_page_url %}
-                                            {% include "home/partials/circle.html" with label="Complete" n=counts_all.block_percent color="primary" url=progress_page_url %}
-                                            {% include "home/partials/circle.html" with label="Users" n=counts_all.user color="primary" modal="#users-modal" %}
+                                            <div class="progress-circles">
+                                                {% include "home/partials/circle.html" with label="Blocks" n=counts_all.block color="primary" url=progress_page_url %}
+                                                {% include "home/partials/circle.html" with label="Complete" n=counts_all.block_percent color="primary" url=progress_page_url %}
+                                                {% include "home/partials/circle.html" with label="Users" n=counts_all.user color="primary" modal="#users-modal" %}
+                                            </div>
                                         </div>
                                         <div class="col-md-6">
                                             {% include "home/partials/ticker.html" with n=counts_all.tree %}
@@ -57,9 +72,11 @@
                                 <div class="tab-pane" id="past-week">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            {% include "home/partials/circle.html" with label="Blocks" n=counts_week.block color="primary" url=progress_page_url %}
-                                            {% include "home/partials/circle.html" with label="Complete" n=counts_week.block_percent color="primary" url=progress_page_url %}
-                                            {% include "home/partials/circle.html" with label="Events" n=counts_week.event color="primary" url=events_page_url %}
+                                            <div class="progress-circles">
+                                                {% include "home/partials/circle.html" with label="Blocks" n=counts_week.block color="primary" url=progress_page_url %}
+                                                {% include "home/partials/circle.html" with label="Complete" n=counts_week.block_percent color="primary" url=progress_page_url %}
+                                                {% include "home/partials/circle.html" with label="Events" n=counts_week.event color="primary" url=events_page_url %}
+                                            </div>
                                         </div>
                                         <div class="col-md-6">
                                             {% include "home/partials/ticker.html" with n=counts_week.tree %}
@@ -69,9 +86,11 @@
                                 <div class="tab-pane" id="my-trees">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            {% include "home/partials/circle.html" with label="Blocks" n=counts.block color="primary" url=progress_page_url %}
-                                            {% include "home/partials/circle.html" with label="Species" n=counts.species color="primary" modal="#species-modal" %}
-                                            {% include "home/partials/circle.html" with label="Events" n=counts.event color="primary" url=events_page_url %}
+                                            <div class="progress-circles">
+                                                {% include "home/partials/circle.html" with label="Blocks" n=counts.block color="primary" url=progress_page_url %}
+                                                {% include "home/partials/circle.html" with label="Species" n=counts.species color="primary" modal="#species-modal" %}
+                                                {% include "home/partials/circle.html" with label="Events" n=counts.event color="primary" url=events_page_url %}
+                                            </div>
                                         </div>
                                         <div class="col-md-6">
                                             {% include "home/partials/ticker.html" with n=counts.tree_digits %}
@@ -82,25 +101,20 @@
                         </div>
                     </section>
 
-                    <div class="dashboard-columns">
-                        {% if user.online_training_complete %}
+                    {% if user.online_training_complete %}
+                        <div class="dashboard-columns">
                             <section class="events">
                                 <div class="home-container">
-                                    <h4 class="section-heading">Events</h4>
+                                    <h4 class="section-heading"><a href="{% url 'events_list_page' %}">Events</a></h4>
+                                    <p>Join other tree-loving citizens at street tree mapping events across the five boroughs! Sign up and help us make trees count!</p>
                                     <div data-class="event-list-container">
                                         {% include "event/partials/event_list.html" with event_list=all_events %}
                                     </div>
                                 </div>
                             </section>
                             {% include "users/partials/activity.html" %}
-                        {% else %}
-                            <section class="trainings">
-                                <div class="home-container">
-                                    {% include "home/partials/training.html" %}
-                                </div>
-                            </section>
-                        {% endif %}
-                    </div>
+                        </div>
+                    {% endif %}
 
                 {% else %}
                     <section class="soft-launch">

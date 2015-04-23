@@ -1,6 +1,10 @@
 {% extends "base_survey.html" %}
 {% load utils %}
 
+{% block nav %}
+{% include "core/partials/nav.html" with active_page="treecorder" %}
+{% endblock %}
+
 {% block aside %}
 
 <div class="map-sidebar">

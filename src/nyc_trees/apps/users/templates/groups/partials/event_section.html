@@ -20,7 +20,7 @@
             {% if event_list.user_can_edit_group %}
             <a href="{{ event.get_absolute_url }}">{{ event.title }}</a>
             {% else %}
-            <h5 class="event-detail event-detail--title">{{ event.title }}</h5>
+            <h5 class="event-detail--title">{{ event.title }}</h5>
             {% endif %}
             <table>
                 <tr class="event-detail">

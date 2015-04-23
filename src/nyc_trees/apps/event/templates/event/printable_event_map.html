@@ -2,11 +2,19 @@
 {% load utils %}
 
 {% block body %}
-    <div id="map" class="map-pdf"
-         data-tile-url="{{ layer.tile_url }}"
-         data-lat="{{ event.location.y }}" data-lon="{{ event.location.x }}">
+    <div class="map-pdf-container">
+        <div class="map-pdf-header">
+            <h3>TreesCount! 2015 Event Map</h3>
+            <p class="map-pdf-subtext">{{ event.title }}, hosted by {{ event.group.name }}.<br>
+            {{ event.begins_at|date:"l, F jS fA" }} to {{ event.ends_at|date:"fA" }}.</p>
+        </div>
+        <div id="map" class="map-pdf"
+             data-tile-url="{{ layer.tile_url }}"
+             data-lat="{{ event.location.y }}" data-lon="{{ event.location.x }}">
+        </div>
     </div>
 {% endblock body %}
+
 
 {% block page_js %}
     <script type="text/javascript" src="{{ "js/printableEventMapPage.js"|static_url }}"></script>

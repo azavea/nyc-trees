@@ -5,12 +5,14 @@ var $ = require('jquery'),
 
 var dom = {
     quizSlug: '[name="quiz-slug"]',
+    userId:  '[name="user-id"]',
     correctAnswers: '[name="correct-answers"]'
 };
 
 function saveCorrectAnswers() {
     var slug = $(dom.quizSlug).val(),
-        progress = states.quizSubmissionState(slug),
+        userId = $(dom.userId).val(),
+        progress = states.quizSubmissionState(slug, userId),
         newState = numberArray($(dom.correctAnswers).val().split(','));
     progress.save(newState);
 }
@@ -26,7 +28,8 @@ function parseIntBase10(n) {
 // Reset quiz progress back to the first question.
 function resetQuizProgress() {
     var slug = $(dom.quizSlug).val(),
-        progress = states.quizProgressState(slug),
+        userId = $(dom.userId).val(),
+        progress = states.quizProgressState(slug, userId),
         state = progress.load();
     if (state) {
         progress.save($.extend(state, {

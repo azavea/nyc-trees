@@ -35,7 +35,6 @@ $hero-box-side-padding: 3rem;
   top: 0;
   height: 100%;
   width: 100%;
-  text-align: center;
 }
 
 .hero-background {
@@ -117,7 +116,7 @@ $hero-box-side-padding: 3rem;
 }
 
 .section-about-logo {
-  margin: 0 3rem 1rem 0;
+  margin: 0 0 1rem 0;
 }
 
 .section-appeal-text {
@@ -132,9 +131,9 @@ $hero-box-side-padding: 3rem;
   height: 0;
   padding-bottom: 92%;
   width: 100%;
-
-  &:hover .progress-circle-label {
-      text-decoration: underline;
+  @include transition(.2s ease-in-out color);
+  &:hover {
+    color: darken($brand-primary, 20%) !important;
   }
 }
 
@@ -157,6 +156,11 @@ $hero-box-side-padding: 3rem;
 .progress-circles {
   margin-left: $grid-gutter-width/-2;
   margin-right: $grid-gutter-width/-2;
+  @include clearfix;
+  @media (max-width: $screen-xs) {
+    margin-left: -.4rem;
+    margin-right: -.4rem;
+  }
 }
 
 .progress-circle-content {
@@ -171,6 +175,9 @@ $hero-box-side-padding: 3rem;
 
 .col-circle {
   padding: 1rem;
+  @media (max-width: $screen-xs) {
+    padding: .4rem;
+  }
 }
 
 .home-description {
@@ -186,14 +193,19 @@ $hero-box-side-padding: 3rem;
     overflow: auto;
 }
 
-.page-dashboard {
-  .ticker {
-    padding-top: 1rem;
-    text-align: center;
-  }
+.ticker {
+  padding-top: 1rem;
+  text-align: center;
+}
+
+.sponsor {
+  margin: 1.25rem 0 .75rem;
 }
 
 @media (max-width: $screen-sm - 1) {
+  .clearleft {
+    clear: left;
+  }
   .page-dashboard {
     .hero-content {
       padding: 0;
@@ -215,6 +227,30 @@ $hero-box-side-padding: 3rem;
 }
 
 @media (min-width: $screen-sm) {
+  .sponsor {
+    margin: 3.25rem 0 0.75rem;
+  }
+  .sponsor-durst {
+    width: 18%;
+  }
+  .sponsor-azavea {
+    width: 20%;
+  }
+  .sponsor-att {
+    width: 10%;
+  }
+  .sponsor-aws {
+    width: 19%;
+  }
+  .sponsor-nyp {
+    width: 32%;
+  }
+  .sponsor-tk {
+    width: 12%;
+  }
+  .sponsor-histree {
+    width: 22%;
+  }
   .section-appeal {
     margin-top: auto;
   }
@@ -224,7 +260,7 @@ $hero-box-side-padding: 3rem;
   .home-description {
     font-size: $font-size-h4;
   }
-  .progress-circles {
+  .page-home .progress-circles {
     margin-left: auto;
     margin-right: auto;
   }
@@ -262,8 +298,6 @@ $hero-box-side-padding: 3rem;
   .page-home, .page-dashboard {
     section {
       margin: 5rem auto 0;
-      margin-left: $grid-gutter-width/-2;
-      margin-right: $grid-gutter-width/-2;
       padding: 0 1.5rem 5rem;
     }
   }

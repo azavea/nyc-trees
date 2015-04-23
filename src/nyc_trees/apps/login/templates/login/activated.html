@@ -1,0 +1,10 @@
+{% extends "registration/registration_base.html" %}
+{% load i18n %}
+
+{% block registration_title %}Active Account{% endblock %}
+
+{% block registration_content %}
+<p>Your account is active. Please try to log in.</p>
+
+<p><a class="btn btn-primary btn-mobile--max" href="{% url 'auth_login' %}">Log In</a></p>
+{% endblock %}

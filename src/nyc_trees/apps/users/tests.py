@@ -110,8 +110,8 @@ class ProfileTemplateTests(UsersTestCase):
         self._assert_visible_to_all('Tree Mapper')
 
     def test_privacy_link_visible_only_to_me(self):
-        self._assert_profile_contains('Privacy</a>', count=2)
-        self._assert_profile_contains('Privacy</a>', count=1, its_me=False)
+        self._assert_profile_contains('Privacy</a>', count=1)
+        self._assert_profile_contains('Privacy</a>', count=0, its_me=False)
 
     def test_groups_section_visibility(self):
         self._assert_visible_only_to_me('<section class="groups">', count=1)
@@ -128,7 +128,17 @@ class ProfileTemplateTests(UsersTestCase):
     def test_achievements_section_visibility(self):
         self._assert_visible_only_to_me('<section class="achievements">',
                                         count=1)
+
+        # The achievements section is only publicly visible when that user
+        # has earned an achievement
         self._update_user(achievements_are_public=True)
+        self._assert_visible_only_to_me('<section class="achievements">',
+                                        count=1)
+
+        self.achievement = Achievement.objects.create(
+            user=self.user,
+            achievement_id=AchievementDefinition.ONLINE_TRAINING
+        )
         self._assert_visible_to_all('<section class="achievements">',
                                     me_count=1,
                                     them_count=1)
@@ -222,11 +232,18 @@ class GroupDetailViewTests(UsersTestCase):
 
         make_survey(self.user, block1)
 
+        # Until the blockface is no longer avialable, it doesn't count
+        self._assert_count_equals('block', '0.0%')
+
+        block1.is_available = False
+        block1.save()
+
         self._assert_count_equals('block', '50.0%')
 
     def test_tree_count(self):
         # We start with 0 trees
-        self._assert_count_equals('tree', 0)
+        self._assert_count_equals('tree_digits',
+                                  ['0', '0', '0', '0', '0', '0', '0'])
 
         block1 = Blockface.objects.create(
             geom=MultiLineString(LineString(((0, 0), (1, 1))))
@@ -238,7 +255,8 @@ class GroupDetailViewTests(UsersTestCase):
         make_tree(survey)
 
         # Once we add a survey, we should see some tree counts
-        self._assert_count_equals('tree', 2)
+        self._assert_count_equals('tree_digits',
+                                  ['0', '0', '0', '0', '0', '0', '2'])
 
         other_survey = make_survey(self.user, block1)
         make_tree(other_survey)
@@ -247,7 +265,8 @@ class GroupDetailViewTests(UsersTestCase):
 
         # Only the most recent survey for each block should be counted,
         # so the count should go to 3, not 5
-        self._assert_count_equals('tree', 3)
+        self._assert_count_equals('tree_digits',
+                                  ['0', '0', '0', '0', '0', '0', '3'])
 
     def test_events_count(self):
         week_ago = now() - timedelta(days=7)
@@ -467,8 +486,7 @@ class TrustedMapperTests(UsersTestCase):
 
         # User request mapper status
         request = make_request(user=user, method='POST')
-        response = request_mapper_status(request, group_slug=group.slug)
-        self.assertEqual(response.content, '{"success": true}')
+        request_mapper_status(request, group_slug=group.slug)
 
         # Clear the test inbox
         mail.outbox = []
@@ -506,12 +524,10 @@ class TrustedMapperTests(UsersTestCase):
         self.group.allows_individual_mappers = True
         self.group.clean_and_save()
         self.assertFalse(self._is_eligible())
-        self.assertRaises(AssertionError, self._become_trusted_mapper)
 
         self.group.admin = self.other_user
         self.group.clean_and_save()
         self.assertFalse(self._is_eligible())
-        self.assertRaises(AssertionError, self._become_trusted_mapper)
 
         TrustedMapper.objects.all().delete()
         self.assertFalse(self._is_eligible())
@@ -520,9 +536,7 @@ class TrustedMapperTests(UsersTestCase):
         self.assertTrue(self._is_eligible())
 
         self._become_trusted_mapper()
-
         self.assertFalse(self._is_eligible())
-        self.assertRaises(AssertionError, self._become_trusted_mapper)
 
 
 class AnonUserTests(UsersTestCase):
@@ -573,8 +587,8 @@ class AchievementTests(UsersTestCase):
 
     def testMappingEvent(self):
         self._assertAchievements([])
-        for i in range(0, 2):
-            event = make_event(self.group, title=unicode(i))
+        for title in {'Event 1', 'Event 2', 'Event 3'}:
+            event = make_event(self.group, title=title)
             EventRegistration.objects.create(event=event, user=self.user,
                                              did_attend=True)
         self._assertAchievements([AchievementDefinition.MAPPING_EVENT])

@@ -79,4 +79,9 @@
 
 {% block extra_content %}
 {% include 'home/partials/species_modal.html' with species_by_name=counts.species_by_name %}
+{% if achievements %}
+    {% for key, achievement in achievements %}
+        {% include "users/partials/achievement_modal.html" %}
+    {% endfor %}
+{% endif %}
 {% endblock %}

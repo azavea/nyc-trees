@@ -1,22 +1,14 @@
 {% extends "users/partials/profile/section.html" %}
-{% load utils %}
 
 {% block section_content %}
 
-{% for achievement in achievements %}
-
-<div class="achievement block item">
-    <div class="row">
-        <div class="col-xs-8">
-            <h5>{{ achievement.name }}</h5>
-            <p class="h6 text--normal">{{ achievement.description_achieved }}</p>
-        </div>
-        <div class="col-xs-4 text-right">
-            <img src="{{ achievement.badge|static_url }}" />
-        </div>
-    </div>
-</div>
-
+{% for key, achievement in achievements %}
+    {% include "users/partials/achievement.html" with description=achievement.description_achieved %}
 {% endfor %}
+
+{# The achievements page is only meaningful for the currently logged in user #}
+{% if viewing_own_profile %}
+    <p class="block--top">Learn more about TreesCount! 2015 <a href="{% url 'achievements' %}">achievements.</a></p>
+{% endif %}
 
 {% endblock section_content %}

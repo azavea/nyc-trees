@@ -12,7 +12,7 @@ Optional Information
 <form method="POST">
     {% csrf_token %}
 
-    {{ form.non_field_errors }}
+    {% include "core/partials/non_field_errors.html" %}
 
     <div class="field">
         {{ form.first_name.label_tag }}

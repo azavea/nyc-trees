@@ -129,6 +129,7 @@ def complete_online_training(user):
     user.training_finished_the_mapping_method = True
     user.training_finished_tree_data = True
     user.training_finished_tree_surroundings = True
+    user.training_finished_wrapping_up = True
     user.training_finished_intro_quiz = True
     user.training_finished_groups_to_follow = True
     user.clean_and_save()

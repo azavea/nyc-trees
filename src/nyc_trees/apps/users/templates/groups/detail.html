@@ -21,7 +21,7 @@
                 {# TODO: Show a default image if group.image is null #}
                 {% if group.image %}
                 <div class="group-branding">
-                    <img src="{{group.image.url}}"/>
+                    <div class="group-image" style="background-image: url({{group.image.url}});"></div>
                 </div>
                 {% endif %}
             </div>
@@ -80,30 +80,12 @@
     </section>
     <section class="contributions">
         <h4 class="section-heading">Contributions</h4>
-        <div class="contribution block item">
-            <div class="row">
-                <div class="contribution-label col-xs-6"><i class="icon-globe"></i>Trees</div>
-                <div class="contribution-number col-xs-6">{{ counts.tree }}</div>
-            </div>
+        <div class="progress-circles block nopadding--top clearfix">
+            {% include "home/partials/circle.html" with label="Blocks" n=counts.block color="primary" url=progress_page_url %}
+            {% include "home/partials/circle.html" with label="Events " n=counts.event color="primary" modal="#users-modal" %}
+            {% include "home/partials/circle.html" with label="Attendees" n=counts.event color="primary" modal="#users-modal" %}
         </div>
-        <div class="contribution block item">
-            <div class="row">
-                <div class="contribution-label col-xs-6"><i class="icon-flow-tree"></i>Mapped in Area</div>
-                <div class="contribution-number col-xs-6">{{ counts.block }}</div>
-            </div>
-        </div>
-        <div class="contribution block item">
-            <div class="row">
-                <div class="contribution-label col-xs-6"><i class="icon-tag"></i>Events Held</div>
-                <div class="contribution-number col-xs-6">{{ counts.event }}</div>
-            </div>
-        </div>
-        <div class="contribution block item">
-            <div class="row">
-                <div class="contribution-label col-xs-6"><i class="icon-user"></i>Event Attendees</div>
-                <div class="contribution-number col-xs-6">{{ counts.attendees }}</div>
-            </div>
-        </div>
+        {% include "home/partials/ticker.html" with n=counts.tree_digits %}
     </section>
     <section class="events" id="{{ group_events_id }}">
         <h4 class="section-heading">Events</h4>
@@ -111,51 +93,22 @@
           {% include "groups/partials/detail_event_list.html" %}
         </div>
     </section>
-    {% if show_mapper_request %}
+    {% if group.allows_individual_mappers %}
     <section>
-        <h4 class="section-heading">Individual Mapping</h4>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu congue lorem, id feugiat tortor. Aliquam ante elit, sodales eget porttitor vel, commodo et felis.</p>
-        <button class="btn btn-primary btn-mobile--max"
-                data-action="request-access"
-                data-group-slug="{{ group.slug }}">Request Individual Mapper Status</button>
+        <form method="POST" action="{% url 'request_mapper_status' group_slug=group.slug %}">
+            {% csrf_token %}
+            <h4 class="section-heading">Individual Mapping</h4>
+            <p>
+                Volun<b>treers</b> are able to map trees on their own, outside of scheduled events!
+                Click the button below to request individual mapping status within this group&rsquo;s Census Zone.
+                Remember to contact your local loaning hub to check out individual tools and start mapping on your own.
+            </p>
+            <button class="btn btn-primary btn-mobile--max">Request Individual Mapper Status</button>
+        </form>
     </section>
     {% endif %}
 
 {% endblock main %}
-
-{% block extra_content %}
-<div class="modal fade" id="request-access-complete-modal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Request Sent</h4>
-            </div>
-            <div class="modal-body">
-                <p>Your request has been sent.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="request-access-fail-modal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Error Sending Request</h4>
-            </div>
-            <div class="modal-body">
-                <p>There was a problem submitting your request. Please try again.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
-            </div>
-        </div>
-    </div>
-</div>
-{% endblock extra_content %}
 
 {% block page_js %}
 <script type="text/javascript" src="{{ "js/group_detail.js"|static_url }}"></script>

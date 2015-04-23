@@ -1,0 +1,20 @@
+{% load utils %}
+<div class="achievement block item">
+    <div class="row">
+        <div class="col-xs-8">
+            <h5>{{ achievement.name|safe }}</h5>
+            <div class="h6 text--normal">{{ description|safe }}</div>
+            {% if achievement.sponsor %}
+                <div class="h6 achievement-sponsor">{{ achievement.sponsor }}</div>
+            {% endif %}
+            {% if achievement.reward %}
+                <a class="color--secondary" href="javascript:" data-toggle="modal" data-target="#achievement-reward-{{ key }}">
+                    View Reward
+                </a>
+            {% endif %}
+        </div>
+        <div class="col-xs-4 text-right">
+            <img class="badge" src="{{ achievement.badge|static_url }}" />
+        </div>
+    </div>
+</div>

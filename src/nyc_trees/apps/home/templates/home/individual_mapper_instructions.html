@@ -1,16 +1,12 @@
 {% extends "base_two_frames.html" %}
 
-{% block nav %}
-{% include "core/partials/nav.html" with active_page="about" %}
-{% endblock %}
-
 {% block aside %}
 <h2>Mapper Status</h2>
 {% endblock aside %}
 
 {% block main %}
 
-<p>You have been approved for individual mapper status! 
+<p>You have been approved for individual mapper status!
 <br><a href="#">Learn more.</a></p>
 
 <a href="{% url "reservations" %}" class="btn btn-primary">Reservations</a>

@@ -9,6 +9,11 @@ var $ = require('jquery'),
     BlockfaceLayer = require('./lib/BlockfaceLayer'),
     SavedState = require('./lib/SavedState'),
 
+    statePrompter = require('./lib/statePrompter').init({
+        warning: 'You have unsaved block edge reservations.',
+        question: ''
+    }),
+
     attrs = {
         blockfaceId: 'data-blockface-id',
         blockfaceStatus: 'data-blockface-status',
@@ -29,7 +34,6 @@ var $ = require('jquery'),
         requestAccessFailModal: '#request-access-fail-modal',
         unavailableBlockfaceModal: '#unavailable-blockface-modal',
 
-        startSection: '#reservations-start',
         addRemoveBtn: '#reservations-add-remove',
 
         cartActionBar: '#reservations-cart-action',
@@ -43,7 +47,7 @@ var $ = require('jquery'),
         popupTemplate: '#reservations-blockface-popup-template',
         popupBlockfaceId: '[' + attrs.blockfaceId + ']',
         popupBlockfaceStatus: '[' + attrs.blockfaceStatus + ']',
-        popupAction: '[' + attrs.blockfaceAction + ']',
+        popupAction: '[' + attrs.blockfaceAction + ']'
     },
 
     actions = {
@@ -88,7 +92,6 @@ var progress = new SavedState({
 
 var selectedLayer = new SelectableBlockfaceLayer(reservationMap, grid, {
     onAdd: function(gridData, latlng) {
-        onAddRemove();
         if (selectedBlockfacesCount >= blockfaceLimit) {
             $(dom.limitReachedModal).modal('show');
         } else if (gridData.restriction === "none") {
@@ -110,7 +113,6 @@ var reservedLayer = new BlockfaceLayer(reservationMap, {
     color: '#CE2029',
     onEachFeature: function(feature, layer) {
         layer.on('click', function(e) {
-            onAddRemove();
             showPopup(feature.properties.id, e.latlng, 'Expires ' + feature.properties.expires_at, actions.remove);
             blockfaceLayers[feature.properties.id] = layer;
             selectedLayer.addData(feature);
@@ -122,7 +124,6 @@ var cartLayer = new BlockfaceLayer(reservationMap, {
     color: '#FF69B4',
     onEachFeature: function(feature, layer) {
         layer.on('click', function(e) {
-            onAddRemove();
             showPopup(feature.properties.id, e.latlng, 'In Cart', actions.remove);
             blockfaceLayers[feature.properties.id] = layer;
             selectedLayer.addData(feature);
@@ -229,8 +230,10 @@ function updateForm() {
 
     if ( ! arrayEquals(ids, currentlyReservedIds)) {
         $hiddenInput.val(ids.join());
+        statePrompter.lock();
         $finishButton.prop('disabled', false);
     } else {
+        statePrompter.unlock();
         $finishButton.prop('disabled', true);
     }
 }
@@ -294,9 +297,4 @@ mapUtil.fetchBlockface(blockfaceId).done(function(blockface) {
     selectedLayer.addBlockface(blockface);
 });
 
-$(dom.addRemoveBtn).on('click', onAddRemove);
-
-function onAddRemove() {
-    $(dom.startSection).addClass('hidden');
-    $(dom.cartActionBar).removeClass('hidden').addClass('active');
-}
+$finishButton.on('click', statePrompter.unlock);

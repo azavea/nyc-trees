@@ -1,9 +1,26 @@
+{% load utils %}
+
 {% if user.online_training_complete %}
-<h3>Training Complete!</h3>
-<p>Visit <a href="{% url 'home_page' %}">the dashboard</a> to explore the site and start mapping! You can also visit the Groups page to learn more about mapping opportunities and follow groups for event information.</p>
+<h3>Online Training Complete!</h3>
+<p>Visit <a href="{% url 'home_page' %}">the dashboard</a> to explore the site and start mapping!</p>
+
+<p>You can also visit the Groups page to learn more about mapping opportunities and follow groups for event information.</p>
+
+<p>The next step after completing online training is to sign up for a training event where you will practice what you've learned in the field! <a href="{% url 'events_list_page' %}?active_filter=training">Sign up for training events here.</a></p>
+
+{% elif is_started %}
+<h3>You're almost there!</h3>
+<p>Continue your training and help us make trees count!</p>
+
 {% else %}
-<h3>You're almost there! Continue your training.</h3>
+<h3>Become a trained volun<span class="color--primary">treer</span> today!</h3>
+
+<p>Before you can RSVP to mapping events, you need to be trained to map trees as a volun<b>treer</b>!
+   Click Start below to continue and help make trees count!</p>
+
 {% endif %}
+
+<p>You can also download a PDF of the training materials <a target="_blank" href="{{ STATIC_URL }}training/TreesCount2015Training.pdf">here.</a></p>
 
 {% for step_info in training_steps %}
 <a {% if step_info.is_visitable %}href="{{ step_info.step.pure_url }}"{% endif %}
@@ -11,7 +28,6 @@
     <div class="row">
         <div class="col-xs-8">
             <h5>{{ step_info.step.description }}</h5>
-            <div class="h6">{{ step_info.step.duration }}</div>
         </div>
         <div class="col-xs-4 text-right">
           {% if step_info.is_complete %}
@@ -29,7 +45,6 @@
     <div class="row">
         <div class="col-xs-8">
             <h5>Groups to Follow</h5>
-            <div class="h6">5 minutes</div>
         </div>
         <div class="col-xs-4 text-right">
           {% if user.training_finished_groups_to_follow %}

@@ -12,6 +12,7 @@ from django.conf import settings
 from django.contrib.gis.db import models
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
+from django.core.validators import RegexValidator
 from django.utils.text import slugify
 
 from apps.core.models import User, Group
@@ -30,7 +31,8 @@ class Event(NycModel, models.Model):
     # people could have registered to attend the group's events.
     group = models.ForeignKey(Group, on_delete=models.PROTECT)
 
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255, validators=[
+        RegexValidator(r'[\w][\w\s]+')])
     # blank=True is valid for 'slug', because we'll automatically create slugs
     slug = models.SlugField(blank=True)
 

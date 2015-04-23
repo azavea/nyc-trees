@@ -13,7 +13,8 @@ from django.utils import timezone
 
 from apps.core.models import User
 from apps.event.models import EventRegistration
-from apps.users import user_profile_context, get_privacy_categories
+from apps.users import (user_profile_context, get_privacy_categories,
+                        get_achievements_for_user)
 from apps.users.forms import ProfileSettingsForm, EventRegistrationFormSet, \
     PrivacySettingsForm
 
@@ -128,5 +129,6 @@ def start_map_for_tool_depots_job(request, username):
 
 
 def achievements_page(request):
-    # TODO: implement
-    return {}
+    return {
+        'achievements': get_achievements_for_user(request.user)
+    }

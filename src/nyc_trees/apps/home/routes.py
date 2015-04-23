@@ -21,3 +21,7 @@ retrieve_job_status = do(v.retrieve_job_status)
 individual_mapper_instructions = individual_mapper_do(
     render_template('home/individual_mapper_instructions.html'),
     v.individual_mapper_instructions)
+
+trusted_mapper_request_sent = individual_mapper_do(
+    render_template('home/trusted_mapper_request_sent.html'),
+    v.trusted_mapper_request_sent)
