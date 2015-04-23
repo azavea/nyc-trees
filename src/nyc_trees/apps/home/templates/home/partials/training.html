@@ -20,7 +20,7 @@
 
 {% endif %}
 
-<p>You can also download a PDF of the training materials <a href="{{ STATIC_URL }}training/TreesCount2015Training.pdf">here.</a></p>
+<p>You can also download a PDF of the training materials <a target="_blank" href="{{ STATIC_URL }}training/TreesCount2015Training.pdf">here.</a></p>
 
 {% for step_info in training_steps %}
 <a {% if step_info.is_visitable %}href="{{ step_info.step.pure_url }}"{% endif %}
