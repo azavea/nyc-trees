@@ -1,6 +1,9 @@
-{% extends "base.html" %}
+{% extends "registration/registration_base.html" %}
+{% load i18n %}
 
-{% block content %}
-    <h1>Page not found</h1>
-    <p>Sorry, but the requested page could not be found.</p>
+{% block registration_title %}{% trans "Reset password" %}{% endblock %}
+
+{% block registration_content %}
+  <h1>Page not found</h1>
+  <p>Sorry, but the requested page could not be found.</p>
 {% endblock %}
