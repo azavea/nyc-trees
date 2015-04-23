@@ -87,6 +87,7 @@ def get_surveyed_species():
           ON species.id = tree.species_id
         WHERE tree.species_id IS NOT NULL
         GROUP BY species.common_name
+        ORDER BY count DESC
         """
     return _get_rows(sql)
 
