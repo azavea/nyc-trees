@@ -289,7 +289,19 @@ $hero-box-side-padding: 3rem;
   }
 }
 
+@media (min-width: $screen-sm) and (max-width: $screen-md) {
+  .main-dashboard {
+    margin-top: 0;
+  }
+}
+
 @media (min-width: $screen-md) {
+  .hero {
+    height: 45rem !important;
+    .page-dashboard & {
+      height: 35rem !important
+    }
+  }
   .page-dashboard {
     .ticker {
       padding-top: 3rem;
