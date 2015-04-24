@@ -66,7 +66,7 @@ achievements = OrderedDict([
         achieved=lambda user: user.online_training_complete
     )),
     (AchievementDefinition.TRAINING_EVENT, AchievementDefinition(
-        name='<b>Treer</b>ifically Trained',
+        name='Treerifically Trained',
         description='Attend a Training Event',
         description_achieved='Attended a Training Event',
         badge='img/badges/ic_badge_training_event.png',
@@ -111,7 +111,7 @@ achievements = OrderedDict([
         badge='img/badges/ic_badge_map_200.png',
         achieved=lambda user: user.blocks_mapped_count >= 200,
         sponsor='Sponsored by Whole Foods Market',
-        reward='TreesCount! Tote & Tree Care Kit that includes a limited '
+        reward='TreesCount! Tote &amp; Tree Care Kit that includes a limited '
         'edition TreesCount! t-shirt, gloves, weeder, cultivator, trowel, '
         'a collapsible buck and other helpful tools.'
     )),
