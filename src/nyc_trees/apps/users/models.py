@@ -137,9 +137,9 @@ achievements = OrderedDict([
         description_achieved='Mapped the Most Block Edges in NYC',
         badge='img/badges/ic_badge_top_mapper.png',
         achieved=lambda user: False,  # doesn't need to be live updated
-        reward='The volun<b>treer</b> that maps the most trees will earn a pair '
-        'of VIP Tickets to the Global Citizen Festival in Central Park on '
-        'September 26, 2015.'
+        reward='The volun<b>treer</b> that maps the most trees will earn a '
+        'pair of VIP Tickets to the Global Citizen Festival in Central Park '
+        'on September 26, 2015.'
     )),
 ])
 
