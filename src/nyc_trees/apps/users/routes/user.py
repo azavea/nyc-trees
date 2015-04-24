@@ -25,8 +25,7 @@ user_profile_settings = do(
     route(GET=v.profile_settings,
           POST=v.update_profile_settings))
 
-achievements = do(login_required,
-                  route(GET=do(render_template('users/achievement.html'),
+achievements = do(route(GET=do(render_template('users/achievement.html'),
                                v.achievements_page)))
 
 user_detail = route(

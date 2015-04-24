@@ -130,5 +130,6 @@ def start_map_for_tool_depots_job(request, username):
 
 def achievements_page(request):
     return {
-        'achievements': get_achievements_for_user(request.user)
+        'achievements': get_achievements_for_user(request.user),
+        'user': request.user
     }
