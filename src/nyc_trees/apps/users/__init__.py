@@ -91,10 +91,13 @@ def get_privacy_categories(form):
 
 
 def get_achievements_for_user(user):
-    update_achievements(user)
-    user_achievements = set(user.achievement_set
-                            .order_by('created_at')
-                            .values_list('achievement_id', flat=True))
+    if user.is_authenticated():
+        update_achievements(user)
+        user_achievements = set(user.achievement_set
+                                .order_by('created_at')
+                                .values_list('achievement_id', flat=True))
+    else:
+        user_achievements = set()
 
     return {
         'achieved': [(key, achievements[key])
