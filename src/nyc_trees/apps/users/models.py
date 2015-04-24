@@ -72,8 +72,8 @@ achievements = OrderedDict([
         badge='img/badges/ic_badge_training_event.png',
         achieved=lambda user: user.field_training_complete,
         reward='Receive a Census Gear Pack with a measuring tape, '
-               'Tree Species ID Guide, volunteer lanyard and badge, '
-               'and a TreesCount safety vest!'
+        'Tree Species ID Guide, volun<b>treer</b> lanyard and badge, and a '
+        'TreesCount safety vest!'
     )),
     (AchievementDefinition.MAPPING_EVENT, AchievementDefinition(
         name='Counter Cultured',
@@ -89,13 +89,10 @@ achievements = OrderedDict([
         badge='img/badges/ic_badge_map_50.png',
         achieved=lambda user: user.blocks_mapped_count >= 50,
         sponsor='Various sponsors',
-        reward='The first 250 volun<b>treers</b> to reach '
-                'this level will receive tickets to a NY '
-                'Liberty Game! All volun<b>treers</b> will '
-                'be entered into lotteries to attend a '
-                'Picnic in the Park, win a personal '
-                'Tree Care Workshop, a Knicks gift '
-                'bag and other great prizes while supplies last.'
+        reward='The first 250 volun<b>treers</b> to reach this level will '
+        'receive tickets to a NY Liberty Game! All volun<b>treers</b> will '
+        'be entered into lotteries to win a personal Tree Care Workshop, '
+        'Knicks gift bag and other great prizes, while supplies last.'
     )),
     (AchievementDefinition.MAP_100, AchievementDefinition(
         name='Mapping Machine',
@@ -105,7 +102,7 @@ achievements = OrderedDict([
         achieved=lambda user: user.blocks_mapped_count >= 100,
         sponsor='Sponsored by Whole Foods Market',
         reward='Tree Care Kit that includes gloves, weeder, cultivator, '
-               'trowel, a collapsible bucket and other helpful tools'
+        'trowel, a collapsible bucket and other helpful tools.'
     )),
     (AchievementDefinition.MAP_200, AchievementDefinition(
         name='Sprout Mapper',
@@ -114,10 +111,9 @@ achievements = OrderedDict([
         badge='img/badges/ic_badge_map_200.png',
         achieved=lambda user: user.blocks_mapped_count >= 200,
         sponsor='Sponsored by Whole Foods Market',
-        reward='TreesCount! Tote &amp; Tree Care Kit '
-               'that includes gloves, weeder, '
-               'cultivator, trowel, a collapsible bucket '
-               'and other helpful tools'
+        reward='TreesCount! Tote &amp; Tree Care Kit that includes a limited '
+        'edition TreesCount! t-shirt, gloves, weeder, cultivator, trowel, '
+        'a collapsible buck and other helpful tools.'
     )),
     (AchievementDefinition.MAP_400, AchievementDefinition(
         name='Seedling Mapper',
@@ -141,9 +137,9 @@ achievements = OrderedDict([
         description_achieved='Mapped the Most Block Edges in NYC',
         badge='img/badges/ic_badge_top_mapper.png',
         achieved=lambda user: False,  # doesn't need to be live updated
-        reward='The voluntreer that maps the most trees will earn a pair of '
-               'VIP Tickets to the Global Citizen Festival in Central Park on '
-               'September 26, 2015.'
+        reward='The volun<b>treer</b> that maps the most trees will earn a pair '
+        'of VIP Tickets to the Global Citizen Festival in Central Park on '
+        'September 26, 2015.'
     )),
 ])
 
