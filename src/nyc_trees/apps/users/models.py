@@ -66,13 +66,13 @@ achievements = OrderedDict([
         achieved=lambda user: user.online_training_complete
     )),
     (AchievementDefinition.TRAINING_EVENT, AchievementDefinition(
-        name='Treerifically Trained',
+        name='<b>Treer</b>ifically Trained',
         description='Attend a Training Event',
         description_achieved='Attended a Training Event',
         badge='img/badges/ic_badge_training_event.png',
         achieved=lambda user: user.field_training_complete,
         reward='Receive a Census Gear Pack with a measuring tape, '
-        'Tree Species ID Guide, voluntreer lanyard and badge, and a '
+        'Tree Species ID Guide, volun<b>treer</b> lanyard and badge, and a '
         'TreesCount safety vest!'
     )),
     (AchievementDefinition.MAPPING_EVENT, AchievementDefinition(
@@ -89,8 +89,8 @@ achievements = OrderedDict([
         badge='img/badges/ic_badge_map_50.png',
         achieved=lambda user: user.blocks_mapped_count >= 50,
         sponsor='Various sponsors',
-        reward='The first 250 voluntreers to reach this level will '
-        'receive tickets to a NY Liberty Game! All voluntreers will '
+        reward='The first 250 volun<b>treers</b> to reach this level will '
+        'receive tickets to a NY Liberty Game! All volun<b>treers</b> will '
         'be entered into lotteries to win a personal Tree Care Workshop, '
         'Knicks gift bag and other great prizes, while supplies last.'
     )),
@@ -137,7 +137,7 @@ achievements = OrderedDict([
         description_achieved='Mapped the Most Block Edges in NYC',
         badge='img/badges/ic_badge_top_mapper.png',
         achieved=lambda user: False,  # doesn't need to be live updated
-        reward='The voluntreer that maps the most trees will earn a pair '
+        reward='The volun<b>treer</b> that maps the most trees will earn a pair '
         'of VIP Tickets to the Global Citizen Festival in Central Park on '
         'September 26, 2015.'
     )),
