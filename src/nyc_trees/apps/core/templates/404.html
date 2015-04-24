@@ -1,9 +1,9 @@
 {% extends "registration/registration_base.html" %}
 {% load i18n %}
 
-{% block registration_title %}{% trans "Reset password" %}{% endblock %}
+{% block registration_title %}{% trans "Page Not Found" %}{% endblock %}
 
 {% block registration_content %}
-  <h1>Page not found</h1>
-  <p>Sorry, but the requested page could not be found.</p>
+  <h4>This is 404 error</h4>
+  <p>Sorry, but the requested page could not be found. You might want to try <a href="{% url 'home_page' %}">returning to the homepage</a>.</p>
 {% endblock %}
