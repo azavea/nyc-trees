@@ -133,6 +133,7 @@
   left: 0;
   top: 0;
   transition: all 400ms $transition;
+  z-index: 1;
   @media (max-height: $screen-xs-height) and (max-width: $screen-sm) {
     padding-top: 4.5rem;
   }
