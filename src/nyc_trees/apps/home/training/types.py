@@ -213,11 +213,12 @@ class Quiz(object):
     questions - iterable<Question>
     passing_score - int; Number of correct answers needed to pass the quiz
     """
-    def __init__(self, slug, title, questions, passing_score):
+    def __init__(self, slug, title, help_text, questions, passing_score):
         assert len(questions) > 0
         assert passing_score <= len(questions)
         self.slug = unicode(slug)
         self.title = unicode(title)
+        self.help_text = unicode(help_text)
         self.questions = list(questions)
         self.passing_score = int(passing_score)
 

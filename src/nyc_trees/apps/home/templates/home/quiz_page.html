@@ -26,6 +26,11 @@
 <div class="question
     {% if forloop.first %}active{% else %}hidden{% endif %}"
     data-question="{{ forloop.counter0 }}">
+
+{% if forloop.first %}
+<p>{{ quiz.help_text }}</p>
+{% endif %}
+
 <h3>
     Question {{ forloop.counter }} of {{ quiz.questions|length }}
 </h3>
