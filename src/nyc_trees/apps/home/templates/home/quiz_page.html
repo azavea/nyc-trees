@@ -26,13 +26,18 @@
 <div class="question
     {% if forloop.first %}active{% else %}hidden{% endif %}"
     data-question="{{ forloop.counter0 }}">
+
+{% if forloop.first %}
+<p>{{ quiz.help_text }}</p>
+{% endif %}
+
 <h3>
     Question {{ forloop.counter }} of {{ quiz.questions|length }}
 </h3>
 <p>{{ question.text|safe }}</p>
 
 {% if question.allow_multiple_selections %}
-<p>Please check all applicable answers.</p>
+<p><strong>Please check all applicable answers.</strong></p>
 {% endif %}
 
 <div class="marked-correct hidden">

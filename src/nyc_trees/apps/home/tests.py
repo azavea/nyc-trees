@@ -115,12 +115,12 @@ class QuizTestCase(TestCase):
         # Must be at least one question
         with self.assertRaises(AssertionError):
             Quiz(title='Test quiz', slug='test_quiz',
-                 passing_score=0, questions=[])
+                 help_text='', passing_score=0, questions=[])
 
         # Passing score must be <= number of questions
         with self.assertRaises(AssertionError):
             Quiz(title='Test quiz', slug='test_quiz',
-                 passing_score=2, questions=['A'])
+                 help_text='', passing_score=2, questions=['A'])
 
     def test_question_assertions(self):
         # Must be at least one choice
@@ -152,6 +152,7 @@ class QuizTestCase(TestCase):
         quiz = Quiz(
             slug='test_quiz',
             title='Test quiz',
+            help_text='',
             passing_score=1,
             questions=(
                 Question(
