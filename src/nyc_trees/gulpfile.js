@@ -199,10 +199,14 @@ function browserifyTask(bundler) {
 }
 
 gulp.task('sass', ['clean'], function() {
-    return gulp.src('sass/main.scss')
-        .pipe(sourcemaps.init())
-        .pipe(sass({style: 'compressed'}))
-        .pipe(sourcemaps.write('./'))
+    return sass('sass/main.scss', { sourcemap: true })
+        .on('error', function (err) {
+            console.error('Sass error', err.message);
+        })
+        .pipe(gulpif(! args.debug, postcss([csswring])))
+        .pipe(sourcemaps.write('./', {
+            includeContent: true,
+        }))
         .pipe(gulp.dest(cssDir));
 });
 
