@@ -18,10 +18,16 @@ class Blockface(models.Model):
     is_available = models.BooleanField(default=True)
     expert_required = models.BooleanField(default=False)
     source = models.CharField(max_length=255, default='unknown')
-
     # We can't use the NycModel mixin, because we want to add db indexes
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
+    # We keep a foreign key to the most recently created survey to avoid using
+    # DISTINCT ON (blockface.id) + ORDER BY (blockface.id, survey.created_at)
+    # in our tiler queries, which was a cause of major performance problems
+    latest_survey = models.ForeignKey('Survey', null=True, blank=True,
+                                      on_delete=models.PROTECT,
+                                      related_name='surveyed_blockface',
+                                      db_index=True)
 
     objects = models.GeoManager()
 
