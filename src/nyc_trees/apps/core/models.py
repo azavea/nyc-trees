@@ -7,6 +7,7 @@ from django.contrib.auth.models import AbstractUser, UserManager
 from django.contrib.gis.db import models
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
+from django.db.models import Q
 from django.utils.text import slugify
 
 from libs.mixins import NycModel
@@ -158,7 +159,9 @@ class User(NycModel, AbstractUser):
 
     @property
     def blocks_mapped_count(self):
-        return self.survey_set.distinct('blockface').count()
+        from apps.survey.models import Survey
+        surveys = Survey.objects.filter(Q(user=self) | Q(teammate=self))
+        return surveys.distinct('blockface').count()
 
     @property
     def reservations_map_pdf_url(self):
