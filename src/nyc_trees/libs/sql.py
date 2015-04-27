@@ -31,9 +31,10 @@ def get_user_tree_count(user):
         FROM survey_tree AS tree
         JOIN most_recent_survey
           ON tree.survey_id = most_recent_survey.id
-        WHERE most_recent_survey.user_id = %s"""
+        WHERE most_recent_survey.user_id = %s
+          OR most_recent_survey.teammate_id = %s"""
 
-    return _get_count(sql, [user.pk])
+    return _get_count(sql, [user.pk, user.pk])
 
 
 def get_group_tree_count(group):
@@ -69,12 +70,13 @@ def get_user_surveyed_species(user):
           ON tree.survey_id = most_recent_survey.id
         INNER JOIN survey_species AS species
           ON species.id = tree.species_id
-        WHERE most_recent_survey.user_id = %s
-            AND tree.species_id IS NOT NULL
+        WHERE tree.species_id IS NOT NULL
+          AND (most_recent_survey.user_id = %s
+               OR most_recent_survey.teammate_id = %s)
         GROUP BY species.common_name
         ORDER BY count DESC
         """
-    return _get_rows(sql, [user.pk])
+    return _get_rows(sql, [user.pk, user.pk])
 
 
 def get_surveyed_species():

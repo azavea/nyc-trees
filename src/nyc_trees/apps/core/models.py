@@ -158,10 +158,14 @@ class User(NycModel, AbstractUser):
             not user_is_trusted_mapper(self, group)
 
     @property
-    def blocks_mapped_count(self):
+    def surveys(self):
+        """Return surveys user has participated in"""
         from apps.survey.models import Survey
-        surveys = Survey.objects.filter(Q(user=self) | Q(teammate=self))
-        return surveys.distinct('blockface').count()
+        return Survey.objects.filter(Q(user=self) | Q(teammate=self))
+
+    @property
+    def blocks_mapped_count(self):
+        return self.surveys.distinct('blockface').count()
 
     @property
     def reservations_map_pdf_url(self):
