@@ -43,8 +43,7 @@ from apps.survey.layer_context import (
     get_context_for_printable_reservations_layer,
     get_context_for_group_progress_layer, get_context_for_user_progress_layer
 )
-from apps.survey.helpers import (teammates_for_event, group_percent_completed,
-                                 teammates_for_individual_mapping)
+from apps.survey.helpers import group_percent_completed, teammates_for_mapping
 
 from libs.pdf_maps import create_and_save_pdf
 
@@ -473,7 +472,7 @@ def start_survey(request):
         'layer': get_context_for_reservations_layer(request),
         'bounds': _user_reservation_bounds(request.user),
         'choices': _get_survey_choices(),
-        'teammates': teammates_for_individual_mapping(request.user),
+        'teammates': teammates_for_mapping(request.user),
         'no_more_reservations': reservations_for_user <= 1,
     }
 
@@ -488,7 +487,7 @@ def start_survey_from_event(request, event_slug):
         'layer': get_context_for_territory_survey_layer(group.id),
         'location': [event.location.y, event.location.x],
         'choices': _get_survey_choices(),
-        'teammates': teammates_for_event(group, event, request.user)
+        'teammates': teammates_for_mapping(request.user)
     }
 
 
