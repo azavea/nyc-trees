@@ -23,6 +23,7 @@ function create(options) {
     }, options);
 
     var mapOptions = {
+        minZoom: zoom.MIN,
         maxZoom: zoom.MAX,
         attributionControl: false,
         zoomControl: false,
@@ -93,6 +94,7 @@ function initBaseMap(map, options) {
         attributionForPdf = '&copy; OpenStreetMap contributors, &copy; CartoDB',
         layerOptions =  {
             subdomains: 'abcd',
+            minZoom: zoom.MIN,
             maxZoom: zoom.MAX,
             attribution: options.forPdf ? attributionForPdf : attribution
         },
