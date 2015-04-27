@@ -154,8 +154,9 @@ function addTileLayer(map, url) {
     return layer;
 }
 
-function addGridLayer(map, url) {
-    var gridUrl = url || getDomMapAttribute('grid-url'),
+function addGridLayer(map, options) {
+    options = options || {};
+    var gridUrl = options.url || getDomMapAttribute('grid-url'),
         layer = L.utfGrid(gridUrl, {
             minZoom: zoom.MIN,
             maxZoom: zoom.MAX,
