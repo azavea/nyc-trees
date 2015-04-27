@@ -23,6 +23,7 @@ function create(options) {
     }, options);
 
     var mapOptions = {
+        maxZoom: zoom.MAX,
         attributionControl: false,
         zoomControl: false,
         maxBounds: L.latLngBounds(config.bounds[0], config.bounds[1]).pad(4)
