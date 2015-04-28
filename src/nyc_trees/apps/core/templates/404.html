@@ -1,6 +1,9 @@
-{% extends "base.html" %}
+{% extends "registration/registration_base.html" %}
+{% load i18n %}
 
-{% block content %}
-    <h1>Page not found</h1>
-    <p>Sorry, but the requested page could not be found.</p>
+{% block registration_title %}Page Not Found{% endblock %}
+
+{% block registration_content %}
+  <h4>This is a 404 error</h4>
+  <p>Sorry, but the requested page could not be found. You might want to try <a href="{% url 'home_page' %}">returning to the homepage</a>.</p>
 {% endblock %}
