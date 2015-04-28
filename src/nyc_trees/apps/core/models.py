@@ -196,7 +196,7 @@ class Group(NycModel, models.Model):
     # change on any Territory rows, we record territory changes on the Group
     # and check the group when trying to find out the Territory cache buster
     territory_updated_at = models.DateTimeField(null=True, blank=True,
-                                                db_index=True)
+                                                db_index=True, editable=False)
 
     objects = models.GeoManager()
 
