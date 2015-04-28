@@ -275,6 +275,8 @@ def event_map_poll(request, event_slug):
 
     if event.map_pdf_url:
         return {'map_pdf_url': event.map_pdf_url}
+    elif event.map_pdf_filename == '':
+        create_event_map_pdf(request, event)
 
     return {}
 

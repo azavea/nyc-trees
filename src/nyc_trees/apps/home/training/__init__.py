@@ -16,6 +16,7 @@ quizzes = {
     'intro_quiz': Quiz(
         slug='intro_quiz',
         title='Explore Your Knowledge',
+        help_text=QS.intro_quiz_help_text,
         passing_score=7,
         questions=(
             Question(

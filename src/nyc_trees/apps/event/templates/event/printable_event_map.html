@@ -3,12 +3,25 @@
 
 {% block body %}
     <div class="map-pdf-container">
-        <div class="map-pdf-header">
-            <h3>TreesCount! 2015 Event Map</h3>
-            <p class="map-pdf-subtext">{{ event.title }}, hosted by {{ event.group.name }}.<br>
-            {{ event.begins_at|date:"l, F jS fA" }} to {{ event.ends_at|date:"fA" }}.</p>
+        <div class="map-pdf-header" style="height: 3.5in">
+            <h3><img style="width: 2.4in; position: relative; top: .02in;" src="{{ 'img/logo-nycparks-print.png'|static_url }}"> Event Map</h3>
+            <h4>{{ event.title }}</h4>
+            <p class="map-pdf-subtext">
+                <b>Host:</b> {{ event.group.name }}<br>
+                <b>Date:</b> {{ event.begins_at|date:"l, F jS fA" }} to {{ event.ends_at|date:"fA" }}.<br>
+            {% if event.includes_training %}
+                <b>Type:</b> Training Event
+            {% else %}
+                <b>Type:</b> Mapping Event
+                <p class="map-pdf-subtext">Remember to bring the Census Gear Pack that you received at your training event!</p>
+            {% endif %}
+            </p>
+            <p class="map-pdf-subtext" style="overflow: hidden; height: 1.25in">
+                <b>How to find us:</b> {{ event.location_description }}
+            </p>
+
         </div>
-        <div id="map" class="map-pdf"
+        <div id="map" class="map-pdf" style="top: 3.5in"
              data-tile-url="{{ layer.tile_url }}"
              data-lat="{{ event.location.y }}" data-lon="{{ event.location.x }}">
         </div>

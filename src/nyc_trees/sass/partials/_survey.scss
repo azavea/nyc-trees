@@ -54,6 +54,7 @@
             display: block;
             height: auto;
             padding: 0;
+            z-index: $zindex-leaflet-controls + 1;
             @media (max-height: $screen-xs-height) and (max-width: $screen-sm) {
                 top: 4.5rem;
             }
