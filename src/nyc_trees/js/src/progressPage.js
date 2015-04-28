@@ -61,6 +61,7 @@ function loadLayers($mode) {
 
     // Clear action bar
     $actionBar.empty();
+    $('body').removeClass('actionbar-triggered');
 
     // Replace layers
     if (tileLayer) {
@@ -106,6 +107,7 @@ function loadLayers($mode) {
 
                         mapModule.fitBounds(progressMap, feature.properties.bounds);
                         $actionBar.load(feature.properties.popupUrl);
+                        $('body').addClass('actionbar-triggered');
                     });
                 }
             });
@@ -127,6 +129,7 @@ function createSelectableLayer() {
                 url += '?group_id=' + gridData.group_id;
             }
             $actionBar.load(url);
+            $('body').addClass('actionbar-triggered');
             return true;
         }
     });
