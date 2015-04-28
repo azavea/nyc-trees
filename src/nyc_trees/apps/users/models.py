@@ -113,7 +113,7 @@ achievements = OrderedDict([
         sponsor='Sponsored by Whole Foods Market',
         reward='TreesCount! Tote &amp; Tree Care Kit that includes a limited '
         'edition TreesCount! t-shirt, gloves, weeder, cultivator, trowel, '
-        'a collapsible buck and other helpful tools.'
+        'a collapsible bucket and other helpful tools.'
     )),
     (AchievementDefinition.MAP_400, AchievementDefinition(
         name='Seedling Mapper',
