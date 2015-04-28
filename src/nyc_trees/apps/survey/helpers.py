@@ -9,18 +9,11 @@ from apps.users import can_show_full_name
 from apps.survey.models import Survey, Territory
 
 
-def teammates_for_event(group, event, current_user):
-    attendees = User.objects.exclude(id=current_user.id)\
-                            .filter(eventregistration__event=event,
-                                    eventregistration__did_attend=True)\
+def teammates_for_mapping(current_user):
+    attendees = User.objects.exclude(id=current_user.id) \
+                            .filter(is_active=True) \
                             .order_by('username')
     return _teammates_context(attendees)
-
-
-def teammates_for_individual_mapping(current_user):
-    mappers = User.objects.exclude(id=current_user.id)\
-                          .filter(individual_mapper=True)
-    return _teammates_context(mappers)
 
 
 def _teammates_context(users):
