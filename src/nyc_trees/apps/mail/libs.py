@@ -8,7 +8,6 @@ import os
 from email.mime.application import MIMEApplication
 
 from django.conf import settings
-from django.core.files.storage import default_storage
 from django.core.mail import EmailMessage
 from django.template.loader import get_template
 from django.template import Context
@@ -56,12 +55,8 @@ def send_to(user, message_type, *args, **kwargs):
     }
 
 
-def storage_pdf_to_attachment(path):
-    """
-    Open the file `path` from default storage and return a
-    MIMEApplication attachment with the content.
-    """
-    with default_storage.open(path) as pdf:
+def pdf_to_attachment(open_fn, path):
+    with open_fn(path) as pdf:
         attachment = MIMEApplication(pdf.read(), 'pdf')
         filename = os.path.basename(path)
         try:
