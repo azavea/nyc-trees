@@ -48,12 +48,6 @@ function fetchBlockface(blockfaceId) {
     return defer.promise();
 }
 
-function zoomToBlockface(map, blockfaceId) {
-    fetchBlockface(blockfaceId).done(function(blockface) {
-        map.fitBounds(blockface.bounds);
-    });
-}
-
 function styledCircleMarker(latLng) {
     return L.circleMarker(latLng, {
         stroke: false,
@@ -91,6 +85,5 @@ module.exports = {
     getLatLngs: getLatLngs,
     styledCircleMarker: styledCircleMarker,
     styledStreetConfirmation: styledStreetConfirmation,
-    fetchBlockface: fetchBlockface,
-    zoomToBlockface: zoomToBlockface
+    fetchBlockface: fetchBlockface
 };

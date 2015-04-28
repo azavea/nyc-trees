@@ -405,3 +405,21 @@
   padding-left: $grid-gutter-width/2;
   padding-right: $grid-gutter-width/2;
 }
+
+.crosshair-x {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 50%;
+  height: 1px;
+  background: black;
+}
+
+.crosshair-y {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 50%;
+  width: 1px;
+  background: black;
+}
