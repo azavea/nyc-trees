@@ -166,10 +166,11 @@ def blockface_cart_page(request):
     ids_str = request.POST.get('ids', None)
     ids = ids_str.split(',') if ids_str else []
     cancelled_reservations = _get_reservations_to_cancel(ids, request.user)
+    already_reserved_ids = _already_reserved_blockface_ids(ids)
 
     return {
         'blockface_ids': request.POST['ids'],
-        'num_reserved': len(ids),
+        'num_reserved': len(ids) - already_reserved_ids.count(),
         'num_cancelled': cancelled_reservations.count()
     }
 
@@ -331,7 +332,8 @@ def confirm_blockface_reservations(request):
     # Filter empty strings
     ids = filter(None, ids)
 
-    is_mapping_with_paper = request.POST['is_mapping_with_paper'] == 'True'
+    is_mapping_with_paper = \
+        request.POST.get('is_mapping_with_paper', 'False') == 'True'
 
     blockfaces = Blockface.objects \
         .filter(id__in=ids) \
@@ -345,10 +347,7 @@ def confirm_blockface_reservations(request):
         .filter(admin=request.user) \
         .values_list('id', flat=True)
 
-    already_reserved_blockface_ids = BlockfaceReservation.objects \
-        .filter(blockface__id__in=ids) \
-        .current() \
-        .values_list('blockface_id', flat=True)
+    already_reserved_blockface_ids = _already_reserved_blockface_ids(ids)
 
     right_now = now()
     expiration_date = right_now + settings.RESERVATION_TIME_PERIOD
@@ -371,6 +370,7 @@ def confirm_blockface_reservations(request):
             ))
 
     cancelled_reservations = _get_reservations_to_cancel(ids, request.user)
+    num_cancelled = cancelled_reservations.count()
 
     cancelled_reservations.update(canceled_at=right_now, updated_at=right_now)
 
@@ -396,11 +396,11 @@ def confirm_blockface_reservations(request):
                                              reservation_ids)) \
             .apply_async()
 
-    num_reserved = len(new_reservations) + len(already_reserved_blockface_ids)
+    num_reserved = len(new_reservations)
     return {
-        'blockfaces_requested': len(ids),
-        'blockfaces_reserved': num_reserved,
-        'blockfaces_cancelled': len(cancelled_reservations),
+        'n_requested': len(ids) - len(already_reserved_blockface_ids),
+        'n_reserved': num_reserved,
+        'n_cancelled': num_cancelled,
         'expiration_date': expiration_date
     }
 
@@ -410,6 +410,13 @@ def _get_territory(blockface):
         return blockface.territory
     except Territory.DoesNotExist:
         return None
+
+
+def _already_reserved_blockface_ids(ids):
+    return BlockfaceReservation.objects \
+        .filter(blockface__id__in=ids) \
+        .current() \
+        .values_list('blockface_id', flat=True)
 
 
 def _get_reservations_to_cancel(ids, user):

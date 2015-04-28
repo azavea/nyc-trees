@@ -148,10 +148,10 @@ class ConfirmBlockfaceReservationTests(SurveyTestCase):
             'ids': ids, 'is_mapping_with_paper': 'False'}, method="POST")
 
         context = confirm_blockface_reservations(req)
-        self.assertIn('blockfaces_requested', context)
-        self.assertIn('blockfaces_reserved', context)
+        self.assertIn('n_requested', context)
+        self.assertIn('n_reserved', context)
         self.assertIn('expiration_date', context)
-        self.assertEqual(num, context['blockfaces_reserved'])
+        self.assertEqual(num, context['n_reserved'])
 
     def test_can_reserve_available_block(self):
         self.assert_blocks_reserved(1, self.block)
@@ -165,7 +165,7 @@ class ConfirmBlockfaceReservationTests(SurveyTestCase):
         reservation = BlockfaceReservation.objects.get(blockface=self.block)
         self.assertEqual(self.user.pk, reservation.user_id)
 
-        self.assert_blocks_reserved(2, self.block, self.block2)
+        self.assert_blocks_reserved(1, self.block2)
 
         self.assertEqual(1, BlockfaceReservation.objects
                          .filter(blockface=self.block).count())
