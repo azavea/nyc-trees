@@ -61,6 +61,7 @@ function loadLayers($mode) {
 
     // Clear action bar
     $actionBar.empty();
+    $('body').removeClass('actionbar-triggered');
 
     // Replace layers
     if (tileLayer) {
@@ -106,6 +107,7 @@ function loadLayers($mode) {
 
                         mapModule.fitBounds(progressMap, feature.properties.bounds);
                         $actionBar.load(feature.properties.popupUrl);
+                        $('body').addClass('actionbar-triggered');
                     });
                 }
             });
@@ -124,6 +126,7 @@ function createSelectableLayer() {
             var url = '/blockedge/' + gridData.id + '/progress-page-blockedge-popup/';
 
             $actionBar.load(url);
+            $('body').addClass('actionbar-triggered');
             return true;
         }
     });
