@@ -47,10 +47,10 @@ class Filter(object):
             return self.empty_template
 
 _ALL = Filter('all')
-_MAPPING = Filter('mapping')
-_TRAINING = Filter('training')
-_CURRENT = Filter('current')
-_PAST = Filter('past')
+_MAPPING = Filter('mapping', 'There are no mapping events.')
+_TRAINING = Filter('training', 'There are no training events.')
+_CURRENT = Filter('current', 'There are no current events.')
+_PAST = Filter('past', 'There are no past events.')
 _RECOMMENDED = Filter('recommended',
                       ('None of the groups you follow have scheduled events. '
                        'You can <a href="%s">find groups to follow here</a>.'),
