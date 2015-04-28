@@ -5,6 +5,7 @@
   block.geom, block.id,
   CASE
     WHEN survey.user_id IS NOT DISTINCT FROM <%= user_id %> THEN 'T'
+    WHEN survey.teammate_id IS NOT DISTINCT FROM <%= user_id %> THEN 'T'
     ELSE 'F'
   END AS is_mapped
   FROM survey_blockface AS block

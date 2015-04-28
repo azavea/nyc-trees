@@ -77,8 +77,7 @@ def progress_page(request):
     if user.is_authenticated():
         context['layer_my'] = get_context_for_user_progress_layer(request)
 
-        blocks = (user.survey_set
-                  .distinct('blockface')
+        blocks = (user.surveys.distinct('blockface')
                   .values_list('blockface_id', flat=True))
         if len(blocks) > 0:
             blockfaces = Blockface.objects.filter(id__in=blocks).collect()
