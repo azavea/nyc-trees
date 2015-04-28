@@ -53,8 +53,8 @@ class QuizStrings(object):
     intro_quiz_help_text = """
     Now it’s time to explore your knowledge by taking a quick
     10-question quiz. You have to answer at least 7 questions
-    correctly to move forward and be able to follow groups. You can
-    re-take this quiz as many times as you need in order to pass.
+    correctly to move forward and register for a training event. You
+    can re-take this quiz as many times as you need in order to pass.
     """
 
     ##############################################################
