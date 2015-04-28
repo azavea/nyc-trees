@@ -20,8 +20,9 @@ class Blockface(models.Model):
     source = models.CharField(max_length=255, default='unknown')
 
     # We can't use the NycModel mixin, because we want to add db indexes
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True, db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True, editable=False)
+    updated_at = models.DateTimeField(auto_now=True, db_index=True,
+                                      editable=False)
 
     objects = models.GeoManager()
 
