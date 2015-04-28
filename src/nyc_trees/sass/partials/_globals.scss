@@ -400,3 +400,36 @@ aside {
 .achievement-sponsor {
   color: #bbb;
 }
+
+.glyphicon.glyphicon-chevron-up {
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid $brand-primary;
+}
+
+.glyphicon.glyphicon-chevron-down {
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid $brand-primary;
+}
+
+.bootstrap-datetimepicker-widget td span:hover {
+  background: none;
+}
+
+.bootstrap-datetimepicker-widget.dropdown-menu td {
+  line-height: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.bootstrap-datetimepicker-widget a[data-action] {
+  padding: 6px 10px !important;
+  &:hover {
+    background-color: #eee;
+  }
+}
