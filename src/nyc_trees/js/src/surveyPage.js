@@ -156,6 +156,13 @@ var dom = {
             endPointLayers.addLayer(startCircle);
             endPointLayers.addLayer(endCircle);
 
+            window.setTimeout(function () {
+                // wait until DOM update cycle is finished and
+                // then bring this layer to the front.
+                endPointLayers.bringToFront();
+            }, 1);
+
+
             showSelectStart();
 
             mapUtil.zoomToBlockface(blockfaceMap, blockfaceId);
