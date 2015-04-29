@@ -6,7 +6,7 @@ var $ = require('jquery'),
     toastr = require('toastr'),
     mapModule = require('./map'),
     mapUtil = require('./lib/mapUtil'),
-    SelectableBlockfaceLayer = require('./lib/SelectableBlockfaceLayer'),
+    BlockfaceLayer = require('./lib/BlockfaceLayer'),
     valIsEmpty = require('./lib/valIsEmpty'),
     mapAnotherPopup = require('./mapAnotherPopup'),
 
@@ -114,7 +114,8 @@ var dom = {
     blockfaceMap = mapModule.create({
         legend: false,
         search: false,
-        geolocation: true
+        geolocation: true,
+        crosshairs: true
     }),
 
     endPointLayers = new L.FeatureGroup(),
@@ -133,48 +134,50 @@ var dom = {
     },
 
     tileLayer = mapModule.addTileLayer(blockfaceMap),
-    grid = mapModule.addGridLayer(blockfaceMap),
+    grid = mapModule.addGridLayer(blockfaceMap, { crosshairs: true }),
 
-    selectedLayer = new SelectableBlockfaceLayer(blockfaceMap, grid, {
-        onAdd: function() {
-            return true;
-        },
-        onAdded: function(feature, layer) {
-            var latLngs = mapUtil.getLatLngs(feature.geometry);
-
-            blockfaceId = feature.properties.id;
-
-            selectedLayer.clearLayers();
-            endPointLayers.clearLayers();
-
-            var startCircle = L.circleMarker(latLngs[0], defaultStyle),
-                endCircle = L.circleMarker(latLngs[latLngs.length - 1], defaultStyle);
-
-            startCircle.isStart = true;
-            endCircle.isStart = false;
-
-            endPointLayers.addLayer(startCircle);
-            endPointLayers.addLayer(endCircle);
-
-            showSelectStart();
-
-            mapUtil.zoomToBlockface(blockfaceMap, blockfaceId);
-            return true;
-        }
-    }),
+    selectedLayer = new BlockfaceLayer(blockfaceMap, { color: '#FFEB3B' }),
 
     isMappedFromStartOfLine = null,
 
-    clicksEnabled = true;
+    mapInteractionEnabled = true;
 
 statePrompter.lock();
 
+selectedLayer.clicksEnabled = false;
 blockfaceMap.addLayer(selectedLayer);
 blockfaceMap.addLayer(endPointLayers);
 
+grid.on('mapMove', function(e) {
+    var data = e.data;
+    if (data && data.survey_type === 'available' && data.id !== blockfaceId) {
+        blockfaceId = data.id;
+
+        var geom = mapUtil.parseGeoJSON(data.geojson),
+            latLngs = mapUtil.getLatLngs(geom),
+            startCircle = L.circleMarker(latLngs[0], defaultStyle),
+            endCircle = L.circleMarker(latLngs[latLngs.length - 1], defaultStyle);
+
+        startCircle.isStart = true;
+        endCircle.isStart = false;
+
+        selectedLayer.clearLayers();
+        endPointLayers.clearLayers();
+
+        selectedLayer.addData({
+            "type": "Feature",
+            "geometry": geom
+        });
+        endPointLayers.addLayer(startCircle);
+        endPointLayers.addLayer(endCircle);
+
+        showSelectStart();
+    }
+});
+
 endPointLayers.setStyle(defaultStyle);
 endPointLayers.on('click', function(e) {
-    if (!clicksEnabled) {
+    if (!mapInteractionEnabled) {
         return;
     }
     endPointLayers.setStyle(defaultStyle);
@@ -336,8 +339,9 @@ $(dom.btnNext).click(function(e) {
     $(dom.selectTeammate).addClass('hidden');
     $(dom.surveyPage).toggleClass('hidden');
     $(dom.actionBar).addClass('expanded');
-    selectedLayer.clicksEnabled = false;
-    clicksEnabled = false;
+    mapInteractionEnabled = false;
+    blockfaceMap.removeLayer(grid);
+    mapModule.hideCrosshairs();
 });
 
 $(dom.addTree).click(function (){

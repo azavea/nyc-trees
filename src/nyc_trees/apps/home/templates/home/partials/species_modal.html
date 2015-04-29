@@ -10,10 +10,10 @@
           {% for common_name, count in species_by_name %}
             <li><strong class="color--primary">{{ count }}</strong> {{ common_name }}</li>
           {% endfor %}
+          </ul>
         {% else %}
           <p>No trees have been surveyed yet.</p>
         {% endif %}
-        </ul>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>

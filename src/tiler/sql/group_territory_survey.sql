@@ -1,15 +1,13 @@
 (SELECT
   block.id,
   block.geom,
+  <% if (is_utf_grid) { %>
+  ST_AsGeoJSON(block.geom) AS geojson,
+  <% } %>
   CASE
     WHEN (block.is_available AND reservation.id IS NULL) THEN 'available'
     ELSE 'unavailable'
-  END AS survey_type,
-  CASE
-    WHEN reservation.id IS NOT NULL THEN 'reserved'
-    WHEN NOT block.is_available THEN 'unavailable'
-    ELSE 'none'
-  END AS restriction
+  END AS survey_type
   FROM survey_blockface AS block
   INNER JOIN survey_territory AS turf
     ON block.id = turf.blockface_id

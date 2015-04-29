@@ -14,7 +14,8 @@ module.exports = {
     addTileLayer: addTileLayer,
     addGridLayer: addGridLayer,
     fitBounds: fitBounds,
-    getDomMapAttribute: getDomMapAttribute
+    getDomMapAttribute: getDomMapAttribute,
+    hideCrosshairs: hideCrosshairs
 };
 
 function create(options) {
@@ -140,9 +141,13 @@ function initLegend($controlsContainer, map) {
 
 function initCrosshairs(domId) {
     var $map = $('#' + domId),
-        $hHair = $('<div style="position:absolute; left:0; right:0; bottom:50%; height:1px; background:black"></div>'),
-        $vHair = $('<div style="position:absolute; right:50%; width:1px; top:0; bottom:0; background:black"></div>');
+        $hHair = $('<div class="crosshair-x"></div>'),
+        $vHair = $('<div class="crosshair-y"></div>');
     $map.append([$hHair, $vHair]);
+}
+
+function hideCrosshairs() {
+    $('.crosshair-x, .crosshair-y').hide();
 }
 
 function addTileLayer(map, url) {
@@ -154,12 +159,15 @@ function addTileLayer(map, url) {
     return layer;
 }
 
-function addGridLayer(map, url) {
-    var gridUrl = url || getDomMapAttribute('grid-url'),
+function addGridLayer(map, options) {
+    options = options || {};
+    var gridUrl = options.url || getDomMapAttribute('grid-url'),
         layer = L.utfGrid(gridUrl, {
             minZoom: zoom.MIN,
             maxZoom: zoom.MAX,
-            useJsonP: false
+            useJsonP: false,
+            crosshairs: options.crosshairs || false,
+            pointerCursor: !options.crosshairs
         });
     map.addLayer(layer);
     return layer;

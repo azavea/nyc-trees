@@ -206,9 +206,10 @@
         border-bottom: 2px solid $gray-lightest;
         margin-bottom: 1rem;
     }
-    legend {
+    legend, .field-title {
         font-size: $font-size-h5;
         font-weight: 600;
+        color: $legend-color;
         margin: 0;
         border: none;
     }

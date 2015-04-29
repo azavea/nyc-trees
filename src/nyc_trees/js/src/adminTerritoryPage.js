@@ -90,7 +90,7 @@ function initAllLayers(blockDataAndTilerUrls) {
     var blockDataList = blockDataAndTilerUrls.blockDataList,
         urls = blockDataAndTilerUrls.tilerUrls;
     tileLayer = mapModule.addTileLayer(territoryMap, urls.tile_url);
-    grid = mapModule.addGridLayer(territoryMap, urls.grid_url);
+    grid = mapModule.addGridLayer(territoryMap, { url: urls.grid_url });
 
     blockDataListForRevert = blockDataList;
     initSelectionLayer(blockDataList);

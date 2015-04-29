@@ -63,12 +63,12 @@
             <div class="dropdown text-right">
                 <button class="btn btn-default dropdown-toggle"
                         type="button"
-                        id="group-detail-event-info-submenu"
+                        id="group-detail-event-info-submenu-{{ event.id }}"
                         data-toggle="dropdown"
                         aria-expanded="true">
                     <span class="caret"></span>
                 </button>
-                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="group-detail-event-info-submenu">
+                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="group-detail-event-info-submenu-{{ event.id }}">
                     <li><a role="menuitem" tabindex="-1" href="{{ event.get_absolute_url }}">View event</a></li>
                     <li><a role="menuitem" tabindex="-1" href="{% url 'event_edit' group_slug=event.group.slug event_slug=event.slug %}">Edit details</a></li>
                     <li><a role="menuitem" tabindex="-1" href="{% url 'event_email' group_slug=event.group.slug event_slug=event.slug %}">Email attendees</a></li>

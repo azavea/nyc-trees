@@ -11,7 +11,7 @@
 
 {% block registration_content %}
 
-<form method="post" action="">
+<form method="post" action="{{ request.path }}">
     {% csrf_token %}
 
     {% include "core/partials/non_field_errors.html" %}

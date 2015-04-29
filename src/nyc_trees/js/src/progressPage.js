@@ -78,7 +78,7 @@ function loadLayers($mode) {
     }
     if (tileUrl) {
         tileLayer = mapModule.addTileLayer(progressMap, tileUrl);
-        grid = mapModule.addGridLayer(progressMap, gridUrl);
+        grid = mapModule.addGridLayer(progressMap, { url: gridUrl });
 
         createSelectableLayer();
 
@@ -101,7 +101,7 @@ function loadLayers($mode) {
                         progressMap.removeLayer(grid);
 
                         tileLayer = mapModule.addTileLayer(progressMap, feature.properties.tileUrl);
-                        grid = mapModule.addGridLayer(progressMap, feature.properties.gridUrl);
+                        grid = mapModule.addGridLayer(progressMap, { url: feature.properties.gridUrl});
 
                         createSelectableLayer();
 

@@ -9,39 +9,40 @@
 
     <div class="map-sidebar">
         <div class="map-sidebar-context block">
-            <h2>Progress
-                <div class="dropdown pull-right">
-                    <button type="button" class="btn btn-default dropdown-toggle progress-toggle" data-toggle="dropdown">
-                        All Users
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                        <li class="text-right" role="presentation">
-                            <a role="menuitem" href="#all"
-                               data-tile-url="{{ layer_all.tile_url }}"
-                               data-grid-url="{{ layer_all.grid_url }}"
-                            >All Users</a>
-                        </li>
+            <h2 class="pull-left">Progress</h2>
+            <div class="dropdown pull-right">
+                <button type="button" class="btn btn-default dropdown-toggle progress-toggle" data-toggle="dropdown">
+                    All Users
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                    <li class="text-right" role="presentation">
+                        <a role="menuitem" href="#all"
+                           data-tile-url="{{ layer_all.tile_url }}"
+                           data-grid-url="{{ layer_all.grid_url }}"
+                        >All Users</a>
+                    </li>
 {% comment %}
 TODO: Uncomment before May 19
-                        {% if request.user.is_authenticated %}
-                        <li class="text-right" role="presentation">
-                            <a role="menuitem" href="#my"
-                               data-tile-url="{{ layer_my.tile_url }}"
-                               data-grid-url="{{ layer_my.grid_url }}"
-                               {% if bounds %}data-bounds="{{ bounds }}"{% endif %}
-                            >My Progress</a>
-                        </li>
-                        {% endif %}
+                    {% if request.user.is_authenticated %}
+                    <li class="text-right" role="presentation">
+                        <a role="menuitem" href="#my"
+                           data-tile-url="{{ layer_my.tile_url }}"
+                           data-grid-url="{{ layer_my.grid_url }}"
+                           {% if bounds %}data-bounds="{{ bounds }}"{% endif %}
+                        >My Progress</a>
+                    </li>
+                    {% endif %}
 {% endcomment %}
-                        <li class="text-right" role="presentation">
-                            <a role="menuitem" href="#group"
-                               data-geojson-url="{% url 'group_borders' %}"
-                            >Groups</a>
-                        </li>
-                    </ul>
-                </div>
-            </h2>
-            {% include 'survey/partials/progress_legend.html' %}
+                    <li class="text-right" role="presentation">
+                        <a role="menuitem" href="#group"
+                           data-geojson-url="{% url 'group_borders' %}"
+                        >Groups</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="clear">
+                {% include 'survey/partials/progress_legend.html' %}
+            </div>
         </div>
         <div class="action-bar" id="action-bar"></div>
     </div>

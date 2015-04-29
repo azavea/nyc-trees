@@ -23,21 +23,23 @@
 <p>You can also download a PDF of the training materials <a target="_blank" href="{{ STATIC_URL }}training/TreesCount2015Training.pdf">here.</a></p>
 
 {% for step_info in training_steps %}
-<a {% if step_info.is_visitable %}href="{{ step_info.step.pure_url }}"{% endif %}
-   class="training block item {% if not step_info.is_visitable %}inactive{% endif %}">
-    <div class="row">
-        <div class="col-xs-8">
-            <h5>{{ step_info.step.description }}</h5>
-        </div>
-        <div class="col-xs-4 text-right">
-          {% if step_info.is_complete %}
-          <i class="icon-check h4"></i>
-          {% elif step_info.is_next %}
-            <button class="btn-primary btn">Start</button>
-          {% endif %}
-        </div>
+<div class="row training block item {% if not step_info.is_visitable %}inactive{% endif %}">
+    <div class="col-xs-8">
+        <h5>
+            <a {% if step_info.is_visitable %}href="{{ step_info.step.pure_url }}"{% endif %}>
+                {{ step_info.step.description }}</a>
+        </h5>
     </div>
-</a>
+    <div class="col-xs-4 text-right">
+        <a {% if step_info.is_visitable %}href="{{ step_info.step.pure_url }}"{% endif %}>
+            {% if step_info.is_complete %}
+            <i class="icon-check h4"></i>
+            {% elif step_info.is_next %}
+            <span class="btn-primary btn">Start</span>
+            {% endif %}
+        </a>
+    </div>
+</div>
 {% endfor %}
 {% if user.online_training_complete %}
 <a href="{% url 'groups_to_follow' %}"
