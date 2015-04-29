@@ -42,8 +42,11 @@ function onModeChanged(e) {
         return;
     }
     $mode = $(e.currentTarget);
+    if ($mode.hasClass('js-my-progress') && !$mode.attr('href')) {
+        return;
+    }
 
-    // Shown chosen mode on dropdown button
+    // Show chosen mode on dropdown button
     $mode.parents(dom.modeDropdown).find(dom.modeButton).text($mode.text());
 
     // Show appropriate legend entries

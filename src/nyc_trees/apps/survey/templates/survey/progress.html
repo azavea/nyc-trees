@@ -21,18 +21,21 @@
                            data-grid-url="{{ layer_all.grid_url }}"
                         >All Users</a>
                     </li>
-{% comment %}
-TODO: Uncomment before May 19
                     {% if request.user.is_authenticated %}
                     <li class="text-right" role="presentation">
-                        <a role="menuitem" href="#my"
-                           data-tile-url="{{ layer_my.tile_url }}"
-                           data-grid-url="{{ layer_my.grid_url }}"
-                           {% if bounds %}data-bounds="{{ bounds }}"{% endif %}
+                        <a role="menuitem" class="js-my-progress"
+                           {% if bounds %}
+                               href="#my"
+                               data-tile-url="{{ layer_my.tile_url }}"
+                               data-grid-url="{{ layer_my.grid_url }}"
+                               data-bounds="{{ bounds }}"
+                           {% else %}
+                               style="color: #bbb"
+                               title="Map a block edge to enable"
+                           {% endif %}
                         >My Progress</a>
                     </li>
                     {% endif %}
-{% endcomment %}
                     <li class="text-right" role="presentation">
                         <a role="menuitem" href="#group"
                            data-geojson-url="{% url 'group_borders' %}"
