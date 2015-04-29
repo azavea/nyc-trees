@@ -24,7 +24,7 @@
             </div>
         </div>
         <div id="select-teammate" class="hidden">
-            <p>Is someone helping you count trees? Enter their user name.</p>
+            <p>Is someone helping you count trees? Enter their user name. If not, click Next.</p>
             <div id="teammate-list">
                 {% include "event/partials/teammates.html" %}
             </div>
@@ -52,7 +52,7 @@
                 <input type="submit" data-class="fake-submit" class="hidden">
 
                 <div class="field">
-                    <label for="distance_to_end">Distance to End</label>
+                    <label for="distance_to_end">Distance to End <small>(decimal feet)</small></label>
                     <input id="distance_to_end" class="form-control" required type="number" min="0" step="any" placeholder="ft">
                 </div>
             </form>

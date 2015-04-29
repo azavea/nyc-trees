@@ -91,7 +91,7 @@ CURB_CHOICES = (
 STATUS_CHOICES = (
     ('Alive', 'Tree is alive'),
     ('Dead', 'Tree is dead'),
-    ('Stump', 'Stump < 24"'),
+    ('Stump', 'Stump (<24" tall)'),
 )
 
 
