@@ -24,7 +24,8 @@ var gulp = require('gulp'),
     del = require('del'),
     shell = require('gulp-shell'),
     runSequence = require('run-sequence'),
-    jshint = require('gulp-jshint');
+    jshint = require('gulp-jshint'),
+    autoprefixer = require('autoprefixer-core');
 
 var args = minimist(process.argv.slice(2),
                     {default: {debug: false}}),
@@ -199,10 +200,19 @@ function browserifyTask(bundler) {
 }
 
 gulp.task('sass', ['clean'], function() {
-    return gulp.src('sass/main.scss')
-        .pipe(sourcemaps.init())
-        .pipe(sass({style: 'compressed'}))
-        .pipe(sourcemaps.write('./'))
+    var autoprefixProcessor = autoprefixer({ browsers: ['> 1% in US'] });
+
+    return sass('sass/main.scss', { sourcemap: true })
+        .on('error', function (err) {
+            console.error('Sass error', err.message);
+        })
+        // For debug mode we just use autoprefixer, but for production mode we
+        // also minify our CSS with csswring
+        .pipe(gulpif(args.debug, postcss([autoprefixProcessor])))
+        .pipe(gulpif(! args.debug, postcss([autoprefixProcessor, csswring])))
+        .pipe(sourcemaps.write('./', {
+            includeContent: true,
+        }))
         .pipe(gulp.dest(cssDir));
 });
 
