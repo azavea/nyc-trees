@@ -240,7 +240,7 @@ function getSectionToggleHandler(fieldName) {
     return function () {
         var $form = $(this).closest('form');
         var $sections = $form.find('[data-' + fieldName + ']');
-        var currentStatus = $form.find('input[name="' + fieldName + '"]:checked').val();
+        var currentStatus = $form.find('input[name="' + fieldName + '"]:checked').val() || "";
 
         $sections.addClass('hidden');
         $sections.filter('[data-' + fieldName + '="' + currentStatus + '"]').removeClass('hidden');
@@ -252,6 +252,9 @@ $(dom.treeFormcontainer).on('change', 'input[name="status"]', getSectionToggleHa
 
 // When "Tree Guard" is changed, we should show/hide the appropriate sections
 $(dom.treeFormcontainer).on('change', 'input[name="guard_installation"]', getSectionToggleHandler('guard_installation'));
+
+// When "No Problems" is changed, we should show/hide the appropriate sections
+$(dom.treeFormcontainer).on('change', 'input[name="problems"][value="None"]', getSectionToggleHandler('problems'));
 
 // Helper for checking the validity of forms
 function checkFormValidity($forms) {
