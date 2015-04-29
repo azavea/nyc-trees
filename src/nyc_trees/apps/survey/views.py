@@ -420,12 +420,49 @@ def _get_reservations_to_cancel(ids, user):
         .current()
 
 
-def blockface(request, blockface_id):
+def fetch_user_blockface(request, blockface_id):
+    """Return blockface if user has reserved it"""
     blockface = get_object_or_404(Blockface, id=blockface_id)
+    reservation = BlockfaceReservation.objects.filter(
+                      blockface=blockface,
+                      user=request.user).current()
+
+    if reservation.exists():
+        return _blockface_context(blockface)
+
+    return {
+        'success': False,
+        'message': 'User has not reserved this blockface'
+    }
+
+
+def fetch_event_blockface(request, event_slug, blockface_id):
+    """Return blockface if it is part of this event"""
+    blockface = get_object_or_404(Blockface, id=blockface_id)
+    event = get_object_or_404(Event, slug=event_slug)
+
+    if not event.in_progress:
+        return {
+            'success': False,
+            'message': 'Event is not in progress'
+        }
+
+    if not Territory.objects.filter(group=request.group,
+                                    blockface=blockface).exists():
+        return {
+            'success': False,
+            'message': 'Blockface is not a part of this event'
+        }
+
+    return _blockface_context(blockface)
+
+
+def _blockface_context(blockface):
     return {
         'id': blockface.id,
         'extent': blockface.geom.extent,
-        'geojson': blockface.geom.geojson
+        'geojson': blockface.geom.geojson,
+        'success': True
     }
 
 

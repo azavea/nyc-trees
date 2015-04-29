@@ -26,14 +26,31 @@ function getLatLngs(geom) {
     }
 }
 
-function fetchBlockface(blockfaceId) {
+function fetchBlockface(blockfaceId, options) {
     var defer = $.Deferred();
+
+    options = $.extend({}, {
+        // Default URL is current page + "/blockedge/<id>/".
+        //
+        // Keep in sync with apps/survey/urls/survey.py
+        //
+        // On survey page this should be:
+        //     /survey/blockedge/<id>
+        // On event survey page this should be:
+        //     /survey/<group>/event/<event>/blockedge/<id>/
+        url: window.location.pathname + 'blockedge/' + blockfaceId + '/'
+    });
+
     if (!blockfaceId) {
         defer.reject();
     } else {
         // NOTE: This has a hard coded url that must be kept in sync with
         // apps/survey/urls/blockface.py
-        $.getJSON('/blockedge/' + blockfaceId + '/', function(blockface) {
+        $.getJSON(options.url).done(function(blockface) {
+            if (!blockface.success) {
+                defer.reject();
+                return;
+            }
             var e = blockface.extent,
                 sw = L.latLng(e[1], e[0]),
                 ne = L.latLng(e[3], e[2]),
@@ -43,6 +60,8 @@ function fetchBlockface(blockfaceId) {
                 bounds: bounds,
                 geojson: blockface.geojson
             });
+        }).fail(function() {
+            defer.reject();
         });
     }
     return defer.promise();
@@ -78,7 +97,7 @@ module.exports = {
 
     getBlockfaceIdFromUrl: function() {
         // Assumes that the hash contains only a blockface ID
-        return window.location.hash.substring(1);
+        return parseInt(window.location.hash.substring(1), 10);
     },
 
     parseGeoJSON: parseGeoJSON,

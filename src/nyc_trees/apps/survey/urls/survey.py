@@ -8,7 +8,8 @@ from django.conf.urls import patterns, url
 from apps.survey.routes import (survey, survey_from_event,
                                 flag_survey, survey_detail,
                                 confirm_survey, confirm_survey_from_event,
-                                release_blockface, redirect_to_treecorder)
+                                release_blockface, redirect_to_treecorder,
+                                fetch_user_blockface, fetch_event_blockface)
 
 
 # These URLs have the prefix 'survey/'
@@ -22,6 +23,15 @@ urlpatterns = patterns(
         confirm_survey_from_event, name='confirm_survey_from_event'),
 
     url(r'^treecorder/$', redirect_to_treecorder, name='treecorder'),
+
+    # Keep in sync with js/src/lib/mapUtil.js
+    url(r'^blockedge/(?P<blockface_id>\d+)/$', fetch_user_blockface,
+        name='fetch_user_blockface'),
+
+    # Keep in sync with js/src/lib/mapUtil.js
+    url(r'^(?P<group_slug>[\w-]+)/event/(?P<event_slug>[\w-]+)'
+        r'/blockedge/(?P<blockface_id>\d+)/$',
+        fetch_event_blockface, name='fetch_event_blockface'),
 
     # main endpoint (independent / from event)
     url(r'^$', survey, name='survey'),

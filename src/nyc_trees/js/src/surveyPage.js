@@ -199,9 +199,11 @@ $(dom.btnToTeammate).click(function(e) {
     showSelectTeammate();
 });
 
-mapUtil.fetchBlockface(blockfaceId).done(function(blockface) {
-    selectedLayer.addBlockface(blockface);
-});
+if (blockfaceId) {
+    mapUtil.fetchBlockface(blockfaceId).done(function(blockface) {
+        selectedLayer.addBlockface(blockface);
+    });
+}
 
 // There is no attribute for requiring "one or more" of a group of checkboxes to
 // be selected, so we have to handle it ourselves.

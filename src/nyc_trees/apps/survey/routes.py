@@ -122,7 +122,13 @@ flag_survey = do(login_required,
 release_blockface = do(login_required,
                        route(POST=do(json_api_call, v.release_blockface)))
 
-blockface = route(GET=do(json_api_call, v.blockface))
+fetch_user_blockface = route(GET=individual_mapper_do(
+                             json_api_call, v.fetch_user_blockface))
+
+fetch_event_blockface = route(GET=do(
+                              login_required,
+                              group_request,
+                              json_api_call, v.fetch_event_blockface))
 
 redirect_to_treecorder = route(GET=do(login_required,
                                       v.redirect_to_treecorder))
