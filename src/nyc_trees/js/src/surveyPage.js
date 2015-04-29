@@ -111,12 +111,14 @@ var dom = {
     formTemplate = Handlebars.compile($(dom.treeFormTemplate).html()),
 
     blockfaceId = mapUtil.getBlockfaceIdFromUrl(),
-    blockfaceMap = mapModule.create({
+    mapObjects = mapModule.createAndGetControls({
         legend: false,
         search: false,
         geolocation: true,
         crosshairs: true
     }),
+    blockfaceMap = mapObjects.map,
+    zoomControl = mapObjects.zoomControl,
 
     endPointLayers = new L.FeatureGroup(),
     defaultStyle = {
@@ -340,6 +342,13 @@ $(dom.btnNext).click(function(e) {
     $(dom.surveyPage).toggleClass('hidden');
     $(dom.actionBar).addClass('expanded');
     mapInteractionEnabled = false;
+    zoomControl.removeFrom(blockfaceMap);
+    blockfaceMap.dragging.disable();
+    blockfaceMap.touchZoom.disable();
+    blockfaceMap.doubleClickZoom.disable();
+    blockfaceMap.scrollWheelZoom.disable();
+    blockfaceMap.boxZoom.disable();
+    blockfaceMap.keyboard.disable();
     blockfaceMap.removeLayer(grid);
     mapModule.hideCrosshairs();
 });

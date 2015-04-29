@@ -11,6 +11,7 @@ var zoom = require('./lib/mapUtil').ZOOM,
 module.exports = {
     SATELLITE: SATELLITE,
     create: create,
+    createAndGetControls: createAndGetControls,
     addTileLayer: addTileLayer,
     addGridLayer: addGridLayer,
     fitBounds: fitBounds,
@@ -19,6 +20,10 @@ module.exports = {
 };
 
 function create(options) {
+    return createAndGetControls(options).map;
+}
+
+function createAndGetControls(options) {
     options = $.extend({
         domId: 'map'
     }, options);
@@ -75,7 +80,7 @@ function create(options) {
         zoomControl.removeFrom(map);
     }
 
-    return map;
+    return {map: map, zoomControl: zoomControl};
 }
 
 function fitBounds(map, bounds) {
