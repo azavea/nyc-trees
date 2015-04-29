@@ -81,8 +81,10 @@ function create(options) {
 function fitBounds(map, bounds) {
     // GeoDjango bounds are [xmin, ymin, xmax, ymax]
     // Leaflet wants [ [ymin, xmin], [ymax, xmax] ]
-    var b = [[bounds[1], bounds[0]], [bounds[3], bounds[2]]];
+    var b = [[bounds[1], bounds[0]], [bounds[3], bounds[2]]],
+        zooming = (map.getZoom() !== map.getBoundsZoom(b));
     map.fitBounds(b);
+    return zooming;
 }
 
 function isRetinaDevice() {
@@ -150,12 +152,14 @@ function hideCrosshairs() {
     $('.crosshair-x, .crosshair-y').hide();
 }
 
-function addTileLayer(map, url) {
-    var tileUrl = url || getDomMapAttribute('tile-url'),
+function addTileLayer(map, options) {
+    options = options || {};
+    var tileUrl = options.url || getDomMapAttribute('tile-url'),
         layer = L.tileLayer(tileUrl, {
             minZoom: zoom.MIN,
             maxZoom: zoom.MAX
-        }).addTo(map);
+        });
+    _addLayer(map, layer, options.waitForZoom);
     return layer;
 }
 
@@ -169,8 +173,26 @@ function addGridLayer(map, options) {
             crosshairs: options.crosshairs || false,
             pointerCursor: !options.crosshairs
         });
-    map.addLayer(layer);
+    _addLayer(map, layer, options.waitForZoom);
     return layer;
+}
+
+function _addLayer(map, layer, waitForZoom) {
+    if (waitForZoom) {
+        _addAfterZoom(map, layer);
+    } else {
+        map.addLayer(layer);
+    }
+}
+
+function _addAfterZoom(map, layer) {
+    // Add layer to map after zoom animation completes.
+    // (Otherwise spurious tile requests will be issued at the old zoom level.)
+    function addLayer() {
+        map.addLayer(layer);
+        map.off('zoomend', addLayer);
+    }
+    map.on('zoomend', addLayer);
 }
 
 function getDomMapAttribute(dataAttName, domId) {
