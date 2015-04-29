@@ -26,6 +26,18 @@ function getLatLngs(geom) {
     }
 }
 
+function blockfaceResponseToFetchResult(blockface) {
+    var e = blockface.extent,
+        sw = L.latLng(e[1], e[0]),
+        ne = L.latLng(e[3], e[2]),
+        bounds = L.latLngBounds(sw, ne);
+    return {
+        id: blockface.id,
+        bounds: bounds,
+        geojson: blockface.geojson
+    };
+}
+
 function fetchBlockface(blockfaceId) {
     var defer = $.Deferred();
     if (!blockfaceId) {
@@ -34,16 +46,24 @@ function fetchBlockface(blockfaceId) {
         // NOTE: This has a hard coded url that must be kept in sync with
         // apps/survey/urls/blockface.py
         $.getJSON('/blockedge/' + blockfaceId + '/', function(blockface) {
-            var e = blockface.extent,
-                sw = L.latLng(e[1], e[0]),
-                ne = L.latLng(e[3], e[2]),
-                bounds = L.latLngBounds(sw, ne);
-            defer.resolve({
-                id: blockface.id,
-                bounds: bounds,
-                geojson: blockface.geojson
-            });
+            defer.resolve(blockfaceResponseToFetchResult(blockface));
         });
+    }
+    return defer.promise();
+}
+
+function fetchBlockfaceNearLatLng(latLng) {
+    var defer = $.Deferred();
+    if (!latLng || !latLng.lat || !latLng.lng) {
+        defer.reject();
+    } else {
+        // NOTE: This has a hard coded url that must be kept in sync with
+        // apps/survey/urls/blockface.py
+        $.getJSON('/blockedge/near/', { lat: latLng.lat, lng: latLng.lng },
+            function(blockface) {
+                defer.resolve(blockfaceResponseToFetchResult(blockface));
+            }
+        );
     }
     return defer.promise();
 }
@@ -85,5 +105,6 @@ module.exports = {
     getLatLngs: getLatLngs,
     styledCircleMarker: styledCircleMarker,
     styledStreetConfirmation: styledStreetConfirmation,
-    fetchBlockface: fetchBlockface
+    fetchBlockface: fetchBlockface,
+    fetchBlockfaceNearLatLng: fetchBlockfaceNearLatLng
 };

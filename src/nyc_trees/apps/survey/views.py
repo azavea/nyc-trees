@@ -11,13 +11,13 @@ from pytz import timezone
 from celery import chain
 
 from django.conf import settings
-from django.contrib.gis.geos import GeometryCollection
+from django.contrib.gis.geos import Point, GeometryCollection
 from django.core.exceptions import ValidationError, PermissionDenied
 from django.core.urlresolvers import reverse
 from django.db import transaction, connection
 from django.db.models import Prefetch
 from django.http import (HttpResponse, HttpResponseForbidden,
-                         HttpResponseBadRequest)
+                         HttpResponseBadRequest, Http404)
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.timezone import now
 
@@ -420,13 +420,34 @@ def _get_reservations_to_cancel(ids, user):
         .current()
 
 
-def blockface(request, blockface_id):
-    blockface = get_object_or_404(Blockface, id=blockface_id)
+def _blockface_context(blockface):
     return {
         'id': blockface.id,
         'extent': blockface.geom.extent,
         'geojson': blockface.geom.geojson
     }
+
+
+def blockface(request, blockface_id):
+    blockface = get_object_or_404(Blockface, id=blockface_id)
+    return _blockface_context(blockface)
+
+
+def blockface_near_point(request):
+    p = Point(float(request.GET.get('lng', 0)),
+              float(request.GET.get('lat', 0)),
+              srid=4326)
+
+    # The size of the distance filter was chosen through trial and
+    # error by testing tap precision on a mobile device
+    qs = Blockface.objects.filter(geom__dwithin=(p, 0.0002))\
+                          .distance(p)\
+                          .order_by('distance')
+    blockfaces = qs[:1]  # We only want the closest blockface
+    if blockfaces:
+        return _blockface_context(blockfaces[0])
+    else:
+        raise Http404
 
 
 def _validate_event_and_group(request, event_slug):
