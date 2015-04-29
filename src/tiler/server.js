@@ -25,13 +25,13 @@ var Windshaft = require('windshaft'),
     styles = files('./style'),
 
     interactivity = {
-        group_territory_survey: 'id,survey_type,restriction',
+        group_territory_survey: 'id,survey_type,geojson',
         group_territory_admin: 'id,survey_type,turf_group_id',
         progress: 'id',
         user_progress: 'id',
         group_progress: 'id',
         user_reservable: 'id,group_id,group_slug,survey_type,restriction',
-        user_reservations: 'id'
+        user_reservations: 'id,survey_type,geojson'
     },
 
     config = {
