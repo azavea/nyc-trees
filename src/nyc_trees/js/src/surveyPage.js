@@ -359,6 +359,12 @@ $(dom.addTree).click(function (){
         $treeForms.collapse('hide');
         $newForm.collapse('show');
 
+        $(dom.treeFormcontainer).one('hidden.bs.collapse', function(e) {
+            // Scroll to the first field for easier data entry
+            var $firstField = $newForm.find('input[name="distance_to_tree"]');
+            $firstField.focus();
+        });
+
         $(dom.collapseButton).removeClass('hidden');
     }
 });
