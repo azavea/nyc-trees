@@ -13,7 +13,7 @@
         <legend>Measurements</legend>
         <div class="field">
             <label for="distance_to_tree">Distance to Tree <small>(decimal feet)</small></label>
-            <input class="form-control" name="distance_to_tree" id="distance_to_tree" required type="number" min="0" step="any" placeholder="ft">
+            <input class="form-control" name="distance_to_tree" id="distance_to_tree" required type="number" min="0" max="100000" step="any" placeholder="ft">
         </div>
     </fieldset>
 
@@ -28,7 +28,7 @@
             <legend>Stump Size</legend>
             <div class="stump_diameter field">
                 <label>Stump Diameter <small>(inches)</small></label>
-                <input class="form-control" name="stump_diameter" id="stump_diameter" required type="number" min="1" step="1" placeholder="in">
+                <input class="form-control" name="stump_diameter" id="stump_diameter" required type="number" min="1" max="2000" step="1" placeholder="in">
             </div>
         </fieldset>
     </div>
@@ -39,7 +39,7 @@
             <legend>Tree Trunk</legend>
             <div class="field">
                 <label>Circumference <small>(inches)</small></label>
-                <input class="form-control" name="circumference" required type="number" min="1" step="1" placeholder="in">
+                <input class="form-control" name="circumference" required type="number" min="1" max="2000" step="1" placeholder="in">
             </div>
         </fieldset>
     </div>
@@ -49,7 +49,7 @@
             <legend>Tree Trunk</legend>
             <div class="field">
                 <label for="circumference">Circumference <small>(inches)</small></label>
-                <input class="form-control" name="circumference" id="circumference" required type="number" min="1" step="1" placeholder="in">
+                <input class="form-control" name="circumference" id="circumference" required type="number" min="1" max="2000" step="1" placeholder="in">
             </div>
         </fieldset>
         <fieldset>
