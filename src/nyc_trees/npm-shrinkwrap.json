@@ -5147,6 +5147,11 @@
       "from": "https://registry.npmjs.org/leaflet-draw/-/leaflet-draw-0.2.3.tgz",
       "resolved": "https://registry.npmjs.org/leaflet-draw/-/leaflet-draw-0.2.3.tgz"
     },
+    "leaflet-geometryutil": {
+      "version": "0.3.2",
+      "from": "https://registry.npmjs.org/leaflet-geometryutil/-/leaflet-geometryutil-0.3.2.tgz",
+      "resolved": "https://registry.npmjs.org/leaflet-geometryutil/-/leaflet-geometryutil-0.3.2.tgz"
+    },
     "merge-stream": {
       "version": "0.1.6",
       "from": "https://registry.npmjs.org/merge-stream/-/merge-stream-0.1.6.tgz",
