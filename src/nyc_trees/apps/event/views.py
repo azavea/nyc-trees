@@ -232,6 +232,10 @@ def edit_event_page(request, event_slug):
     # only datetime form fields.
     tz = get_current_timezone()
     event = get_object_or_404(Event, group=request.group, slug=event_slug)
+
+    if event.is_past():
+        return HttpResponseForbidden()
+
     form_context = {
         'date': event.begins_at.astimezone(tz),
         'begins_at_time': event.begins_at.astimezone(tz),
@@ -247,6 +251,10 @@ def edit_event_page(request, event_slug):
 
 def edit_event(request, event_slug):
     event = get_object_or_404(Event, group=request.group, slug=event_slug)
+
+    if event.is_past():
+        return HttpResponseForbidden()
+
     form = EventForm(request.POST.copy(), instance=event)
     is_valid = _process_event_form(form, request, event)
 
@@ -285,6 +293,9 @@ def event_map_poll(request, event_slug):
 def register_for_event(request, event_slug):
     user = request.user
     event = get_object_or_404(Event, group=request.group, slug=event_slug)
+    if event.is_past():
+        return HttpResponseForbidden()
+
     if event.has_space_available and not user_is_rsvped_for_event(user, event):
         EventRegistration.objects.create(user=user, event=event)
         relative_event_url = reverse('event_detail', kwargs={
