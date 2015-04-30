@@ -17,7 +17,7 @@ from django.core.urlresolvers import reverse
 from django.db import transaction, connection
 from django.db.models import Prefetch
 from django.http import (HttpResponse, HttpResponseForbidden,
-                         HttpResponseBadRequest, Http404)
+                         HttpResponseBadRequest)
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.timezone import now
 
@@ -447,7 +447,9 @@ def blockface_near_point(request):
     if blockfaces:
         return _blockface_context(blockfaces[0])
     else:
-        raise Http404
+        return {
+            'error': 'Block edge not found near lat:%f lon:%f' % (p.y, p.x)
+        }
 
 
 def _validate_event_and_group(request, event_slug):

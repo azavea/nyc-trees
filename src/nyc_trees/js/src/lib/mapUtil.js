@@ -27,6 +27,9 @@ function getLatLngs(geom) {
 }
 
 function blockfaceResponseToFetchResult(blockface) {
+    if (blockface.error) {
+        return blockface;
+    }
     var e = blockface.extent,
         sw = L.latLng(e[1], e[0]),
         ne = L.latLng(e[3], e[2]),
