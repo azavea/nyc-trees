@@ -81,15 +81,6 @@ var $current = $(dom.currentReservations),
 
     grid = mapModule.addGridLayer(reservationMap);
 
-var progress = new SavedState({
-    key: 'reserve-blockfaces',
-    validate: function(state) {
-        if (!$.isPlainObject(state.selections)) {
-            throw new Error('Expected `state.selections` to contain blockfaces');
-        }
-    }
-});
-
 var selectedLayer = new SelectableBlockfaceLayer(reservationMap, grid, {
     onAdd: function(gridData, latlng) {
         if (selectedBlockfacesCount >= blockfaceLimit) {
