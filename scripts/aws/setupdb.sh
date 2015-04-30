@@ -28,9 +28,6 @@ if ! envdir /etc/nyc-trees.d/env /opt/app/manage.py flag -l | grep full_access; 
     envdir /etc/nyc-trees.d/env /opt/app/manage.py flag full_access --create
 fi
 
-# Create training flatpages
-envdir /etc/nyc-trees.d/env /opt/app/manage.py make_training_flatpages || true
-
 # If a domain is not provided, default to treescount.nycgovparks.org
 DJANGO_SITE_DOMAIN=${DJANGO_SITE_DOMAIN:-treescount.nycgovparks.org}
 
