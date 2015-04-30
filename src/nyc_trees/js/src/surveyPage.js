@@ -318,6 +318,8 @@ function checkFormValidity($forms) {
         } else {
             triggerValidationMesasages($elemToFocus, $forms, $disabledElems);
         }
+    } else {
+        $disabledElems.attr('disabled', false);
     }
 
     return valid;
