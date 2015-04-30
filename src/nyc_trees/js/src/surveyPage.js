@@ -73,6 +73,10 @@ var dom = {
         addTree: '#another-tree',
         submitSurvey: '#submit-survey',
 
+        deleteTree: '[data-action="delete"]',
+        deleteTreePopup: '#delete-tree-popup',
+        deleteTreeConfirm: '#delete-tree-confirm',
+
         quitPopup: '#quit-popup',
         quitShowPopup: '#cant-map',
         quitReason: '#quit-reason',
@@ -360,6 +364,11 @@ $(dom.addTree).click(function (){
         $newForm.collapse('show');
 
         $(dom.collapseButton).removeClass('hidden');
+
+        // Hide delete tree button on all but last form
+        var $deleteButtons = $(dom.treeFormcontainer).find(dom.deleteTree);
+        $deleteButtons.addClass('hidden');
+        $deleteButtons.last().removeClass('hidden');
     }
 });
 
@@ -377,7 +386,55 @@ $(dom.treeFormcontainer).on('hide.bs.collapse', function(e) {
     $toggle.removeClass('icon-down-open-big').addClass('icon-right-open-big');
 });
 
-function getTreeData(i, form) {
+$(dom.treeFormcontainer).on('click', dom.deleteTree, function(e) {
+    // We assume that we are dealing with the last tree form, since we only
+    // show the delete button for the last tree
+    var $lastTreeForm = $(dom.treeFormcontainer).find(dom.treeForms).last(),
+        treeData = getTreeData($lastTreeForm),
+
+        showWarning = false;
+
+    for (var key in treeData) {
+        if (treeData[key]) {
+            showWarning = true;
+        }
+    }
+
+    if (showWarning) {
+        $(dom.deleteTreePopup).modal('show');
+    } else {
+        deleteLastTree();
+    }
+});
+
+$(dom.deleteTreeConfirm).on('click', deleteLastTree);
+
+function deleteLastTree() {
+    var $lastTreeForm = $(dom.treeForms).last(),
+        $lastTreeHeader = $lastTreeForm.prev();
+
+    $lastTreeForm.remove();
+    $lastTreeHeader.remove();
+
+    // A little bit of housekeeping - we need to undo the effects of adding
+    // a new tree form, with some special cases if there is only one tree left
+    var $deleteButtons = $(dom.deleteTree);
+    $deleteButtons.addClass('hidden');
+
+    if ($deleteButtons.length > 1) {
+        $deleteButtons.last().removeClass('hidden');
+    }
+
+    var $collapseButtons = $(dom.collapseButton);
+    if ($collapseButtons.length == 1) {
+        $collapseButtons.addClass('hidden');
+    }
+
+    var $newLastForm = $(dom.treeForms).last();
+    $newLastForm.collapse('show');
+}
+
+function getTreeData(form) {
     var obj = {},
         $form = $(form),
         wasCollapsed = $form.hasClass('collapse');
@@ -439,7 +496,9 @@ function submitSurveyWithTrees() {
         // Disable submit button to prevent double POSTs
         $(dom.submitSurvey).off('click', submitSurveyWithTrees);
 
-        var treeData = $treeForms.map(getTreeData).get();
+        var treeData = $treeForms.map(function(i, form) {
+            return getTreeData(form);
+        }).get();
 
         // Only the last tree has "distance_to_end", so it gets special handling
         treeData[treeData.length - 1].distance_to_end = $(dom.distanceToEnd).val();
