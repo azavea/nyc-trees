@@ -8,16 +8,12 @@ var $ = require('jquery'),
 
 require('./lib/mapHelp');
 
-// Extends the leaflet object
-require('leaflet-utfgrid');
-
 var progressMap = mapModule.create({
         geolocation: true,
         legend: true,
         search: true
     }),
     tileLayer = null,
-    grid = null,
     selectedLayer = null,
     geojsonLayer = null,
 
@@ -32,6 +28,11 @@ var progressMap = mapModule.create({
     $mode = null;
 
 $(dom.modeChoice).click(onModeChanged);
+
+// The progress page does not have a grid, so we set a pointer
+// cursor to indicate that a click/tap will do something no
+// matter where you click/tap.
+$('.leaflet-container').css('cursor', 'pointer');
 
 loadLayers($(dom.modeChoice).first());
 
@@ -55,7 +56,6 @@ function onModeChanged(e) {
 
 function loadLayers($mode) {
     var tileUrl = $mode.data('tile-url'),
-        gridUrl = $mode.data('grid-url'),
         geojsonUrl = $mode.data('geojson-url'),
         bounds = $mode.data('bounds');
 
@@ -67,9 +67,6 @@ function loadLayers($mode) {
     if (tileLayer) {
         progressMap.removeLayer(tileLayer);
     }
-    if (grid) {
-        progressMap.removeLayer(grid);
-    }
     if (selectedLayer) {
         progressMap.removeLayer(selectedLayer);
     }
@@ -78,7 +75,6 @@ function loadLayers($mode) {
     }
     if (tileUrl) {
         tileLayer = mapModule.addTileLayer(progressMap, tileUrl);
-        grid = mapModule.addGridLayer(progressMap, { url: gridUrl });
 
         createSelectableLayer();
 
@@ -98,10 +94,8 @@ function loadLayers($mode) {
                 onEachFeature: function(feature, layer) {
                     layer.on('click', function showGroupBlockfaces() {
                         progressMap.removeLayer(tileLayer);
-                        progressMap.removeLayer(grid);
 
                         tileLayer = mapModule.addTileLayer(progressMap, feature.properties.tileUrl);
-                        grid = mapModule.addGridLayer(progressMap, { url: feature.properties.gridUrl});
 
                         createSelectableLayer();
 
@@ -117,13 +111,14 @@ function loadLayers($mode) {
 }
 
 function createSelectableLayer() {
-    selectedLayer = new SelectableBlockfaceLayer(progressMap, grid, {
-        onAdd: function(gridData) {
+    selectedLayer = new SelectableBlockfaceLayer(progressMap, null, {
+        onAdd: function() { return true; }, // Always try and fetch the feature
+        onAdded: function(feature, layer) {
             selectedLayer.clearLayers();
 
             // Note: this must be kept in sync with
             // src/nyc_trees/apps/survey/urls/blockface.py
-            var url = '/blockedge/' + gridData.id + '/progress-page-blockedge-popup/';
+            var url = '/blockedge/' + feature.properties.id + '/progress-page-blockedge-popup/';
 
             $actionBar.load(url);
             $('body').addClass('actionbar-triggered');

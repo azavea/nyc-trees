@@ -10,7 +10,7 @@ from apps.survey.routes import (
     blockface, progress_page, blockface_reservations_confirmation_page,
     progress_page_blockface_popup, printable_reservations_map,
     reservations_map_pdf_poll, user_reserved_blockfaces_geojson,
-    group_borders_geojson, group_popup
+    group_borders_geojson, group_popup, blockface_near_point
 )
 
 
@@ -35,6 +35,8 @@ urlpatterns = patterns(
     # src/nyc_trees/js/src/progressPage.js
     url(r'^(?P<blockface_id>\d+)/progress-page-blockedge-popup/$',
         progress_page_blockface_popup, name='progress_blockface_popup'),
+
+    url(r'^near/$', blockface_near_point, name='blockface_near_point'),
 
     url(r'^checkout/$', reserve_blockfaces, name='reserve_blockfaces'),
 
