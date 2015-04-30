@@ -85,7 +85,7 @@
         <div class="progress-circles block nopadding--top clearfix">
             {% include "home/partials/circle.html" with label="Blocks" n=counts.block color="primary" url=progress_page_url %}
             {% include "home/partials/circle.html" with label="Events " n=counts.event color="primary" modal="#users-modal" %}
-            {% include "home/partials/circle.html" with label="Attendees" n=counts.event color="primary" modal="#users-modal" %}
+            {% include "home/partials/circle.html" with label="Attendees" n=counts.attendees color="primary" modal="#users-modal" %}
         </div>
         {% include "home/partials/ticker.html" with n=counts.tree_digits %}
     </section>
