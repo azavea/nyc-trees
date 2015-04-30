@@ -39,7 +39,8 @@ class Command(BaseCommand):
         self.stdout.write("%s: %s" % (_COMMAND_NAME, msg))
 
     def handle(self, *args, **options):
-        today = now().date()
+        right_now = now()
+        today = right_now.date()
         with transaction.atomic():
             with connection.cursor() as cursor:
                 cursor.execute('LOCK TABLE %s IN EXCLUSIVE MODE'
@@ -61,11 +62,12 @@ class Command(BaseCommand):
         # thursday before 1am if they haven't been notified already.
         # If something was expiring wednesday at 11pm, it would get another
         # shot on tuesday at 1am, and another shot on wednesday at 1am.
-        soon = now() + timedelta(days=settings.RESERVATION_REMINDER_WINDOW)
+        soon = right_now + timedelta(days=settings.RESERVATION_REMINDER_WINDOW)
         expiring_soon = (BlockfaceReservation
                          .objects
                          .filter(reminder_sent_at__isnull=True,
                                  canceled_at__isnull=True,
+                                 expires_at__gte=right_now,
                                  expires_at__lte=soon))
 
         if not expiring_soon:
@@ -116,7 +118,7 @@ class Command(BaseCommand):
                 (BlockfaceReservation
                  .objects
                  .filter(id__in=ids)
-                 .update(reminder_sent_at=now()))
+                 .update(reminder_sent_at=right_now))
                 self._log("email sent to user_id: '%s'" % user_id)
 
                 user_remaining_retries = _DONE
