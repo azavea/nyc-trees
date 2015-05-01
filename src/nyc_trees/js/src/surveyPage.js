@@ -117,7 +117,7 @@ var dom = {
     blockfaceId = mapUtil.getBlockfaceIdFromUrl(),
     mapObjects = mapModule.createAndGetControls({
         legend: false,
-        search: false,
+        search: true,
         geolocation: true,
         crosshairs: true
     }),
