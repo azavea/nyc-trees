@@ -101,7 +101,11 @@ module.exports = {
 
     getBlockfaceIdFromUrl: function() {
         // Assumes that the hash contains only a blockface ID
-        return window.location.hash.substring(1);
+        var hash = window.location.hash.substring(1);
+        if (hash) {
+            return parseInt(hash, 10);
+        }
+        return null;
     },
 
     parseGeoJSON: parseGeoJSON,
