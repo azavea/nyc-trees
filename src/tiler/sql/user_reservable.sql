@@ -17,10 +17,10 @@
     ELSE 'unavailable'
   END AS survey_type,
   CASE
-    WHEN reservation.id IS NOT NULL AND reservation.user_id <> <%= user_id %> THEN 'reserved'
+    WHEN NOT block.is_available THEN 'unavailable'
     WHEN (core_group.id IS NOT NULL
           AND NOT core_group.allows_individual_mappers) THEN 'unavailable'
-    WHEN NOT block.is_available THEN 'unavailable'
+    WHEN reservation.id IS NOT NULL AND reservation.user_id <> <%= user_id %> THEN 'reserved'
     -- We should only allow requesting access to active groups that you are
     -- not already a trusted mapper or admin of
     WHEN (turf.id IS NOT NULL
