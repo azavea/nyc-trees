@@ -12,7 +12,8 @@
     -- 'available'.  We use a GeoJSON layer in the UI for the user's
     -- reserved blockfaces, and when a blockface is deselected we want to
     -- be able to reselect it
-    WHEN reservation.user_id IS NOT DISTINCT FROM <%= user_id %> THEN 'available'
+    WHEN (block.is_available
+          AND reservation.user_id IS NOT DISTINCT FROM <%= user_id %>) THEN 'available'
     ELSE 'unavailable'
   END AS survey_type,
   CASE
