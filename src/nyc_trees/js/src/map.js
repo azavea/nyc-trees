@@ -11,6 +11,7 @@ var zoom = require('./lib/mapUtil').ZOOM,
 module.exports = {
     SATELLITE: SATELLITE,
     create: create,
+    createAndGetControls: createAndGetControls,
     addTileLayer: addTileLayer,
     addGridLayer: addGridLayer,
     fitBounds: fitBounds,
@@ -19,6 +20,10 @@ module.exports = {
 };
 
 function create(options) {
+    return createAndGetControls(options).map;
+}
+
+function createAndGetControls(options) {
     options = $.extend({
         domId: 'map'
     }, options);
@@ -40,8 +45,15 @@ function create(options) {
     }
 
     var map = L.map(options.domId, mapOptions),
-        zoomControl = L.control.zoom({position: 'bottomleft'}).addTo(map),
-        $controlsContainer = $(zoomControl.getContainer()),
+        // We have stretched the zoomControl and its "container" (which is
+        // not its parent as once thought but rather its DOM element) 
+        // into a multi-purpose widget control. This is done by
+        // instantiating a zoom control and then placing additional markup
+        // in its DOM element for other controls. Subsequently, we
+        // refer to it as the multiControl in order to hide this
+        // implementation detail.
+        multiControl = L.control.zoom({position: 'bottomleft'}).addTo(map),
+        $multiControlContainer = $(multiControl.getContainer()),
         bounds = getDomMapAttribute('bounds', options.domId);
 
     map.addControl(L.control.attribution({prefix: false}));
@@ -59,23 +71,23 @@ function create(options) {
     initBaseMap(map, options);
 
     if (options.geolocation && navigator.geolocation) {
-        initGeolocation($controlsContainer, map);
+        initGeolocation($multiControlContainer, map);
     }
     if (options.legend) {
-        initLegend($controlsContainer, map);
+        initLegend($multiControlContainer, map);
     }
     if (options.search) {
-        initLocationSearch($controlsContainer, map);
+        initLocationSearch($multiControlContainer, map);
     }
     if (options.crosshairs) {
         initCrosshairs(options.domId);
     }
     if (options.static) {
         // We had to add zoomControl to find its container, but now remove it.
-        zoomControl.removeFrom(map);
+        multiControl.removeFrom(map);
     }
 
-    return map;
+    return {map: map, multiControl: multiControl};
 }
 
 function fitBounds(map, bounds) {
@@ -113,9 +125,9 @@ function initBaseMap(map, options) {
     map.addLayer(new L.TileLayer(url, layerOptions));
 }
 
-function initGeolocation($controlsContainer, map) {
+function initGeolocation($multiControlContainer, map) {
     var $button = $('<a class="geolocate-button" href="javascript:;" title="Show my location"><i class="icon-location"></i></a>');
-    $controlsContainer.prepend($button);
+    $multiControlContainer.prepend($button);
 
     $button.on('click', function () {
         navigator.geolocation.getCurrentPosition(showPosition, showError);
@@ -131,14 +143,14 @@ function initGeolocation($controlsContainer, map) {
     }
 }
 
-function initLocationSearch($controlsContainer, map) {
-    searchController.create($controlsContainer, map);
+function initLocationSearch($multiControlContainer, map) {
+    searchController.create($multiControlContainer, map);
 }
 
-function initLegend($controlsContainer, map) {
+function initLegend($multiControlContainer, map) {
     var $button = $(
         '<a class="legend-button" data-toggle="modal" href="#legend" href="javascript:;" title="Legend">?</a>');
-    $controlsContainer.prepend($button);
+    $multiControlContainer.prepend($button);
 }
 
 function initCrosshairs(domId) {
