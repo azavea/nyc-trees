@@ -133,6 +133,9 @@ class Event(NycModel, models.Model):
     def map_pdf_url(self):
         return url_if_cooked(self.map_pdf_filename)
 
+    def is_past(self):
+        return self.ends_at < timezone.now()
+
     class Meta:
         unique_together = (("group", "slug"), ("group", "title"))
         ordering = ['-begins_at']
