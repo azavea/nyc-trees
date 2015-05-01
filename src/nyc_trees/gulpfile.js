@@ -11,7 +11,6 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     sourcemaps = require('gulp-sourcemaps'),
     minimist = require('minimist'),
-    watchify = require('watchify'),
     gutil = require('gulp-util'),
     revall = require('gulp-rev-all'),
     sass = require('gulp-ruby-sass'),
@@ -127,13 +126,6 @@ gulp.task('copy-dev-assets', function(cb) {
         .pipe(gulp.dest(versionedDir, {mode: '0775'}));
 });
 
-gulp.task('browserify', ['clean'], function() {
-    return browserifyTask(browserify({
-        entries: entryFiles,
-        debug: true
-    }));
-});
-
 gulp.task('browserify-tests', ['clean'], function() {
     gutil.log("Rebundling test bundle JS");
     return browserify({
@@ -145,27 +137,12 @@ gulp.task('browserify-tests', ['clean'], function() {
         .pipe(gulp.dest(bundleDir));
 });
 
-gulp.task('watchify', function() {
-    var bundler = watchify(browserify({
+gulp.task('browserify', ['clean'], function() {
+    var bundler = browserify({
         entries: entryFiles,
-        debug: true,
-        // Watchify requires these
-        cache: {},
-        packageCache: {},
-        fullPaths: true
-    }), {
-        poll: true
+        debug: true
     });
 
-    bundler.on('update', function() {
-        gutil.log("Rebundling JS");
-        return browserifyTask(bundler);
-    });
-
-    return browserifyTask(bundler);
-});
-
-function browserifyTask(bundler) {
     // We need to use a through-stream for entry bundles so we can minify them
     var entryBundles = entries.map(function(_, i) {
         return through().pipe(source(entries[i]));
@@ -197,7 +174,7 @@ function browserifyTask(bundler) {
     });
 
     return merge.apply(this, bundles);
-}
+});
 
 gulp.task('sass', ['clean'], function() {
     var autoprefixProcessor = autoprefixer({ browsers: ['> 1% in US'] });
@@ -234,12 +211,19 @@ gulp.task('build', function(cb) {
     runSequence(buildTasks, 'collect-debug', cb);
 });
 
-gulp.task('watch', ['watchify'], function() {
-    // Note: JS rebuilding is handled by watchify, in order to utilize it's
-    // caching behaviour
+gulp.task('reload', function() {
+    // We can't just add a '.pipe(livereload())' to our various streams,
+    // because it needs to happen after collect-debug is finished
+    livereload.changed();
+});
+
+gulp.task('watch', function() {
     livereload.listen({auto: true });
+    gulp.watch('js/**/*.js', function(cb) {
+        runSequence('browserify', 'collect-debug', 'reload');
+    });
     gulp.watch('sass/**/*.scss', function(cb) {
-        runSequence('sass', 'collect-debug');
+        runSequence('sass', 'collect-debug', 'reload');
     });
 });
 
