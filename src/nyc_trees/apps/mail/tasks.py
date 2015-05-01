@@ -37,6 +37,8 @@ def notify_reservation_confirmed(pdf_filename, user_id, reservation_ids):
     blockfaces = Blockface.objects.filter(id__in=blockface_ids)
     expiration_date = reservations[0].expires_at
     attachments = []
+    is_mapping_with_paper = False
+
     if pdf_filename:
         attachment = pdf_to_attachment(default_storage.open, pdf_filename)
         attachments.append(attachment)
@@ -44,6 +46,7 @@ def notify_reservation_confirmed(pdf_filename, user_id, reservation_ids):
         path = os.path.join(settings.STATIC_ROOT,
                             'TreesCount2015_worksheet.pdf')
         attachments.append(pdf_to_attachment(open, path))
+        is_mapping_with_paper = True
 
     root_url = 'http://%s' % Site.objects.get_current().domain
     reservations_url = urljoin(root_url, reverse('reservations'))
@@ -51,6 +54,7 @@ def notify_reservation_confirmed(pdf_filename, user_id, reservation_ids):
     return send_to(user,
                    MessageType.NEW_RESERVATIONS_CONFIRMED,
                    blockfaces=blockfaces,
+                   is_mapping_with_paper=is_mapping_with_paper,
                    reservations_url=reservations_url,
                    expiration_date=expiration_date,
                    attachments=attachments)
