@@ -24,6 +24,7 @@ var $ = require('jquery');
 // handling.
 function fetchAndReplace(options) {
     var domEventName = options.domEventName || 'click',
+        callback = options.callback || $.noop,
         handler = function(event) {
             var url = $(event.target).data('url'),
                 verb = $(event.target).data('verb') || 'GET';
@@ -35,6 +36,7 @@ function fetchAndReplace(options) {
                     })
                     .done(function(content) {
                         $(options.container).html(content);
+                        callback(content);
                     })
                     .fail(options.onError);
             }
@@ -54,7 +56,7 @@ function fetchAndReplaceMany(options) {
                 target: options.target,
                 container: $(el).parents(options.container)
             }));
-    });
+        });
     return function() {
         $.each(handlers, function(i, remove) {
             remove();

@@ -94,6 +94,10 @@ def event_detail(request, event_slug):
                                  kwargs={'group_slug': request.group.slug}),
                          GROUP_EVENTS_ID))
 
+    registration = None
+    if user.is_authenticated():
+        registration = event.eventregistration_set.filter(user=user).first()
+
     return {
         'group': request.group,
         'event': event,
@@ -114,7 +118,8 @@ def event_detail(request, event_slug):
             'group_slug': request.group.slug,
             'event_slug': event.slug
         }),
-        'share_url': event.get_shareable_url(request)
+        'share_url': event.get_shareable_url(request),
+        'event_registration': registration
     }
 
 

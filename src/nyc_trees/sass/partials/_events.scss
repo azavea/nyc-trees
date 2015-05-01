@@ -113,3 +113,19 @@
     }
   }
 }
+
+.event-alert {
+  background-color: $brand-secondary;
+  color: #fff;
+  .event-alert-text {
+    padding: 1rem;
+  }
+  .event-alert-button {
+    padding: 0.5rem;
+  }
+  a {
+    padding: 0.5rem;
+    border: 1px solid #fff;
+    color: #fff;
+  }
+}

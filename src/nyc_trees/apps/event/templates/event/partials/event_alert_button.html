@@ -1,0 +1,19 @@
+{% comment %}
+Expects the following in the context:
+  - user: An authenticated user
+  - event: The event starting soon
+  - did_attend_event: If the user has been checked in to this event
+{% endcomment %}
+{% if request.user == event.group.admin %}
+    <a class="pull-right" href="{{ event.get_admin_checkin_url }}">
+        Check-in guests
+    </a>
+{% elif did_attend_event %}
+    <a class="pull-right" href="{% url 'survey_from_event' group_slug=event.group.slug event_slug=event.slug %}">
+        Start Mapping
+    </a>
+{% else %}
+    <a class="pull-right" href="{{ event.get_user_checkin_url }}">
+        Check-in
+    </a>
+{% endif %}
