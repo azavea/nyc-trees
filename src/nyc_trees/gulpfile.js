@@ -238,9 +238,9 @@ gulp.task('watch', ['watchify'], function() {
     // Note: JS rebuilding is handled by watchify, in order to utilize it's
     // caching behaviour
     livereload.listen({auto: true });
-    gulp.watch('sass/**/*.scss', ['sass']);
-    // Rerun collectstatic whenever files are added to the static files dir
-    gulp.watch(intermediaryDir + '**', ['collect-debug']);
+    gulp.watch('sass/**/*.scss', function(cb) {
+        runSequence('sass', 'collect-debug');
+    });
 });
 
 gulp.task('watch-tests', function() {
