@@ -46,7 +46,7 @@ function createAndGetControls(options) {
 
     var map = L.map(options.domId, mapOptions),
         // We have stretched the zoomControl and its "container" (which is
-        // not its parent as once thought but rather its DOM element) 
+        // not its parent as once thought but rather its DOM element)
         // into a multi-purpose widget control. This is done by
         // instantiating a zoom control and then placing additional markup
         // in its DOM element for other controls. Subsequently, we
@@ -125,9 +125,9 @@ function initBaseMap(map, options) {
     map.addLayer(new L.TileLayer(url, layerOptions));
 }
 
-function initGeolocation($multiControlContainer, map) {
-    var $button = $('<a class="geolocate-button" href="javascript:;" title="Show my location"><i class="icon-location"></i></a>');
-    $multiControlContainer.prepend($button);
+function initGeolocation($controlsContainer, map) {
+    var $button = $('<a class="geolocate-button" href="javascript:;" title="Show my location"><i class="icon-target"></i></a>');
+    $controlsContainer.prepend($button);
 
     $button.on('click', function () {
         navigator.geolocation.getCurrentPosition(showPosition, showError);

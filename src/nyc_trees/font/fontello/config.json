@@ -7,6 +7,12 @@
   "ascent": 850,
   "glyphs": [
     {
+      "uid": "9bd60140934a1eb9236fd7a8ab1ff6ba",
+      "css": "spin4",
+      "code": 59418,
+      "src": "fontelico"
+    },
+    {
       "uid": "7222571caa5c15f83dcfd447c58d68d9",
       "css": "search",
       "code": 59394,
@@ -130,6 +136,12 @@
       "uid": "e188c02f740feff7e2d2bce1950b75fa",
       "css": "record",
       "code": 59415,
+      "src": "entypo"
+    },
+    {
+      "uid": "3eadc3e443cf1c7e17f1b44d21254c00",
+      "css": "target",
+      "code": 59417,
       "src": "entypo"
     },
     {
