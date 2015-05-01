@@ -77,7 +77,7 @@ function loadLayers($mode) {
         progressMap.removeLayer(geojsonLayer);
     }
     if (tileUrl) {
-        addLayers(bounds, tileUrl, gridUrl);
+        addLayers(bounds, tileUrl);
     }
     if (geojsonUrl) {
         $.getJSON(geojsonUrl, function(geojson) {
@@ -93,7 +93,7 @@ function loadLayers($mode) {
                         progressMap.removeLayer(tileLayer);
 
                         var p = feature.properties;
-                        addLayers(p.bounds, p.tileUrl, p.gridUrl);
+                        addLayers(p.bounds, p.tileUrl);
 
                         $actionBar.load(p.popupUrl);
                         $('body').addClass('actionbar-triggered');
@@ -105,7 +105,7 @@ function loadLayers($mode) {
     }
 }
 
-function addLayers(bounds, tileUrl, gridUrl) {
+function addLayers(bounds, tileUrl) {
     var zooming = false;
     if (bounds) {
         zooming = mapModule.fitBounds(progressMap, bounds);
