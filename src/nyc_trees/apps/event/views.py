@@ -101,6 +101,7 @@ def event_detail(request, event_slug):
     return {
         'group': request.group,
         'event': event,
+        'location': [event.location.y, event.location.x],
         'is_admin': user == request.group.admin,
         'can_rsvp': rsvp_count < event.max_attendees,
         'is_rsvped': user_is_rsvped_for_event(user, event),
@@ -335,6 +336,7 @@ def printable_event_map(request, event_slug):
     event = get_object_or_404(Event, group=request.group, slug=event_slug)
     context = {
         'event': event,
+        'location': [event.location.y, event.location.x],
         'layer': get_context_for_territory_layer(request.group.id),
     }
     return context
