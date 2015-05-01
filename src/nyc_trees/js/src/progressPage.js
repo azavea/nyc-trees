@@ -42,8 +42,11 @@ function onModeChanged(e) {
         return;
     }
     $mode = $(e.currentTarget);
+    if ($mode.hasClass('js-my-progress') && !$mode.attr('href')) {
+        return;
+    }
 
-    // Shown chosen mode on dropdown button
+    // Show chosen mode on dropdown button
     $mode.parents(dom.modeDropdown).find(dom.modeButton).text($mode.text());
 
     // Show appropriate legend entries
@@ -74,13 +77,7 @@ function loadLayers($mode) {
         progressMap.removeLayer(geojsonLayer);
     }
     if (tileUrl) {
-        tileLayer = mapModule.addTileLayer(progressMap, tileUrl);
-
-        createSelectableLayer();
-
-        if (bounds) {
-            mapModule.fitBounds(progressMap, bounds);
-        }
+        addLayers(bounds, tileUrl, gridUrl);
     }
     if (geojsonUrl) {
         $.getJSON(geojsonUrl, function(geojson) {
@@ -88,19 +85,17 @@ function loadLayers($mode) {
                 style: function() {
                     return {
                         color: '#36b5db',
-                        weight: 3,
+                        weight: 3
                     };
                 },
                 onEachFeature: function(feature, layer) {
                     layer.on('click', function showGroupBlockfaces() {
                         progressMap.removeLayer(tileLayer);
 
-                        tileLayer = mapModule.addTileLayer(progressMap, feature.properties.tileUrl);
+                        var p = feature.properties;
+                        addLayers(p.bounds, p.tileUrl, p.gridUrl);
 
-                        createSelectableLayer();
-
-                        mapModule.fitBounds(progressMap, feature.properties.bounds);
-                        $actionBar.load(feature.properties.popupUrl);
+                        $actionBar.load(p.popupUrl);
                         $('body').addClass('actionbar-triggered');
                     });
                 }
@@ -108,6 +103,19 @@ function loadLayers($mode) {
             geojsonLayer.addTo(progressMap);
         });
     }
+}
+
+function addLayers(bounds, tileUrl, gridUrl) {
+    var zooming = false;
+    if (bounds) {
+        zooming = mapModule.fitBounds(progressMap, bounds);
+    }
+    tileLayer = mapModule.addTileLayer(progressMap, {
+        url: tileUrl,
+        waitForZoom: zooming
+    });
+
+    createSelectableLayer();
 }
 
 function createSelectableLayer() {
