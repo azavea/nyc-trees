@@ -9,23 +9,26 @@
     </div>
 
     {% if event.starting_soon %}
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="block">
-                    {% if is_admin %}
-                    <a href="{{ event.get_admin_checkin_url }}"
-                        class="btn btn-switch pull-right">Check-in guests</a>
-                    {% elif event in my_events_now_all %}
-                    <a href="{{ event.get_user_checkin_url }}"
-                        class="btn btn-switch pull-right">Start Mapping</a>
-                    {% endif %}
+    <div class="event-alert">
+        <div class="container">
+            <div class="row">
+                <div class="event-alert-text col-md-8 col-md-offset-1 col-xs-8">
+                    This event
                     {% if event.in_progress %}
-                      <p>This event is currently in-progress!</p>
+                        has started!
                     {% else %}
-                      <p>This event is starting soon!</p>
+                        is starting soon.
                     {% endif %}
                 </div>
+                {% if event_registration %}
+                    <div id="event-button" class="event-alert-button col-md-2 col-xs-4">
+                        {% include "event/partials/event_alert_button.html" with did_attend_event=event_registration.did_attend %}
+                    </div>
+                {% else %}
+                    <div id="event-button" class="event-alert-button col-md-2 col-xs-4 hidden">
+                        {% include "event/partials/event_alert_button.html" with did_attend_event=False %}
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>

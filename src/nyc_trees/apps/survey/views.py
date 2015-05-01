@@ -25,7 +25,8 @@ from apps.core.models import Group
 from apps.core.helpers import user_is_group_admin, user_is_individual_mapper
 
 from apps.event.models import Event, EventRegistration
-from apps.event.helpers import user_is_checked_in_to_event
+from apps.event.helpers import (user_is_checked_in_to_event,
+                                user_is_rsvped_for_event)
 
 from apps.mail.tasks import notify_reservation_confirmed
 from libs.pdf_maps import create_reservations_map_pdf
@@ -509,7 +510,15 @@ def start_survey(request):
 
 def start_survey_from_event(request, event_slug):
     group = request.group
-    event = _validate_event_and_group(request, event_slug)
+    event = get_object_or_404(Event, group=request.group, slug=event_slug)
+
+    if not user_is_rsvped_for_event(request.user, event):
+        raise PermissionDenied('User not checked-in to this event')
+
+    if not user_is_checked_in_to_event(request.user, event):
+        return redirect('event_user_check_in_page',
+                        group_slug=event.group.slug, event_slug=event.slug)
+
     if not event.in_progress():
         return HttpResponseForbidden('Event not currently in-progress')
 

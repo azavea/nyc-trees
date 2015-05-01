@@ -27,6 +27,15 @@ def home_page(request):
         context.update(training_summary.get_context(request.user))
         context['counts_all'] = _global_counts()
         context['counts_week'] = _global_counts(past_week=True)
+
+        registered_events = EventRegistration.my_events_now(request.user)
+        attended_events, non_attended_events = registered_events
+        if attended_events:
+            context['event'] = attended_events[0]
+            context['did_attend_event'] = True
+        elif non_attended_events:
+            context['event'] = non_attended_events[0]
+            context['did_attend_event'] = False
     else:
         context = {
             'user': request.user,
