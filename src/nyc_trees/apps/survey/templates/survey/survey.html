@@ -67,10 +67,13 @@
         </div>
     </div>
 </div>
+
 <script type="handlebars/template" id="tree-form-template">
     {# 'tree_number' here goes into the template with the '{{ }}', which is used for handlebar templating #}
     {% include "survey/partials/tree_form.html" with tree_number="{{ tree_number }}" %}
 </script>
+
+{% include 'home/partials/location_search.html' %}
 {% endblock aside %}
 
 {% block main %}
