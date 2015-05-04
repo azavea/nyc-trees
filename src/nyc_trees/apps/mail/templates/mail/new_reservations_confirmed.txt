@@ -4,7 +4,11 @@ Thank you for signing up to map on your own during TreesCount! 2015. The follo
 {% for blockface in blockfaces %}
 * {{ blockface.id }}
 {% endfor %}
+{% if is_mapping_with_paper %}
+Once you have completed collecting data using a paper worksheet you will have until {{ expiration_date|date:"l, F jS f A" }} to enter it into the Treecorder.
+{% else %}
 The block edges will be reserved for you to map until {{ expiration_date|date:"l, F jS f A" }}.
+{% endif %}
 
 You can view and change your other block edge reservations at {{ reservations_url }}.
 {% endblock content %}
