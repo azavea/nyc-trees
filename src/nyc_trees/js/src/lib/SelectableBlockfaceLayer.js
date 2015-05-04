@@ -52,7 +52,7 @@ module.exports = BlockfaceLayer.extend({
 
         if (grid) {
             grid.on('click', function(e) {
-                if (self.clicksEnabled) {
+                if (self.clicksEnabled && e.data) {
                     self.addBlockface(e.data, e.latlng);
                 }
             });
