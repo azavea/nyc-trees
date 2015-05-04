@@ -13,6 +13,18 @@ from apps.core.models import User, Group
 from libs.mixins import NycModel
 
 
+class Borough(NycModel, models.Model):
+    geom = models.MultiPolygonField()
+    name = models.CharField(max_length=32)
+    code = models.IntegerField(db_index=True, unique=True)
+
+
+class NeighborhoodTabulationArea(NycModel, models.Model):
+    geom = models.MultiPolygonField()
+    name = models.CharField(max_length=75)
+    code = models.CharField(max_length=4, db_index=True, unique=True)
+
+
 class Blockface(models.Model):
     geom = models.MultiLineStringField(
         help_text='Coordinates of blockface polyline')
@@ -25,6 +37,12 @@ class Blockface(models.Model):
     source = models.CharField(
         max_length=255, default='unknown',
         help_text='Source for blockface data (borough name)')
+    borough = models.ForeignKey(
+        Borough, null=True,
+        help_text='The borough containing this blockface')
+    nta = models.ForeignKey(
+        NeighborhoodTabulationArea, null=True,
+        help_text='The neighborhood tabulation area containing this blockface')
 
     # We can't use the NycModel mixin, because we want to add db indexes
     created_at = models.DateTimeField(
