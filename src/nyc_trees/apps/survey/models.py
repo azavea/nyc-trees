@@ -14,15 +14,26 @@ from libs.mixins import NycModel
 
 
 class Blockface(models.Model):
-    geom = models.MultiLineStringField()
-    is_available = models.BooleanField(default=True)
-    expert_required = models.BooleanField(default=False)
-    source = models.CharField(max_length=255, default='unknown')
+    geom = models.MultiLineStringField(
+        help_text='Coordinates of blockface polyline')
+    is_available = models.BooleanField(
+        default=True,
+        help_text='Is blockface available for surveying?')
+    expert_required = models.BooleanField(
+        default=False,
+        help_text='Is an expert required to survey this blockface?')
+    source = models.CharField(
+        max_length=255, default='unknown',
+        help_text='Source for blockface data (borough name)')
 
     # We can't use the NycModel mixin, because we want to add db indexes
-    created_at = models.DateTimeField(auto_now_add=True, editable=False)
-    updated_at = models.DateTimeField(auto_now=True, db_index=True,
-                                      editable=False)
+    created_at = models.DateTimeField(
+        auto_now_add=True, editable=False,
+        help_text='Time when row was created')
+    updated_at = models.DateTimeField(
+        auto_now=True, db_index=True, editable=False,
+        help_text='Time when row was last updated'
+    )
 
     objects = models.GeoManager()
 
@@ -31,8 +42,12 @@ class Blockface(models.Model):
 
 
 class Territory(NycModel, models.Model):
-    group = models.ForeignKey(Group)
-    blockface = models.OneToOneField(Blockface)
+    group = models.ForeignKey(
+        Group,
+        help_text='ID of group responsible for surveying blockface')
+    blockface = models.OneToOneField(
+        Blockface,
+        help_text='ID of blockface')
 
     def __unicode__(self):
         return '%s -> %s' % (self.group, self.blockface_id)
@@ -44,18 +59,31 @@ class Territory(NycModel, models.Model):
 class Survey(NycModel, models.Model):
     # We do not anticipate deleting a Blockface, but we definitely
     # should not allow it to be deleted if there is a related Survey
-    blockface = models.ForeignKey(Blockface, on_delete=models.PROTECT)
+    blockface = models.ForeignKey(
+        Blockface, on_delete=models.PROTECT,
+        help_text='ID of blockface surveyed')
     # We do not want to lose survey data by allowing the deletion of
     # a User object to automatically cascade and delete the Survey
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
-    teammate = models.ForeignKey(User, null=True, on_delete=models.PROTECT,
-                                 related_name='surveys_as_teammate',
-                                 blank=True)
-    is_flagged = models.BooleanField(default=False)
-    has_trees = models.BooleanField()
-    is_mapped_in_blockface_polyline_direction = models.BooleanField()
-    is_left_side = models.BooleanField()
-    quit_reason = models.TextField(blank=True)
+    user = models.ForeignKey(
+        User, on_delete=models.PROTECT,
+        help_text='ID of user performing survey')
+    teammate = models.ForeignKey(
+        User, null=True, on_delete=models.PROTECT,
+        related_name='surveys_as_teammate',
+        blank=True,
+        help_text='ID of user helping with survey')
+    is_flagged = models.BooleanField(
+        default=False,
+        help_text='Did user request a review for this survey?')
+    has_trees = models.BooleanField(
+        help_text='Did blockface contain any trees?')
+    is_mapped_in_blockface_polyline_direction = models.BooleanField(
+        help_text='Does survey begin at first point of blockface polyline?')
+    is_left_side = models.BooleanField(
+        help_text='Was left side of block surveyed?')
+    quit_reason = models.TextField(
+        blank=True,
+        help_text='Description of why survey was abandoned')
 
     def __unicode__(self):
         return 'block %s on %s by %s' % (self.blockface_id, self.created_at,
@@ -66,12 +94,22 @@ class Survey(NycModel, models.Model):
 
 
 class Species(NycModel, models.Model):
-    scientific_name = models.CharField(max_length=100)
-    common_name = models.CharField(max_length=100)
-    cultivar = models.CharField(max_length=100, blank=True)
+    scientific_name = models.CharField(
+        max_length=100,
+        help_text='Scientific name for species, e.g. "Acer Rubrum"')
+    common_name = models.CharField(
+        max_length=100,
+        help_text='Common name for species, e.g. "Red Maple"')
+    cultivar = models.CharField(
+        max_length=100, blank=True,
+        help_text='Further qualifies scientific name')
 
-    forms_id = models.CharField(max_length=10)
-    species_code = models.CharField(max_length=10)
+    forms_id = models.CharField(
+        max_length=10,
+        help_text='ID from original data source')
+    species_code = models.CharField(
+        max_length=10,
+        help_text='Species code from original data source')
 
     def __unicode__(self):
         return '%s [%s]' % (self.common_name, self.scientific_name)
@@ -160,35 +198,56 @@ def flatten_categorized_choices(choices):
 
 
 class Tree(NycModel, models.Model):
-    survey = models.ForeignKey(Survey)
+    survey = models.ForeignKey(
+        Survey,
+        help_text='ID of survey containing this tree')
     # We do not anticipate deleting a Species, but we definitely
     # should not allow it to be deleted if there is a related Tree
-    species = models.ForeignKey(Species, null=True, blank=True,
-                                on_delete=models.PROTECT)
+    species = models.ForeignKey(
+        Species, null=True, blank=True, on_delete=models.PROTECT,
+        help_text='ID of tree species')
+    distance_to_tree = models.FloatField(
+        help_text='Measured distance to tree (feet)')
+    distance_to_end = models.FloatField(
+        null=True, blank=True,
+        help_text='Measured distance to end of block (feet) '
+                  '[only if final tree in survey]')
 
-    distance_to_tree = models.FloatField()
-    distance_to_end = models.FloatField(null=True, blank=True)
+    circumference = models.PositiveIntegerField(
+        null=True, blank=True,
+        help_text='Measured circumference (inches) [if not a stump]')
+    stump_diameter = models.PositiveIntegerField(
+        null=True, blank=True,
+        help_text='Measured diameter (inches) [if a stump]')
 
-    circumference = models.PositiveIntegerField(null=True, blank=True)
-    stump_diameter = models.PositiveIntegerField(null=True, blank=True)
-
-    curb_location = models.CharField(max_length=25, choices=CURB_CHOICES)
-    status = models.CharField(max_length=15, choices=STATUS_CHOICES)
+    curb_location = models.CharField(
+        max_length=25, choices=CURB_CHOICES,
+        help_text='Location of tree bed')
+    status = models.CharField(
+        max_length=15, choices=STATUS_CHOICES,
+        help_text='Is this tree alive, dead, or a stump?')
 
     # The following fields are collected only when status == 'Alive',
     # hence blank=True
 
     species_certainty = models.CharField(
-        blank=True, max_length=15, choices=CERTAINTY_CHOICES)
+        blank=True, max_length=15, choices=CERTAINTY_CHOICES,
+        help_text='How certain is user of species? [if alive]')
     health = models.CharField(
-        blank=True, max_length=15, choices=HEALTH_CHOICES)
+        blank=True, max_length=15, choices=HEALTH_CHOICES,
+        help_text='Perception of tree health [if alive]')
     stewardship = models.CharField(
-        blank=True, max_length=15, choices=STEWARDSHIP_CHOICES)
+        blank=True, max_length=15, choices=STEWARDSHIP_CHOICES,
+        help_text='Number of observed stewardship practices [if alive]')
     guards = models.CharField(
-        blank=True, max_length=15, choices=GUARD_CHOICES)
+        blank=True, max_length=15, choices=GUARD_CHOICES,
+        help_text='Status of tree guards [if alive]')
     sidewalk_damage = models.CharField(
-        blank=True, max_length=15, choices=SIDEWALK_CHOICES)
-    problems = models.CharField(blank=True, max_length=130)
+        blank=True, max_length=15, choices=SIDEWALK_CHOICES,
+        help_text='Observed sidewalk damage [if alive]')
+    problems = models.CharField(
+        blank=True, max_length=130,
+        help_text='Observed problems (comma-separated strings) [if alive]')
 
     def __unicode__(self):
         t = 'id: %s - survey: %s - dist: %s'
@@ -253,15 +312,26 @@ class ReservationsQuerySet(models.QuerySet):
 
 
 class BlockfaceReservation(NycModel, models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(
+        User,
+        help_text='ID of user reserving blockface')
     # We do not plan on Blockface records being deleted, but we should
     # make sure that a Blockface that has been reserved cannot be
     # deleted out from under a User who had planned to map it.
-    blockface = models.ForeignKey(Blockface, on_delete=models.PROTECT)
-    is_mapping_with_paper = models.BooleanField(default=False)
-    expires_at = models.DateTimeField()
-    canceled_at = models.DateTimeField(null=True, blank=True)
-    reminder_sent_at = models.DateTimeField(null=True, blank=True)
+    blockface = models.ForeignKey(
+        Blockface, on_delete=models.PROTECT,
+        help_text='ID of blockface reserved')
+    is_mapping_with_paper = models.BooleanField(
+        default=False,
+        help_text='Does user plan to survey using the paper form?')
+    expires_at = models.DateTimeField(
+        help_text='Expiration time for this reservation')
+    canceled_at = models.DateTimeField(
+        null=True, blank=True,
+        help_text='Cancellation time [if reservation was canceled]')
+    reminder_sent_at = models.DateTimeField(
+        null=True, blank=True,
+        help_text='Time expiration reminder was emailed')
 
     objects = ReservationsQuerySet.as_manager()
 

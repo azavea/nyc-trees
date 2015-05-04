@@ -7,8 +7,14 @@ from django.db import models
 
 
 class NycModel(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True, editable=False)
-    updated_at = models.DateTimeField(auto_now=True, editable=False)
+    created_at = models.DateTimeField(
+        auto_now_add=True, editable=False,
+        help_text='Time when row was created'
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True, editable=False,
+        help_text='Time when row was last updated'
+    )
 
     class Meta:
         abstract = True
