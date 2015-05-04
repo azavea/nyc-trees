@@ -19,7 +19,8 @@
   CASE
     WHEN NOT block.is_available THEN 'unavailable'
     WHEN (core_group.id IS NOT NULL
-          AND NOT core_group.allows_individual_mappers) THEN 'unavailable'
+          AND NOT core_group.allows_individual_mappers
+          AND NOT core_group.admin_id = <%= user_id %>) THEN 'unavailable'
     WHEN reservation.id IS NOT NULL AND reservation.user_id <> <%= user_id %> THEN 'reserved'
     -- Designate as "group_territory" if block belongs to a group and the user
     -- is neither a trusted mapper nor a group admin.
