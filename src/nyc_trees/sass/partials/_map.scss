@@ -212,12 +212,8 @@
 
 @media (max-width: $screen-sm - 1) {
   body:not(.actionbar-triggered) {
-    .map-container {
+    .map-container.progress-map {
       bottom: 0;
-    }
-    .action-bar {
-      bottom: 0;
-
     }
   }
   .leaflet-control-zoom-out, .leaflet-control-zoom-in {

@@ -47,12 +47,14 @@
                 {% include 'survey/partials/progress_legend.html' %}
             </div>
         </div>
-        <div class="action-bar" id="action-bar"></div>
+        <div class="action-bar action-bar-progress" id="action-bar"></div>
     </div>
 
     {% include 'home/partials/location_search.html' %}
 
 {% endblock aside %}
+
+{% block map_class %} progress-map {% endblock map_class %}
 
 {% block main %}
 
