@@ -205,6 +205,12 @@ def events_list_feed(request):
     events = Event.objects.order_by('-begins_at').filter(is_private=False,
                                                          group__is_active=True)
 
+    includes_training = request.GET.get('includes_training', '').lower()
+    if includes_training == 'true':
+        events = events.filter(includes_training=True)
+    elif includes_training == 'false':
+        events = events.filter(includes_training=False)
+
     return [{
         'id': e.id,
         'name': e.title,
@@ -212,6 +218,7 @@ def events_list_feed(request):
         'start_time': e.begins_at.time(),
         'end_time': e.ends_at.time(),
         'description': e.description,
+        'includes_training': e.includes_training,
         'snippet': e.description[:169],
         'email': e.contact_email,
         'locations': [{
