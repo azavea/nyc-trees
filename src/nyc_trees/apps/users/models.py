@@ -212,4 +212,3 @@ class Achievement(NycModel, models.Model):
 
     class Meta:
         unique_together = ("user", "achievement_id")
-

@@ -12,21 +12,32 @@ from django.utils.timezone import now
 from apps.core.models import TaskRun
 from apps.census_admin.tasks import (dump_model, dump_trees_to_shapefile,
                                      dump_blockface_to_shapefile, zip_dumps,
-                                     dump_events_to_shapefile)
+                                     dump_events_to_shapefile,
+                                     write_data_dictionary)
 
 TASK_NAME = 'dump_db'
 
-MODELS = ['apps.core.models.User',
-          'apps.core.models.Group',
-          'apps.event.models.EventRegistration',
-          'apps.survey.models.BlockfaceReservation',
-          'apps.survey.models.Species',
-          'apps.survey.models.Survey',
-          'apps.survey.models.Territory',
-          'apps.users.models.Achievement',
-          'apps.users.models.Follow',
-          'apps.users.models.TrainingResult',
-          'apps.users.models.TrustedMapper']
+CSV_MODELS = [
+    'apps.core.models.User',
+    'apps.core.models.Group',
+    'apps.event.models.EventRegistration',
+    'apps.survey.models.BlockfaceReservation',
+    'apps.survey.models.Species',
+    'apps.survey.models.Survey',
+    'apps.survey.models.Territory',
+    'apps.users.models.Achievement',
+    'apps.users.models.Follow',
+    'apps.users.models.TrainingResult',
+    'apps.users.models.TrustedMapper'
+]
+
+GEO_MODELS = [
+    'apps.event.models.Event',
+    'apps.survey.models.Blockface',
+    'apps.survey.models.Tree',
+]
+
+MODELS = CSV_MODELS + GEO_MODELS
 
 
 class Command(BaseCommand):
@@ -52,10 +63,12 @@ class Command(BaseCommand):
 
         dump_id = today.isoformat()
 
-        dump_model_tasks = [dump_model.s(fqn, dump_id) for fqn in MODELS]
+        dump_model_tasks = [dump_model.s(fqn, dump_id) for fqn in CSV_MODELS]
         dump_model_tasks += [dump_trees_to_shapefile.s(dump_id),
                              dump_blockface_to_shapefile.s(dump_id),
-                             dump_events_to_shapefile.s(dump_id)]
+                             dump_events_to_shapefile.s(dump_id),
+                             write_data_dictionary.s(MODELS, dump_id),
+                             ]
 
         dump_tasks = chord(dump_model_tasks, zip_dumps.s(dump_id))
         dump_tasks.apply_async()
