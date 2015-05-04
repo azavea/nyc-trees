@@ -187,19 +187,43 @@
   padding: 1em;
   background-color: black;
   color: white;
+
+  &:after {
+    position: absolute;
+    top: 1.4em;
+    right: 100%;
+    height: 0;
+    width: 0;
+    border: solid transparent;
+    border-right-color: black;
+    border-width: 12px 25px;
+    content: " ";
+    pointer-events: none;
+  }
 }
 
-.legend-help:after {
+.geolocate-help {
   position: absolute;
-  top: 1.4em;
-  right: 100%;
-  height: 0;
-  width: 0;
-  border: solid transparent;
-  border-right-color: black;
-  border-width: 12px 25px;
-  content: " ";
-  pointer-events: none;
+  left: 220%;
+  top: 0;
+  font-size: 180%;
+  padding: 1em;
+  background-color: black;
+  color: white;
+  width: 10em;
+
+  &:after {
+    position: absolute;
+    top: 1.4em;
+    right: 100%;
+    height: 0;
+    width: 0;
+    border: solid transparent;
+    border-right-color: black;
+    border-width: 12px 25px;
+    content: " ";
+    pointer-events: none;
+  }
 }
 
 .reservations-popup {
@@ -216,6 +240,16 @@
       bottom: 0;
     }
   }
+
+  .geolocate-help {
+    top: -40px;
+
+    &:after {
+      top: 70px;
+      border-width: 8px 20px;
+    }
+  }
+
   .leaflet-control-zoom-out, .leaflet-control-zoom-in {
     display: none !important;
   }

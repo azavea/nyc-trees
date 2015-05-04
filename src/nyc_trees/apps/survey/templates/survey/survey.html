@@ -83,6 +83,7 @@
             <div id="map" class="map-survey"
                 data-tile-url="{{ layer.tile_url }}"
                 data-grid-url="{{ layer.grid_url }}"
+                data-geolocate-help-shown="{{ geolocate_help_shown }}"
                 {% if bounds %}data-bounds="{{ bounds }}"
                 {% elif location %}data-location="{{ location }}"
                 {% endif %}>
