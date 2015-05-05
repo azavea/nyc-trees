@@ -53,6 +53,8 @@ var makeMutexShow = (function() {
 }());
 
 var dom = {
+        geolocateButton: '.geolocate-button',
+
         selectStartingPoint: '#select-starting-point',
         selectSide: '#select-side',
 
@@ -731,3 +733,14 @@ $('body').on('select2-close', 'select', function() {
         $('.select2-focusser:focus').blur();
     }, 1);
 });
+
+// Display help popup for geolocation button.
+var helpShown = mapModule.getDomMapAttribute('geolocate-help-shown').toLowerCase() == 'true';
+if (!helpShown) {
+    $(dom.geolocateButton).append(
+        '<div class="geolocate-help">Move the map to your location</div>'
+    );
+    $(document).one('click', function () {
+        $('.geolocate-help').hide();
+    });
+}

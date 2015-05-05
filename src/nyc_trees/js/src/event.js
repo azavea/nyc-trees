@@ -15,7 +15,7 @@ var $ = require('jquery'),
     $map = $('#map');
 
 new EventMap({
-    location: L.latLng($map.data('lat'), $map.data('lon')),
+    location: L.latLng($map.data('location')),
     static: true
 });
 

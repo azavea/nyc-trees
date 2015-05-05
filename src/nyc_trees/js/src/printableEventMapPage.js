@@ -7,7 +7,7 @@ var $ = require('jquery'),
 
 var $map = $('#map'),
     eventMap = new EventMap({
-        location: L.latLng($map.data('lat'), $map.data('lon')),
+        location: L.latLng($map.data('location')),
         static: true,
         forPdf: true
     });

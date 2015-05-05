@@ -83,6 +83,7 @@ class User(NycModel, AbstractUser):
 
     progress_page_help_shown = models.BooleanField(default=False)
     reservations_page_help_shown = models.BooleanField(default=False)
+    survey_geolocate_help_shown = models.BooleanField(default=False)
 
     reservation_ids_in_map_pdf = models.TextField(default='', blank=True)
     reservations_map_pdf_filename = models.CharField(
