@@ -26,6 +26,18 @@
     <fieldset>
         {% include "survey/partials/radios.html" with label="Tree Structure" field="status" choices=choices.status %}
     </fieldset>
+
+    <!-- bind to an unused status name so that this is visible until -->
+    <!-- a status is chosen and then never again. -->
+    <div data-status="124d9zX_">
+        <fieldset>
+          <legend>Size</legend>
+          <div class="field">
+            <input class="form-control" placeholder="in" disabled>
+          </div>
+        </fieldset>
+    </div>
+
     <div data-status="Stump" class="hidden">
         <fieldset>
             <legend>Stump Size</legend>
@@ -47,7 +59,7 @@
         </fieldset>
     </div>
 
-    <div data-status="Alive">
+    <div data-status="Alive" class="hidden">
         <fieldset>
             <legend>Tree Trunk</legend>
             <div class="field">
