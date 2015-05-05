@@ -159,29 +159,33 @@ blockfaceMap.addLayer(endPointLayers);
 grid.on('mapMove', function(e) {
     var data = e.data;
     if (data && data.survey_type === 'available' && data.id !== blockfaceId) {
-        blockfaceId = data.id;
-
-        var geom = mapUtil.parseGeoJSON(data.geojson),
-            latLngs = mapUtil.getLatLngs(geom),
-            startCircle = L.circleMarker(latLngs[0], defaultStyle),
-            endCircle = L.circleMarker(latLngs[latLngs.length - 1], defaultStyle);
-
-        startCircle.isStart = true;
-        endCircle.isStart = false;
-
-        selectedLayer.clearLayers();
-        endPointLayers.clearLayers();
-
-        selectedLayer.addData({
-            "type": "Feature",
-            "geometry": geom
-        });
-        endPointLayers.addLayer(startCircle);
-        endPointLayers.addLayer(endCircle);
-
-        showSelectStart();
+        selectBlockface(data);
     }
 });
+
+function selectBlockface(data) {
+    blockfaceId = data.id;
+
+    var geom = mapUtil.parseGeoJSON(data.geojson),
+        latLngs = mapUtil.getLatLngs(geom),
+        startCircle = L.circleMarker(latLngs[0], defaultStyle),
+        endCircle = L.circleMarker(latLngs[latLngs.length - 1], defaultStyle);
+
+    startCircle.isStart = true;
+    endCircle.isStart = false;
+
+    selectedLayer.clearLayers();
+    endPointLayers.clearLayers();
+
+    selectedLayer.addData({
+        "type": "Feature",
+        "geometry": geom
+    });
+    endPointLayers.addLayer(startCircle);
+    endPointLayers.addLayer(endCircle);
+
+    showSelectStart();
+}
 
 endPointLayers.setStyle(defaultStyle);
 endPointLayers.on('click', function(e) {
@@ -207,9 +211,7 @@ $(dom.btnToTeammate).click(function(e) {
     showSelectTeammate();
 });
 
-mapUtil.fetchBlockface(blockfaceId).done(function(blockface) {
-    selectedLayer.addBlockface(blockface);
-});
+mapUtil.fetchBlockface(blockfaceId).done(selectBlockface);
 
 // There is no attribute for requiring "one or more" of a group of checkboxes to
 // be selected, so we have to handle it ourselves.
