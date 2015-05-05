@@ -12,26 +12,23 @@
     -- 'available'.  We use a GeoJSON layer in the UI for the user's
     -- reserved blockfaces, and when a blockface is deselected we want to
     -- be able to reselect it
-    WHEN reservation.user_id IS NOT DISTINCT FROM <%= user_id %> THEN 'available'
+    WHEN (block.is_available
+          AND reservation.user_id IS NOT DISTINCT FROM <%= user_id %>) THEN 'available'
     ELSE 'unavailable'
   END AS survey_type,
   CASE
-    WHEN reservation.id IS NOT NULL AND reservation.user_id <> <%= user_id %> THEN 'reserved'
-    WHEN (core_group.id IS NOT NULL
-          AND NOT core_group.allows_individual_mappers) THEN 'unavailable'
     WHEN NOT block.is_available THEN 'unavailable'
-    -- We should only allow requesting access to active groups that you are
-    -- not already a trusted mapper or admin of
+    WHEN (core_group.id IS NOT NULL
+          AND NOT core_group.allows_individual_mappers
+          AND NOT core_group.admin_id = <%= user_id %>) THEN 'unavailable'
+    WHEN reservation.id IS NOT NULL AND reservation.user_id <> <%= user_id %> THEN 'reserved'
+    -- Designate as "group_territory" if block belongs to a group and the user
+    -- is neither a trusted mapper nor a group admin.
+    -- Don't filter out inactive groups or else non trusted mappers will be
+    -- able to reserve blocks in the "expert" group.
     WHEN (turf.id IS NOT NULL
-          AND (core_group.is_active = TRUE
-               AND trustedmapper.id IS NULL
-               AND core_group.admin_id <> <%= user_id %>)) THEN 'group_territory'
-    -- If a group is inactive, it is unavailable unless you are an admin or
-    -- a trusted mapper of that group
-    WHEN (turf.id IS NOT NULL
-          AND core_group.is_active = FALSE
           AND trustedmapper.id IS NULL
-          AND core_group.admin_id <> <%= user_id %>) THEN 'unavailable'
+          AND core_group.admin_id <> <%= user_id %>) THEN 'group_territory'
     ELSE 'none'
   END AS restriction
   FROM survey_blockface AS block

@@ -6,7 +6,8 @@
   CASE
     WHEN block.is_available AND reservation.user_id = <%= user_id %> THEN 'available'
     ELSE 'unavailable'
-  END as survey_type
+  END as survey_type,
+  'none' as restriction
   FROM survey_blockface AS block
   LEFT OUTER JOIN survey_blockfacereservation AS reservation
     ON (block.id = reservation.blockface_id
