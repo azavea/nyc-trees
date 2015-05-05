@@ -130,8 +130,8 @@ class User(NycModel, AbstractUser):
         default=False,
         help_text='Seen help text on Progress page?')
     survey_geolocate_help_shown = models.BooleanField(
-    	default=False,
-    	help_text='Seen geolocation help text on Survey page?')
+        default=False,
+        help_text='Seen geolocation help text on Survey page?')
     reservations_page_help_shown = models.BooleanField(
         default=False,
         help_text='Seen help text on Reservations page?')
