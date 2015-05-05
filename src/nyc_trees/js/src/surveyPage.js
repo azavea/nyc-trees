@@ -679,6 +679,8 @@ function setupSpeciesAutocomplete($form) {
 
     $form.find('select[name="species_id"]').select2({
         allowClear: false,
+        minimumInputLength: 3,
+        placeholder: "Select and type species name",
         matcher: function(term, commonName, $option) {
             var scientificName = $option.data('scientific-name'),
                 cultivar = $option.data('cultivar'),
