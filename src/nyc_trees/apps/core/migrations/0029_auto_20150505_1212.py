@@ -11,7 +11,7 @@ import apps.core.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0027_auto_20150428_1529'),
+        ('core', '0028_user_survey_geolocate_help_shown'),
     ]
 
     operations = [
@@ -235,6 +235,12 @@ class Migration(migrations.Migration):
             model_name='user',
             name='reservations_page_help_shown',
             field=models.BooleanField(default=False, help_text='Seen help text on Reservations page?'),
+            preserve_default=True,
+        ),
+        migrations.AlterField(
+            model_name='user',
+            name='survey_geolocate_help_shown',
+            field=models.BooleanField(default=False, help_text='Seen geolocation help text on Survey page?'),
             preserve_default=True,
         ),
         migrations.AlterField(
