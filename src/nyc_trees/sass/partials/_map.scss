@@ -330,6 +330,10 @@
   }
 }
 
+.modal-dialog {
+  margin-top: 7rem;
+}
+
 @media (min-width: $screen-sm) {
   .reservation-action-item {
     margin: 0 $grid-gutter-width/-2;
