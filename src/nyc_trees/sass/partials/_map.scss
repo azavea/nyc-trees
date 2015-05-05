@@ -15,6 +15,9 @@
 }
 
 .map-container {
+  transition: bottom 400ms;
+  -ms-transition: bottom 400ms;
+  -webkit-transition: bottom 400ms;
   .tab-status-map-tab & {
     position: fixed;
     bottom: 8rem;
@@ -61,7 +64,7 @@
     padding: 0;
   }
   &:empty {
-    visibility: hidden;
+    display: none;
   }
   @media (max-height: $screen-xs-height) and (max-width: $screen-sm) {
     height: 7rem;
@@ -208,6 +211,11 @@
 }
 
 @media (max-width: $screen-sm - 1) {
+  body:not(.actionbar-triggered) {
+    .map-container.progress-map {
+      bottom: 0;
+    }
+  }
   .leaflet-control-zoom-out, .leaflet-control-zoom-in {
     display: none !important;
   }
