@@ -168,6 +168,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       app.vm.synced_folder "src/nyc_trees/apps", "/opt/app/apps"
     else
       app.vm.synced_folder "src/nyc_trees", "/opt/app/"
+      # Expose tiler SQL queries to app VM for unit testing purposes.
+      app.vm.synced_folder "src/tiler/sql", "/opt/tiler/sql/"
     end
 
     # Django via Nginx/Gunicorn
