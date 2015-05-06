@@ -161,7 +161,12 @@
         border-top: 2px solid $gray-lightest;
     }
     #another-tree {
-        margin-bottom: 2rem;
+        margin-bottom: 0;
+        border-radius: $input-border-radius $input-border-radius 0 0;
+    }
+    #no-further-trees {
+        margin-top: 0;
+        border-radius: 0 0 $input-border-radius $input-border-radius;
     }
 
     @media (max-width: $screen-sm - 1) {
@@ -257,5 +262,32 @@
     img {
           max-width: 85px;
           vertical-align: baseline;
+    }
+}
+
+#no-further-trees-group {
+    border-top: 2px solid $gray-lightest;
+    margin-top: 10px;
+    .distance-end-form, #submit-survey {
+        display: none;
+    }
+    p {
+        margin-top: 20px;
+        font-size: $font-size-base;
+    }
+    
+    &.active {
+        border-top: none;
+       .distance-end-form, #submit-survey {
+            display: block;
+        } 
+        p {
+            display: none;
+        }
+        .tree-form-block {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid $gray-lightest;
+        }
     }
 }
