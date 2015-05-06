@@ -48,7 +48,7 @@ urlpatterns = patterns(
         event_user_check_in_poll, name='event_user_check_in_poll'),
 
     url(r'^(?P<group_slug>[\w-]+)/event/'
-        r'(?P<event_slug>[\w-]+)/checkin/(?P<username>[^/]+)/$',
+        r'(?P<event_slug>[\w-]+)/checkin/(?P<username>[\w.@+-]+)/$',
         check_in_user_to_event, name='check_in_user_to_event'),
 
     url(r'^(?P<group_slug>[\w-]+)/event/'

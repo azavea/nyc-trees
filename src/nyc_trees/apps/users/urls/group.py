@@ -29,7 +29,7 @@ urlpatterns = patterns(
         r.start_group_map_print_job,
         name='start_group_map_print_job'),
 
-    url(r'^(?P<group_slug>[\w-]+)/individual-mapper/(?P<username>\w+)/$',
+    url(r'^(?P<group_slug>[\w-]+)/individual-mapper/(?P<username>[\w.@+-]+)/$',
         r.edit_user_mapping_priveleges,
         name='edit_user_mapping_priveleges'),
 
