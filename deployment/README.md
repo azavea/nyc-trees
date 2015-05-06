@@ -25,7 +25,7 @@ Lastly, install the AWS CLI, Boto, and Troposphere:
 
 ```bash
 $ cd deployment
-$ pip install -r deployment/requirements.txt
+$ pip install -r requirements.txt
 ```
 
 ## S3 Website Failover
