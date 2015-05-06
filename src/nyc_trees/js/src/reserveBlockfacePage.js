@@ -135,14 +135,18 @@ var cartLayer = new BlockfaceLayer(reservationMap, {
     onEachFeature: function(feature, layer) {
         layer.on('click', function(e) {
             showPopup(feature.properties.id, e.latlng, 'In Cart', actions.remove);
-            blockfaceLayers[feature.properties.id] = layer;
-            selectedLayer.addData(feature);
+            selectFeature(feature, layer);
         });
     }
 });
 
 function selectReservedBlockface(feature, layer, latlng) {
     showPopup(feature.properties.id, latlng, 'Expires ' + feature.properties.expires_at, actions.remove);
+    selectFeature(feature, layer);
+}
+
+function selectFeature(feature, layer) {
+    selectedLayer.clearLayers();
     blockfaceLayers[feature.properties.id] = layer;
     selectedLayer.addData(feature);
 }
@@ -173,7 +177,7 @@ function showPopup(blockfaceId, latlng, status, action) {
     // But we don't want invisible popups to auto-pan the map in "mobile" view,
     // so only add the popup if we are in "desktop" view -- determined by
     // whether the legend is visible.
-    if ($(dom.legendTitle).length > 0) {
+    if ($(dom.legendTitle + ':visible').length > 0) {
         // Find right edge of sidebar so we can make the popup avoid it
         var $sidebar = $(dom.mapSidebar),
             sidebarRight = $sidebar.offset().left + $sidebar.outerWidth();
