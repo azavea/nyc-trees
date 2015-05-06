@@ -116,7 +116,7 @@ function initBaseMap(map, options) {
             maxZoom: zoom.MAX,
             attribution: options.forPdf ? attributionForPdf : attribution
         },
-        satelliteUrl = 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        satelliteUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
         strandardResUrl = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
         retinaSuffix = 'cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}@2x.png',
         retinaUrl = 'https://' + retinaSuffix,
