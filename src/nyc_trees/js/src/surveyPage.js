@@ -73,7 +73,10 @@ var dom = {
         collapseButton: '[data-toggle="collapse"]',
 
         addTree: '#another-tree',
+        noFurtherTrees: '#no-further-trees',
         submitSurvey: '#submit-survey',
+
+        noFurtherTreesGroup: '#no-further-trees-group',
 
         deleteTree: '[data-action="delete"]',
         deleteTreePopup: '#delete-tree-popup',
@@ -392,6 +395,12 @@ $(dom.addTree).click(function (){
         $deleteButtons.addClass('hidden');
         $deleteButtons.last().removeClass('hidden');
     }
+});
+
+$(dom.noFurtherTrees).on('click', function(e) {
+    // Adding active class will reveal submit button,
+    // and distance to end field
+    $(dom.noFurtherTreesGroup).addClass('active');
 });
 
 // When tree forms are opened/closed we need to change the icon class of the toggle

@@ -43,22 +43,25 @@
             <div class="tree-form-block">
                 <div class="field">
                     <button class="btn btn-primary btn-block" id="another-tree">+ Another Tree</button>
+                    <button class="btn btn-gray btn-block" id="no-further-trees">No Further Trees on Block</button>
                 </div>
             </div>
 
+            <div id="no-further-trees-group">
+                <form autocomplete="off" class="distance-end-form">
+                    <!-- We need a clickable submit button in order to trigger browser error validation popups -->
+                    <input type="submit" data-class="fake-submit" class="hidden">
 
-            <form autocomplete="off" class="distance-end-form">
-                <!-- We need a clickable submit button in order to trigger browser error validation popups -->
-                <input type="submit" data-class="fake-submit" class="hidden">
-
-                <div class="field">
-                    <label for="distance_to_end">Distance to End <small>(decimal feet)</small></label>
-                    <input id="distance_to_end" class="form-control" required type="number" min="0" max="100000" step="any" placeholder="ft">
+                    <div class="field">
+                        <label for="distance_to_end">Distance to End <small>(decimal feet)</small></label>
+                        <input id="distance_to_end" class="form-control" required type="number" min="0" max="100000" step="any" placeholder="ft">
+                    </div>
+                </form>
+                <div class="tree-form-block">
+                    <p>When you've added all the trees, please select "No Further Trees on Block" and submit your data.</p>
+                    <button class="btn btn-primary btn-block" id="submit-survey">Submit</button>
+                    <a class="btn btn-warning btn-block" id="cant-map" href="#quit-popup" data-toggle="modal">I cannot map this block because...</a>
                 </div>
-            </form>
-            <div class="tree-form-block">
-                <button class="btn btn-primary btn-block" id="submit-survey">Submit</button>
-                <a class="btn btn-warning btn-block" id="cant-map" href="#quit-popup" data-toggle="modal">I cannot map this block because...</a>
             </div>
             <div class="block" id="treeform-sponsor">
                 <span>Powered By</span>
