@@ -15,7 +15,8 @@
         WHEN turf.group_id = <%= group_id %> THEN 'surveyed-by-me'
         ELSE 'surveyed-by-others'
       END
-  END AS survey_type
+  END AS survey_type,
+  'none' AS restriction
 
   FROM survey_blockface AS block
   LEFT OUTER JOIN survey_territory AS turf

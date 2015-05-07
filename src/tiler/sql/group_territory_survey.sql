@@ -7,7 +7,8 @@
   CASE
     WHEN (block.is_available AND reservation.id IS NULL) THEN 'available'
     ELSE 'unavailable'
-  END AS survey_type
+  END AS survey_type,
+  'none' AS restriction
   FROM survey_blockface AS block
   INNER JOIN survey_territory AS turf
     ON block.id = turf.blockface_id
