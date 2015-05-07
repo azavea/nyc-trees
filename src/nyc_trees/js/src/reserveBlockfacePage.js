@@ -84,13 +84,15 @@ var $current = $(dom.currentReservations),
 
 var selectedLayer = new SelectableBlockfaceLayer(reservationMap, grid, {
     onAdd: function(gridData, latlng) {
-        if (selectedBlockfacesCount >= blockfaceLimit) {
-            $(dom.limitReachedModal).modal('show');
-        } else if (gridData.restriction === "none") {
-            selectedLayer.clearLayers();
-            showPopup(gridData.id, latlng, 'Available', actions.add);
+        if (!(gridData.id in selectedBlockfaces)) {
+            if (selectedBlockfacesCount >= blockfaceLimit) {
+                $(dom.limitReachedModal).modal('show');
+            } else if (gridData.survey_type === "available") {
+                selectedLayer.clearLayers();
+                showPopup(gridData.id, latlng, 'Available', actions.add);
 
-            return true;
+                return true;
+            }
         }
         return false;
     },
@@ -271,14 +273,14 @@ grid.on('click', function(e) {
     if (!e.data) {
         return;
     }
-    if (e.data.restriction === 'group_territory') {
+    if (e.data.survey_type === 'group_territory') {
         $(dom.requestAccessModal)
             .find(dom.requestAccessButton)
             .data('group-slug', e.data.group_slug);
         $(dom.requestAccessModal).modal('show');
-    } else if (e.data.restriction === 'reserved') {
+    } else if (e.data.survey_type === 'reserved') {
         $(dom.alreadyReservedModal).modal('show');
-    } else if (e.data.restriction !== 'none') {
+    } else if (e.data.survey_type !== 'available') {
         $(dom.unavailableBlockfaceModal).modal('show');
     }
 });

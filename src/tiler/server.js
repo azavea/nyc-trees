@@ -30,7 +30,7 @@ var Windshaft = require('windshaft'),
         progress: 'id',
         user_progress: 'id',
         group_progress: 'id',
-        user_reservable: 'id,group_id,group_slug,survey_type,restriction',
+        user_reservable: 'id,group_id,group_slug,survey_type',
         user_reservations: 'id,survey_type,geojson'
     },
 

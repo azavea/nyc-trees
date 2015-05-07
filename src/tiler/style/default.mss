@@ -33,9 +33,4 @@
   [survey_type = 'unavailable'] {
     line-color: @unavailable;
   }
-
-  /* restriction rules must come after the survey_type rules so they can override styling */
-  [restriction = 'unavailable'] {
-    line-color: @unavailable;
-  }
 }
