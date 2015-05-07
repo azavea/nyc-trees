@@ -48,6 +48,39 @@ $(dom.modeChoice).click(onModeChanged);
 // matter where you click/tap.
 $('.leaflet-container').css('cursor', 'pointer');
 
+
+// Maximum zoom levels for aggregate layers
+var zoomMaxes = {
+    borough: 12,
+    nta: 15
+};
+
+var boroughLayer = mapModule.addTileLayer(progressMap, {
+    url: '//33.33.33.20/1430516442/nyc_trees/borough_progress/{z}/{x}/{y}.png',
+    minZoom: 1,
+    maxZoom: zoomMaxes.borough
+});
+
+var ntaLayer = mapModule.addTileLayer(progressMap, {
+    url: '//33.33.33.20/1430516442/nyc_trees/nta_progress/{z}/{x}/{y}.png',
+    minZoom: zoomMaxes.borough + 1,
+    maxZoom: zoomMaxes.nta
+});
+
+// Work around https://github.com/Leaflet/Leaflet/issues/1905
+progressMap.on('zoomend', function(e) {
+    var zoom = progressMap.getZoom();
+        if (zoom > zoomMaxes.borough) {
+        boroughLayer._clearBgBuffer();
+    }
+    if (zoom < (zoomMaxes.borough + 1) || zoom > zoomMaxes.nta) {
+        ntaLayer._clearBgBuffer();
+    }
+    if (zoom < (zoomMaxes.nta + 1) && tileLayer) {
+        tileLayer._clearBgBuffer();
+    }
+});
+
 loadLayers($(dom.modeChoice).first());
 
 progressMap.addLayer(selectedLayer);
@@ -92,7 +125,7 @@ function loadLayers($mode) {
     }
 
     if (tileUrl) {
-        addLayers(bounds, tileUrl);
+        addLayers(bounds, tileUrl, {minZoom: zoomMaxes.nta + 1, maxZoom: zoom.MAX});
         selectedLayer.clicksEnabled = true;
     } else {
         selectedLayer.clicksEnabled = false;
@@ -124,15 +157,14 @@ function loadLayers($mode) {
     }
 }
 
-function addLayers(bounds, tileUrl) {
+function addLayers(bounds, tileUrl, options) {
     // Add layer to map after zoom animation completes.
     // (Otherwise spurious tile requests will be issued at the old zoom level.)
     mapModule.fitBounds(progressMap, bounds).then(function() {
         tileLayer = mapModule.addTileLayer(progressMap, {
-            url: tileUrl
+            url: tileUrl,
+            minZoom: options.minZoom,
+            maxZoom: options.maxZoom
         });
     });
-}
-
-function createSelectableLayer() {
 }
