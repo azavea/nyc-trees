@@ -631,7 +631,8 @@ def _create_survey_and_trees(request, event=None):
             return HttpResponseForbidden(
                 'You have not reserved this block edge.')
 
-    survey.clean_and_save()
+    survey.full_clean()
+    survey.save()
 
     if survey.quit_reason == '':
         _mark_survey_blockface_availability(survey, False)
@@ -648,7 +649,8 @@ def _create_survey_and_trees(request, event=None):
 def flag_survey(request, survey_id):
     survey = get_object_or_404(Survey, id=survey_id, user=request.user)
     survey.is_flagged = True
-    survey.clean_and_save()
+    survey.full_clean()
+    survey.save()
     ctx = {'success': True}
     return ctx
 

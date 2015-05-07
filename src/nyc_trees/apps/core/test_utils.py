@@ -78,7 +78,8 @@ def make_survey(user, blockface, **kwargs):
     defaults.update(kwargs)
 
     s = Survey(**defaults)
-    s.clean_and_save()
+    s.full_clean()
+    s.save()
 
     return s
 
