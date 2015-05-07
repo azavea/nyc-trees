@@ -39,7 +39,7 @@ class Event(NycModel, models.Model):
 
     # blank=True is valid for 'slug', because we'll automatically create slugs
     slug = models.SlugField(
-        blank=True,
+        blank=True, max_length=255,
         help_text='Short name used in URLs')
 
     description = models.TextField(

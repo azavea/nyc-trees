@@ -240,7 +240,7 @@ class Group(NycModel, models.Model):
         help_text='Name of group, for display')
     # blank=True is valid for 'slug', because we'll automatically create slugs
     slug = models.SlugField(
-        unique=True, blank=True,
+        unique=True, blank=True, max_length=255,
         help_text='Short name for group, used in URLs')
     description = models.TextField(
         default='', blank=True,
