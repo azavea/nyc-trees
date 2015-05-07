@@ -56,7 +56,7 @@ class Territory(NycModel, models.Model):
         verbose_name_plural = "Territories"
 
 
-class Survey(NycModel, models.Model):
+class Survey(models.Model):
     # We do not anticipate deleting a Blockface, but we definitely
     # should not allow it to be deleted if there is a related Survey
     blockface = models.ForeignKey(
@@ -84,6 +84,15 @@ class Survey(NycModel, models.Model):
     quit_reason = models.TextField(
         blank=True,
         help_text='Description of why survey was abandoned')
+
+    # We can't use the NycModel mixin, because we want to add db indexes
+    created_at = models.DateTimeField(
+        auto_now_add=True, editable=False,
+        help_text='Time when row was created')
+    updated_at = models.DateTimeField(
+        auto_now=True, db_index=True, editable=False,
+        help_text='Time when row was last updated'
+    )
 
     def __unicode__(self):
         return 'block %s on %s by %s' % (self.blockface_id, self.created_at,
@@ -311,7 +320,7 @@ class ReservationsQuerySet(models.QuerySet):
         return self.filter(user=user).current().count()
 
 
-class BlockfaceReservation(NycModel, models.Model):
+class BlockfaceReservation(models.Model):
     user = models.ForeignKey(
         User,
         help_text='ID of user reserving blockface')
@@ -332,6 +341,15 @@ class BlockfaceReservation(NycModel, models.Model):
     reminder_sent_at = models.DateTimeField(
         null=True, blank=True,
         help_text='Time expiration reminder was emailed')
+
+    # We can't use the NycModel mixin, because we want to add db indexes
+    created_at = models.DateTimeField(
+        auto_now_add=True, editable=False,
+        help_text='Time when row was created')
+    updated_at = models.DateTimeField(
+        auto_now=True, db_index=True, editable=False,
+        help_text='Time when row was last updated'
+    )
 
     objects = ReservationsQuerySet.as_manager()
 
