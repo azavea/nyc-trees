@@ -4,7 +4,8 @@
   turf.group_id,
   core_group.slug AS group_slug,
   CASE
-    WHEN (block.is_available AND reservation.id IS NULL
+    WHEN not block.is_available THEN 'unavailable'
+    WHEN (reservation.id IS NULL
           AND (turf.id IS NULL
                OR trustedmapper.id IS NOT NULL
                OR core_group.admin_id = <%= user_id %>)) THEN 'available'
@@ -12,15 +13,7 @@
     -- 'available'.  We use a GeoJSON layer in the UI for the user's
     -- reserved blockfaces, and when a blockface is deselected we want to
     -- be able to reselect it
-    WHEN (block.is_available
-          AND reservation.user_id IS NOT DISTINCT FROM <%= user_id %>) THEN 'available'
-    ELSE 'unavailable'
-  END AS survey_type,
-  CASE
-    WHEN NOT block.is_available THEN 'unavailable'
-    WHEN (core_group.id IS NOT NULL
-          AND NOT core_group.allows_individual_mappers
-          AND NOT core_group.admin_id = <%= user_id %>) THEN 'unavailable'
+    WHEN reservation.user_id IS NOT DISTINCT FROM <%= user_id %> THEN 'available'
     WHEN reservation.id IS NOT NULL AND reservation.user_id <> <%= user_id %> THEN 'reserved'
     -- Designate as "group_territory" if block belongs to a group and the user
     -- is neither a trusted mapper nor a group admin.
@@ -28,9 +21,11 @@
     -- able to reserve blocks in the "expert" group.
     WHEN (turf.id IS NOT NULL
           AND trustedmapper.id IS NULL
+          AND core_group.allows_individual_mappers
           AND core_group.admin_id <> <%= user_id %>) THEN 'group_territory'
-    ELSE 'none'
-  END AS restriction
+    ELSE 'unavailable'
+  END AS survey_type
+
   FROM survey_blockface AS block
   LEFT OUTER JOIN survey_territory AS turf
     ON block.id = turf.blockface_id
