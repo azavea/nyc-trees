@@ -17,7 +17,7 @@
                     <span class="icon-bar"></span>
                 </button>
                 <div class="brand nav-left">
-                    <a href="{% url 'home_page' %}"><img src="{{ 'img/logo-treescount.png'|static_url }}" srcset="{{ 'img/logo-treescount@2x.png'|static_url }} 2x" alt="TreesCount! 2015 logo"></a>
+                    <a href="{% url 'home_page' %}"><img src="{{ 'img/logo-treescount.png'|static_url }}" srcset="{{ 'img/logo-treescount@2x.png'|static_url }} 2x" alt="TreesCount! 2015 logo" /></a>
                 </div>
             </div>
             <div class="nav-right nav-account">
@@ -30,30 +30,6 @@
                 | <a href="{% url 'registration_register' %}">Register</a>
                 {% endif %}
             </div>
-            {% if my_events_now %}
-            <div class="nav-right nav-alert">
-                <div class="dropdown">
-                    <button class="btn dropdown-toggle" type="button" id="eventNowAlert" data-toggle="dropdown" aria-expanded="false">
-                        <div class="nav-alert-badge">!</div>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="eventNowAlert">
-                        {% for event in my_events_now %}
-                        <li class="text-right" role="presentation">
-                            <a role="menuitem" tabindex="-1" href="{{ event.get_user_checkin_url }}">
-                                The event
-                                <b>{{ event.title }}</b>
-                                {% if event.has_started %}
-                                    has started
-                                {% else %}
-                                    is starting soon
-                                {% endif %}
-                            </a>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-            {% endif %}
         </nav>
     </header>
     <div class="overlay-menued"></div>
@@ -70,7 +46,7 @@
             <div class="container text-center">
                 <div class="row">
                     <div>
-                        <img class="section-about-logo" src="{{ 'img/logo-nycparks.png'|static_url }}" srcset="{{ 'img/logo-nycparks@2x.png'|static_url }} 2x">
+                        <img class="section-about-logo" src="{{ 'img/logo-nycparks.png'|static_url }}" srcset="{{ 'img/logo-nycparks@2x.png'|static_url }} 2x" alt="NYC Parks Logo" />
                         <p>A project of New York City <strong>Department&nbsp;of&nbsp;Parks&nbsp;&amp;&nbsp;Recreation</strong></p>
                     </div>
                 </div>

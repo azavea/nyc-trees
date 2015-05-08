@@ -11,7 +11,7 @@ from pytz import timezone
 from celery import chain
 
 from django.conf import settings
-from django.contrib.gis.geos import GeometryCollection
+from django.contrib.gis.geos import Point, GeometryCollection
 from django.core.exceptions import ValidationError, PermissionDenied
 from django.core.urlresolvers import reverse
 from django.db import transaction, connection
@@ -25,7 +25,8 @@ from apps.core.models import Group
 from apps.core.helpers import user_is_group_admin, user_is_individual_mapper
 
 from apps.event.models import Event, EventRegistration
-from apps.event.helpers import user_is_checked_in_to_event
+from apps.event.helpers import (user_is_checked_in_to_event,
+                                user_is_rsvped_for_event)
 
 from apps.mail.tasks import notify_reservation_confirmed
 from libs.pdf_maps import create_reservations_map_pdf
@@ -43,8 +44,7 @@ from apps.survey.layer_context import (
     get_context_for_printable_reservations_layer,
     get_context_for_group_progress_layer, get_context_for_user_progress_layer
 )
-from apps.survey.helpers import (teammates_for_event, group_percent_completed,
-                                 teammates_for_individual_mapping)
+from apps.survey.helpers import group_percent_completed, teammates_for_mapping
 
 from libs.pdf_maps import create_and_save_pdf
 
@@ -78,8 +78,7 @@ def progress_page(request):
     if user.is_authenticated():
         context['layer_my'] = get_context_for_user_progress_layer(request)
 
-        blocks = (user.survey_set
-                  .distinct('blockface')
+        blocks = (user.surveys.distinct('blockface')
                   .values_list('blockface_id', flat=True))
         if len(blocks) > 0:
             blockfaces = Blockface.objects.filter(id__in=blocks).collect()
@@ -168,10 +167,11 @@ def blockface_cart_page(request):
     ids_str = request.POST.get('ids', None)
     ids = ids_str.split(',') if ids_str else []
     cancelled_reservations = _get_reservations_to_cancel(ids, request.user)
+    already_reserved_ids = _already_reserved_blockface_ids(ids)
 
     return {
         'blockface_ids': request.POST['ids'],
-        'num_reserved': len(ids),
+        'num_reserved': len(ids) - already_reserved_ids.count(),
         'num_cancelled': cancelled_reservations.count()
     }
 
@@ -333,7 +333,8 @@ def confirm_blockface_reservations(request):
     # Filter empty strings
     ids = filter(None, ids)
 
-    is_mapping_with_paper = request.POST['is_mapping_with_paper'] == 'True'
+    is_mapping_with_paper = \
+        request.POST.get('is_mapping_with_paper', 'False') == 'True'
 
     blockfaces = Blockface.objects \
         .filter(id__in=ids) \
@@ -347,10 +348,7 @@ def confirm_blockface_reservations(request):
         .filter(admin=request.user) \
         .values_list('id', flat=True)
 
-    already_reserved_blockface_ids = BlockfaceReservation.objects \
-        .filter(blockface__id__in=ids) \
-        .current() \
-        .values_list('blockface_id', flat=True)
+    already_reserved_blockface_ids = _already_reserved_blockface_ids(ids)
 
     right_now = now()
     expiration_date = right_now + settings.RESERVATION_TIME_PERIOD
@@ -373,6 +371,7 @@ def confirm_blockface_reservations(request):
             ))
 
     cancelled_reservations = _get_reservations_to_cancel(ids, request.user)
+    num_cancelled = cancelled_reservations.count()
 
     cancelled_reservations.update(canceled_at=right_now, updated_at=right_now)
 
@@ -398,11 +397,11 @@ def confirm_blockface_reservations(request):
                                              reservation_ids)) \
             .apply_async()
 
-    num_reserved = len(new_reservations) + len(already_reserved_blockface_ids)
+    num_reserved = len(new_reservations)
     return {
-        'blockfaces_requested': len(ids),
-        'blockfaces_reserved': num_reserved,
-        'blockfaces_cancelled': len(cancelled_reservations),
+        'n_requested': len(ids) - len(already_reserved_blockface_ids),
+        'n_reserved': num_reserved,
+        'n_cancelled': num_cancelled,
         'expiration_date': expiration_date
     }
 
@@ -414,6 +413,13 @@ def _get_territory(blockface):
         return None
 
 
+def _already_reserved_blockface_ids(ids):
+    return BlockfaceReservation.objects \
+        .filter(blockface__id__in=ids) \
+        .current() \
+        .values_list('blockface_id', flat=True)
+
+
 def _get_reservations_to_cancel(ids, user):
     # Whatever blockface IDs were not submitted, should be cancelled
     return BlockfaceReservation.objects \
@@ -422,13 +428,36 @@ def _get_reservations_to_cancel(ids, user):
         .current()
 
 
-def blockface(request, blockface_id):
-    blockface = get_object_or_404(Blockface, id=blockface_id)
+def _blockface_context(blockface):
     return {
         'id': blockface.id,
         'extent': blockface.geom.extent,
         'geojson': blockface.geom.geojson
     }
+
+
+def blockface(request, blockface_id):
+    blockface = get_object_or_404(Blockface, id=blockface_id)
+    return _blockface_context(blockface)
+
+
+def blockface_near_point(request):
+    p = Point(float(request.GET.get('lng', 0)),
+              float(request.GET.get('lat', 0)),
+              srid=4326)
+
+    # The size of the distance filter was chosen through trial and
+    # error by testing tap precision on a mobile device
+    qs = Blockface.objects.filter(geom__dwithin=(p, 0.0002))\
+                          .distance(p)\
+                          .order_by('distance')
+    blockfaces = qs[:1]  # We only want the closest blockface
+    if blockfaces:
+        return _blockface_context(blockfaces[0])
+    else:
+        return {
+            'error': 'Block edge not found near lat:%f lon:%f' % (p.y, p.x)
+        }
 
 
 def _validate_event_and_group(request, event_slug):
@@ -474,14 +503,24 @@ def start_survey(request):
         'layer': get_context_for_reservations_layer(request),
         'bounds': _user_reservation_bounds(request.user),
         'choices': _get_survey_choices(),
-        'teammates': teammates_for_individual_mapping(request.user),
+        'teammates': teammates_for_mapping(request.user),
         'no_more_reservations': reservations_for_user <= 1,
+        'geolocate_help_shown': _was_help_shown(request,
+                                                'survey_geolocate_help_shown'),
     }
 
 
 def start_survey_from_event(request, event_slug):
     group = request.group
-    event = _validate_event_and_group(request, event_slug)
+    event = get_object_or_404(Event, group=request.group, slug=event_slug)
+
+    if not user_is_rsvped_for_event(request.user, event):
+        raise PermissionDenied('User not checked-in to this event')
+
+    if not user_is_checked_in_to_event(request.user, event):
+        return redirect('event_user_check_in_page',
+                        group_slug=event.group.slug, event_slug=event.slug)
+
     if not event.in_progress():
         return HttpResponseForbidden('Event not currently in-progress')
 
@@ -489,7 +528,9 @@ def start_survey_from_event(request, event_slug):
         'layer': get_context_for_territory_survey_layer(group.id),
         'location': [event.location.y, event.location.x],
         'choices': _get_survey_choices(),
-        'teammates': teammates_for_event(group, event, request.user)
+        'teammates': teammates_for_mapping(request.user),
+        'geolocate_help_shown': _was_help_shown(request,
+                                                'survey_geolocate_help_shown'),
     }
 
 
@@ -590,7 +631,8 @@ def _create_survey_and_trees(request, event=None):
             return HttpResponseForbidden(
                 'You have not reserved this block edge.')
 
-    survey.clean_and_save()
+    survey.full_clean()
+    survey.save()
 
     if survey.quit_reason == '':
         _mark_survey_blockface_availability(survey, False)
@@ -607,7 +649,8 @@ def _create_survey_and_trees(request, event=None):
 def flag_survey(request, survey_id):
     survey = get_object_or_404(Survey, id=survey_id, user=request.user)
     survey.is_flagged = True
-    survey.clean_and_save()
+    survey.full_clean()
+    survey.save()
     ctx = {'success': True}
     return ctx
 

@@ -50,26 +50,37 @@ module.exports = BlockfaceLayer.extend({
             });
         };
 
-        grid.on('click', function(e) {
-            if (self.clicksEnabled) {
-                self.addBlockface(e.data, e.latlng);
-            }
-        });
+        if (grid) {
+            grid.on('click', function(e) {
+                if (self.clicksEnabled && e.data) {
+                    self.addBlockface(e.data, e.latlng);
+                }
+            });
+        } else {
+            map.on('click', function(e) {
+                if (self.clicksEnabled) {
+                    self.addBlockface(null, e.latlng);
+                }
+            });
+        }
     },
 
     addBlockface: function(data, latlng) {
-        var self = this;
-        if (!data || !data.id) {
-            return;
-        }
+        var self = this,
+            fetch;
         if (self.options.onAdd(data, latlng)) {
-            mapUtil.fetchBlockface(data.id).then(function(blockfaceData) {
+            if (data && data.id) {
+                fetch = mapUtil.fetchBlockface(data.id);
+            } else {
+                fetch = mapUtil.fetchBlockfaceNearLatLng(latlng);
+            }
+            fetch.then(function(blockfaceData) {
                 if (blockfaceData && blockfaceData.geojson) {
                     var geom = mapUtil.parseGeoJSON(blockfaceData.geojson);
                     self.addData({
                         "type": "Feature",
                         "geometry": geom,
-                        "properties": data
+                        "properties": data || { id: blockfaceData.id }
                     });
                 }
             });

@@ -17,7 +17,8 @@ from apps.core.models import User, Group
 from apps.core.test_utils import (make_request, make_tree, tree_defaults,
                                   make_survey, survey_defaults)
 
-from apps.users.models import TrustedMapper
+from apps.users import get_achievements_for_user
+from apps.users.models import TrustedMapper, Achievement
 
 from apps.survey.models import (Blockface, BlockfaceReservation, Territory,
                                 Survey, Tree)
@@ -35,6 +36,14 @@ class SurveyTestCase(TestCase):
             email='pat@rat.com',
             first_name='Pat',
             last_name='Smith',
+            profile_is_public=True,
+        )
+        self.other_user = User.objects.create(
+            username='foo',
+            password='password',
+            email='foo@bar.com',
+            first_name='Foo',
+            last_name='Bar',
             profile_is_public=True,
         )
         self.block = Blockface.objects.create(
@@ -139,10 +148,10 @@ class ConfirmBlockfaceReservationTests(SurveyTestCase):
             'ids': ids, 'is_mapping_with_paper': 'False'}, method="POST")
 
         context = confirm_blockface_reservations(req)
-        self.assertIn('blockfaces_requested', context)
-        self.assertIn('blockfaces_reserved', context)
+        self.assertIn('n_requested', context)
+        self.assertIn('n_reserved', context)
         self.assertIn('expiration_date', context)
-        self.assertEqual(num, context['blockfaces_reserved'])
+        self.assertEqual(num, context['n_reserved'])
 
     def test_can_reserve_available_block(self):
         self.assert_blocks_reserved(1, self.block)
@@ -156,7 +165,7 @@ class ConfirmBlockfaceReservationTests(SurveyTestCase):
         reservation = BlockfaceReservation.objects.get(blockface=self.block)
         self.assertEqual(self.user.pk, reservation.user_id)
 
-        self.assert_blocks_reserved(2, self.block, self.block2)
+        self.assert_blocks_reserved(1, self.block2)
 
         self.assertEqual(1, BlockfaceReservation.objects
                          .filter(blockface=self.block).count())
@@ -201,3 +210,54 @@ class ConfirmBlockfaceReservationTests(SurveyTestCase):
                                      is_approved=True)
 
         self.assert_blocks_reserved(01, self.block)
+
+
+class TeammateTests(SurveyTestCase):
+    def test_survey_achievements(self):
+        self._assert_blockface_achievements(0, 0)
+        self._assert_blockface_achievements(50, 1)
+        self._assert_blockface_achievements(100, 2)
+        self._assert_blockface_achievements(200, 3)
+        self._assert_blockface_achievements(400, 4)
+        self._assert_blockface_achievements(1000, 5)
+
+    def _assert_blockface_achievements(self, amount_blockfaces,
+                                       amount_achievements):
+        Survey.objects.all().delete()
+        Blockface.objects.all().delete()
+        Achievement.objects.all().delete()
+
+        # Add blocks
+        Blockface.objects.bulk_create(
+            Blockface(
+                geom=MultiLineString(LineString(((0, 0), (1, 1)))),
+                created_at=now())
+            for i in xrange(amount_blockfaces))
+
+        # Survey blocks (solo)
+        ids = Blockface.objects.values_list('id', flat=True)
+        Survey.objects.bulk_create(
+            Survey(blockface_id=id,
+                   user=self.user,
+                   created_at=now(),
+                   is_flagged=False,
+                   has_trees=True,
+                   is_left_side=True,
+                   is_mapped_in_blockface_polyline_direction=True,
+                   quit_reason='N/A')
+            for id in ids)
+
+        # Assert first user (only) has achievements
+        achievements = get_achievements_for_user(self.user)['achieved']
+        self.assertEqual(amount_achievements, len(achievements))
+        achievements = get_achievements_for_user(self.other_user)['achieved']
+        self.assertEqual(0, len(achievements))
+
+        # Survey blocks (with partner)
+        Survey.objects.all().update(teammate=self.other_user)
+
+        # Assert both users have achievements
+        achievements = get_achievements_for_user(self.user)['achieved']
+        self.assertEqual(amount_achievements, len(achievements))
+        achievements = get_achievements_for_user(self.other_user)['achieved']
+        self.assertEqual(amount_achievements, len(achievements))

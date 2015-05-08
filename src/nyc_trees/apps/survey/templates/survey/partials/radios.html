@@ -1,4 +1,10 @@
+{# Preserve original behavior, but allow us to opt-out of using legend tag. #}
+{# Multiple legends in a fieldset is not valid markup. #}
+{% if use_title_div %}
+<div class="field-title">{{ label }}</div>
+{% else %}
 <legend>{{ label }}</legend>
+{% endif %}
 <div class="field">
 
     <div class="btn-group btn-group-toggles">

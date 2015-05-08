@@ -94,9 +94,14 @@ def event_detail(request, event_slug):
                                  kwargs={'group_slug': request.group.slug}),
                          GROUP_EVENTS_ID))
 
+    registration = None
+    if user.is_authenticated():
+        registration = event.eventregistration_set.filter(user=user).first()
+
     return {
         'group': request.group,
         'event': event,
+        'location': [event.location.y, event.location.x],
         'is_admin': user == request.group.admin,
         'can_rsvp': rsvp_count < event.max_attendees,
         'is_rsvped': user_is_rsvped_for_event(user, event),
@@ -114,7 +119,8 @@ def event_detail(request, event_slug):
             'group_slug': request.group.slug,
             'event_slug': event.slug
         }),
-        'share_url': event.get_shareable_url(request)
+        'share_url': event.get_shareable_url(request),
+        'event_registration': registration
     }
 
 
@@ -200,6 +206,12 @@ def events_list_feed(request):
     events = Event.objects.order_by('-begins_at').filter(is_private=False,
                                                          group__is_active=True)
 
+    includes_training = request.GET.get('includes_training', '').lower()
+    if includes_training == 'true':
+        events = events.filter(includes_training=True)
+    elif includes_training == 'false':
+        events = events.filter(includes_training=False)
+
     return [{
         'id': e.id,
         'name': e.title,
@@ -207,6 +219,7 @@ def events_list_feed(request):
         'start_time': e.begins_at.time(),
         'end_time': e.ends_at.time(),
         'description': e.description,
+        'includes_training': e.includes_training,
         'snippet': e.description[:169],
         'email': e.contact_email,
         'locations': [{
@@ -232,6 +245,10 @@ def edit_event_page(request, event_slug):
     # only datetime form fields.
     tz = get_current_timezone()
     event = get_object_or_404(Event, group=request.group, slug=event_slug)
+
+    if event.is_past():
+        return HttpResponseForbidden()
+
     form_context = {
         'date': event.begins_at.astimezone(tz),
         'begins_at_time': event.begins_at.astimezone(tz),
@@ -247,6 +264,10 @@ def edit_event_page(request, event_slug):
 
 def edit_event(request, event_slug):
     event = get_object_or_404(Event, group=request.group, slug=event_slug)
+
+    if event.is_past():
+        return HttpResponseForbidden()
+
     form = EventForm(request.POST.copy(), instance=event)
     is_valid = _process_event_form(form, request, event)
 
@@ -285,6 +306,9 @@ def event_map_poll(request, event_slug):
 def register_for_event(request, event_slug):
     user = request.user
     event = get_object_or_404(Event, group=request.group, slug=event_slug)
+    if event.is_past():
+        return HttpResponseForbidden()
+
     if event.has_space_available and not user_is_rsvped_for_event(user, event):
         EventRegistration.objects.create(user=user, event=event)
         relative_event_url = reverse('event_detail', kwargs={
@@ -312,6 +336,7 @@ def printable_event_map(request, event_slug):
     event = get_object_or_404(Event, group=request.group, slug=event_slug)
     context = {
         'event': event,
+        'location': [event.location.y, event.location.x],
         'layer': get_context_for_territory_layer(request.group.id),
     }
     return context

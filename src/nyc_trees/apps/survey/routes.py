@@ -124,6 +124,8 @@ release_blockface = do(login_required,
 
 blockface = route(GET=do(json_api_call, v.blockface))
 
+blockface_near_point = route(GET=do(json_api_call, v.blockface_near_point))
+
 redirect_to_treecorder = route(GET=do(login_required,
                                       v.redirect_to_treecorder))
 

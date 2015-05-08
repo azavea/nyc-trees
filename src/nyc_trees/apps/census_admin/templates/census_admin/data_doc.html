@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>TreesCount! 2015 - Data Tables and Columns</title>
+    <style type="text/css">
+        h2 {
+            margin-top: 1.5em;
+        }
+        table {
+            border-collapse: collapse;
+        }
+        th {
+            text-align: left;
+            background-color: #666;
+            color: #fff;
+        }
+        th, td {
+            vertical-align: top;
+            border: 1px solid #bbb;
+            padding: 2px 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>TreesCount! 2015 - Data Tables and Columns</h1>
+    <p>Schema date {{ date }}</p>
+    <h3>Index</h3>
+    <ul>
+        {% for model in models %}
+            <li>
+                <a href="#{{ model.name }}">{{ model.name }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+    {% for model in models %}
+        <h2>
+            <a name={{ model.name }}>
+                {{ model.name }}
+            </a>
+        </h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Column</th>
+                    <th>Description</th>
+                    <th>Type</th>
+                    <th>Required</th>
+                    <th>Max Length</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for field in model.fields %}
+                    {% if field.name %}
+                        <tr>
+                            <td><b>{{ field.name }}</b></td>
+                            <td>{{ field.description|safe }}</td>
+                            <td>{{ field.type }}</td>
+                            <td>{% if field.required %}Yes{% else %}&mdash;{% endif %}</td>
+                            <td>{{ field.max_length }}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endfor %}
+</body>
+</html>

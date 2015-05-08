@@ -159,17 +159,22 @@ def update_achievements(user):
 
 
 class Follow(NycModel, models.Model):
-    user = models.ForeignKey(User)
-    group = models.ForeignKey(Group)
+    user = models.ForeignKey(User, help_text='ID of user following group')
+    group = models.ForeignKey(Group, help_text='ID of group being followed')
 
     def __unicode__(self):
         return '%s -> %s' % (self.user, self.group)
 
 
 class TrustedMapper(NycModel, models.Model):
-    user = models.ForeignKey(User)
-    group = models.ForeignKey(Group)
-    is_approved = models.NullBooleanField()
+    user = models.ForeignKey(
+        User,
+        help_text="ID of user requesting mapping permission")
+    group = models.ForeignKey(
+        Group,
+        help_text='ID of group granting mapping permission')
+    is_approved = models.NullBooleanField(
+        help_text='Has mapping permission been granted?')
 
     def __unicode__(self):
         return '%s -> %s' % (self.user, self.group)
@@ -179,14 +184,31 @@ class TrustedMapper(NycModel, models.Model):
 
 
 class TrainingResult(NycModel, models.Model):
-    user = models.ForeignKey(User)
-    module_name = models.CharField(max_length=255)
-    score = models.IntegerField(null=True)
+    user = models.ForeignKey(
+        User,
+        help_text='ID of user answering quiz questions')
+    module_name = models.CharField(
+        max_length=255,
+        help_text='Name of quiz')
+    score = models.IntegerField(
+        null=True,
+        help_text='Number of questions answered correctly')
+
+
+def achievement_help_text():
+    help_items = ['%s - %s - %s' % (i, adef.name, adef.description)
+                  for i, adef in achievements.iteritems()]
+    help_items.sort()
+    return '<br/>'.join(help_items)
 
 
 class Achievement(NycModel, models.Model):
-    user = models.ForeignKey(User)
-    achievement_id = models.IntegerField(choices=achievement_choices)
+    user = models.ForeignKey(
+        User,
+        help_text='ID of user who achieved the achievement')
+    achievement_id = models.IntegerField(
+        choices=achievement_choices,
+        help_text=achievement_help_text)
 
     class Meta:
         unique_together = ("user", "achievement_id")

@@ -18,8 +18,10 @@ from djqscsv import write_csv
 import importlib
 
 from django.conf import settings
+from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.db import connection
+from django.template.loader import render_to_string
 
 
 from apps.survey.models import Blockface
@@ -223,11 +225,122 @@ def dump_model(fq_name, dump_id):
     return [destination_path]
 
 
+@task
+def write_data_dictionary(fq_names, dump_id):
+    models = [_model_context(fq_name) for fq_name in fq_names]
+    models.sort(key=lambda m: m['name'])
+    context = {
+        'models': models,
+        'date': dump_id
+    }
+    html = render_to_string('census_admin/data_doc.html', context)
+    content = ContentFile(html)
+
+    file_name = 'dump/{}/doc.html'.format(dump_id)
+    destination_path = _storage.save(file_name, content)
+
+    return [destination_path]
+
+
+def _model_context(fq_name):
+    Model = _model_from_fq_name(fq_name)
+    model_name = Model.__name__
+
+    context = {
+        'name': model_name,
+        'fields': [_field_context(field, model_name)
+                   for field in Model._meta.fields]
+        }
+    return context
+
+
+def _field_context(field, model_name):
+    name = field.attname
+    if model_name in _shapefile_fields:
+        name = _shapefile_fields[model_name][name]
+
+    type = field.get_internal_type()
+
+    if type == 'CharField' or type == 'TextField':
+        required = not field.blank
+    else:
+        required = not field.null
+
+    if type == 'CharField':
+        max_length = field.max_length
+    else:
+        max_length = ''
+
+    context = {
+        'name': name,
+        'type': type,
+        'required': required,
+        'description': field.help_text,
+        'max_length': max_length
+        }
+    return context
+
+
 def _class_for_name(module_name, class_name):
     m = importlib.import_module(module_name)
     return getattr(m, class_name)
 
 
 def _model_from_fq_name(fq_name):
+    # "fq" means "fully-qualified"
     module_name, class_name = fq_name.rsplit('.', 1)
     return _class_for_name(module_name, class_name)
+
+
+# Translate model fields to shapefile fields for data dictionary doc
+_shapefile_fields = {
+    'Blockface': {
+        'id': 'block_id',
+        'is_available': 'is_avail',
+        'expert_required': 'expert_req',
+        'updated_at': 'updated_at',
+        'created_at': 'created_at',
+        'geom': None,
+        'source': None,
+        },
+    'Event': {
+        'id': 'event_id',
+        'group_id': 'group_id',
+        'title': 'title',
+        'slug': 'slug',
+        'description': 'desc',
+        'location_description': 'loc_desc',
+        'contact_email': 'con_email',
+        'contact_name': 'con_name',
+        'begins_at': 'begins_at',
+        'ends_at': 'ends_at',
+        'address': 'address',
+        'max_attendees': 'max_rsvps',
+        'includes_training': 'training',
+        'is_canceled': 'canceled',
+        'is_private': 'private',
+        'created_at': 'created_at',
+        'updated_at': 'updated_at',
+        'location': None,
+        'map_pdf_filename': None,
+        },
+    'Tree': {
+        'id': 'tree_id',
+        'survey_id': 'survey_id',
+        'species_id': 'species_id',
+        'distance_to_tree': 'dist_tree',
+        'distance_to_end': 'dist_end',
+        'circumference': 'tree_circ',
+        'stump_diameter': 'stump_diam',
+        'curb_location': 'curb_loc',
+        'status': 'status',
+        'species_certainty': 'speci_cert',
+        'health': 'health',
+        'stewardship': 'steward',
+        'guards': 'guards',
+        'sidewalk_damage': 'sidewalk',
+        'problems': 'problems',
+        'created_at': 'created_at',
+        'updated_at': 'updated_at',
+        }
+}

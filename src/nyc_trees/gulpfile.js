@@ -11,7 +11,6 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     sourcemaps = require('gulp-sourcemaps'),
     minimist = require('minimist'),
-    watchify = require('watchify'),
     gutil = require('gulp-util'),
     revall = require('gulp-rev-all'),
     sass = require('gulp-ruby-sass'),
@@ -24,7 +23,8 @@ var gulp = require('gulp'),
     del = require('del'),
     shell = require('gulp-shell'),
     runSequence = require('run-sequence'),
-    jshint = require('gulp-jshint');
+    jshint = require('gulp-jshint'),
+    autoprefixer = require('autoprefixer-core');
 
 var args = minimist(process.argv.slice(2),
                     {default: {debug: false}}),
@@ -126,13 +126,6 @@ gulp.task('copy-dev-assets', function(cb) {
         .pipe(gulp.dest(versionedDir, {mode: '0775'}));
 });
 
-gulp.task('browserify', ['clean'], function() {
-    return browserifyTask(browserify({
-        entries: entryFiles,
-        debug: true
-    }));
-});
-
 gulp.task('browserify-tests', ['clean'], function() {
     gutil.log("Rebundling test bundle JS");
     return browserify({
@@ -144,27 +137,12 @@ gulp.task('browserify-tests', ['clean'], function() {
         .pipe(gulp.dest(bundleDir));
 });
 
-gulp.task('watchify', function() {
-    var bundler = watchify(browserify({
+gulp.task('browserify', ['clean'], function() {
+    var bundler = browserify({
         entries: entryFiles,
-        debug: true,
-        // Watchify requires these
-        cache: {},
-        packageCache: {},
-        fullPaths: true
-    }), {
-        poll: true
+        debug: true
     });
 
-    bundler.on('update', function() {
-        gutil.log("Rebundling JS");
-        return browserifyTask(bundler);
-    });
-
-    return browserifyTask(bundler);
-});
-
-function browserifyTask(bundler) {
     // We need to use a through-stream for entry bundles so we can minify them
     var entryBundles = entries.map(function(_, i) {
         return through().pipe(source(entries[i]));
@@ -196,13 +174,22 @@ function browserifyTask(bundler) {
     });
 
     return merge.apply(this, bundles);
-}
+});
 
 gulp.task('sass', ['clean'], function() {
-    return gulp.src('sass/main.scss')
-        .pipe(sourcemaps.init())
-        .pipe(sass({style: 'compressed'}))
-        .pipe(sourcemaps.write('./'))
+    var autoprefixProcessor = autoprefixer({ browsers: ['> 1% in US'] });
+
+    return sass('sass/main.scss', { sourcemap: true })
+        .on('error', function (err) {
+            console.error('Sass error', err.message);
+        })
+        // For debug mode we just use autoprefixer, but for production mode we
+        // also minify our CSS with csswring
+        .pipe(gulpif(args.debug, postcss([autoprefixProcessor])))
+        .pipe(gulpif(! args.debug, postcss([autoprefixProcessor, csswring])))
+        .pipe(sourcemaps.write('./', {
+            includeContent: true,
+        }))
         .pipe(gulp.dest(cssDir));
 });
 
@@ -224,13 +211,20 @@ gulp.task('build', function(cb) {
     runSequence(buildTasks, 'collect-debug', cb);
 });
 
-gulp.task('watch', ['watchify'], function() {
-    // Note: JS rebuilding is handled by watchify, in order to utilize it's
-    // caching behaviour
+gulp.task('reload', function() {
+    // We can't just add a '.pipe(livereload())' to our various streams,
+    // because it needs to happen after collect-debug is finished
+    livereload.changed();
+});
+
+gulp.task('watch', function() {
     livereload.listen({auto: true });
-    gulp.watch('sass/**/*.scss', ['sass']);
-    // Rerun collectstatic whenever files are added to the static files dir
-    gulp.watch(intermediaryDir + '**', ['collect-debug']);
+    gulp.watch('js/**/*.js', function(cb) {
+        runSequence('browserify', 'collect-debug', 'reload');
+    });
+    gulp.watch('sass/**/*.scss', function(cb) {
+        runSequence('sass', 'collect-debug', 'reload');
+    });
 });
 
 gulp.task('watch-tests', function() {

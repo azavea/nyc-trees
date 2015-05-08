@@ -16,7 +16,7 @@
                 {% endblock aside %}
 
             </aside>
-            <div class="map-container">
+            <div class="map-container{% block map_class %}{% endblock map_class %}">
 
                 {% block main %}
                 {% endblock main %}

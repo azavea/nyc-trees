@@ -1,5 +1,8 @@
 <h4 class="color--primary">
     Tree <span>{{ tree_number }}</span>
+    <a class="hidden" data-action="delete" href="javascript:">
+        <i class="icon-cancel"></i>
+    </a>
     <a class="hidden pull-right" data-toggle="collapse" data-target="#tree-form-{{ tree_number }}">
         <i class="icon-down-open-big"></i>
     </a>
@@ -12,8 +15,8 @@
     <fieldset>
         <legend>Measurements</legend>
         <div class="field">
-            <label for="distance_to_tree">Distance to Tree</label>
-            <input class="form-control" name="distance_to_tree" id="distance_to_tree" required type="number" min="0" step="any" placeholder="ft">
+            <label for="distance_to_tree">Distance to Tree <small>(decimal feet)</small></label>
+            <input class="form-control" name="distance_to_tree" id="distance_to_tree" required type="number" min="0" max="100000" step="any" placeholder="ft">
         </div>
     </fieldset>
 
@@ -23,12 +26,24 @@
     <fieldset>
         {% include "survey/partials/radios.html" with label="Tree Structure" field="status" choices=choices.status %}
     </fieldset>
+
+    <!-- bind to an unused status name so that this is visible until -->
+    <!-- a status is chosen and then never again. -->
+    <div data-status="124d9zX_">
+        <fieldset>
+          <legend>Size</legend>
+          <div class="field">
+            <input class="form-control" placeholder="in" disabled>
+          </div>
+        </fieldset>
+    </div>
+
     <div data-status="Stump" class="hidden">
         <fieldset>
             <legend>Stump Size</legend>
             <div class="stump_diameter field">
-                <label>Stump Diameter</label>
-                <input class="form-control" name="stump_diameter" id="stump_diameter" required type="number" min="1" step="1" placeholder="in">
+                <label>Stump Diameter <small>(inches)</small></label>
+                <input class="form-control" name="stump_diameter" id="stump_diameter" required type="number" min="1" max="2000" step="1" placeholder="in">
             </div>
         </fieldset>
     </div>
@@ -38,26 +53,27 @@
         <fieldset>
             <legend>Tree Trunk</legend>
             <div class="field">
-                <label>Circumference</label>
-                <input class="form-control" name="circumference" required type="number" min="1" step="1" placeholder="in">
+                <label>Circumference <small>(inches)</small></label>
+                <input class="form-control" name="circumference" required type="number" min="1" max="2000" step="1" placeholder="in">
             </div>
         </fieldset>
     </div>
 
-    <div data-status="Alive">
+    <div data-status="Alive" class="hidden">
         <fieldset>
             <legend>Tree Trunk</legend>
             <div class="field">
-                <label for="circumference">Circumference</label>
-                <input class="form-control" name="circumference" id="circumference" required type="number" min="1" step="1" placeholder="in">
+                <label for="circumference">Circumference <small>(inches)</small></label>
+                <input class="form-control" name="circumference" id="circumference" required type="number" min="1" max="2000" step="1" placeholder="in">
             </div>
         </fieldset>
         <fieldset>
             <legend>Tree Species</legend>
             <div class="field">
                 <label for="species_id">Species Name</label>
-                <select name="species_id" required>
-                  <option></option>
+                <select name="species_id" id="species_id" required>
+                  {# A blank option so first species is not preselected #}
+                  <option value="">&nbsp;</option>
                   {% for species in choices.species %}
                   <option value="{{ species.pk }}" data-scientific-name="{{ species.scientific_name }}" data-cultivar="{{ species.cultivar }}">
                     {{ species.common_name }}
@@ -66,7 +82,7 @@
                 </select>
             </div>
 
-            {% include "survey/partials/radios.html" with label="Are you confident in this answer?" field="species_certainty" choices=choices.species_certainty %}
+            {% include "survey/partials/radios.html" with label="Are you confident in this answer?" field="species_certainty" choices=choices.species_certainty use_title_div=True %}
         </fieldset>
         <fieldset>
             {% include "survey/partials/radios.html" with label="Perception of Tree Health" field="health" choices=choices.health %}
@@ -75,7 +91,7 @@
             {% include "survey/partials/radios.html" with label="Tree Guards" field="guard_installation" choices=choices.guard_installation %}
 
             <div data-guard_installation="Yes">
-                {% include "survey/partials/radios.html" with label="Is the tree guard:" field="guards" choices=choices.guards %}
+                {% include "survey/partials/radios.html" with label="Is the tree guard:" field="guards" choices=choices.guards use_title_div=True %}
             </div>
         </fieldset>
         <fieldset>
@@ -94,7 +110,7 @@
                     </label>
                 </div>
             </div>
-            <div class="field">
+            <div class="field" data-problems="">
                 {% for group_label, group_choices in choices.problem_groups %}
                     <label>{{ group_label }}</label>
                     <div class="btn-group btn-group-toggles">

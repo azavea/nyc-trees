@@ -18,10 +18,16 @@ class SurveyAdmin(admin.ModelAdmin):
     list_display = ('blockface', 'user', 'has_trees',
                     'is_flagged', 'teammate', 'quit_reason')
     list_filter = ('is_flagged', 'has_trees')
+    raw_id_fields = ("blockface",)
+
+
+class BlockfaceReservationAdmin(admin.ModelAdmin):
+    raw_id_fields = ("blockface",)
+
 
 admin.site.register(m.Blockface)
 admin.site.register(m.Territory)
 admin.site.register(m.Survey, SurveyAdmin)
 admin.site.register(m.Tree)
-admin.site.register(m.BlockfaceReservation)
+admin.site.register(m.BlockfaceReservation, BlockfaceReservationAdmin)
 admin.site.register(m.Species)

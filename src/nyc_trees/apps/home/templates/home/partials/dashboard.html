@@ -3,6 +3,25 @@
 
 {% url 'events_list_page' as events_page_url %}
 {% url 'progress_page' as progress_page_url %}
+{% if event %}
+    <div class="event-alert">
+        <div class="container">
+            <div class="row">
+                <div class="event-alert-text col-xs-8">
+                    The event {{ event.title }} for {{ event.group.name }}
+                    {% if event.in_progress %}
+                        has started!
+                    {% else %}
+                        is starting soon.
+                    {% endif %}
+                </div>
+                <div class="event-alert-button col-xs-4">
+                    {% include "event/partials/event_alert_button.html" %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
 
 <div class="page-dashboard">
 

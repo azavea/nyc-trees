@@ -7,33 +7,52 @@
 {% endblock aside %}
 
 {% block main %}
-    <h3>Blocks Reserved</h3>
-    {% if blockfaces_requested == blockfaces_reserved %}
-
-    <p>Your block edges were successfully reserved!
-        Check your inbox for your reservation confirmation.</p>
-
-    <p>You can start mapping the trees on these blocks whenever you are ready.
-        Remember to contact a Loaning Hub to reserve mapping gear!</p>
-
-    {% elif blockfaces_requested > blockfaces_reserved %}
-
-    <p>
-      You requested {{ blockfaces_requested }} block edge{{blockfaces_requested|pluralize }},
-      but we could only reserve {{ blockfaces_reserved }} block edge{{ blockfaces_reserved|pluralize }} for you.
-    </p>
-
-    <p>Check the <a href="{% url 'reservations' %}">Reservations Page</a> to see which block edges you have reserved.</p>
-    {% endif %}
-    {% if blockfaces_cancelled %}
-    <p>
-      Per your request, {{ blockfaces_cancelled }} of your block edge
-      reservation{{ blockfaces_cancelled|pluralize }} were cancelled.
-    </p>
+    {% if n_reserved %}
+        <h3>Block Edge{{ n_requested|pluralize }} Reserved</h3>
+    {% elif n_cancelled %}
+        <h3>Block Edge{{ n_cancelled|pluralize }} Cancelled</h3>
+    {% else %}
+        <h3>No Changes</h3>
     {% endif %}
 
-    <p>These blocks will be reserved for you until <b>{{ expiration_date|date }}</b>.</p>
+    {% if n_requested %}
+        {% if n_requested == n_reserved %}
 
-    <a class="btn btn-primary" href="{% url 'survey' %}">Start Mapping</a>
+            <p>Your block edge{{ n_reserved|pluralize:" was,s were" }} successfully reserved!
+                Check your inbox for your reservation confirmation.</p>
+
+            <p>You can start mapping the trees on
+                {{ n_reserved|pluralize:"this block edge,these block edges" }}
+                whenever you are ready.
+                Remember to contact a Loaning Hub to reserve mapping gear!</p>
+
+        {% else %}
+
+            <p>
+                You requested {{ n_requested }} block edge{{ n_requested|pluralize }},
+                but we could only reserve {{ n_reserved }}
+                block edge{{ n_reserved|pluralize }} for you.
+            </p>
+
+            <p>Check the <a href="{% url 'reservations' %}">Reservations Page</a> to see which block edges you have reserved.</p>
+
+        {% endif %}
+
+        {% if n_reserved %}
+            <p>{{ n_reserved|pluralize:"This block edge,These block edges" }}
+                will be reserved for you until <b>{{ expiration_date|date }}</b>.</p>
+        {% endif %}
+    {% endif %}
+
+    {% if n_cancelled %}
+        <p>
+          Per your request, {{ n_cancelled }} of your block edge
+          reservations {{ n_cancelled|pluralize:"was,were" }} cancelled.
+        </p>
+    {% endif %}
+
+    {% if n_reserved %}
+        <a class="btn btn-primary" href="{% url 'survey' %}">Start Mapping</a>
+    {% endif %}
 
 {% endblock main %}

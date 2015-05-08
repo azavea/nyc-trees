@@ -8,19 +8,23 @@ var $ = require('jquery'),
     dom = {
         map: '#map',
         rsvpSection: '#rsvp-section',
-        rsvpButton: '#rsvp'
+        rsvpButton: '#rsvp',
+        eventAlertButton: '#event-button'
     },
 
     $map = $('#map');
 
 new EventMap({
-    location: L.latLng($map.data('lat'), $map.data('lon')),
+    location: L.latLng($map.data('location')),
     static: true
 });
 
 fetchAndReplace({
     container: dom.rsvpSection,
-    target: dom.rsvpButton
+    target: dom.rsvpButton,
+    callback: function() {
+        $(dom.eventAlertButton).toggleClass('hidden');
+    }
 });
 
 require('./copyEventUrl');

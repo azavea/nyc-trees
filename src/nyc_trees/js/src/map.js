@@ -11,13 +11,19 @@ var zoom = require('./lib/mapUtil').ZOOM,
 module.exports = {
     SATELLITE: SATELLITE,
     create: create,
+    createAndGetControls: createAndGetControls,
     addTileLayer: addTileLayer,
     addGridLayer: addGridLayer,
     fitBounds: fitBounds,
-    getDomMapAttribute: getDomMapAttribute
+    getDomMapAttribute: getDomMapAttribute,
+    hideCrosshairs: hideCrosshairs
 };
 
 function create(options) {
+    return createAndGetControls(options).map;
+}
+
+function createAndGetControls(options) {
     options = $.extend({
         domId: 'map'
     }, options);
@@ -39,9 +45,17 @@ function create(options) {
     }
 
     var map = L.map(options.domId, mapOptions),
-        zoomControl = L.control.zoom({position: 'bottomleft'}).addTo(map),
-        $controlsContainer = $(zoomControl.getContainer()),
-        bounds = getDomMapAttribute('bounds', options.domId);
+        // We have stretched the zoomControl and its "container" (which is
+        // not its parent as once thought but rather its DOM element)
+        // into a multi-purpose widget control. This is done by
+        // instantiating a zoom control and then placing additional markup
+        // in its DOM element for other controls. Subsequently, we
+        // refer to it as the multiControl in order to hide this
+        // implementation detail.
+        multiControl = L.control.zoom({position: 'bottomleft'}).addTo(map),
+        $multiControlContainer = $(multiControl.getContainer()),
+        bounds = getDomMapAttribute('bounds', options.domId),
+        mapLocation = getDomMapAttribute('location', options.domId);
 
     map.addControl(L.control.attribution({prefix: false}));
 
@@ -49,6 +63,8 @@ function create(options) {
         fitBounds(map, bounds);
     } else if (options.bounds) {
         map.fitBounds(options.bounds, {maxZoom: zoom.NEIGHBORHOOD});
+    } else if (mapLocation) {
+        map.setView(mapLocation, zoom.NEIGHBORHOOD);
     } else if (options.location && options.location.lat !== 0) {
         map.setView(options.location, zoom.NEIGHBORHOOD);
     } else {
@@ -58,30 +74,32 @@ function create(options) {
     initBaseMap(map, options);
 
     if (options.geolocation && navigator.geolocation) {
-        initGeolocation($controlsContainer, map);
+        initGeolocation($multiControlContainer, map);
     }
     if (options.legend) {
-        initLegend($controlsContainer, map);
+        initLegend($multiControlContainer, map);
     }
     if (options.search) {
-        initLocationSearch($controlsContainer, map);
+        initLocationSearch($multiControlContainer, map);
     }
     if (options.crosshairs) {
         initCrosshairs(options.domId);
     }
     if (options.static) {
         // We had to add zoomControl to find its container, but now remove it.
-        zoomControl.removeFrom(map);
+        multiControl.removeFrom(map);
     }
 
-    return map;
+    return {map: map, multiControl: multiControl};
 }
 
 function fitBounds(map, bounds) {
     // GeoDjango bounds are [xmin, ymin, xmax, ymax]
     // Leaflet wants [ [ymin, xmin], [ymax, xmax] ]
-    var b = [[bounds[1], bounds[0]], [bounds[3], bounds[2]]];
+    var b = [[bounds[1], bounds[0]], [bounds[3], bounds[2]]],
+        zooming = (map.getZoom() !== map.getBoundsZoom(b));
     map.fitBounds(b);
+    return zooming;
 }
 
 function isRetinaDevice() {
@@ -98,7 +116,7 @@ function initBaseMap(map, options) {
             maxZoom: zoom.MAX,
             attribution: options.forPdf ? attributionForPdf : attribution
         },
-        satelliteUrl = 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        satelliteUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
         strandardResUrl = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
         retinaSuffix = 'cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}@2x.png',
         retinaUrl = 'https://' + retinaSuffix,
@@ -111,7 +129,7 @@ function initBaseMap(map, options) {
 }
 
 function initGeolocation($controlsContainer, map) {
-    var $button = $('<a class="geolocate-button" href="javascript:;" title="Show my location"><i class="icon-location"></i></a>');
+    var $button = $('<a class="geolocate-button" href="javascript:;" title="Show my location"><i class="icon-target"></i></a>');
     $controlsContainer.prepend($button);
 
     $button.on('click', function () {
@@ -128,41 +146,68 @@ function initGeolocation($controlsContainer, map) {
     }
 }
 
-function initLocationSearch($controlsContainer, map) {
-    searchController.create($controlsContainer, map);
+function initLocationSearch($multiControlContainer, map) {
+    searchController.create($multiControlContainer, map);
 }
 
-function initLegend($controlsContainer, map) {
+function initLegend($multiControlContainer, map) {
     var $button = $(
         '<a class="legend-button" data-toggle="modal" href="#legend" href="javascript:;" title="Legend">?</a>');
-    $controlsContainer.prepend($button);
+    $multiControlContainer.prepend($button);
 }
 
 function initCrosshairs(domId) {
     var $map = $('#' + domId),
-        $hHair = $('<div style="position:absolute; left:0; right:0; bottom:50%; height:1px; background:black"></div>'),
-        $vHair = $('<div style="position:absolute; right:50%; width:1px; top:0; bottom:0; background:black"></div>');
+        $hHair = $('<div class="crosshair-x"></div>'),
+        $vHair = $('<div class="crosshair-y"></div>');
     $map.append([$hHair, $vHair]);
 }
 
-function addTileLayer(map, url) {
-    var tileUrl = url || getDomMapAttribute('tile-url'),
+function hideCrosshairs() {
+    $('.crosshair-x, .crosshair-y').hide();
+}
+
+function addTileLayer(map, options) {
+    options = options || {};
+    var tileUrl = options.url || getDomMapAttribute('tile-url'),
         layer = L.tileLayer(tileUrl, {
             minZoom: zoom.MIN,
             maxZoom: zoom.MAX
-        }).addTo(map);
+        });
+    _addLayer(map, layer, options.waitForZoom);
     return layer;
 }
 
-function addGridLayer(map, url) {
-    var gridUrl = url || getDomMapAttribute('grid-url'),
+function addGridLayer(map, options) {
+    options = options || {};
+    var gridUrl = options.url || getDomMapAttribute('grid-url'),
         layer = L.utfGrid(gridUrl, {
             minZoom: zoom.MIN,
             maxZoom: zoom.MAX,
-            useJsonP: false
+            useJsonP: false,
+            crosshairs: options.crosshairs || false,
+            pointerCursor: !options.crosshairs
         });
-    map.addLayer(layer);
+    _addLayer(map, layer, options.waitForZoom);
     return layer;
+}
+
+function _addLayer(map, layer, waitForZoom) {
+    if (waitForZoom) {
+        _addAfterZoom(map, layer);
+    } else {
+        map.addLayer(layer);
+    }
+}
+
+function _addAfterZoom(map, layer) {
+    // Add layer to map after zoom animation completes.
+    // (Otherwise spurious tile requests will be issued at the old zoom level.)
+    function addLayer() {
+        map.addLayer(layer);
+        map.off('zoomend', addLayer);
+    }
+    map.on('zoomend', addLayer);
 }
 
 function getDomMapAttribute(dataAttName, domId) {

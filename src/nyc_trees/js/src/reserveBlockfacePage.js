@@ -44,6 +44,9 @@ var $ = require('jquery'),
         blockActionPopupContainer: '#reservations-blockface-popup-container',
         blockActionBarClose: '#close-blockface-action',
 
+        legendTitle: '.js-legend-title',
+        mapSidebar: '.map-sidebar',
+
         popupTemplate: '#reservations-blockface-popup-template',
         popupBlockfaceId: '[' + attrs.blockfaceId + ']',
         popupBlockfaceStatus: '[' + attrs.blockfaceStatus + ']',
@@ -61,6 +64,7 @@ require('./lib/mapHelp');
 
 // Extends the leaflet object
 require('leaflet-utfgrid');
+require('leaflet-geometryutil');
 
 var reservationMap = mapModule.create({
     geolocation: true,
@@ -81,15 +85,6 @@ var $current = $(dom.currentReservations),
 
     grid = mapModule.addGridLayer(reservationMap);
 
-var progress = new SavedState({
-    key: 'reserve-blockfaces',
-    validate: function(state) {
-        if (!$.isPlainObject(state.selections)) {
-            throw new Error('Expected `state.selections` to contain blockfaces');
-        }
-    }
-});
-
 var selectedLayer = new SelectableBlockfaceLayer(reservationMap, grid, {
     onAdd: function(gridData, latlng) {
         if (selectedBlockfacesCount >= blockfaceLimit) {
@@ -109,14 +104,29 @@ var selectedLayer = new SelectableBlockfaceLayer(reservationMap, grid, {
     }
 });
 
+// Zoom the map to fit a blockface ID passed in the URL hash, if it is an
+// already reserved block
+var blockfaceId = mapUtil.getBlockfaceIdFromUrl();
+
 var reservedLayer = new BlockfaceLayer(reservationMap, {
     color: '#CE2029',
     onEachFeature: function(feature, layer) {
         layer.on('click', function(e) {
-            showPopup(feature.properties.id, e.latlng, 'Expires ' + feature.properties.expires_at, actions.remove);
-            blockfaceLayers[feature.properties.id] = layer;
-            selectedLayer.addData(feature);
+            selectReservedBlockface(feature, layer, e.latlng);
         });
+
+        if (feature.properties.id === blockfaceId) {
+            blockfaceId = null;
+
+            // We need to add this to the map *after* the reserved blockface
+            // layer is done adding things
+            window.setTimeout(function() {
+                reservationMap.fitBounds(layer.getBounds());
+
+                var middlePoint = L.GeometryUtil.interpolateOnLine(reservationMap, layer.getLatLngs()[0], 0.5);
+                selectReservedBlockface(feature, layer, middlePoint.latLng);
+            }, 1);
+        }
     }
 });
 
@@ -125,11 +135,21 @@ var cartLayer = new BlockfaceLayer(reservationMap, {
     onEachFeature: function(feature, layer) {
         layer.on('click', function(e) {
             showPopup(feature.properties.id, e.latlng, 'In Cart', actions.remove);
-            blockfaceLayers[feature.properties.id] = layer;
-            selectedLayer.addData(feature);
+            selectFeature(feature, layer);
         });
     }
 });
+
+function selectReservedBlockface(feature, layer, latlng) {
+    showPopup(feature.properties.id, latlng, 'Expires ' + feature.properties.expires_at, actions.remove);
+    selectFeature(feature, layer);
+}
+
+function selectFeature(feature, layer) {
+    selectedLayer.clearLayers();
+    blockfaceLayers[feature.properties.id] = layer;
+    selectedLayer.addData(feature);
+}
 
 // Keep this URL in sync with src/nyc_trees/apps/survey/urls/blockface.py
 $.getJSON("/blockedge/reserved-blockedges.json", function(data) {
@@ -151,13 +171,24 @@ function showPopup(blockfaceId, latlng, status, action) {
     $popup.find(dom.popupAction).attr(attrs.blockfaceAction, action).html(action);
 
     // We add the blockface popup in 2 places, as a leaflet popup and as an
-    // action bar item
-    // CSS media queries will hide one or the other depending on screen size
-    L.popup({className: 'reservation-leaflet-popup'})
-        .setLatLng(latlng)
-        .setContent($popup[0])
-        .openOn(reservationMap);
+    // action bar item.
+    // CSS media queries will hide one or the other depending on screen size.
 
+    // But we don't want invisible popups to auto-pan the map in "mobile" view,
+    // so only add the popup if we are in "desktop" view -- determined by
+    // whether the legend is visible.
+    if ($(dom.legendTitle + ':visible').length > 0) {
+        // Find right edge of sidebar so we can make the popup avoid it
+        var $sidebar = $(dom.mapSidebar),
+            sidebarRight = $sidebar.offset().left + $sidebar.outerWidth();
+        L.popup({
+            className: 'reservation-leaflet-popup',
+            autoPanPaddingTopLeft: [sidebarRight + 8, 8]
+        })
+            .setLatLng(latlng)
+            .setContent($popup[0])
+            .openOn(reservationMap);
+    }
     $(dom.blockActionBar).addClass('active');
     $(dom.blockActionPopupContainer).html($popup.clone());
     $(dom.cartActionBar).removeClass('active');
@@ -289,12 +320,6 @@ $(dom.requestAccessModal).on('click', dom.requestAccessButton, function() {
         .fail(function() {
             $(dom.requestAccessFailModal).modal('show');
         });
-});
-
-// Zoom the map to fit a blockface ID pased in the URL hash
-var blockfaceId = mapUtil.getBlockfaceIdFromUrl();
-mapUtil.fetchBlockface(blockfaceId).done(function(blockface) {
-    selectedLayer.addBlockface(blockface);
 });
 
 $finishButton.on('click', statePrompter.unlock);

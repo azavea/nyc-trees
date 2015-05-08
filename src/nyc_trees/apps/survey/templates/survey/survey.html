@@ -11,7 +11,7 @@
 
     <div class="action-bar-survey">
         <div id="select-starting-point">
-            <p>Select the block edge you would like to map and then choose a starting point.</p>
+            <p>Drag the map to choose a block edge.<br/>Then choose a starting point.</p>
         </div>
         <div id="select-side" class="hidden">
             <p>What side of the street are you on?</p>
@@ -24,7 +24,7 @@
             </div>
         </div>
         <div id="select-teammate" class="hidden">
-            <p>Is someone helping you count trees? Enter their user name.</p>
+            <p>Is someone helping you count trees? Enter their user name. If not, click Next.</p>
             <div id="teammate-list">
                 {% include "event/partials/teammates.html" %}
             </div>
@@ -43,34 +43,40 @@
             <div class="tree-form-block">
                 <div class="field">
                     <button class="btn btn-primary btn-block" id="another-tree">+ Another Tree</button>
+                    <button class="btn btn-gray btn-block" id="no-further-trees">No Further Trees on Block</button>
                 </div>
             </div>
 
+            <div id="no-further-trees-group">
+                <form autocomplete="off" class="distance-end-form">
+                    <!-- We need a clickable submit button in order to trigger browser error validation popups -->
+                    <input type="submit" data-class="fake-submit" class="hidden">
 
-            <form autocomplete="off" class="distance-end-form">
-                <!-- We need a clickable submit button in order to trigger browser error validation popups -->
-                <input type="submit" data-class="fake-submit" class="hidden">
-
-                <div class="field">
-                    <label for="distance_to_end">Distance to End</label>
-                    <input id="distance_to_end" class="form-control" required type="number" min="0" step="any" placeholder="ft">
+                    <div class="field">
+                        <label for="distance_to_end">Distance to End <small>(decimal feet)</small></label>
+                        <input id="distance_to_end" class="form-control" required type="number" min="0" max="100000" step="any" placeholder="ft">
+                    </div>
+                </form>
+                <div class="tree-form-block">
+                    <p>When you've added all the trees, please select "No Further Trees on Block" and submit your data.</p>
+                    <button class="btn btn-primary btn-block" id="submit-survey">Submit</button>
+                    <a class="btn btn-warning btn-block" id="cant-map" href="#quit-popup" data-toggle="modal">I cannot map this block because...</a>
                 </div>
-            </form>
-            <div class="tree-form-block">
-                <button class="btn btn-primary btn-block" id="submit-survey">Submit</button>
-                <a class="btn btn-warning btn-block" id="cant-map" href="#quit-popup" data-toggle="modal">I cannot map this block because...</a>
             </div>
             <div class="block" id="treeform-sponsor">
                 <span>Powered By</span>
-                <img src="{{ "img/logo-treekit.png"|static_url }}" alt="TreeKit">
+                <img src="{{ "img/logo-treekit.png"|static_url }}" alt="TreeKit" />
             </div>
         </div>
     </div>
 </div>
+
 <script type="handlebars/template" id="tree-form-template">
     {# 'tree_number' here goes into the template with the '{{ }}', which is used for handlebar templating #}
     {% include "survey/partials/tree_form.html" with tree_number="{{ tree_number }}" %}
 </script>
+
+{% include 'home/partials/location_search.html' %}
 {% endblock aside %}
 
 {% block main %}
@@ -80,6 +86,7 @@
             <div id="map" class="map-survey"
                 data-tile-url="{{ layer.tile_url }}"
                 data-grid-url="{{ layer.grid_url }}"
+                data-geolocate-help-shown="{{ geolocate_help_shown }}"
                 {% if bounds %}data-bounds="{{ bounds }}"
                 {% elif location %}data-location="{{ location }}"
                 {% endif %}>
@@ -130,6 +137,23 @@
             <div class="modal-footer">
                 <button id="no-trees-cancel" class="btn btn-default" data-dismiss="modal">Resume</button>
                 <button id="no-trees-confirm" type="submit" class="btn btn-primary">Finish With No Trees</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="delete-tree-popup" tabindex="-1" role="dialog" aria-labelledby="delete-tree-popup-title" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="delete-tree-popup-title">Remove Tree</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to remove this tree? You will lose the data you have already entered.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button id="delete-tree-confirm" type="submit" class="btn btn-primary" data-dismiss="modal">Remove</button>
             </div>
         </div>
     </div>

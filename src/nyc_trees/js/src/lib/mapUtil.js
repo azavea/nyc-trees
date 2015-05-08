@@ -26,6 +26,21 @@ function getLatLngs(geom) {
     }
 }
 
+function blockfaceResponseToFetchResult(blockface) {
+    if (blockface.error) {
+        return blockface;
+    }
+    var e = blockface.extent,
+        sw = L.latLng(e[1], e[0]),
+        ne = L.latLng(e[3], e[2]),
+        bounds = L.latLngBounds(sw, ne);
+    return {
+        id: blockface.id,
+        bounds: bounds,
+        geojson: blockface.geojson
+    };
+}
+
 function fetchBlockface(blockfaceId) {
     var defer = $.Deferred();
     if (!blockfaceId) {
@@ -34,24 +49,26 @@ function fetchBlockface(blockfaceId) {
         // NOTE: This has a hard coded url that must be kept in sync with
         // apps/survey/urls/blockface.py
         $.getJSON('/blockedge/' + blockfaceId + '/', function(blockface) {
-            var e = blockface.extent,
-                sw = L.latLng(e[1], e[0]),
-                ne = L.latLng(e[3], e[2]),
-                bounds = L.latLngBounds(sw, ne);
-            defer.resolve({
-                id: blockface.id,
-                bounds: bounds,
-                geojson: blockface.geojson
-            });
+            defer.resolve(blockfaceResponseToFetchResult(blockface));
         });
     }
     return defer.promise();
 }
 
-function zoomToBlockface(map, blockfaceId) {
-    fetchBlockface(blockfaceId).done(function(blockface) {
-        map.fitBounds(blockface.bounds);
-    });
+function fetchBlockfaceNearLatLng(latLng) {
+    var defer = $.Deferred();
+    if (!latLng || !latLng.lat || !latLng.lng) {
+        defer.reject();
+    } else {
+        // NOTE: This has a hard coded url that must be kept in sync with
+        // apps/survey/urls/blockface.py
+        $.getJSON('/blockedge/near/', { lat: latLng.lat, lng: latLng.lng },
+            function(blockface) {
+                defer.resolve(blockfaceResponseToFetchResult(blockface));
+            }
+        );
+    }
+    return defer.promise();
 }
 
 function styledCircleMarker(latLng) {
@@ -84,7 +101,11 @@ module.exports = {
 
     getBlockfaceIdFromUrl: function() {
         // Assumes that the hash contains only a blockface ID
-        return window.location.hash.substring(1);
+        var hash = window.location.hash.substring(1);
+        if (hash) {
+            return parseInt(hash, 10);
+        }
+        return null;
     },
 
     parseGeoJSON: parseGeoJSON,
@@ -92,5 +113,5 @@ module.exports = {
     styledCircleMarker: styledCircleMarker,
     styledStreetConfirmation: styledStreetConfirmation,
     fetchBlockface: fetchBlockface,
-    zoomToBlockface: zoomToBlockface
+    fetchBlockfaceNearLatLng: fetchBlockfaceNearLatLng
 };

@@ -29,32 +29,57 @@ STARTING_SOON_WINDOW = timedelta(hours=1)
 class Event(NycModel, models.Model):
     # Once a group has events, we can't just delete the group, because
     # people could have registered to attend the group's events.
-    group = models.ForeignKey(Group, on_delete=models.PROTECT)
+    group = models.ForeignKey(
+        Group, on_delete=models.PROTECT,
+        help_text='Group sponsoring the event')
 
-    title = models.CharField(max_length=255, validators=[
-        RegexValidator(r'[\w][\w\s]+')])
+    title = models.CharField(
+        max_length=255, validators=[RegexValidator(r'[\w][\w\s]+')],
+        help_text='Name of event, for display')
+
     # blank=True is valid for 'slug', because we'll automatically create slugs
-    slug = models.SlugField(blank=True)
+    slug = models.SlugField(
+        blank=True, max_length=255,
+        help_text='Short name used in URLs')
 
-    description = models.TextField(default='', blank=True)
-    location_description = models.TextField(default='', blank=True)
+    description = models.TextField(
+        default='', blank=True,
+        help_text='Description of event, for display')
+    location_description = models.TextField(
+        default='', blank=True,
+        help_text='How to find the event meeting location')
 
-    contact_email = models.EmailField(null=True)
-    contact_name = models.CharField(max_length=255, default='', blank=True)
+    contact_email = models.EmailField(
+        null=True,
+        help_text='Email address of contact person')
+    contact_name = models.CharField(
+        max_length=255, default='', blank=True,
+        help_text='Name of contact person')
 
-    begins_at = models.DateTimeField()
-    ends_at = models.DateTimeField()
+    begins_at = models.DateTimeField(help_text='When the event starts')
+    ends_at = models.DateTimeField(help_text='When the event ends')
 
-    address = models.CharField(max_length=1000)
-    location = models.PointField()
+    address = models.CharField(
+        max_length=1000,
+        help_text='Approximate address of meeting location')
+    location = models.PointField(help_text='Location displayed on event maps')
 
-    max_attendees = models.IntegerField()
+    max_attendees = models.IntegerField(
+        help_text='Maximum number of people allowed to RSVP')
 
-    includes_training = models.BooleanField(default=False)
-    is_canceled = models.BooleanField(default=False)
-    is_private = models.BooleanField(default=False)
+    includes_training = models.BooleanField(
+        default=False,
+        help_text='Is this a training event?')
+    is_canceled = models.BooleanField(
+        default=False,
+        help_text='Has this event been canceled?')
+    is_private = models.BooleanField(
+        default=False,
+        help_text='Is this a private event?')
 
-    map_pdf_filename = models.CharField(max_length=255, default='', blank=True)
+    map_pdf_filename = models.CharField(
+        max_length=255, default='', blank=True,
+        help_text='S3 file path of event map PDF')
 
     objects = models.GeoManager()
 
@@ -133,20 +158,31 @@ class Event(NycModel, models.Model):
     def map_pdf_url(self):
         return url_if_cooked(self.map_pdf_filename)
 
+    def is_past(self):
+        return self.ends_at < timezone.now()
+
     class Meta:
         unique_together = (("group", "slug"), ("group", "title"))
         ordering = ['-begins_at']
 
 
 class EventRegistration(NycModel, models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(
+        User,
+        help_text='ID of user registering for event')
     # If users have registered for an event, we do not want to allow
     # the event to be deleted. If we do, the registration will
     # disappear from the User's profile page and they may show up to
     # an event on the day, not knowing it was canceled
-    event = models.ForeignKey(Event, on_delete=models.PROTECT)
-    did_attend = models.BooleanField(default=False)
-    opt_in_emails = models.BooleanField(default=True)
+    event = models.ForeignKey(
+        Event, on_delete=models.PROTECT,
+        help_text='ID of event registered for')
+    did_attend = models.BooleanField(
+        default=False,
+        help_text='Was user  checked in to event?')
+    opt_in_emails = models.BooleanField(
+        default=True,
+        help_text='Should user receive emails for this event?')
 
     class Meta:
         unique_together = ('user', 'event')

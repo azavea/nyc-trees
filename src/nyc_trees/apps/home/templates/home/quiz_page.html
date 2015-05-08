@@ -20,7 +20,7 @@
 
 {% block main %}
 
-<form method="POST" action="" class="quiz" data-user-id="{{ user.id }}" data-quiz-slug="{{ quiz_slug }}">
+<form method="POST" action="{{ request.path }}" class="quiz" data-user-id="{{ user.id }}" data-quiz-slug="{{ quiz_slug }}">
 {% csrf_token %}
 {% for question in quiz.questions %}
 <div class="question

@@ -4,17 +4,15 @@
 <nav class="nav-side">
     {% if user.is_authenticated %}
     <div class="nav-side-user clearfix">
-        <span>
-            <h2><a href="{% url 'user_detail_redirect' %}" class="nav-side-user-name">{{ user.username }}</a></h2>
-            <div class="nav-side-options">
-                <a href="{% url 'user_profile_settings' %}" class="btn btn-primary">
-                    Settings
-                </a>&nbsp;{% if not user.is_minor %}<a href="{{ user_settings_privacy_url }}"
-                                                       class="btn btn-primary">
-                    Privacy
-                </a>{% endif %}
-            </div>
-        </span>
+        <h2><a href="{% url 'user_detail_redirect' %}" class="nav-side-user-name">{{ user.username }}</a></h2>
+        <div class="nav-side-options">
+            <a href="{% url 'user_profile_settings' %}" class="btn btn-primary">
+                Settings
+            </a>&nbsp;{% if not user.is_minor %}<a href="{{ user_settings_privacy_url }}"
+                                                   class="btn btn-primary">
+                Privacy
+            </a>{% endif %}
+        </div>
     </div>
     {% endif %}
     <ul class="nav-side-list">
@@ -33,7 +31,7 @@
         <li{% if active_page == "about" %} class="active"{% endif %}><a href="{% url 'about_faq_page' %}">About &amp; FAQ</a></li>
     </ul>
     <div class="nav-side-sub">
-        <img src="{{ 'img/logo-nyc.png'|static_url }}" srcset="{{ 'img/logo-nyc@2x.png'|static_url }} 2x" alt="NYC">
+        <img src="{{ 'img/logo-nyc.png'|static_url }}" srcset="{{ 'img/logo-nyc@2x.png'|static_url }} 2x" alt="NYC" />
         <h6 class="color--white">Copyright 2015, The City of New York</h6>
         <a title="treescount.help@parks.nyc.gov" href="mailto:treescount.help@parks.nyc.gov">Contact Us</a>
         <!-- TODO: link to an appropriate page

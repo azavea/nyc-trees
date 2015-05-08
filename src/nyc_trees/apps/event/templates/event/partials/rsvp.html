@@ -16,37 +16,41 @@ The following variables must be in scope:
     </div>
 </div>
 <div class="col-xs-8 text-right">
-    {% if is_admin %}
-        <a href="{{ event_edit_url }}"
-           class="btn btn-secondary"><i class="icon-cog"></i>Edit</a>
-    {% endif %}
-    {% if is_rsvped %}
-        <a id="rsvp"
-           href="#"
-           data-verb="DELETE"
-           data-url="{{ rsvp_url }}"
-           class="btn btn-switch btn-rsvp active">Attending</a>
-    {% elif can_rsvp %}
-        {% if not user.is_authenticated %}
-            <a id="rsvp"
-               href="{% url "login" %}?next={{ event.get_absolute_url }}"
-               class="btn btn-switch">RSVP</a>
-        {% elif not user.online_training_complete %}
-            <a id="rsvp"
-               href="{% url "training_instructions" %}"
-               class="btn btn-switch btn-rsvp">RSVP</a>
-        {% elif not event.includes_training and not user.training_complete %}
-            <a id="rsvp"
-               href="{% url "training_instructions" %}"
-               class="btn btn-switch btn-rsvp">RSVP</a>
-        {% else %}
+    {% if event.is_past %}
+        <a id="rsvp" href="#" class="btn btn-switch disabled">This event has ended.</a>
+    {% else %}
+        {% if is_admin %}
+            <a href="{{ event_edit_url }}"
+               class="btn btn-secondary"><i class="icon-cog"></i>Edit</a>
+        {% endif %}
+        {% if is_rsvped %}
             <a id="rsvp"
                href="#"
-               data-verb="POST"
+               data-verb="DELETE"
                data-url="{{ rsvp_url }}"
-               class="btn btn-switch btn-rsvp">RSVP</a>
+               class="btn btn-switch btn-rsvp active">Attending</a>
+        {% elif can_rsvp %}
+            {% if not user.is_authenticated %}
+                <a id="rsvp"
+                   href="{% url "login" %}?next={{ event.get_absolute_url }}"
+                   class="btn btn-switch">RSVP</a>
+            {% elif not user.online_training_complete %}
+                <a id="rsvp"
+                   href="{% url "training_instructions" %}"
+                   class="btn btn-switch btn-rsvp">RSVP</a>
+            {% elif not event.includes_training and not user.training_complete %}
+                <a id="rsvp"
+                   href="{% url "training_instructions" %}"
+                   class="btn btn-switch btn-rsvp">RSVP</a>
+            {% else %}
+                <a id="rsvp"
+                   href="#"
+                   data-verb="POST"
+                   data-url="{{ rsvp_url }}"
+                   class="btn btn-switch btn-rsvp">RSVP</a>
+            {% endif %}
+        {% else %}
+            <a id="rsvp" href="#" class="btn btn-switch disabled">At Capacity</a>
         {% endif %}
-    {% else %}
-        <a id="rsvp" href="#" class="btn btn-switch disabled">At Capacity</a>
     {% endif %}
 </div>

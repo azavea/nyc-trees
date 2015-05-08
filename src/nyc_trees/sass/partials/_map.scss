@@ -15,6 +15,9 @@
 }
 
 .map-container {
+  transition: bottom 400ms;
+  -ms-transition: bottom 400ms;
+  -webkit-transition: bottom 400ms;
   .tab-status-map-tab & {
     position: fixed;
     bottom: 8rem;
@@ -61,7 +64,7 @@
     padding: 0;
   }
   &:empty {
-    visibility: hidden;
+    display: none;
   }
   @media (max-height: $screen-xs-height) and (max-width: $screen-sm) {
     height: 7rem;
@@ -184,19 +187,43 @@
   padding: 1em;
   background-color: black;
   color: white;
+
+  &:after {
+    position: absolute;
+    top: 1.4em;
+    right: 100%;
+    height: 0;
+    width: 0;
+    border: solid transparent;
+    border-right-color: black;
+    border-width: 12px 25px;
+    content: " ";
+    pointer-events: none;
+  }
 }
 
-.legend-help:after {
+.geolocate-help {
   position: absolute;
-  top: 1.4em;
-  right: 100%;
-  height: 0;
-  width: 0;
-  border: solid transparent;
-  border-right-color: black;
-  border-width: 12px 25px;
-  content: " ";
-  pointer-events: none;
+  left: 220%;
+  top: 0;
+  font-size: 180%;
+  padding: 1em;
+  background-color: black;
+  color: white;
+  width: 10em;
+
+  &:after {
+    position: absolute;
+    top: 1.4em;
+    right: 100%;
+    height: 0;
+    width: 0;
+    border: solid transparent;
+    border-right-color: black;
+    border-width: 12px 25px;
+    content: " ";
+    pointer-events: none;
+  }
 }
 
 .reservations-popup {
@@ -208,6 +235,29 @@
 }
 
 @media (max-width: $screen-sm - 1) {
+  body:not(.actionbar-triggered) {
+    .map-container.progress-map {
+      bottom: 0;
+    }
+  }
+
+  .geolocate-help {
+    top: -40px;
+
+    &:after {
+      top: 70px;
+      border-width: 8px 20px;
+    }
+  }
+
+  .leaflet-control-zoom-out, .leaflet-control-zoom-in {
+    display: none !important;
+  }
+  .geolocate-button {
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-bottom: none;
+  }
   .pageheading-description-detail {
     .tab-status-map-tab & {
       display: none;
@@ -278,6 +328,10 @@
   @media (max-height: $screen-xs-height) and (max-width: $screen-sm) {
     margin-top: -.3rem;
   }
+}
+
+.modal-dialog {
+  margin-top: 7rem;
 }
 
 @media (min-width: $screen-sm) {
@@ -404,4 +458,22 @@
 .reservations-padding {
   padding-left: $grid-gutter-width/2;
   padding-right: $grid-gutter-width/2;
+}
+
+.crosshair-x {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 50%;
+  height: 1px;
+  background: black;
+}
+
+.crosshair-y {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 50%;
+  width: 1px;
+  background: black;
 }

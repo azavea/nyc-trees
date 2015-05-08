@@ -1,5 +1,5 @@
 (SELECT
-  block.geom, 'reserved' as survey_type
+  block.geom, 'reserved' as survey_type, 'none' AS restriction
   FROM survey_blockface AS block
   INNER JOIN survey_blockfacereservation AS reservation
     ON (block.id = reservation.blockface_id

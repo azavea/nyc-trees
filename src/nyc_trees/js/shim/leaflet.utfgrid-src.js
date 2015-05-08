@@ -2,6 +2,8 @@
  Copyright (c) 2012, Smartrak, David Leaver
  Leaflet.utfgrid is an open-source JavaScript library that provides utfgrid interaction on leaflet powered maps.
  https://github.com/danzel/Leaflet.utfgrid
+
+ Modified 2015-04-28 to take "crosshairs" option (respond to map moves rather than clicks)
 */
 (function (window, undefined) {
 
@@ -46,7 +48,8 @@ L.UtfGrid = L.Class.extend({
 		resolution: 4,
 
 		useJsonP: true,
-		pointerCursor: true
+		pointerCursor: true,
+        crosshairs: false
 	},
 
 	//The thing the mouse is currently on
@@ -85,16 +88,24 @@ L.UtfGrid = L.Class.extend({
 			return;
 		}
 
-		map.on('click', this._click, this);
-		map.on('mousemove', this._move, this);
-		map.on('moveend', this._update, this);
+        if (this.options.crosshairs) {
+            map.on('move', this._mapMove, this);
+        } else {
+            map.on('click', this._click, this);
+            map.on('mousemove', this._move, this);
+        }
+        map.on('moveend', this._update, this);
 	},
 
 	onRemove: function () {
 		var map = this._map;
-		map.off('click', this._click, this);
-		map.off('mousemove', this._move, this);
-		map.off('moveend', this._update, this);
+        if (this.options.crosshairs) {
+            map.off('move', this._mapMove, this);
+        } else {
+            map.off('click', this._click, this);
+            map.off('mousemove', this._move, this);
+        }
+        map.off('moveend', this._update, this);
 		if (this.options.pointerCursor) {
 			this._container.style.cursor = '';
 		}
@@ -124,6 +135,10 @@ L.UtfGrid = L.Class.extend({
 		} else if (on.data) {
 			this.fire('mousemove', on);
 		}
+	},
+	_mapMove: function (e) {
+        e.latlng = this._map.getCenter();
+		this.fire('mapMove', this._objectForEvent(e));
 	},
 
 	_objectForEvent: function (e) {

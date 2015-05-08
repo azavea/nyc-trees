@@ -27,10 +27,11 @@
                data-url="{% url 'increase_rsvp_limit' group_slug=group.slug event_slug=event.slug %}"
                class="btn btn-primary">+</a>
 
+            <a href="{% url "survey_from_event" group_slug=group.slug event_slug=event.slug %}" class="btn btn-default pull-right">Start Mapping</a>
+
             <hr />
         </div>
     </div>
-
 
     {% if users %}
         {% for user, did_attend in users %}

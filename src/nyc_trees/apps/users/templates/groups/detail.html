@@ -47,6 +47,7 @@
             <h4 class="section-heading">Description</h4>
             <div>{{group.description}}</div>
         </div>
+        {% if group.contact_name %}
         <div class="description block item">
             <div class="row">
                 <div class="col-xs-8">
@@ -56,6 +57,7 @@
                 <div class="col-xs-4 text-right"><a href="mailto:{{group.contact_email}}" class="btn btn-default">Email</a></div>
             </div>
         </div>
+        {% endif %}
         {% if group.contact_url %}
             <div class="description block item">
                 <div class="row">
@@ -83,7 +85,7 @@
         <div class="progress-circles block nopadding--top clearfix">
             {% include "home/partials/circle.html" with label="Blocks" n=counts.block color="primary" url=progress_page_url %}
             {% include "home/partials/circle.html" with label="Events " n=counts.event color="primary" modal="#users-modal" %}
-            {% include "home/partials/circle.html" with label="Attendees" n=counts.event color="primary" modal="#users-modal" %}
+            {% include "home/partials/circle.html" with label="Attendees" n=counts.attendees color="primary" modal="#users-modal" %}
         </div>
         {% include "home/partials/ticker.html" with n=counts.tree_digits %}
     </section>

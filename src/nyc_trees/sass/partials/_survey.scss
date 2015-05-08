@@ -121,7 +121,7 @@
     }
 }
 
-@media (max-width: $screen-phone) {
+@media (max-width: $screen-tablet) {
     .select2-drop.select2-drop-active {
         top: 10px !important;
         bottom: 30px !important;
@@ -129,6 +129,7 @@
         border-radius: 4px !important;
         box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.45) !important;
         overflow: hidden;
+        max-width: 80%;
 
         .select2-results {
             max-height: 85%;
@@ -160,7 +161,12 @@
         border-top: 2px solid $gray-lightest;
     }
     #another-tree {
-        margin-bottom: 2rem;
+        margin-bottom: 0;
+        border-radius: $input-border-radius $input-border-radius 0 0;
+    }
+    #no-further-trees {
+        margin-top: 0;
+        border-radius: 0 0 $input-border-radius $input-border-radius;
     }
 
     @media (max-width: $screen-sm - 1) {
@@ -206,9 +212,10 @@
         border-bottom: 2px solid $gray-lightest;
         margin-bottom: 1rem;
     }
-    legend {
+    legend, .field-title {
         font-size: $font-size-h5;
         font-weight: 600;
+        color: $legend-color;
         margin: 0;
         border: none;
     }
@@ -255,5 +262,32 @@
     img {
           max-width: 85px;
           vertical-align: baseline;
+    }
+}
+
+#no-further-trees-group {
+    border-top: 2px solid $gray-lightest;
+    margin-top: 10px;
+    .distance-end-form, #submit-survey {
+        display: none;
+    }
+    p {
+        margin-top: 20px;
+        font-size: $font-size-base;
+    }
+    
+    &.active {
+        border-top: none;
+       .distance-end-form, #submit-survey {
+            display: block;
+        } 
+        p {
+            display: none;
+        }
+        .tree-form-block {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid $gray-lightest;
+        }
     }
 }

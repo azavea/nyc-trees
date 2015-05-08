@@ -6,7 +6,7 @@ var $ = require('jquery'),
     toastr = require('toastr'),
     mapModule = require('./map'),
     mapUtil = require('./lib/mapUtil'),
-    SelectableBlockfaceLayer = require('./lib/SelectableBlockfaceLayer'),
+    BlockfaceLayer = require('./lib/BlockfaceLayer'),
     valIsEmpty = require('./lib/valIsEmpty'),
     mapAnotherPopup = require('./mapAnotherPopup'),
 
@@ -53,6 +53,8 @@ var makeMutexShow = (function() {
 }());
 
 var dom = {
+        geolocateButton: '.geolocate-button',
+
         selectStartingPoint: '#select-starting-point',
         selectSide: '#select-side',
 
@@ -71,7 +73,14 @@ var dom = {
         collapseButton: '[data-toggle="collapse"]',
 
         addTree: '#another-tree',
+        noFurtherTrees: '#no-further-trees',
         submitSurvey: '#submit-survey',
+
+        noFurtherTreesGroup: '#no-further-trees-group',
+
+        deleteTree: '[data-action="delete"]',
+        deleteTreePopup: '#delete-tree-popup',
+        deleteTreeConfirm: '#delete-tree-confirm',
 
         quitPopup: '#quit-popup',
         quitShowPopup: '#cant-map',
@@ -111,11 +120,14 @@ var dom = {
     formTemplate = Handlebars.compile($(dom.treeFormTemplate).html()),
 
     blockfaceId = mapUtil.getBlockfaceIdFromUrl(),
-    blockfaceMap = mapModule.create({
+    mapObjects = mapModule.createAndGetControls({
         legend: false,
-        search: false,
-        geolocation: true
+        search: true,
+        geolocation: true,
+        crosshairs: true
     }),
+    blockfaceMap = mapObjects.map,
+    multiControl = mapObjects.multiControl,
 
     endPointLayers = new L.FeatureGroup(),
     defaultStyle = {
@@ -133,48 +145,54 @@ var dom = {
     },
 
     tileLayer = mapModule.addTileLayer(blockfaceMap),
-    grid = mapModule.addGridLayer(blockfaceMap),
+    grid = mapModule.addGridLayer(blockfaceMap, { crosshairs: true }),
 
-    selectedLayer = new SelectableBlockfaceLayer(blockfaceMap, grid, {
-        onAdd: function() {
-            return true;
-        },
-        onAdded: function(feature, layer) {
-            var latLngs = mapUtil.getLatLngs(feature.geometry);
-
-            blockfaceId = feature.properties.id;
-
-            selectedLayer.clearLayers();
-            endPointLayers.clearLayers();
-
-            var startCircle = L.circleMarker(latLngs[0], defaultStyle),
-                endCircle = L.circleMarker(latLngs[latLngs.length - 1], defaultStyle);
-
-            startCircle.isStart = true;
-            endCircle.isStart = false;
-
-            endPointLayers.addLayer(startCircle);
-            endPointLayers.addLayer(endCircle);
-
-            showSelectStart();
-
-            mapUtil.zoomToBlockface(blockfaceMap, blockfaceId);
-            return true;
-        }
-    }),
+    selectedLayer = new BlockfaceLayer(blockfaceMap, { color: '#FFEB3B' }),
 
     isMappedFromStartOfLine = null,
 
-    clicksEnabled = true;
+    mapInteractionEnabled = true;
 
 statePrompter.lock();
 
+selectedLayer.clicksEnabled = false;
 blockfaceMap.addLayer(selectedLayer);
 blockfaceMap.addLayer(endPointLayers);
 
+grid.on('mapMove', function(e) {
+    var data = e.data;
+    if (data && data.survey_type === 'available' && data.id !== blockfaceId) {
+        selectBlockface(data);
+    }
+});
+
+function selectBlockface(data) {
+    blockfaceId = data.id;
+
+    var geom = mapUtil.parseGeoJSON(data.geojson),
+        latLngs = mapUtil.getLatLngs(geom),
+        startCircle = L.circleMarker(latLngs[0], defaultStyle),
+        endCircle = L.circleMarker(latLngs[latLngs.length - 1], defaultStyle);
+
+    startCircle.isStart = true;
+    endCircle.isStart = false;
+
+    selectedLayer.clearLayers();
+    endPointLayers.clearLayers();
+
+    selectedLayer.addData({
+        "type": "Feature",
+        "geometry": geom
+    });
+    endPointLayers.addLayer(startCircle);
+    endPointLayers.addLayer(endCircle);
+
+    showSelectStart();
+}
+
 endPointLayers.setStyle(defaultStyle);
 endPointLayers.on('click', function(e) {
-    if (!clicksEnabled) {
+    if (!mapInteractionEnabled) {
         return;
     }
     endPointLayers.setStyle(defaultStyle);
@@ -196,9 +214,7 @@ $(dom.btnToTeammate).click(function(e) {
     showSelectTeammate();
 });
 
-mapUtil.fetchBlockface(blockfaceId).done(function(blockface) {
-    selectedLayer.addBlockface(blockface);
-});
+mapUtil.fetchBlockface(blockfaceId).done(selectBlockface);
 
 // There is no attribute for requiring "one or more" of a group of checkboxes to
 // be selected, so we have to handle it ourselves.
@@ -237,7 +253,7 @@ function getSectionToggleHandler(fieldName) {
     return function () {
         var $form = $(this).closest('form');
         var $sections = $form.find('[data-' + fieldName + ']');
-        var currentStatus = $form.find('input[name="' + fieldName + '"]:checked').val();
+        var currentStatus = $form.find('input[name="' + fieldName + '"]:checked').val() || "";
 
         $sections.addClass('hidden');
         $sections.filter('[data-' + fieldName + '="' + currentStatus + '"]').removeClass('hidden');
@@ -249,6 +265,9 @@ $(dom.treeFormcontainer).on('change', 'input[name="status"]', getSectionToggleHa
 
 // When "Tree Guard" is changed, we should show/hide the appropriate sections
 $(dom.treeFormcontainer).on('change', 'input[name="guard_installation"]', getSectionToggleHandler('guard_installation'));
+
+// When "No Problems" is changed, we should show/hide the appropriate sections
+$(dom.treeFormcontainer).on('change', 'input[name="problems"][value="None"]', getSectionToggleHandler('problems'));
 
 // Helper for checking the validity of forms
 function checkFormValidity($forms) {
@@ -308,6 +327,8 @@ function checkFormValidity($forms) {
         } else {
             triggerValidationMesasages($elemToFocus, $forms, $disabledElems);
         }
+    } else {
+        $disabledElems.attr('disabled', false);
     }
 
     return valid;
@@ -336,8 +357,16 @@ $(dom.btnNext).click(function(e) {
     $(dom.selectTeammate).addClass('hidden');
     $(dom.surveyPage).toggleClass('hidden');
     $(dom.actionBar).addClass('expanded');
-    selectedLayer.clicksEnabled = false;
-    clicksEnabled = false;
+    mapInteractionEnabled = false;
+    multiControl.removeFrom(blockfaceMap);
+    blockfaceMap.dragging.disable();
+    blockfaceMap.touchZoom.disable();
+    blockfaceMap.doubleClickZoom.disable();
+    blockfaceMap.scrollWheelZoom.disable();
+    blockfaceMap.boxZoom.disable();
+    blockfaceMap.keyboard.disable();
+    blockfaceMap.removeLayer(grid);
+    mapModule.hideCrosshairs();
 });
 
 $(dom.addTree).click(function (){
@@ -355,8 +384,25 @@ $(dom.addTree).click(function (){
         $treeForms.collapse('hide');
         $newForm.collapse('show');
 
+        $(dom.treeFormcontainer).one('hidden.bs.collapse', function(e) {
+            // Scroll to the first field for easier data entry
+            var $firstField = $newForm.find('input[name="distance_to_tree"]');
+            $firstField.focus();
+        });
+
         $(dom.collapseButton).removeClass('hidden');
+
+        // Hide delete tree button on all but last form
+        var $deleteButtons = $(dom.treeFormcontainer).find(dom.deleteTree);
+        $deleteButtons.addClass('hidden');
+        $deleteButtons.last().removeClass('hidden');
     }
+});
+
+$(dom.noFurtherTrees).on('click', function(e) {
+    // Adding active class will reveal submit button,
+    // and distance to end field
+    $(dom.noFurtherTreesGroup).addClass('active');
 });
 
 // When tree forms are opened/closed we need to change the icon class of the toggle
@@ -373,7 +419,55 @@ $(dom.treeFormcontainer).on('hide.bs.collapse', function(e) {
     $toggle.removeClass('icon-down-open-big').addClass('icon-right-open-big');
 });
 
-function getTreeData(i, form) {
+$(dom.treeFormcontainer).on('click', dom.deleteTree, function(e) {
+    // We assume that we are dealing with the last tree form, since we only
+    // show the delete button for the last tree
+    var $lastTreeForm = $(dom.treeFormcontainer).find(dom.treeForms).last(),
+        treeData = getTreeData($lastTreeForm),
+
+        showWarning = false;
+
+    for (var key in treeData) {
+        if (treeData[key]) {
+            showWarning = true;
+        }
+    }
+
+    if (showWarning) {
+        $(dom.deleteTreePopup).modal('show');
+    } else {
+        deleteLastTree();
+    }
+});
+
+$(dom.deleteTreeConfirm).on('click', deleteLastTree);
+
+function deleteLastTree() {
+    var $lastTreeForm = $(dom.treeForms).last(),
+        $lastTreeHeader = $lastTreeForm.prev();
+
+    $lastTreeForm.remove();
+    $lastTreeHeader.remove();
+
+    // A little bit of housekeeping - we need to undo the effects of adding
+    // a new tree form, with some special cases if there is only one tree left
+    var $deleteButtons = $(dom.deleteTree);
+    $deleteButtons.addClass('hidden');
+
+    if ($deleteButtons.length > 1) {
+        $deleteButtons.last().removeClass('hidden');
+    }
+
+    var $collapseButtons = $(dom.collapseButton);
+    if ($collapseButtons.length == 1) {
+        $collapseButtons.addClass('hidden');
+    }
+
+    var $newLastForm = $(dom.treeForms).last();
+    $newLastForm.collapse('show');
+}
+
+function getTreeData(form) {
     var obj = {},
         $form = $(form),
         wasCollapsed = $form.hasClass('collapse');
@@ -435,7 +529,9 @@ function submitSurveyWithTrees() {
         // Disable submit button to prevent double POSTs
         $(dom.submitSurvey).off('click', submitSurveyWithTrees);
 
-        var treeData = $treeForms.map(getTreeData).get();
+        var treeData = $treeForms.map(function(i, form) {
+            return getTreeData(form);
+        }).get();
 
         // Only the last tree has "distance_to_end", so it gets special handling
         treeData[treeData.length - 1].distance_to_end = $(dom.distanceToEnd).val();
@@ -596,6 +692,8 @@ function setupSpeciesAutocomplete($form) {
 
     $form.find('select[name="species_id"]').select2({
         allowClear: false,
+        minimumInputLength: 3,
+        placeholder: "Select and type species name",
         matcher: function(term, commonName, $option) {
             var scientificName = $option.data('scientific-name'),
                 cultivar = $option.data('cultivar'),
@@ -648,3 +746,14 @@ $('body').on('select2-close', 'select', function() {
         $('.select2-focusser:focus').blur();
     }, 1);
 });
+
+// Display help popup for geolocation button.
+var helpShown = mapModule.getDomMapAttribute('geolocate-help-shown').toLowerCase() == 'true';
+if (!helpShown) {
+    $(dom.geolocateButton).append(
+        '<div class="geolocate-help">Move the map to your location</div>'
+    );
+    $(document).one('click', function () {
+        $('.geolocate-help').hide();
+    });
+}

@@ -122,7 +122,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     }.merge(VAGRANT_NETWORK_OPTIONS)
 
     services.vm.provider "virtualbox" do |v|
-      v.memory = 1024
+      v.memory = 2048
     end
 
     services.vm.provision "ansible" do |ansible|

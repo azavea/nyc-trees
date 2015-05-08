@@ -1,6 +1,6 @@
 <select class="teammate" style="width: 100%;">
     {# A blank option to allow for clearing the selection #}
-    <option></option>
+    <option value="">&nbsp;</option>
     {% for teammate in teammates %}
         {% include "event/partials/teammate_item.html" %}
     {% endfor %}
