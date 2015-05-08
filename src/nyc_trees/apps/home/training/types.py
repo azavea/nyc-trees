@@ -188,7 +188,7 @@ class QuizTrainingStep(ViewTrainingStep):
         @wraps(view_fn)
         def wrapper(request, *args, **kwargs):
             training_results = (TrainingResult.objects
-                                .filter(user=request.user,
+                                .filter(user=request.user.id,
                                         module_name=self.quiz.slug,
                                         score__gte=self.quiz.passing_score))
             if not training_results.exists():
