@@ -16,3 +16,21 @@
 		bottom: -10px;
 	}
 }
+
+.non-field-errors {
+	color: darken($brand-warning, 20%);
+	padding: 1rem;
+	background: rgba($brand-warning, 0.3);
+	border: 1px solid $brand-warning;
+	border-radius: $border-radius-base;
+	position: relative;
+	margin: 0 0 .25rem;
+
+	.form-error {
+		margin: 0;
+
+		+ .form-error {
+			margin-top: 10px;
+		}
+	}
+}
