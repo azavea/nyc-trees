@@ -9,3 +9,4 @@ class MessageType(object):
     RESERVATION_REMINDER = 'reservation_reminder'
     NEW_RESERVATIONS_CONFIRMED = 'new_reservations_confirmed'
     ONLINE_TRAINING_COMPLETE = 'online_training_complete'
+    AFTER_EVENT_CHECKIN = 'after_event_checkin'

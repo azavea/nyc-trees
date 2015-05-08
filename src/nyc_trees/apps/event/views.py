@@ -28,7 +28,7 @@ from apps.event.helpers import (user_is_rsvped_for_event,
                                 user_is_checked_in_to_event)
 
 from apps.core.tasks import wait_for_default_storage_file
-from apps.mail.tasks import notify_rsvp
+from apps.mail.tasks import notify_rsvp, notify_after_event_checkin
 
 from apps.survey.layer_context import get_context_for_territory_layer
 from libs.pdf_maps import create_event_map_pdf
@@ -395,6 +395,8 @@ def check_in_user_to_event(request, event_slug, username):
         return HttpResponseForbidden()
 
     if event.includes_training:
+        if did_attend and user.field_training_complete is False:
+            notify_after_event_checkin.delay(user.id)
         user.field_training_complete = True
         user.clean_and_save()
 
