@@ -216,7 +216,8 @@ class User(NycModel, AbstractUser):
     def surveys(self):
         """Return surveys user has participated in"""
         from apps.survey.models import Survey
-        return Survey.objects.filter(Q(user=self) | Q(teammate=self))
+        return Survey.objects.complete().filter(
+            Q(user=self) | Q(teammate=self))
 
     @property
     def blocks_mapped_count(self):

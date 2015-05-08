@@ -58,7 +58,7 @@ def _global_counts(past_week=False):
     if past_week:
         blocks_mapped = get_block_count_past_week()
     else:
-        blocks_mapped = Survey.objects.all().distinct('blockface_id').count()
+        blocks_mapped = Survey.objects.complete().distinct('blockface').count()
     if blocks_mapped > 0:
         fraction_mapped = float(blocks_mapped) / float(blocks_total)
         fmt = "{:.0%}" if fraction_mapped >= .1 else "{:.1%}"

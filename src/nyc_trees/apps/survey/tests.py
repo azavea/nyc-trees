@@ -243,8 +243,7 @@ class TeammateTests(SurveyTestCase):
                    is_flagged=False,
                    has_trees=True,
                    is_left_side=True,
-                   is_mapped_in_blockface_polyline_direction=True,
-                   quit_reason='N/A')
+                   is_mapped_in_blockface_polyline_direction=True)
             for id in ids)
 
         # Assert first user (only) has achievements
