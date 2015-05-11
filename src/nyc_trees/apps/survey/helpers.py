@@ -41,6 +41,7 @@ def group_percent_completed(group):
 
     if group_blocks_count > 0:
         completed_blocks = Survey.objects \
+            .complete() \
             .filter(blockface_id__in=group_blocks) \
             .filter(blockface__is_available=False) \
             .distinct('blockface')

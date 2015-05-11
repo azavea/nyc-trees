@@ -56,6 +56,11 @@ class Territory(NycModel, models.Model):
         verbose_name_plural = "Territories"
 
 
+class SurveyQuerySet(models.QuerySet):
+    def complete(self):
+        return self.filter(quit_reason='')
+
+
 class Survey(models.Model):
     # We do not anticipate deleting a Blockface, but we definitely
     # should not allow it to be deleted if there is a related Survey
@@ -93,6 +98,8 @@ class Survey(models.Model):
         auto_now=True, db_index=True, editable=False,
         help_text='Time when row was last updated'
     )
+
+    objects = SurveyQuerySet.as_manager()
 
     def __unicode__(self):
         return 'block %s on %s by %s' % (self.blockface_id, self.created_at,

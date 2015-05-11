@@ -10,6 +10,7 @@ _survey_sql = """
     WITH most_recent_survey AS (
         SELECT DISTINCT ON (survey.blockface_id) survey.*
         FROM survey_survey AS survey
+        WHERE COALESCE(survey.quit_reason, '') = ''
         ORDER BY survey.blockface_id, survey.created_at DESC
     )"""
 
