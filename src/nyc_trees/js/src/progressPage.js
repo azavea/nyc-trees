@@ -125,13 +125,12 @@ function loadLayers($mode) {
 }
 
 function addLayers(bounds, tileUrl) {
-    var zooming = false;
-    if (bounds) {
-        zooming = mapModule.fitBounds(progressMap, bounds);
-    }
-    tileLayer = mapModule.addTileLayer(progressMap, {
-        url: tileUrl,
-        waitForZoom: zooming
+    // Add layer to map after zoom animation completes.
+    // (Otherwise spurious tile requests will be issued at the old zoom level.)
+    mapModule.fitBounds(progressMap, bounds).then(function() {
+        tileLayer = mapModule.addTileLayer(progressMap, {
+            url: tileUrl
+        });
     });
 }
 
