@@ -14,8 +14,9 @@
     END AS is_mapped
     FROM survey_blockface AS block
     LEFT OUTER JOIN survey_survey AS survey
-      ON block.id = survey.blockface_id
-    ORDER BY block.id, survey.created_at DESC NULLS LAST
+      ON (block.id = survey.blockface_id
+          AND COALESCE(survey.quit_reason, '') = '')
+    ORDER BY block.id
   ) AS s
   GROUP BY nta_id
 ) AS agg
