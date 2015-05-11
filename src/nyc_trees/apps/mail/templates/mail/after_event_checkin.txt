@@ -1,0 +1,16 @@
+{% extends "mail/base_email.txt" %}
+
+{% block content %}
+Hi Voluntreer!
+
+Now that you are Treerifically Trained you will be able to sign up for and attend mapping events held by groups!
+
+Remember, training events always start with a refresher on how to collect the data and use the app. You are welcome to attend additional training events at any time, and will still be able to sign up for these events if you would like a refresher.
+
+At a mapping event, you will be able to pick up equipment and start mapping right away! Staff and groups will be on hand to give you equipment and help troubleshoot any problems, but at mapping events there is no time specifically set aside as a training refresher.
+
+We would love to hear your feedback on the voluntreer experience! Please follow this link to fill out a quick survey which will help us target our engagement efforts and shape future events:
+https://www.surveymonkey.com/s/5HT3B59
+
+Thank you for helping count, map and care for NYC’s street trees!
+{% endblock content %}
