@@ -14,7 +14,6 @@ var progressMap = mapModule.create({
         search: true
     }),
     tileLayer = null,
-    selectedLayer = null,
     geojsonLayer = null,
 
     dom = {
@@ -25,7 +24,22 @@ var progressMap = mapModule.create({
         actionBar: '#action-bar'
     },
     $actionBar = $(dom.actionBar),
-    $mode = null;
+    $mode = null,
+
+    selectedLayer = new SelectableBlockfaceLayer(progressMap, null, {
+        onAdd: function() { return true; }, // Always try and fetch the feature
+        onAdded: function(feature, layer) {
+            selectedLayer.clearLayers();
+
+            // Note: this must be kept in sync with
+            // src/nyc_trees/apps/survey/urls/blockface.py
+            var url = '/blockedge/' + feature.properties.id + '/progress-page-blockedge-popup/';
+
+            $actionBar.load(url);
+            $('body').addClass('actionbar-triggered');
+            return true;
+        }
+    });
 
 $(dom.modeChoice).click(onModeChanged);
 
@@ -35,6 +49,8 @@ $(dom.modeChoice).click(onModeChanged);
 $('.leaflet-container').css('cursor', 'pointer');
 
 loadLayers($(dom.modeChoice).first());
+
+progressMap.addLayer(selectedLayer);
 
 function onModeChanged(e) {
     e.preventDefault();
@@ -65,20 +81,23 @@ function loadLayers($mode) {
     // Clear action bar
     $actionBar.empty();
     $('body').removeClass('actionbar-triggered');
+    selectedLayer.clearLayers();
 
     // Replace layers
     if (tileLayer) {
         progressMap.removeLayer(tileLayer);
     }
-    if (selectedLayer) {
-        progressMap.removeLayer(selectedLayer);
-    }
     if (geojsonLayer) {
         progressMap.removeLayer(geojsonLayer);
     }
+
     if (tileUrl) {
         addLayers(bounds, tileUrl);
+        selectedLayer.clicksEnabled = true;
+    } else {
+        selectedLayer.clicksEnabled = false;
     }
+
     if (geojsonUrl) {
         $.getJSON(geojsonUrl, function(geojson) {
             geojsonLayer = L.geoJson(geojson, {
@@ -114,24 +133,7 @@ function addLayers(bounds, tileUrl) {
         url: tileUrl,
         waitForZoom: zooming
     });
-
-    createSelectableLayer();
 }
 
 function createSelectableLayer() {
-    selectedLayer = new SelectableBlockfaceLayer(progressMap, null, {
-        onAdd: function() { return true; }, // Always try and fetch the feature
-        onAdded: function(feature, layer) {
-            selectedLayer.clearLayers();
-
-            // Note: this must be kept in sync with
-            // src/nyc_trees/apps/survey/urls/blockface.py
-            var url = '/blockedge/' + feature.properties.id + '/progress-page-blockedge-popup/';
-
-            $actionBar.load(url);
-            $('body').addClass('actionbar-triggered');
-            return true;
-        }
-    });
-    progressMap.addLayer(selectedLayer);
 }
