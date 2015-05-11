@@ -9,6 +9,8 @@ var $ = require('jquery'),
     BlockfaceLayer = require('./lib/BlockfaceLayer'),
     SavedState = require('./lib/SavedState'),
 
+    MIN_ZOOM = zoom.NEIGHBORHOOD,
+
     statePrompter = require('./lib/statePrompter').init({
         warning: 'You have unsaved block edge reservations.',
         question: ''
@@ -38,6 +40,8 @@ var $ = require('jquery'),
 
         cartActionBar: '#reservations-cart-action',
         cartHelpText: '#reservations-help-text',
+        cartHelpTextZoomedOut: '.js-zoomed-out-help',
+        cartHelpTextZoomedIn: '.js-zoomed-in-help',
         cartFinishSection: '#reservations-finish-section',
 
         blockActionBar: '#reservations-blockface-action',
@@ -72,8 +76,6 @@ var reservationMap = mapModule.create({
     search: true
 });
 
-mapModule.addTileLayer(reservationMap);
-
 var $current = $(dom.currentReservations),
     $hiddenInput = $(dom.hiddenInput),
     $finishButton = $(dom.finishReservations),
@@ -83,6 +85,7 @@ var $current = $(dom.currentReservations),
     selectedBlockfaces = {},
     blockfaceLayers = {},
 
+    tileLayer = mapModule.addTileLayer(reservationMap, {minZoom: MIN_ZOOM}),
     grid = mapModule.addGridLayer(reservationMap);
 
 var selectedLayer = new SelectableBlockfaceLayer(reservationMap, grid, {
@@ -139,6 +142,28 @@ var cartLayer = new BlockfaceLayer(reservationMap, {
         });
     }
 });
+
+reservationMap.on('zoomend', updateForZoom);
+
+function updateForZoom() {
+    // At low zooms, generating map tiles which show reservable blocks
+    // is expensive and unnecessary.
+    var showTiles = (reservationMap.getZoom() >= MIN_ZOOM);
+
+    toggleLayer(tileLayer);
+    toggleLayer(grid);
+
+    $(dom.cartHelpTextZoomedIn).toggle(showTiles);
+    $(dom.cartHelpTextZoomedOut).toggle(!showTiles);
+
+    function toggleLayer(layer) {
+        if (showTiles && !reservationMap.hasLayer(layer)) {
+            reservationMap.addLayer(layer);
+        } else if (!showTiles && reservationMap.hasLayer(layer)) {
+            reservationMap.removeLayer(layer);
+        }
+    }
+}
 
 function selectReservedBlockface(feature, layer, latlng) {
     showPopup(feature.properties.id, latlng, 'Expires ' + feature.properties.expires_at, actions.remove);
@@ -323,3 +348,5 @@ $(dom.requestAccessModal).on('click', dom.requestAccessButton, function() {
 });
 
 $finishButton.on('click', statePrompter.unlock);
+
+updateForZoom();
