@@ -40,6 +40,9 @@
     {# This block exists for placing elements that need to be children of the body, like bootstrap modals #}
     {% block extra_content %}
     {% endblock extra_content %}
+    {% if treecorder_urls|length > 1 %}
+      {% include "home/partials/treecorder_modal.html" %}
+    {% endif %}
 
     {% block footer %}
         <footer>

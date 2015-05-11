@@ -221,6 +221,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
     'nyc_trees.context_processors.user_settings_privacy_url',
     'nyc_trees.context_processors.config',
+    'nyc_trees.context_processors.treecorder_urls',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#template-loaders

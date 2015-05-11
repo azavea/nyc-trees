@@ -17,7 +17,15 @@
     {% endif %}
     <ul class="nav-side-list">
         {% flag full_access %}
-            <li{% if active_page == "treecorder" %} class="active"{% endif %}><a href="{% url 'treecorder' %}">Treecorder</a></li>
+            <li{% if active_page == "treecorder" %} class="active"{% endif %}>
+                {% if treecorder_urls|length_is:"1" %}
+                    {% with link=treecorder_urls.items|first %}
+                    <a href="{{ link.1 }}">Treecorder</a>
+                    {% endwith %}
+                {% else %}
+                    <a href="javascript:" data-toggle="modal" data-target="#treecorder-survey-modal">Treecorder</a>
+                {% endif %}
+            </li>
             <li{% if active_page == "dashboard" %} class="active"{% endif %}>
                 <a href="{% url 'home_page' %}">{% if user.is_authenticated %}Dashboard{% else %}Homepage{% endif %}</a>
             </li>

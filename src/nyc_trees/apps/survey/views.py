@@ -23,7 +23,7 @@ from django.utils.timezone import now
 from apps.core.models import Group
 from apps.core.helpers import user_is_group_admin, user_is_individual_mapper
 
-from apps.event.models import Event, EventRegistration
+from apps.event.models import Event
 from apps.event.helpers import (user_is_checked_in_to_event,
                                 user_is_rsvped_for_event)
 
@@ -464,35 +464,6 @@ def _validate_event_and_group(request, event_slug):
     if not user_is_checked_in_to_event(request.user, event):
         raise PermissionDenied('User not checked-in to this event')
     return event
-
-
-def redirect_to_treecorder(request):
-    user = request.user
-
-    # We assume you can't have RSVPed to events without completing training
-    attended_events, unattended_events = EventRegistration.my_events_now(user)
-
-    if attended_events:
-        event = attended_events[0]
-        return redirect('survey_from_event',
-                        group_slug=event.group.slug, event_slug=event.slug)
-    elif unattended_events:
-        event = unattended_events[0]
-        return redirect('event_user_check_in_page',
-                        group_slug=event.group.slug, event_slug=event.slug)
-
-    # Need to check indivdual mapper status first, to allow census admins to
-    # "skip" a users online training via the admin site easily
-    if user.individual_mapper:
-        if user.blockfacereservation_set.current().exists():
-            return redirect('survey')
-        else:
-            return redirect('reservations')
-
-    if not user.training_complete:
-        return redirect('training_instructions')
-
-    return redirect('reservations_instructions')
 
 
 def start_survey(request):
