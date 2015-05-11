@@ -21,12 +21,16 @@ class SurveyAdmin(admin.ModelAdmin):
     raw_id_fields = ("blockface",)
 
 
+class BlockfaceAdmin(admin.ModelAdmin):
+    search_fields = ('id',)
+
+
 class BlockfaceReservationAdmin(admin.ModelAdmin):
     raw_id_fields = ("blockface",)
     search_fields = ('blockface__id',)
 
 
-admin.site.register(m.Blockface)
+admin.site.register(m.Blockface, BlockfaceAdmin)
 admin.site.register(m.Territory)
 admin.site.register(m.Survey, SurveyAdmin)
 admin.site.register(m.Tree)
