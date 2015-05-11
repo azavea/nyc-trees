@@ -1,4 +1,6 @@
+{% autoescape off %}
 {% block content %}
 {% endblock content %}
 
 Please contact us at Treescount.Help@parks.nyc.gov for technical assistance or any questions related to the TreesCount! 2015 website.
+{% endautoescape %}
