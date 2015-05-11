@@ -42,7 +42,8 @@ from apps.survey.layer_context import (
     get_context_for_reservations_layer, get_context_for_reservable_layer,
     get_context_for_progress_layer, get_context_for_territory_survey_layer,
     get_context_for_printable_reservations_layer,
-    get_context_for_group_progress_layer, get_context_for_user_progress_layer
+    get_context_for_group_progress_layer, get_context_for_user_progress_layer,
+    get_context_for_borough_progress_layer, get_context_for_nta_progress_layer
 )
 from apps.survey.helpers import group_percent_completed, teammates_for_mapping
 
@@ -64,6 +65,7 @@ def progress_page(request):
             {'mode': 'my', 'css_class': 'mapped', 'label': 'Mapped by you'},
             {'mode': 'my', 'css_class': 'not-mapped',
              'label': 'Not mapped by you'},
+
             {'mode': 'group', 'css_class': 'mapped',
              'label': 'Mapped by this group'},
             {'mode': 'group', 'css_class': 'not-mapped',
@@ -71,6 +73,8 @@ def progress_page(request):
         ],
         'legend_mode': 'all',
         'layer_all': get_context_for_progress_layer(),
+        'layer_all_nta': get_context_for_nta_progress_layer(),
+        'layer_all_borough': get_context_for_borough_progress_layer(),
         'help_shown': _was_help_shown(request, 'progress_page_help_shown')
     }
 
@@ -82,7 +86,7 @@ def progress_page(request):
                   .values_list('blockface_id', flat=True))
         if len(blocks) > 0:
             blockfaces = Blockface.objects.filter(id__in=blocks).collect()
-            context['bounds'] = list(blockfaces.extent)
+            context['my_bounds'] = list(blockfaces.extent)
 
     return context
 
