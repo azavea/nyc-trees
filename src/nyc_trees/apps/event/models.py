@@ -24,6 +24,8 @@ from libs.pdf_maps import url_if_cooked
 # Amount of time before an event starts to display
 # the "Starting soon" notification message.
 STARTING_SOON_WINDOW = timedelta(hours=1)
+# Amount of time after the event ends when emailing attendees is allowed
+EMAIL_WINDOW = timedelta(days=7)
 
 
 class Event(NycModel, models.Model):
@@ -160,6 +162,10 @@ class Event(NycModel, models.Model):
 
     def is_past(self):
         return self.ends_at < timezone.now()
+
+    @property
+    def can_send_email(self):
+        return (self.ends_at + EMAIL_WINDOW) >= timezone.now()
 
     class Meta:
         unique_together = (("group", "slug"), ("group", "title"))
