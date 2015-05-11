@@ -23,11 +23,14 @@ class SurveyAdmin(admin.ModelAdmin):
 
 class BlockfaceAdmin(admin.ModelAdmin):
     search_fields = ('id',)
+    list_filter = ('is_available',)
 
 
 class BlockfaceReservationAdmin(admin.ModelAdmin):
     raw_id_fields = ("blockface",)
     search_fields = ('blockface__id',)
+    list_filter = ('canceled_at', 'expires_at', 'blockface__is_available')
+    list_display = ('canceled_at', 'expires_at', 'blockface', 'user')
 
 
 admin.site.register(m.Blockface, BlockfaceAdmin)
