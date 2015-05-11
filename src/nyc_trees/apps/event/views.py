@@ -310,15 +310,17 @@ def register_for_event(request, event_slug):
         return HttpResponseForbidden()
 
     if event.has_space_available and not user_is_rsvped_for_event(user, event):
-        EventRegistration.objects.create(user=user, event=event)
-        relative_event_url = reverse('event_detail', kwargs={
-            'group_slug': event.group.slug,
-            'event_slug': event.slug
-        })
-        event_url = request.build_absolute_uri(relative_event_url)
-        chain(wait_for_default_storage_file.s(event.map_pdf_filename),
-              notify_rsvp.s(event_url, user.id, event.id))\
-            .apply_async()
+        _, created = EventRegistration.objects.get_or_create(user=user,
+                                                             event=event)
+        if created:
+            relative_event_url = reverse('event_detail', kwargs={
+                'group_slug': event.group.slug,
+                'event_slug': event.slug
+            })
+            event_url = request.build_absolute_uri(relative_event_url)
+            chain(wait_for_default_storage_file.s(event.map_pdf_filename),
+                  notify_rsvp.s(event_url, user.id, event.id))\
+                .apply_async()
     return event_detail(request, event_slug)
 
 
