@@ -62,6 +62,7 @@ def progress_page(request):
         'legend_entries': [
             {'mode': 'all', 'css_class': 'mapped', 'label': 'Mapped'},
             {'mode': 'all', 'css_class': 'not-mapped', 'label': 'Not mapped'},
+
             {'mode': 'my', 'css_class': 'mapped', 'label': 'Mapped by you'},
             {'mode': 'my', 'css_class': 'not-mapped',
              'label': 'Not mapped by you'},
@@ -71,7 +72,8 @@ def progress_page(request):
             {'mode': 'group', 'css_class': 'not-mapped',
              'label': 'Not mapped'},
         ],
-        'legend_mode': 'all',
+        'percentage_ramps': range(0, 100, 10),
+        'legend_mode': 'all-percent',
         'layer_all': get_context_for_progress_layer(),
         'layer_all_nta': get_context_for_nta_progress_layer(),
         'layer_all_borough': get_context_for_borough_progress_layer(),

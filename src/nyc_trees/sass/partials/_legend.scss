@@ -40,4 +40,30 @@
   .selected {
     background-color: #FFEB3B;
   }
+  .mapped-percentage-color-ramp {
+    width: 100%;
+    .mapped-percentage {
+      width: 10%;
+      height: 0;
+      padding-top: 10%;
+      border: 1px solid #ddd;
+    }
+  }
+
+  .mapped-labels {
+    width: 100%;
+    height: 2rem;
+  }
+
+  // If you change these colors, you should also change src/tiler/style/progres.mss
+  .mapped-0  { background-color: #fff; }
+  .mapped-10 { background-color: #f7fcfd; }
+  .mapped-20 { background-color: #e5f5f9; }
+  .mapped-30 { background-color: #ccece6; }
+  .mapped-40 { background-color: #99d8c9; }
+  .mapped-50 { background-color: #66c2a4; }
+  .mapped-60 { background-color: #41ae76; }
+  .mapped-70 { background-color: #238b45; }
+  .mapped-80 { background-color: #006d2c; }
+  .mapped-90 { background-color: #00441b; }
 }

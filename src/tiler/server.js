@@ -124,8 +124,9 @@ function req2interactivity(req) {
 }
 
 function req2style(req) {
-    var type =  req.params.type;
-    if (type === 'progress' || type === 'user_progress' || type === 'group_progress') {
+    var type = req.params.type;
+    if (type === 'progress' || type === 'user_progress' || type === 'group_progress' ||
+            type === 'borough_progress' || type === 'nta_progress') {
         return styles.progress();
     } else {
         return styles.default();

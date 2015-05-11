@@ -14,12 +14,34 @@ Progress
 <div data-mode="all" class="hidden">
     This map shows the block edges mapped so far by all volun<b>treers</b> for TreesCount! 2015. Sign up for an event to help us finish mapping our street trees!
 </div>
+<div data-mode="all-percent" class="hidden">
+    This map shows the block edges mapped so far by all volun<b>treers</b> for TreesCount! 2015. Sign up for an event to help us finish mapping our street trees!
+</div>
 <div data-mode="my" class="hidden">
     <p>This map shows the block edges that have been mapped by you!</p>
 
     <p>Sign up for an event or make a block edge reservation to keep on mapping!</p>
 </div>
-<div data-mode="groups" class="hidden">
+<div data-mode="group" class="hidden">
     This map shows you our TreesCount! Partner groups’ Census Zones and their mapping progress. Click on a Census Zone for more details!
 </div>
 {% endblock %}
+
+{% block legend_entries %}
+{{ block.super }}
+<div data-mode="all-percent">
+    <p>Total block edges mapped</p>
+    <table class="mapped-percentage-color-ramp">
+        <tr>
+        {% for percent in percentage_ramps %}
+            <td class="mapped-percentage mapped-{{ percent }}"></td>
+        {% endfor %}
+        </tr>
+    </table>
+    <div class="mapped-labels">
+        <div class="col-xs-4 text-left">0</div>
+        <div class="col-xs-4 text-center">50</div>
+        <div class="col-xs-4 text-right">100%</div>
+    </div>
+</div>
+{% endblock legend_entries %}

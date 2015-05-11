@@ -14,12 +14,14 @@
                 {% endblock %}
                 </div>
                 <h5 class="js-legend-title">Legend</h5>
+                {% block legend_entries %}
                 {% for entry in legend_entries %}
                     <div class="entry {% if entry.mode != legend_mode %}hidden{% endif%}" data-mode="{{ entry.mode }}">
                         <div class="swatch {{ entry.css_class }}"></div>
                         {{ entry.label }}
                     </div>
                 {% endfor %}
+                {% endblock %}
             </div>
         </div>
     </div>

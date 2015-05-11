@@ -76,11 +76,23 @@ function onModeChanged(e) {
         return;
     }
 
+    changeLegendEntries();
+
     // Show chosen mode on dropdown button
     $mode.parents(dom.modeDropdown).find(dom.modeButton).text($mode.text());
 
+    loadLayers($mode);
+}
+
+function changeLegendEntries() {
     // Show appropriate legend entries
     var mode = $mode.attr('href').slice(1);  // strip leading #
+
+    // Show different legend entries depending on zoom level if appropriate for
+    // this mode
+    if ($mode.data('tile-url-neighborhood') && progressMap.getZoom() <= zoomMaxes.neighborhood) {
+        mode = mode + '-percent';
+    }
     $(dom.legendEntries).addClass('hidden');
     $('[data-mode=' + mode + ']').removeClass('hidden');
 }
@@ -146,6 +158,7 @@ function addLayers(bounds, tileUrl, neighborhoodTileUrl, boroughTileUrl) {
     // (Otherwise spurious tile requests will be issued at the old zoom level.)
     mapModule.fitBounds(progressMap, bounds).then(function() {
         progressMap.off('zoomend', fixZoomLayerSwitch);
+        progressMap.off('zoomend', changeLegendEntries);
 
         if (neighborhoodTileUrl || boroughTileUrl) {
             tileLayer = mapModule.addTileLayer(progressMap, {
@@ -167,6 +180,7 @@ function addLayers(bounds, tileUrl, neighborhoodTileUrl, boroughTileUrl) {
             });
 
             progressMap.on('zoomend', fixZoomLayerSwitch);
+            progressMap.on('zoomend', changeLegendEntries);
         } else {
             tileLayer = mapModule.addTileLayer(progressMap, {
                 url: tileUrl
