@@ -171,8 +171,8 @@ function addTileLayer(map, options) {
     options = options || {};
     var tileUrl = options.url || getDomMapAttribute('tile-url'),
         layer = L.tileLayer(tileUrl, {
-            minZoom: zoom.MIN,
-            maxZoom: zoom.MAX
+            minZoom: options.minZoom || zoom.MIN,
+            maxZoom: options.maxZoom || zoom.MAX
         });
     _addLayer(map, layer, options.waitForZoom);
     return layer;

@@ -34,6 +34,11 @@ var Windshaft = require('windshaft'),
         user_reservations: 'id,survey_type,geojson'
     },
 
+    tables = {
+        'nta_progress': 'survey_neighborhoodtabulationarea',
+        'borough_progress': 'survey_borough'
+    },
+
     config = {
         base_url: '/:cache_buster/:dbname/:type',
         base_url_notable: '/:cache_buster/:dbname',
@@ -75,7 +80,7 @@ var Windshaft = require('windshaft'),
             try {
                 // Windshaft needs a table name, even if you are providing
                 // a custom sql statement.
-                req.params.table = 'survey_blockface';
+                req.params.table = req2table(req);
                 req.params.sql = req2sql(req);
                 req.params.style = req2style(req);
                 req.params.interactivity = req2interactivity(req);
@@ -85,6 +90,11 @@ var Windshaft = require('windshaft'),
             }
         }
     };
+
+function req2table(req) {
+    var table = tables[req.params.type];
+    return table ? table : 'survey_blockface';
+}
 
 function req2context(req) {
     // constructs a context object that will be passed to

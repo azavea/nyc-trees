@@ -34,6 +34,39 @@ $(dom.modeChoice).click(onModeChanged);
 // matter where you click/tap.
 $('.leaflet-container').css('cursor', 'pointer');
 
+
+// Maximum zoom levels for aggregate layers
+var zoomMaxes = {
+    borough: 12,
+    nta: 15
+};
+
+var boroughLayer = mapModule.addTileLayer(progressMap, {
+    url: '//33.33.33.20/1430516442/nyc_trees/borough_progress/{z}/{x}/{y}.png',
+    minZoom: 1,
+    maxZoom: zoomMaxes.borough
+});
+
+var ntaLayer = mapModule.addTileLayer(progressMap, {
+    url: '//33.33.33.20/1430516442/nyc_trees/nta_progress/{z}/{x}/{y}.png',
+    minZoom: zoomMaxes.borough + 1,
+    maxZoom: zoomMaxes.nta
+});
+
+// Work around https://github.com/Leaflet/Leaflet/issues/1905
+progressMap.on('zoomend', function(e) {
+    var zoom = progressMap.getZoom();
+        if (zoom > zoomMaxes.borough) {
+        boroughLayer._clearBgBuffer();
+    }
+    if (zoom < (zoomMaxes.borough + 1) || zoom > zoomMaxes.nta) {
+        ntaLayer._clearBgBuffer();
+    }
+    if (zoom < (zoomMaxes.nta + 1) && tileLayer) {
+        tileLayer._clearBgBuffer();
+    }
+});
+
 loadLayers($(dom.modeChoice).first());
 
 function onModeChanged(e) {
@@ -77,7 +110,7 @@ function loadLayers($mode) {
         progressMap.removeLayer(geojsonLayer);
     }
     if (tileUrl) {
-        addLayers(bounds, tileUrl);
+        addLayers(bounds, tileUrl, {minZoom: zoomMaxes.nta + 1, maxZoom: zoom.MAX});
     }
     if (geojsonUrl) {
         $.getJSON(geojsonUrl, function(geojson) {
@@ -105,14 +138,17 @@ function loadLayers($mode) {
     }
 }
 
-function addLayers(bounds, tileUrl) {
+function addLayers(bounds, tileUrl, options) {
     var zooming = false;
+    options = options || {};
     if (bounds) {
         zooming = mapModule.fitBounds(progressMap, bounds);
     }
     tileLayer = mapModule.addTileLayer(progressMap, {
         url: tileUrl,
-        waitForZoom: zooming
+        waitForZoom: zooming,
+        minZoom: options.minZoom,
+        maxZoom: options.maxZoom
     });
 
     createSelectableLayer();
@@ -120,7 +156,11 @@ function addLayers(bounds, tileUrl) {
 
 function createSelectableLayer() {
     selectedLayer = new SelectableBlockfaceLayer(progressMap, null, {
-        onAdd: function() { return true; }, // Always try and fetch the feature
+        onAdd: function() {
+            // Only allow selection when the blockface
+            // layer is visible
+            return progressMap.getZoom() > zoomMaxes.nta;
+        },
         onAdded: function(feature, layer) {
             selectedLayer.clearLayers();
 
