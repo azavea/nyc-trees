@@ -156,9 +156,24 @@
     h3 {
         margin-bottom: 2rem;
     }
-    h4 {
+    .sticky-title {
         padding-top: 1rem;
         border-top: 2px solid $gray-lightest;
+        text-align: right;
+    }
+    // TODO: use SCSS variables to demystify the top and right numbers below
+    // TODO: z-index
+    // TODO: white background?
+    .sticky-title.fixed {
+        position: fixed;
+        width: 100%;
+        top: 52px;
+        padding-right: 50px;
+    }
+    .sticky-title.absolute {
+        position: absolute;
+        width: 100%;
+        padding-right: 29px;
     }
     #another-tree {
         margin-bottom: 0;
@@ -232,9 +247,13 @@
     top: -.75rem;
 }
 
-// Requires such specifity in order to override bootstrap default behavior
-#survey .tree-form .btn-group>input:first-child+.btn {
-    border-radius: $border-radius-base 0 0 $border-radius-base;
+#survey {
+    position: relative;  // for sticky titles
+
+    // Requires such specifity in order to override bootstrap default behavior
+    .tree-form .btn-group > input:first-child + .btn {
+        border-radius: $border-radius-base 0 0 $border-radius-base;
+    }
 }
 
 .distance-end-form {

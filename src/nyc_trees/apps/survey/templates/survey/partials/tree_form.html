@@ -1,13 +1,14 @@
-<h4 class="color--primary">
-    Tree <span>{{ tree_number }}</span>
-    <a class="hidden" data-action="delete" href="javascript:">
-        <i class="icon-cancel"></i>
-    </a>
-    <a class="hidden pull-right" data-toggle="collapse" data-target="#tree-form-{{ tree_number }}">
-        <i class="icon-down-open-big"></i>
-    </a>
-</h4>
-
+<div>
+    <h4 class="sticky-title color--primary">
+        <a class="hidden" data-action="delete" href="javascript:">
+            <i class="icon-cancel"></i>
+        </a>
+        <a class="hidden pull-right" data-toggle="collapse" data-target="#tree-form-{{ tree_number }}">
+            <i class="icon-down-open-big"></i>
+        </a>
+        Tree <span>{{ tree_number }}</span>
+    </h4>
+</div>
 <form class="tree-form collapse in" data-class="tree-form" autocomplete="off" id="tree-form-{{ tree_number }}">
     <!-- We need a clickable submit button in order to trigger browser error validation popups -->
     <input type="submit" data-class="fake-submit" class="hidden">

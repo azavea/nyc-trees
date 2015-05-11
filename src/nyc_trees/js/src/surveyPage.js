@@ -9,6 +9,7 @@ var $ = require('jquery'),
     BlockfaceLayer = require('./lib/BlockfaceLayer'),
     valIsEmpty = require('./lib/valIsEmpty'),
     mapAnotherPopup = require('./mapAnotherPopup'),
+    stickyTitlesModule = require('./lib/stickyTitles'),
 
     statePrompter = require('./lib/statePrompter').init({
         warning: 'You have begun mapping this block edge but have not saved your work.',
@@ -94,7 +95,9 @@ var dom = {
 
         btnNoTrees: '#no-trees',
         noTreesPopup: '#no-trees-popup',
-        noTreesConfirm: '#no-trees-confirm'
+        noTreesConfirm: '#no-trees-confirm',
+
+        treeHeading: '.sticky-title'
     },
 
     showSelectStart = makeMutexShow([
@@ -151,7 +154,9 @@ var dom = {
 
     isMappedFromStartOfLine = null,
 
-    mapInteractionEnabled = true;
+    mapInteractionEnabled = true,
+
+    stickyTitles = stickyTitlesModule($(dom.actionBar), dom.treeHeading);
 
 statePrompter.lock();
 
@@ -396,6 +401,8 @@ $(dom.addTree).click(function (){
         var $deleteButtons = $(dom.treeFormcontainer).find(dom.deleteTree);
         $deleteButtons.addClass('hidden');
         $deleteButtons.last().removeClass('hidden');
+
+        stickyTitles.update();
     }
 });
 
@@ -411,12 +418,14 @@ $(dom.treeFormcontainer).on('show.bs.collapse', function(e) {
         $toggle = $(dom.collapseButton).filter('[data-target="#' + formId + '"]').children('i');
 
     $toggle.removeClass('icon-right-open-big').addClass('icon-down-open-big');
+    stickyTitles.update();
 });
 $(dom.treeFormcontainer).on('hide.bs.collapse', function(e) {
     var formId = $(e.target).attr('id'),
         $toggle = $(dom.collapseButton).filter('[data-target="#' + formId + '"]').children('i');
 
     $toggle.removeClass('icon-down-open-big').addClass('icon-right-open-big');
+    stickyTitles.update();
 });
 
 $(dom.treeFormcontainer).on('click', dom.deleteTree, function(e) {
