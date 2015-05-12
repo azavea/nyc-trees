@@ -20,7 +20,12 @@
                   </div>
               </div>
               <div id="reservations-help-text" class="col-xs-7 text-left">
-                  Click on a block edge to add or remove it from your reservations
+                  <div class="js-zoomed-in-help">
+                      Click on a block edge to add or remove it from your reservations
+                  </div>
+                  <div class="js-zoomed-out-help">
+                      <span style="font-weight: bold; color: #7ac143">Zoom in</span> (or search for an address) to select a block edge
+                  </div>
               </div>
               <div id="reservations-finish-section" class="col-xs-7 text-right hidden">
                   <form method="post" action="{% url 'reserve_blockfaces' %}">
