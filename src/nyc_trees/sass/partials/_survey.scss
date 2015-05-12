@@ -316,8 +316,12 @@
     background: #f3f3f3;
     margin-bottom: -10px;
     position: absolute;
-    left: -2rem;
-    right: -2rem;
+    width: 100%;
+    @media (min-width: $screen-sm) {
+        width: auto;
+        left: -2rem;
+        right: -2rem;
+    }
     span {
         font-size: $font-size-small;
     }
