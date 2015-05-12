@@ -1,0 +1,17 @@
+<div class="modal fade navbar-modal" id="treecorder-survey-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Where do you want to map?</h4>
+      </div>
+      <div class="modal-body">
+          <p>Please choose where you will be mapping trees. You can map at an event or map your reserved block edges.</p>
+          <ul>
+          {% for label, url in treecorder_urls.iteritems %}
+            <li><a href="{{ url }}">{{ label }}</a></li>
+          {% endfor %}
+          </ul>
+      </div>
+    </div>
+  </div>
+</div>

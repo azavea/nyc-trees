@@ -11,11 +11,10 @@ from pytz import timezone
 from celery import chain
 
 from django.conf import settings
-from django.contrib.gis.geos import Point, GeometryCollection
+from django.contrib.gis.geos import Point
 from django.core.exceptions import ValidationError, PermissionDenied
 from django.core.urlresolvers import reverse
 from django.db import transaction, connection
-from django.db.models import Prefetch
 from django.http import (HttpResponse, HttpResponseForbidden,
                          HttpResponseBadRequest)
 from django.shortcuts import get_object_or_404, redirect
@@ -24,7 +23,7 @@ from django.utils.timezone import now
 from apps.core.models import Group
 from apps.core.helpers import user_is_group_admin, user_is_individual_mapper
 
-from apps.event.models import Event, EventRegistration
+from apps.event.models import Event
 from apps.event.helpers import (user_is_checked_in_to_event,
                                 user_is_rsvped_for_event)
 
@@ -211,10 +210,7 @@ def user_reserved_blockfaces_geojson(request):
 
 
 def group_borders_geojson(request):
-    groups = Group.objects.filter(is_active=True) \
-        .prefetch_related(
-            Prefetch('territory_set', to_attr="turf",
-                     queryset=Territory.objects.select_related('blockface')))
+    groups = Group.objects.filter(is_active=True)
 
     base_group_layer_context = get_context_for_group_progress_layer()
     base_group_tile_url = base_group_layer_context['tile_url']
@@ -232,10 +228,7 @@ def group_borders_geojson(request):
                 'gridUrl': '%s?group=%s' % (base_group_grid_url, group.id),
                 'popupUrl': reverse('group_popup',
                                     kwargs={'group_slug': group.slug}),
-                'bounds': GeometryCollection(
-                    [territory.blockface.geom
-                     for territory in group.turf]).extent
-                if group.turf else group.border.extent
+                'bounds': group.border.extent
             }
         }
         for group in groups
@@ -473,35 +466,6 @@ def _validate_event_and_group(request, event_slug):
     return event
 
 
-def redirect_to_treecorder(request):
-    user = request.user
-
-    # We assume you can't have RSVPed to events without completing training
-    attended_events, unattended_events = EventRegistration.my_events_now(user)
-
-    if attended_events:
-        event = attended_events[0]
-        return redirect('survey_from_event',
-                        group_slug=event.group.slug, event_slug=event.slug)
-    elif unattended_events:
-        event = unattended_events[0]
-        return redirect('event_user_check_in_page',
-                        group_slug=event.group.slug, event_slug=event.slug)
-
-    # Need to check indivdual mapper status first, to allow census admins to
-    # "skip" a users online training via the admin site easily
-    if user.individual_mapper:
-        if user.blockfacereservation_set.current().exists():
-            return redirect('survey')
-        else:
-            return redirect('reservations')
-
-    if not user.training_complete:
-        return redirect('training_instructions')
-
-    return redirect('reservations_instructions')
-
-
 def start_survey(request):
     reservations_for_user = (
         BlockfaceReservation.objects.remaining_for(request.user))
@@ -527,7 +491,7 @@ def start_survey_from_event(request, event_slug):
         return redirect('event_user_check_in_page',
                         group_slug=event.group.slug, event_slug=event.slug)
 
-    if not event.in_progress():
+    if not event.is_mapping_allowed():
         return HttpResponseForbidden('Event not currently in-progress')
 
     return {
