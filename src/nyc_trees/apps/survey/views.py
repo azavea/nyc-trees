@@ -11,11 +11,10 @@ from pytz import timezone
 from celery import chain
 
 from django.conf import settings
-from django.contrib.gis.geos import Point, GeometryCollection
+from django.contrib.gis.geos import Point
 from django.core.exceptions import ValidationError, PermissionDenied
 from django.core.urlresolvers import reverse
 from django.db import transaction, connection
-from django.db.models import Prefetch
 from django.http import (HttpResponse, HttpResponseForbidden,
                          HttpResponseBadRequest)
 from django.shortcuts import get_object_or_404, redirect
@@ -211,10 +210,7 @@ def user_reserved_blockfaces_geojson(request):
 
 
 def group_borders_geojson(request):
-    groups = Group.objects.filter(is_active=True) \
-        .prefetch_related(
-            Prefetch('territory_set', to_attr="turf",
-                     queryset=Territory.objects.select_related('blockface')))
+    groups = Group.objects.filter(is_active=True)
 
     base_group_layer_context = get_context_for_group_progress_layer()
     base_group_tile_url = base_group_layer_context['tile_url']
@@ -232,10 +228,7 @@ def group_borders_geojson(request):
                 'gridUrl': '%s?group=%s' % (base_group_grid_url, group.id),
                 'popupUrl': reverse('group_popup',
                                     kwargs={'group_slug': group.slug}),
-                'bounds': GeometryCollection(
-                    [territory.blockface.geom
-                     for territory in group.turf]).extent
-                if group.turf else group.border.extent
+                'bounds': group.border.extent
             }
         }
         for group in groups
