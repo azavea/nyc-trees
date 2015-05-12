@@ -36,10 +36,8 @@
             <div id="tree-form-header">
                 <h4>Treecorder</h4>
             </div>
-            <!-- TODO: I moved this <a> out of #tree-form-container to simplify
-                 absolute positioning, but now its styling must be restored -->
-            <a class="btn btn-warning btn-block" href="#no-trees-popup" data-toggle="modal" id="no-trees">No Trees On This Block</a>
             <div id="tree-form-container" class="clearfix">
+                <a class="btn btn-warning btn-block" href="#no-trees-popup" data-toggle="modal" id="no-trees">No Trees On This Block</a>
                 {% include "survey/partials/tree_form.html" with tree_number=1 %}
             </div>
             <div class="tree-form-block">

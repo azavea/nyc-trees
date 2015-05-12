@@ -1,12 +1,14 @@
 <div>
     <h4 class="sticky-title color--primary">
-        <a class="hidden" data-action="delete" href="javascript:">
-            <i class="icon-cancel"></i>
-        </a>
         <a class="hidden pull-right" data-toggle="collapse" data-target="#tree-form-{{ tree_number }}">
             <i class="icon-down-open-big"></i>
         </a>
-        Tree <span>{{ tree_number }}</span>
+        <span>
+            Tree {{ tree_number }}
+            <a class="hidden" data-action="delete" href="javascript:">
+                <i class="icon-cancel"></i>
+            </a>
+        </span>
     </h4>
 </div>
 <form class="tree-form collapse in" data-class="tree-form" autocomplete="off" id="tree-form-{{ tree_number }}">
