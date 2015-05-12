@@ -51,8 +51,9 @@
         <div class="description block item">
             <div class="row">
                 <div class="col-xs-8">
-                    <h5>{{group.contact_name}}</h5>
-                    <div class="h6">Group Contact</div>
+                    <h5>Group Contact</h5>
+                    <div class="h6">{{ group.contact_name }}</div>
+                    <div class="h6"><a href="mailto:{{ group.contact_email }}">{{ group.contact_email }}</a></div>
                 </div>
                 <div class="col-xs-4 text-right"><a href="mailto:{{group.contact_email}}" class="btn btn-default">Email</a></div>
             </div>
