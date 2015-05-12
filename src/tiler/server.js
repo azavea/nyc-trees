@@ -3,6 +3,7 @@
 var Windshaft = require('windshaft'),
     fs = require('fs'),
     _ = require('lodash'),
+    healthCheck = require('./healthCheck'),
     files = require('./files'),
     port = process.env.PORT || 4000,
 
@@ -20,6 +21,8 @@ var Windshaft = require('windshaft'),
     // See http://wiki.openstreetmap.org/wiki/Meta_tiles for a discussion of metatiles.
     // 4 is the default set in https://github.com/CartoDB/Windshaft/blob/42218bc480bedaa6b5e1b7d60478ea8afdce2d87/lib/windshaft/renderers/mapnik/factory.js#L26
     mapnikMetatileCount = process.env.NYC_TREES_METATILE_COUNT || 4,
+
+    tilerHealthTimeout = process.env.NYC_TREES_TILER_HEALTH_TIMEOUT || 1000,
 
     queries = files('./sql'),
     styles = files('./style'),
@@ -133,5 +136,7 @@ function req2sql(req) {
     }
 }
 
-Windshaft.Server(config).listen(port);
+var server = Windshaft.Server(config);
+server.get('/health-check', healthCheck(config, tilerHealthTimeout));
+server.listen(port);
 console.log("Now serving tiles");
