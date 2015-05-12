@@ -12,13 +12,24 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import make_aware, utc
 
-from models import (Group, Blockface, Survey, Territory, BlockfaceReservation)
+from apps.survey.models import (Group, Blockface, Survey, BlockfaceReservation,
+                                Borough, Territory, NeighborhoodTabulationArea)
 from apps.users.models import TrustedMapper
 
 
 def get_context_for_progress_layer():
     models = [Blockface, Survey]
     return _get_context_for_layer("progress", models)
+
+
+def get_context_for_borough_progress_layer():
+    models = [Blockface, Borough, Survey]
+    return _get_context_for_layer("borough_progress", models)
+
+
+def get_context_for_nta_progress_layer():
+    models = [Blockface, NeighborhoodTabulationArea, Survey]
+    return _get_context_for_layer("nta_progress", models)
 
 
 @login_required
