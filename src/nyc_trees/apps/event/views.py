@@ -148,7 +148,7 @@ def event_email(request, event_slug):
         for rsvp in rsvps.select_related('user'):
             rsvp.user.email_user(form.cleaned_data['subject'],
                                  form.cleaned_data['body'],
-                                 [event.contact_email])
+                                 event.contact_email)
         message_sent = True
 
     return {
