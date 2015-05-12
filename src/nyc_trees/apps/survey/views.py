@@ -491,7 +491,7 @@ def start_survey_from_event(request, event_slug):
         return redirect('event_user_check_in_page',
                         group_slug=event.group.slug, event_slug=event.slug)
 
-    if not event.in_progress():
+    if not event.is_mapping_allowed():
         return HttpResponseForbidden('Event not currently in-progress')
 
     return {
