@@ -127,10 +127,13 @@ def event_detail(request, event_slug):
 def event_email_page(request, event_slug):
     event = get_object_or_404(Event, slug=event_slug,
                               group=request.group)
+    event_registrations = event.eventregistration_set.all() \
+        .select_related('user')
     return {
         'event': event,
         'group': event.group,
-        'rsvp_count': event.eventregistration_set.count(),
+        'event_registrations': event_registrations,
+        'rsvp_count': len(event_registrations),
         'form': EmailForm(),
         'message_sent': False
     }

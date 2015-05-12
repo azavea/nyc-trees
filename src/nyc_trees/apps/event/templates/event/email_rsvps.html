@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 
-{# TODO: This should be a "tab" on the Event Management page, once that has been merged/styled #}
 {% block content %}
 <div class="container">
     <div class="row">
@@ -12,7 +11,7 @@
                 <h4 class="section-heading">Recipients</h4>
                 {% if rsvp_count > 0 %}
                     <span>{{ rsvp_count }}</span> RSVPS
-                    <a href="{% url 'event_admin_check_in_page' group_slug=group.slug event_slug=event.slug%}">See all</a>
+                    <a href="javascript:" data-toggle="modal" data-target="#see-all-users-modal">See all</a>
                     <p>This form will allow you to contact your event registrants, either before the event or up to 7 days after the event. <i>Note that only event attendees who have opted into emails will receive these updates!! Do not use this to update your event details – edit the event details directly instead.</i></p>
                     {% include "core/partials/email_form.html" %}
                 {% else %}
@@ -25,3 +24,30 @@
     </div>
 </div>
 {% endblock %}
+{% block extra_content %}
+<div class="modal fade" id="see-all-users-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Event Registrants</h4>
+            </div>
+            <div class="modal-body species-modal-content">
+                <ul class="list-unstyled">
+                {% for event_reg in event_registrations %}
+                    <li>
+                    {% if user.profile_is_public %}
+                    <a href="{{ user.get_absolute_url}}">{{ user.username }}</a>
+                    {% else %}
+                    {{ user.username }}
+                    {% endif %}
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock extra_content %}
