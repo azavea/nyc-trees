@@ -16,13 +16,13 @@ from libs.mixins import NycModel
 class Borough(NycModel, models.Model):
     geom = models.MultiPolygonField()
     name = models.CharField(max_length=32)
-    code = models.IntegerField(db_index=True, unique=True)
+    code = models.IntegerField(unique=True)
 
 
 class NeighborhoodTabulationArea(NycModel, models.Model):
     geom = models.MultiPolygonField()
     name = models.CharField(max_length=75)
-    code = models.CharField(max_length=4, db_index=True, unique=True)
+    code = models.CharField(max_length=4, unique=True)
 
 
 class Blockface(models.Model):
@@ -38,10 +38,10 @@ class Blockface(models.Model):
         max_length=255, default='unknown',
         help_text='Source for blockface data (borough name)')
     borough = models.ForeignKey(
-        Borough, null=True,
+        Borough, null=True, blank=True,
         help_text='The borough containing this blockface')
     nta = models.ForeignKey(
-        NeighborhoodTabulationArea, null=True,
+        NeighborhoodTabulationArea, null=True, blank=True,
         help_text='The neighborhood tabulation area containing this blockface')
 
     # We can't use the NycModel mixin, because we want to add db indexes
