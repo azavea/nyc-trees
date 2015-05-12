@@ -1,3 +1,6 @@
+#djDebug {
+    display: none !important;
+}
 .page-new-survery {
     .map-action-sidebar {
         position: static;
@@ -163,6 +166,7 @@
         text-align: left;
         margin-bottom: 0;
         z-index: 10;
+        font-weight: 600;
     }
     @media (max-width: $screen-sm - 1) {
         .sticky-title.fixed {
