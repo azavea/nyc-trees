@@ -9,7 +9,7 @@
 --
 -- Tree measures are expected to be in the linestring's coordinate units.
 --
--- Author: Sandro Santilli <strk@vizzuality.com>
+-- Author: Sandro Santilli <strk@keybit.net>
 --
 -- }{
 CREATE OR REPLACE FUNCTION layoutBoxes(line geometry, left_side boolean, dist float8[], len float8[], width float8[], off float8[])
@@ -53,7 +53,11 @@ BEGIN
     IF tree.len = 0 THEN
       -- This is an arbitrarily small number used
       -- to obtain another point but on the same segment
-      distfrac := distfrac + 0.0000001;
+      IF curdst >= roadrec.len THEN
+        distfrac := distfrac - 0.0000001;
+      ELSE
+        distfrac := distfrac + 0.0000001;
+      END IF;
     ELSE
       curdst := curdst + tree.len;
       distfrac := curdst/roadrec.len;
@@ -61,6 +65,9 @@ BEGIN
     END IF;
     p1 := ST_Line_Interpolate_Point(roadrec.geom, distfrac);
     l0 := ST_MakeLine(p0, p1);
+    IF tree.len = 0 AND ST_Equals(p0, ST_EndPoint(roadrec.geom)) THEN
+      l0 := ST_Reverse(l0);
+    END IF;
     BEGIN
       IF tree.off IS NOT NULL THEN
         l0 := ST_OffsetCurve(l0, tree.off*roadrec.side);
@@ -80,7 +87,11 @@ BEGIN
     END IF;
 
     IF tree.len = 0 THEN
-      ret := ST_PointN(l1, 2);
+      IF ST_Equals(p0, ST_EndPoint(roadrec.geom)) AND roadrec.side = 1 THEN
+        ret := ST_PointN(l1, 1);
+      ELSE
+        ret := ST_PointN(l1, 2);
+      END IF;
     ELSE
       ret := ST_MakeLine(l0, l1);
       ret := ST_MakeLine(ret, ST_StartPoint(l0)); -- add closing point
