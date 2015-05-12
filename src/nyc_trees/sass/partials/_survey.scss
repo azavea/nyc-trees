@@ -164,53 +164,55 @@
         margin-bottom: 0;
         z-index: 10;
     }
-    .sticky-title.fixed {
-        position: fixed;
-        left: 1.5rem;
-        right: 5.6rem;
-        top: 5.5rem;
-        transform: translateZ(0); // Fixes fixed position issue on mobile
-        width: auto;
-        text-align: right;
-        border: none;
-        @media (max-height: $screen-xs-height) and (max-width: $screen-sm) {
-            top: 4.5rem;
-        }
-        span {
-            background: $brand-primary;
-            color: #fff;
-            padding: 1rem;
-            transition: .2s ease all;
-            right: 0;
-            a {
+    @media (max-width: $screen-sm - 1) {
+        .sticky-title.fixed {
+            position: fixed;
+            left: 1.5rem;
+            right: 5.6rem;
+            top: 5.5rem;
+            transform: translateZ(0); // Fixes fixed position issue on mobile
+            width: auto;
+            text-align: right;
+            border: none;
+            @media (max-height: $screen-xs-height) and (max-width: $screen-sm) {
+                top: 4.5rem;
+            }
+            span {
+                background: $brand-primary;
                 color: #fff;
+                padding: 1rem;
+                transition: .2s ease all;
+                right: 0;
+                a {
+                    color: #fff;
+                }
             }
-        }
-        a.pull-right {
-            background: darken($brand-primary, 5%);
-            padding: 1rem 1.5rem;
-            position: absolute;
-            right: -5.6rem;
-            width: 5.6rem;
-            top: 0;
-            color: #fff;
-            min-height: 40px;
-            transition: .2s ease background;
-
-            // When only one tree exist.
-            &.hidden + span {
-                right: -5.6rem;
+            a.pull-right {
+                background: darken($brand-primary, 5%);
+                padding: 1rem 1.5rem;
                 position: absolute;
+                right: -5.6rem;
+                width: 5.6rem;
                 top: 0;
+                color: #fff;
+                min-height: 40px;
+                transition: .2s ease background;
+
+                // When only one tree exist.
+                &.hidden + span {
+                    right: -5.6rem;
+                    position: absolute;
+                    top: 0;
+                }
             }
         }
-    }
-    .sticky-title.absolute {
-        position: absolute;
-        left: 1.5rem;
-        right: 1.5rem;
-        background: #fff;
-        border-color: #fff;
+        .sticky-title.absolute {
+            position: absolute;
+            left: 1.5rem;
+            right: 1.5rem;
+            background: #fff;
+            border-color: #fff;
+        }
     }
     #another-tree {
         margin-bottom: 0;
