@@ -206,14 +206,21 @@ def _dump_to_shapefile(dump_id, mappings, rows, filename, geom, geom_type):
 
 
 @task
-def dump_model(fq_name, dump_id):
+def dump_model(fq_name, fields, dump_id):
     _, temp_file_path = tempfile.mkstemp()
     Model = _model_from_fq_name(fq_name)
+
+    if fields is None:
+        queryset = Model.objects.all()
+    else:
+        print(fields)
+        queryset = Model.objects.all().values(*fields)
+
     with open(temp_file_path, 'w') as f:
         # We specify QUOTE_NONNUMERIC here but the current version of
         # djqscsv coerces everything to a string. Overquoting is better
         # than underquoting.
-        write_csv(Model.objects.all(), f, quoting=csv.QUOTE_NONNUMERIC)
+        write_csv(queryset, f, quoting=csv.QUOTE_NONNUMERIC)
 
     model_name = Model.__name__.lower()
     file_name = 'dump/{}/{}.csv'.format(dump_id, model_name)
