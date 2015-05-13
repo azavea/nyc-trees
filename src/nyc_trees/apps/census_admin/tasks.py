@@ -12,6 +12,8 @@ import zipfile
 from io import BytesIO
 from collections import namedtuple
 
+from pytz import timezone
+
 import fiona
 from celery import task
 from djqscsv import write_csv
@@ -22,7 +24,7 @@ from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.db import connection
 from django.template.loader import render_to_string
-
+from django.contrib.gis.db.models import DateTimeField, DateField, TimeField
 
 from apps.survey.models import Blockface
 from apps.event.models import Event
@@ -46,8 +48,17 @@ with open(TREES_QUERY_FILE, 'r') as f:
 Mapping = namedtuple('Mapping', ['shp_record', 'type', 'column'])
 
 
+def get_dt_formatter():
+    est_tz = timezone('US/Eastern')
+
+    def f(dt):
+        return dt.astimezone(est_tz).strftime('%Y-%m-%d %H:%M:%S')
+    return f
+
+
 def _datetime_attr(col):
-    return lambda row: row[col].strftime('%Y-%m-%d %H:%M:%S')
+    dt_format = get_dt_formatter()
+    return lambda row: (dt_format(row[col]))
 
 
 def _boolean_attr(col):
@@ -215,11 +226,18 @@ def dump_model(fq_name, fields, dump_id):
     else:
         queryset = Model.objects.all().values(*fields)
 
+    dt_format = get_dt_formatter()
+
+    field_serializer_map = {
+        field.name: dt_format for field in Model._meta.fields
+        if isinstance(field, (DateField, TimeField, DateTimeField))}
+
     with open(temp_file_path, 'w') as f:
         # We specify QUOTE_NONNUMERIC here but the current version of
         # djqscsv coerces everything to a string. Overquoting is better
         # than underquoting.
-        write_csv(queryset, f, quoting=csv.QUOTE_NONNUMERIC)
+        write_csv(queryset, f, quoting=csv.QUOTE_NONNUMERIC,
+                  field_serializer_map=field_serializer_map)
 
     model_name = Model.__name__.lower()
     file_name = 'dump/{}/{}.csv'.format(dump_id, model_name)
