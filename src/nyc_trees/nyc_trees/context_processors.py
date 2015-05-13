@@ -55,7 +55,7 @@ def treecorder_urls(request):
         elif not user.training_complete:
             urls[''] = reverse('training_instructions')
         else:
-            urls[''] = reverse('reservation_instructions')
+            urls[''] = reverse('reservations_instructions')
 
     return {
         'treecorder_urls': urls
