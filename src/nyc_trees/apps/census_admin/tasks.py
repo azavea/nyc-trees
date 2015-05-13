@@ -213,7 +213,6 @@ def dump_model(fq_name, fields, dump_id):
     if fields is None:
         queryset = Model.objects.all()
     else:
-        print(fields)
         queryset = Model.objects.all().values(*fields)
 
     with open(temp_file_path, 'w') as f:
