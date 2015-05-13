@@ -300,6 +300,8 @@ _shapefile_fields = {
         'expert_required': 'expert_req',
         'updated_at': 'updated_at',
         'created_at': 'created_at',
+        'borough_id': 'borough_id',
+        'nta_id': 'nta_id',
         'geom': None,
         'source': None,
         },
