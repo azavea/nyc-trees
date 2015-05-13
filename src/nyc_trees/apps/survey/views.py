@@ -549,9 +549,6 @@ def submit_survey_from_event(request, event_slug):
 
 
 def _mark_survey_blockface_availability(survey, availability):
-    if survey.quit_reason != '':
-        raise ValidationError('Cannot mark block edge complete for survey '
-                              'that has been quit.')
     if not isinstance(availability, bool):
         raise ValidationError('availability arg must be a boolean value')
 
@@ -608,8 +605,7 @@ def _create_survey_and_trees(request, event=None):
     survey.full_clean()
     survey.save()
 
-    if survey.quit_reason == '':
-        _mark_survey_blockface_availability(survey, False)
+    _mark_survey_blockface_availability(survey, False)
 
     for tree_data in tree_list:
         if 'problems' in tree_data:
