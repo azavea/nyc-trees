@@ -5,6 +5,7 @@ tiler_deploy_branch: "master"
 tiler_use_profiler: "false"
 
 tiler_config:
+  - { file: "NYC_TREES_DB_NAME", content: "{{ postgresql_database }}" }
   - { file: "NYC_TREES_DB_USER", content: "{{ postgresql_username }}" }
   - { file: "NYC_TREES_DB_PASSWORD", content: "{{ postgresql_password }}" }
   - { file: "NYC_TREES_DB_HOST", content: "{{ postgresql_host }}" }
