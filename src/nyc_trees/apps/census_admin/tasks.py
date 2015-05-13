@@ -24,19 +24,10 @@ from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.db import connection
 from django.template.loader import render_to_string
-
+from django.contrib.gis.db.models import DateTimeField, DateField, TimeField
 
 from apps.survey.models import Blockface
 from apps.event.models import Event
-
-_DATETIME_FIELDS = ('created_at',
-                    'updated_at',
-                    'territory_updated_at',
-                    'canceled_at',
-                    'expries_at',
-                    'reminder_sent_at',
-                    'begins_at',
-                    'ends_at')
 
 
 if getattr(settings, 'PRIVATE_AWS_STORAGE_BUCKET_NAME', None):
@@ -238,8 +229,9 @@ def dump_model(fq_name, fields, dump_id):
 
     dt_format = get_dt_formatter()
 
-    field_serializer_map = {k: dt_format
-                            for k in _DATETIME_FIELDS}
+    field_serializer_map = {
+        field.name: dt_format for field in Model._meta.fields
+        if isinstance(field, (DateField, TimeField, DateTimeField))}
 
     with open(temp_file_path, 'w') as f:
         # We specify QUOTE_NONNUMERIC here but the current version of
