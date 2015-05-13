@@ -99,13 +99,13 @@
     <section>
         <form method="POST" action="{% url 'request_mapper_status' group_slug=group.slug %}">
             {% csrf_token %}
-            <h4 class="section-heading">Individual Mapping</h4>
+            <h4 class="section-heading">Independent Mapping</h4>
             <p>
                 Volun<b>treers</b> are able to map trees on their own, outside of scheduled events!
-                Click the button below to request individual mapping status within this group&rsquo;s Census Zone.
+                Click the button below to request independent mapping status within this group&rsquo;s Census Zone.
                 Remember to contact your local loaning hub to check out individual tools and start mapping on your own.
             </p>
-            <button class="btn btn-primary btn-mobile--max">Request Individual Mapper Status</button>
+            <button class="btn btn-primary btn-mobile--max">Request Independent Mapper Status</button>
         </form>
     </section>
     {% endif %}

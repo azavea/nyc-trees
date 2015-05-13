@@ -518,7 +518,7 @@ class TilerTests(SurveyTestCase):
         self.assertEqual(rows[0]['survey_type'], 'available')
         self.assertEqual(rows[0]['restriction'], 'none')
 
-        # Test that group owned blocks (with individual mappers disabled)
+        # Test that group owned blocks (with independent mappers disabled)
         # are 'unavailable' by default.
         t = make_territory(self.group, self.block)
         rows = query()
@@ -585,7 +585,7 @@ class TilerTests(SurveyTestCase):
         t.delete()
 
         # Test that blocks are marked 'unavailable' when someone else has
-        # reserved the block (when individual mappers are not enabled).
+        # reserved the block (when independent mappers are not enabled).
         t = make_territory(self.group, self.block)
         r = make_reservation(self.other_user, self.block)
         rows = query()
@@ -610,7 +610,7 @@ class TilerTests(SurveyTestCase):
         r.delete()
 
         ###
-        # This group will allow individual mappers from here on.
+        # This group will allow independent mappers from here on.
         ###
         self.group.allows_individual_mappers = True
         self.group.clean_and_save()
@@ -633,7 +633,7 @@ class TilerTests(SurveyTestCase):
         t.delete()
 
         # Test that blocks are marked 'reserved' when someone else has
-        # reserved it (when individual mappers are enabled).
+        # reserved it (when independent mappers are enabled).
         t = make_territory(self.group, self.block)
         r = make_reservation(self.other_user, self.block)
         rows = query()

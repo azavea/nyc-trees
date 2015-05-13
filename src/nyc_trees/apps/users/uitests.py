@@ -100,14 +100,14 @@ class GroupUITest(BaseGroupUITest):
         self.group.save()
         self.get(self.group.get_absolute_url())
         self.wait_for_text(self.group.name)
-        self.assert_text_in_body("Request Individual Mapper Status")
+        self.assert_text_in_body("Request Independent Mapper Status")
 
     def test_mapper_request_hidden_when_not_allowed(self):
         self.group.allows_individual_mappers = False
         self.group.save()
         self.get(self.group.get_absolute_url())
         self.wait_for_text(self.group.name)
-        self.assert_text_not_in_body("Request Individual Mapper Status")
+        self.assert_text_not_in_body("Request Independent Mapper Status")
 
     def test_mapper_request_hidden_when_admin(self):
         self.group.allows_individual_mappers = True
@@ -115,7 +115,7 @@ class GroupUITest(BaseGroupUITest):
         self.login(self.group_admin_user.username)
         self.get(self.group.get_absolute_url())
         self.wait_for_text(self.group.name)
-        self.assert_text_not_in_body("Request Individual Mapper Status")
+        self.assert_text_not_in_body("Request Independent Mapper Status")
 
 
 class FollowGroupUITest(BaseGroupUITest):

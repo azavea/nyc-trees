@@ -46,7 +46,7 @@ class User(NycModel, AbstractUser):
         help_text='Can user reserve and map block edges outside of events?')
     requested_individual_mapping_at = models.DateTimeField(
         null=True, blank=True,
-        help_text='Time when user requested individual mapper status')
+        help_text='Time when user requested independent mapper status')
 
     profile_is_public = models.BooleanField(
         default=False,
@@ -196,7 +196,7 @@ class User(NycModel, AbstractUser):
         """
         Return True if user has completed online training, attended a mapping
         event, and one other training/mapping event.
-        Return False if user is *already* an individual mapper or their mapper
+        Return False if user is *already* an independent mapper or their mapper
         status was rescinded.
         """
         if self.individual_mapper is None:
