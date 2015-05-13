@@ -108,12 +108,12 @@
         "model": "survey.Species",
         "fields": {
             "species_code": "ACPLCR",
-            "scientific_name": "Acer platanoides",
+            "scientific_name": "Acer platanoides 'Crimson King'",
             "created_at": "2023-04-10T17:11:50.350Z",
             "updated_at": "2023-04-10T17:11:50.350Z",
             "forms_id": 92393,
-            "common_name": "Crimson King Norway Maple",
-            "cultivar": "Not Green Leaf"
+            "common_name": "Crimson King Maple",
+            "cultivar": ""
         }
     },
     {
@@ -212,7 +212,7 @@
         "model": "survey.Species",
         "fields": {
             "species_code": "AECA",
-            "scientific_name": "Aesculus \u00d7carnea",
+            "scientific_name": "Aesculus x carnea",
             "created_at": "2031-04-10T17:11:50.350Z",
             "updated_at": "2031-04-10T17:11:50.350Z",
             "forms_id": 1146,
@@ -346,7 +346,7 @@
             "created_at": "2041-04-10T17:11:50.350Z",
             "updated_at": "2041-04-10T17:11:50.350Z",
             "forms_id": 12996,
-            "common_name": "European Bornbeam",
+            "common_name": "European Hornbeam",
             "cultivar": ""
         }
     },
@@ -641,7 +641,7 @@
         "model": "survey.Species",
         "fields": {
             "species_code": "CRCR",
-            "scientific_name": "Crataegus crus-galli var. inermis",
+            "scientific_name": "Crataegus crusgalli var. inermis",
             "created_at": "2064-04-10T17:11:50.350Z",
             "updated_at": "2064-04-10T17:11:50.350Z",
             "forms_id": 92401,
@@ -763,19 +763,6 @@
             "updated_at": "2073-04-10T17:11:50.350Z",
             "forms_id": 39377,
             "common_name": "Kentucky Coffeetree",
-            "cultivar": ""
-        }
-    },
-    {
-        "pk": 60,
-        "model": "survey.Species",
-        "fields": {
-            "species_code": "HACA",
-            "scientific_name": "Halesia carolina",
-            "created_at": "2074-04-10T17:11:50.350Z",
-            "updated_at": "2074-04-10T17:11:50.350Z",
-            "forms_id": 39541,
-            "common_name": "Silverbell",
             "cultivar": ""
         }
     },
@@ -1278,12 +1265,12 @@
         "model": "survey.Species",
         "fields": {
             "species_code": "PR",
-            "scientific_name": "Prunus serrulata",
+            "scientific_name": "Prunus",
             "created_at": "2113-04-10T17:11:50.350Z",
             "updated_at": "2113-04-10T17:11:50.350Z",
             "forms_id": 92410,
             "common_name": "Cherry",
-            "cultivar": "Green leaf"
+            "cultivar": ""
         }
     },
     {
@@ -1291,12 +1278,12 @@
         "model": "survey.Species",
         "fields": {
             "species_code": "PRVISC",
-            "scientific_name": "Prunus serrulata",
+            "scientific_name": "Prunus virginiana",
             "created_at": "2114-04-10T17:11:50.350Z",
             "updated_at": "2114-04-10T17:11:50.350Z",
             "forms_id": 92411,
             "common_name": "Schubert Cherry",
-            "cultivar": "Not Green leaf"
+            "cultivar": ""
         }
     },
     {
@@ -1712,6 +1699,19 @@
             "updated_at": "2146-04-10T17:11:50.350Z",
             "forms_id": 92181,
             "common_name": "Japanese Zelkova",
+            "cultivar": ""
+        }
+    },
+    {
+        "pk": 133,
+        "model": "survey.Species",
+        "fields": {
+            "species_code": "SABA",
+            "scientific_name": "Salix babylonica",
+            "created_at": "2146-04-10T17:11:50.350Z",
+            "updated_at": "2146-04-10T17:11:50.350Z",
+            "forms_id": 75879,
+            "common_name": "Weeping Willow",
             "cultivar": ""
         }
     }
