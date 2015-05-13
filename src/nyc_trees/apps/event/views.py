@@ -144,14 +144,21 @@ def event_email(request, event_slug):
     form = EmailForm(request.POST)
     rsvps = event.eventregistration_set.all()
 
+    recipients = [rsvp.user for rsvp in rsvps.select_related('user')]
+    # Send a copy to the user sending the message.
+    recipients.append(request.user)
+    # Send a copy to the group admin.
+    recipients.append(request.group.admin)
+
     message_sent = False
     if form.is_valid():
         # We need to send emails one-by-one, or everyone will be in the same
         # "to" line in the email
-        for rsvp in rsvps.select_related('user'):
-            rsvp.user.email_user(form.cleaned_data['subject'],
-                                 form.cleaned_data['body'],
-                                 event.contact_email)
+        for user in set(recipients):
+            user.email_user(form.cleaned_data['subject'],
+                            form.cleaned_data['body'],
+                            event.contact_email)
+
         message_sent = True
 
     return {
