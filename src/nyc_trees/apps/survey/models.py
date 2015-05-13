@@ -7,6 +7,7 @@ from django.contrib.gis.db import models
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.utils.timezone import now
+from django.db import transaction
 
 from apps.core.models import User, Group
 
@@ -57,6 +58,21 @@ class Blockface(models.Model):
 
     def __unicode__(self):
         return '%s (available: %s)' % (self.pk, self.is_available)
+
+    @transaction.atomic
+    def save(self, *args, **kwargs):
+        should_cancel_reservations = False
+        if self.is_available is True:
+            is_becoming_available = (Blockface.objects
+                                     .filter(id=self.id, is_available=False)
+                                     .exists())
+            if is_becoming_available:
+                should_cancel_reservations = True
+
+        super(Blockface, self).save(*args, **kwargs)
+
+        if should_cancel_reservations:
+            self.blockfacereservation_set.update(canceled_at=now())
 
 
 class Territory(NycModel, models.Model):

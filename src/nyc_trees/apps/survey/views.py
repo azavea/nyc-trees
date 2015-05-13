@@ -560,9 +560,13 @@ def _mark_survey_blockface_availability(survey, availability):
     survey.blockface.save()
 
 
-def release_blockface(request, survey_id):
+def restart_blockface(request, survey_id):
     survey = get_object_or_404(Survey, id=survey_id, user=request.user)
     _mark_survey_blockface_availability(survey, True)
+    expiration_date = now() + settings.RESERVATION_TIME_PERIOD
+    BlockfaceReservation.objects.create(blockface=survey.blockface,
+                                        user=request.user,
+                                        expires_at=expiration_date)
     return {'success': True}
 
 

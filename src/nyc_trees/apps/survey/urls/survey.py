@@ -8,7 +8,7 @@ from django.conf.urls import patterns, url
 from apps.survey.routes import (survey, survey_from_event,
                                 flag_survey, survey_detail,
                                 confirm_survey, confirm_survey_from_event,
-                                release_blockface)
+                                restart_blockface)
 
 
 # These URLs have the prefix 'survey/'
@@ -32,6 +32,6 @@ urlpatterns = patterns(
 
     url(r'^flag/(?P<survey_id>\d+)/$', flag_survey, name='flag_survey'),
 
-    url(r'^release_blockedge/(?P<survey_id>\d+)/$',
-        release_blockface, name='release_blockface'),
+    url(r'^restart_blockedge/(?P<survey_id>\d+)/$',
+        restart_blockface, name='restart_blockface'),
 )
