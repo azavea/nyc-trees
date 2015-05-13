@@ -251,6 +251,7 @@ MIDDLEWARE_CLASSES = (
     'django_statsd.middleware.GraphiteMiddleware',
     'waffle.middleware.WaffleMiddleware',
     'nyc_trees.middleware.SoftLaunchMiddleware',
+    'nyc_trees.middleware.BannedUserMiddleware',
 )
 # END MIDDLEWARE CONFIGURATION
 
