@@ -59,6 +59,10 @@
                 <br />{{ user.get_full_name }}
                 {% endif %}
 
+                {% if user.is_ambassador %}
+                <br /><strong class="color--primary">Ambassador</strong>
+                {% endif %}
+
                 <hr />
             </div>
         </div>

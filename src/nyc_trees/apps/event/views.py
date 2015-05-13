@@ -356,7 +356,8 @@ def printable_event_map(request, event_slug):
 
 def event_admin_check_in_page(request, event_slug):
     event = get_object_or_404(Event, group=request.group, slug=event_slug)
-    rsvps = EventRegistration.objects.filter(event=event)
+    rsvps = EventRegistration.objects.filter(event=event) \
+        .order_by('-user__is_ambassador', 'user')
     users = [(row.user, row.did_attend) for row in rsvps]
     return {
         'group': request.group,
