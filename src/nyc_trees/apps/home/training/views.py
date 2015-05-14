@@ -91,8 +91,11 @@ def _quiz_summary(quiz, submitted_answers):
 
 def training_instructions(request):
     user = request.user
-    step1_complete = user.online_training_complete
-    step2_complete = step1_complete and user.field_training_complete
+    step1_complete = False
+    step2_complete = False
+    if user.is_authenticated():
+        step1_complete = user.online_training_complete
+        step2_complete = step1_complete and user.field_training_complete
     return {
         'step1_complete': step1_complete,
         'step2_complete': step2_complete,
