@@ -401,7 +401,8 @@ class IndividualMapperTests(UsersTestCase):
         # Is the button visible on the user profile page?
         request = make_request(user=self.user)
         response = user_detail_route(request, username=self.user.username)
-        self.assertTrue('Request Independent Mapper Status' in response.content)
+        self.assertTrue(
+            'Request Independent Mapper Status' in response.content)
 
         # Is the button visible on the dashboard?
         request = make_request(user=self.user)
@@ -482,7 +483,8 @@ class TrustedMapperTests(UsersTestCase):
         # Does the grant access button appear on the group detail page?
         request = make_request(user=user)
         response = group_detail(request, group_slug=group.slug)
-        self.assertTrue('Request Independent Mapper Status' in response.content)
+        self.assertTrue(
+            'Request Independent Mapper Status' in response.content)
 
         # User request mapper status
         request = make_request(user=user, method='POST')
