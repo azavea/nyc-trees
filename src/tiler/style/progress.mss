@@ -34,15 +34,15 @@
   line-width: 1;
   polygon-opacity: 0.50;
   polygon-fill: #fff;
-  [percent >= 10] { polygon-fill: #f7fcfd }
-  [percent >= 20] { polygon-fill: #e5f5f9 }
-  [percent >= 30] { polygon-fill: #ccece6 }
-  [percent >= 40] { polygon-fill: #99d8c9 }
-  [percent >= 50] { polygon-fill: #66c2a4 }
-  [percent >= 60] { polygon-fill: #41ae76 }
-  [percent >= 70] { polygon-fill: #238b45 }
-  [percent >= 80] { polygon-fill: #006d2c }
-  [percent >= 90] { polygon-fill: #00441b }
+  [percent >= 10] { polygon-fill: #F6F9F4 }
+  [percent >= 20] { polygon-fill: #D7EBC7 }
+  [percent >= 30] { polygon-fill: #B8DD9B }
+  [percent >= 40] { polygon-fill: #99CF6F }
+  [percent >= 50] { polygon-fill: #7AC143 }
+  [percent >= 60] { polygon-fill: #5BA63B }
+  [percent >= 70] { polygon-fill: #3D8C33 }
+  [percent >= 80] { polygon-fill: #1E722B }
+  [percent >= 90] { polygon-fill: #005824 }
 }
 
 /*
