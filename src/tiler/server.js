@@ -11,6 +11,7 @@ var Windshaft = require('windshaft'),
     dbPassword = process.env.NYC_TREES_DB_PASSWORD || 'nyc_trees',
     dbHost = process.env.NYC_TREES_DB_HOST || 'localhost',
     dbPort = process.env.NYC_TREES_DB_PORT || 5432,
+    dbName = process.env.NYC_TREES_DB_NAME || 'nyc_trees',
 
     redisHost = process.env.NYC_TREES_CACHE_HOST || 'localhost',
     redisPort = process.env.NYC_TREES_CACHE_PORT || 6379,
@@ -48,6 +49,7 @@ var Windshaft = require('windshaft'),
 
         grainstore: {
             datasource: {
+                dbname: dbName,
                 user: dbUser,
                 password: dbPassword,
                 host: dbHost,

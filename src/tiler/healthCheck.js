@@ -79,7 +79,7 @@ module.exports = function createHealthCheckHandler(config, timeout) {
         pgPort = pgConf.port,
         pgUser = pgConf.user,
         pgPassword = pgConf.password,
-        pgDatabase = pgConf.user, // We require db name match username
+        pgDatabase = pgConf.dbname,
 
         redisHost = config.redis.host,
         redisPort = config.redis.port;
