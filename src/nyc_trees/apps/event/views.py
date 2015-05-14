@@ -29,6 +29,7 @@ from apps.event.helpers import (user_is_rsvped_for_event,
 
 from apps.core.tasks import wait_for_default_storage_file
 from apps.mail.tasks import notify_rsvp, notify_after_event_checkin
+from apps.mail.libs import send_to
 
 from apps.survey.layer_context import get_context_for_territory_layer
 from libs.pdf_maps import create_event_map_pdf
@@ -142,29 +143,43 @@ def event_email_page(request, event_slug):
 def event_email(request, event_slug):
     event = get_object_or_404(Event, slug=event_slug, group=request.group)
     form = EmailForm(request.POST)
-    rsvps = event.eventregistration_set.all()
-
-    recipients = [rsvp.user for rsvp in rsvps.select_related('user')]
-    # Send a copy to the user sending the message.
-    recipients.append(request.user)
-    # Send a copy to the group admin.
-    recipients.append(request.group.admin)
+    extra_recipients = set([request.user, request.group.admin])
+    rsvps = EventRegistration.objects.filter(event=event, opt_in_emails=True) \
+                                     .select_related('user') \
+                                     .exclude(user__in=extra_recipients)
+    messages_sent_count = 0
 
     message_sent = False
     if form.is_valid():
+        subject = form.cleaned_data['subject']
+        body = form.cleaned_data['body']
+
         # We need to send emails one-by-one, or everyone will be in the same
         # "to" line in the email
-        for user in set(recipients):
-            user.email_user(form.cleaned_data['subject'],
-                            form.cleaned_data['body'],
-                            event.contact_email)
+        for rsvp in rsvps:
+            url = reverse('event_email_unsubscribe', kwargs={
+                'group_slug': request.group.slug,
+                'event_slug': event.slug,
+                'token': rsvp.user.make_token(),
+            })
+            url = request.build_absolute_uri(url)
+
+            # TODO: Change reply_to email to event.contact_email
+            send_to(rsvp.user, 'event', subject=subject, body=body,
+                    unsubscribe_url=url)
+            messages_sent_count += 1
+
+        for user in extra_recipients:
+            send_to(user, 'event', subject=subject, body=body,
+                    from_email=event.contact_email)
+            messages_sent_count += 1
 
         message_sent = True
 
     return {
         'event': event,
         'group': event.group,
-        'rsvp_count': rsvps.count(),
+        'rsvp_count': messages_sent_count,
         'form': form,
         'message_sent': message_sent
     }
@@ -429,3 +444,26 @@ def increase_rsvp_limit(request, event_slug):
     return {
         'max_attendees': event.max_attendees
     }
+
+
+@transaction.atomic
+def event_email_unsubscribe(request, event_slug, token):
+    event = get_object_or_404(Event, group=request.group, slug=event_slug)
+
+    try:
+        username, signed_value = token.split(':', 1)
+    except ValueError:
+        # Invalid token
+        return {}
+
+    user = get_object_or_404(User, username=username)
+
+    if not user.is_valid_token(token):
+        # Invalid token
+        return {}
+
+    EventRegistration.objects.filter(event=event, user=user) \
+                             .update(opt_in_emails=False)
+
+    # Redirect to Emails tab on user profile page.
+    return redirect(reverse('user_profile_settings') + '#emails-pane')
