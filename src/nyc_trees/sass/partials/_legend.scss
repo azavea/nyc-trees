@@ -41,13 +41,13 @@
     background-color: #FFEB3B;
   }
   .mapped-percentage-color-ramp {
+    border: 1px solid #ddd;
     opacity: 0.75; // Account for the layer being translucent on top of a grey basemap
     width: 100%;
     .mapped-percentage {
       width: 10%;
       height: 0;
       padding-top: 10%;
-      border: 1px solid #ddd;
     }
   }
 
