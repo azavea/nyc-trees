@@ -45,19 +45,20 @@
         .tab-status-list & {
           display: none;
         }
-        #select-starting-point, #select-side {
+        #select-starting-point, #select-side, #select-teammate {
             display: table-cell;
             vertical-align: middle;
         }
 
         &.expanded {
             top: $navbar-height;
-            overflow: scroll;
             bottom: 0;
             display: block;
             height: auto;
             padding: 0;
             z-index: $zindex-leaflet-controls + 1;
+            position: absolute;
+            display: block;
             @media (max-height: $screen-xs-height) and (max-width: $screen-sm) {
                 top: 4.5rem;
             }
@@ -298,6 +299,7 @@
 
 #survey {
     position: relative;  // for sticky titles
+    background-color: #fff;
 
     // Requires such specifity in order to override bootstrap default behavior
     .tree-form .btn-group > input:first-child + .btn {
