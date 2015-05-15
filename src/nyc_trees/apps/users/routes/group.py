@@ -51,7 +51,8 @@ request_mapper_status = do(
     login_required,
     group_request,
     json_api_call,
-    route(POST=v.request_mapper_status))
+    route(GET=v.redirect_to_group_detail,
+          POST=v.request_mapper_status))
 
 group_unmapped_territory_geojson = route(
     POST=census_admin_do(json_api_call,
