@@ -450,21 +450,32 @@ def increase_rsvp_limit(request, event_slug):
 @transaction.atomic
 def event_email_unsubscribe(request, event_slug, token):
     event = get_object_or_404(Event, group=request.group, slug=event_slug)
+    invalid_token_url = reverse(
+        'event_email_invalid_token',
+        kwargs={
+            'group_slug': request.group.slug,
+            'event_slug': event.slug,
+        })
 
     try:
         username, signed_value = token.split(':', 1)
     except ValueError:
-        # Invalid token
-        return {}
+        return redirect(invalid_token_url)
 
     user = get_object_or_404(User, username=username)
 
     if not user.is_valid_token(token):
-        # Invalid token
-        return {}
+        return redirect(invalid_token_url)
 
     EventRegistration.objects.filter(event=event, user=user) \
                              .update(opt_in_emails=False)
 
-    # Redirect to Emails tab on user profile page.
-    return redirect(reverse('user_profile_settings') + '#emails-pane')
+    return {
+        'event': event,
+        'user': user,
+    }
+
+
+def event_email_invalid_token(request, event_slug):
+    get_object_or_404(Event, group=request.group, slug=event_slug)
+    pass
