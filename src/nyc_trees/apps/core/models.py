@@ -6,6 +6,7 @@ from __future__ import division
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.contrib.gis.db import models
 from django.core.exceptions import ValidationError
+from django.core.signing import TimestampSigner, BadSignature, SignatureExpired
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.utils.text import slugify
@@ -30,6 +31,7 @@ REFERRER_AD = (
 
 
 class NycUserManager(UserManager):
+
     def get_by_natural_key(self, username):
         # For login, make username case-insensitive
         return self.get(username__iexact=username)
@@ -226,6 +228,17 @@ class User(NycModel, AbstractUser):
     @property
     def reservations_map_pdf_url(self):
         return url_if_cooked(self.reservations_map_pdf_filename)
+
+    def make_token(self):
+        return TimestampSigner().sign(self.username)
+
+    # Source: http://grokcode.com/819/one-click-unsubscribes-for-django-apps/
+    def is_valid_token(self, token):
+        try:
+            TimestampSigner().unsign(token)
+        except (BadSignature, SignatureExpired):
+            return False
+        return True
 
     class Meta:
         ordering = ['username']

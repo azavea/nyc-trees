@@ -33,12 +33,12 @@
             </div>
             <div class="modal-body species-modal-content">
                 <ul class="list-unstyled">
-                {% for event_reg in event_registrations %}
+                {% for rsvp in event_registrations %}
                     <li>
-                    {% if user.profile_is_public %}
-                    <a href="{{ user.get_absolute_url}}">{{ user.username }}</a>
+                    {% if rsvp.user.profile_is_public %}
+                    <a href="{{ rsvp.user.get_absolute_url}}">{{ rsvp.user.username }}</a>
                     {% else %}
-                    {{ user.username }}
+                    {{ rsvp.user.username }}
                     {% endif %}
                     </li>
                 {% endfor %}
