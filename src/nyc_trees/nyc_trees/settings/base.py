@@ -300,6 +300,7 @@ REGISTRATION_AUTO_LOGIN = True
 WATCHMAN_CHECKS = (
     'watchman.checks.caches',
     'watchman.checks.databases',
+    'apps.survey.checks.cron_jobs',
 )
 
 # END THIRD-PARTY CONFIGURATION
