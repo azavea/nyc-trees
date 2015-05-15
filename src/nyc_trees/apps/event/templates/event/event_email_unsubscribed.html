@@ -1,0 +1,16 @@
+{% extends "registration/registration_base.html" %}
+{% load i18n %}
+
+{% block registration_title %}Unsubscribed{% endblock %}
+
+{% block registration_content %}
+  <h4>Unsubscribed</h4>
+  <p>
+    {{ user.email }} has been successfully unsubscribed from all future
+    emails regarding <a href="{{ event.get_absolute_url }}">{{ event.title }}</a>.
+  </p>
+  <p>
+    Access your <a href="{% url 'user_profile_settings' %}#emails-pane">settings page</a>
+    to re-enable notifications for this event.
+  </p>
+{% endblock %}

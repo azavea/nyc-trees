@@ -36,10 +36,22 @@ def send_to(user, message_type, *args, **kwargs):
     # Use rstrip to ensure that the subject does not end with \n
     subject = subject_template.render(context).rstrip()
 
-    from_email = settings.DEFAULT_FROM_EMAIL
+    sender_name = kwargs.get('sender_name', '')
+    if sender_name:
+        from_email = '%s <%s>' % (sender_name, settings.DEFAULT_FROM_EMAIL)
+    else:
+        from_email = settings.DEFAULT_FROM_EMAIL
+
+    reply_to = kwargs.get('reply_to', '')
     to = user.email
 
-    msg = EmailMessage(subject, body_text, from_email, [to])
+    headers = {}
+    if reply_to:
+        headers.update({
+            'Reply-To': reply_to
+        })
+
+    msg = EmailMessage(subject, body_text, from_email, [to], headers=headers)
 
     if 'attachments' in kwargs and kwargs['attachments']:
         for attachment in kwargs['attachments']:
