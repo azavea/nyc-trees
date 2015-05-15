@@ -38,7 +38,7 @@
         bottom: 0;
         width: 100%;
         height: 15rem;
-        padding: $grid-gutter-width/3 $grid-gutter-width/2;
+        padding: 0 $grid-gutter-width/2;
         z-index: 1;
         background-color: #fff;
         display: table;
@@ -347,12 +347,12 @@
         margin-top: 20px;
         font-size: $font-size-base;
     }
-    
+
     &.active {
         border-top: none;
        .distance-end-form, #submit-survey {
             display: block;
-        } 
+        }
         p {
             display: none;
         }
