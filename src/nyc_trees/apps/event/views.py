@@ -151,8 +151,12 @@ def event_email(request, event_slug):
 
     message_sent = False
     if form.is_valid():
-        subject = form.cleaned_data['subject']
-        body = form.cleaned_data['body']
+        msg_kwargs = {
+            'subject': form.cleaned_data['subject'],
+            'body': form.cleaned_data['body'],
+            'sender_name': event.contact_name,
+            'reply_to': event.contact_email,
+        }
 
         # We need to send emails one-by-one, or everyone will be in the same
         # "to" line in the email
@@ -164,14 +168,11 @@ def event_email(request, event_slug):
             })
             url = request.build_absolute_uri(url)
 
-            # TODO: Change reply_to email to event.contact_email
-            send_to(rsvp.user, 'event', subject=subject, body=body,
-                    unsubscribe_url=url)
+            send_to(rsvp.user, 'event', unsubscribe_url=url, **msg_kwargs)
             messages_sent_count += 1
 
         for user in extra_recipients:
-            send_to(user, 'event', subject=subject, body=body,
-                    from_email=event.contact_email)
+            send_to(user, 'event', **msg_kwargs)
             messages_sent_count += 1
 
         message_sent = True
