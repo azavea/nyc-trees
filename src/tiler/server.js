@@ -3,6 +3,7 @@
 var Windshaft = require('windshaft'),
     fs = require('fs'),
     _ = require('lodash'),
+    healthCheck = require('./healthCheck'),
     files = require('./files'),
     port = process.env.PORT || 4000,
 
@@ -10,6 +11,7 @@ var Windshaft = require('windshaft'),
     dbPassword = process.env.NYC_TREES_DB_PASSWORD || 'nyc_trees',
     dbHost = process.env.NYC_TREES_DB_HOST || 'localhost',
     dbPort = process.env.NYC_TREES_DB_PORT || 5432,
+    dbName = process.env.NYC_TREES_DB_NAME || 'nyc_trees',
 
     redisHost = process.env.NYC_TREES_CACHE_HOST || 'localhost',
     redisPort = process.env.NYC_TREES_CACHE_PORT || 6379,
@@ -20,6 +22,8 @@ var Windshaft = require('windshaft'),
     // See http://wiki.openstreetmap.org/wiki/Meta_tiles for a discussion of metatiles.
     // 4 is the default set in https://github.com/CartoDB/Windshaft/blob/42218bc480bedaa6b5e1b7d60478ea8afdce2d87/lib/windshaft/renderers/mapnik/factory.js#L26
     mapnikMetatileCount = process.env.NYC_TREES_METATILE_COUNT || 4,
+
+    tilerHealthTimeout = process.env.NYC_TREES_TILER_HEALTH_TIMEOUT || 1000,
 
     queries = files('./sql'),
     styles = files('./style'),
@@ -34,12 +38,18 @@ var Windshaft = require('windshaft'),
         user_reservations: 'id,survey_type,geojson'
     },
 
+    tables = {
+        'nta_progress': 'survey_neighborhoodtabulationarea',
+        'borough_progress': 'survey_borough'
+    },
+
     config = {
         base_url: '/:cache_buster/:dbname/:type',
         base_url_notable: '/:cache_buster/:dbname',
 
         grainstore: {
             datasource: {
+                dbname: dbName,
                 user: dbUser,
                 password: dbPassword,
                 host: dbHost,
@@ -75,7 +85,7 @@ var Windshaft = require('windshaft'),
             try {
                 // Windshaft needs a table name, even if you are providing
                 // a custom sql statement.
-                req.params.table = 'survey_blockface';
+                req.params.table = req2table(req);
                 req.params.sql = req2sql(req);
                 req.params.style = req2style(req);
                 req.params.interactivity = req2interactivity(req);
@@ -85,6 +95,11 @@ var Windshaft = require('windshaft'),
             }
         }
     };
+
+function req2table(req) {
+    var table = tables[req.params.type];
+    return table ? table : 'survey_blockface';
+}
 
 function req2context(req) {
     // constructs a context object that will be passed to
@@ -114,8 +129,9 @@ function req2interactivity(req) {
 }
 
 function req2style(req) {
-    var type =  req.params.type;
-    if (type === 'progress' || type === 'user_progress' || type === 'group_progress') {
+    var type = req.params.type;
+    if (type === 'progress' || type === 'user_progress' || type === 'group_progress' ||
+            type === 'borough_progress' || type === 'nta_progress') {
         return styles.progress();
     } else {
         return styles.default();
@@ -133,5 +149,7 @@ function req2sql(req) {
     }
 }
 
-Windshaft.Server(config).listen(port);
+var server = Windshaft.Server(config);
+server.get('/health-check', healthCheck(config, tilerHealthTimeout));
+server.listen(port);
 console.log("Now serving tiles");

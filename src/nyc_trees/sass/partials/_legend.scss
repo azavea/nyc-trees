@@ -40,4 +40,58 @@
   .selected {
     background-color: #FFEB3B;
   }
+  .mapped-percentage-color-ramp {
+    border: 1px solid #ddd;
+    opacity: 0.75; // Account for the layer being translucent on top of a grey basemap
+    width: 100%;
+    .mapped-percentage {
+      width: 10%;
+      height: 0;
+      padding-top: 10%;
+    }
+  }
+
+  .mapped-labels {
+    width: 100%;
+    height: 2rem;
+  }
+
+  // If you change these colors, you should also change src/tiler/style/progres.mss
+
+/*
+
+  Generated with http://www.zonums.com/online/color_ramp/
+
+  Input:
+  ------
+  0,88,36
+  3
+  122,193,67
+  3
+  246,249,244
+
+  Output:
+  -------
+  0,88,36       #005824
+  30,114,43     #1E722B
+  61,140,51     #3D8C33
+  91,166,59     #5BA63B
+  122,193,67    #7AC143
+  153,207,111   #99CF6F
+  184,221,155   #B8DD9B
+  215,235,199   #D7EBC7
+  246,249,244   #F6F9F4
+
+*/
+
+  .mapped-0  { background-color: #FFFFFF; }
+  .mapped-10 { background-color: #F6F9F4; }
+  .mapped-20 { background-color: #D7EBC7; }
+  .mapped-30 { background-color: #B8DD9B; }
+  .mapped-40 { background-color: #99CF6F; }
+  .mapped-50 { background-color: #7AC143; }
+  .mapped-60 { background-color: #5BA63B; }
+  .mapped-70 { background-color: #3D8C33; }
+  .mapped-80 { background-color: #1E722B; }
+  .mapped-90 { background-color: #005824; }
 }

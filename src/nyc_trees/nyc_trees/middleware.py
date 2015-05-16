@@ -7,6 +7,7 @@ import re
 import waffle
 
 from django.conf import settings
+from django.contrib.auth import logout
 from django.shortcuts import redirect
 
 
@@ -25,3 +26,13 @@ class SoftLaunchMiddleware(object):
 
         if not allowed:
             return redirect(self.redirect_url)
+
+
+# Author: Tony Abou-Assaleh
+# Source: http://stackoverflow.com/a/7871831
+class BannedUserMiddleware(object):
+    def process_request(self, request):
+        if not request.user.is_authenticated():
+            return
+        if request.user.is_banned:
+           logout(request)

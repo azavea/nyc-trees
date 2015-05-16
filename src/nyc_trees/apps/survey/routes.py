@@ -6,6 +6,7 @@ from __future__ import division
 from django.core.urlresolvers import reverse
 
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import last_modified
 
 from django_tinsel.decorators import route, render_template, json_api_call
 from django_tinsel.utils import decorate as do
@@ -13,6 +14,7 @@ from django_tinsel.utils import decorate as do
 from apps.core.decorators import (individual_mapper_do, group_request,
                                   census_admin_do, update_with)
 from apps.survey import views as v
+from apps.survey.layer_context import get_group_territory_modification_time
 
 #####################################
 # PROGRESS PAGE ROUTES
@@ -26,7 +28,9 @@ progress_page_blockface_popup = route(
         render_template('survey/partials/progress_page_blockface_popup.html'),
         v.progress_page_blockface_popup))
 
-group_borders_geojson = route(GET=json_api_call(v.group_borders_geojson))
+group_borders_geojson = do(
+    last_modified(get_group_territory_modification_time),
+    route(GET=json_api_call(v.group_borders_geojson)))
 
 group_popup = route(GET=do(group_request,
                            render_template('survey/partials/group_popup.html'),
@@ -119,15 +123,12 @@ survey_from_event = do(
 flag_survey = do(login_required,
                  route(POST=do(json_api_call, v.flag_survey)))
 
-release_blockface = do(login_required,
-                       route(POST=do(json_api_call, v.release_blockface)))
+restart_blockface = do(login_required,
+                       route(POST=do(json_api_call, v.restart_blockface)))
 
 blockface = route(GET=do(json_api_call, v.blockface))
 
 blockface_near_point = route(GET=do(json_api_call, v.blockface_near_point))
-
-redirect_to_treecorder = route(GET=do(login_required,
-                                      v.redirect_to_treecorder))
 
 #####################################
 # ADMIN ROUTES

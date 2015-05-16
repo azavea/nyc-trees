@@ -12,13 +12,24 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import make_aware, utc
 
-from models import (Group, Blockface, Survey, Territory, BlockfaceReservation)
+from apps.survey.models import (Group, Blockface, Survey, BlockfaceReservation,
+                                Borough, Territory, NeighborhoodTabulationArea)
 from apps.users.models import TrustedMapper
 
 
 def get_context_for_progress_layer():
     models = [Blockface, Survey]
     return _get_context_for_layer("progress", models)
+
+
+def get_context_for_borough_progress_layer():
+    models = [Blockface, Borough, Survey]
+    return _get_context_for_layer("borough_progress", models)
+
+
+def get_context_for_nta_progress_layer():
+    models = [Blockface, NeighborhoodTabulationArea, Survey]
+    return _get_context_for_layer("nta_progress", models)
 
 
 @login_required
@@ -72,6 +83,10 @@ def get_context_for_territory_admin_layer(group_id):
                                   {'group': group_id})
 
 
+def get_group_territory_modification_time(request):
+    return _get_max_modification_time([Group])
+
+
 def _get_context_for_layer(layer_name, models, params=None):
     tiler_url_format = \
         "%(tiler_url)s/%(cache_buster)s/%(db)s/%(type)s/{z}/{x}/{y}"
@@ -96,11 +111,17 @@ def _get_context_for_layer(layer_name, models, params=None):
     return context
 
 
-def _get_cache_buster(models, params):
+def _get_cache_buster(models, params=None):
+    max_datetime = _get_max_modification_time(models, params)
+
+    max_timestamp = timegm(max_datetime.utctimetuple())
+    return max_timestamp
+
+
+def _get_max_modification_time(models, params=None):
     datetimes = [_get_last_updated_datetime(Model, params) for Model in models]
 
-    max_timestamp = timegm(max(*datetimes).utctimetuple())
-    return max_timestamp
+    return max(datetimes)
 
 
 def _get_last_updated_datetime(Model, params):

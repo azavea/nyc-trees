@@ -14,7 +14,8 @@ var progressMap = mapModule.create({
         search: true
     }),
     tileLayer = null,
-    selectedLayer = null,
+    neighborhoodTileLayer=null,
+    boroughTileLayer = null,
     geojsonLayer = null,
 
     dom = {
@@ -25,7 +26,34 @@ var progressMap = mapModule.create({
         actionBar: '#action-bar'
     },
     $actionBar = $(dom.actionBar),
-    $mode = null;
+    $mode = $(dom.modeChoice).first(),
+
+    // Maximum zoom levels for aggregate layers
+    zoomMaxes = {
+        borough: 12,
+        neighborhood: 15
+    },
+    selectedLayer = new SelectableBlockfaceLayer(progressMap, null, {
+        onAdd: function() {
+            if ($mode !== null && $mode.data('tile-url-neighborhood')) {
+                // If this mode has a neighborhood layer, only allow clicks
+                // when we are zoomed in past it
+                return progressMap.getZoom() > zoomMaxes.neighborhood;
+            }
+            return true;
+        },
+        onAdded: function(feature, layer) {
+            selectedLayer.clearLayers();
+
+            // Note: this must be kept in sync with
+            // src/nyc_trees/apps/survey/urls/blockface.py
+            var url = '/blockedge/' + feature.properties.id + '/progress-page-blockedge-popup/';
+
+            $actionBar.load(url);
+            $('body').addClass('actionbar-triggered');
+            return true;
+        }
+    });
 
 $(dom.modeChoice).click(onModeChanged);
 
@@ -34,7 +62,9 @@ $(dom.modeChoice).click(onModeChanged);
 // matter where you click/tap.
 $('.leaflet-container').css('cursor', 'pointer');
 
-loadLayers($(dom.modeChoice).first());
+loadLayers($mode);
+
+progressMap.addLayer(selectedLayer);
 
 function onModeChanged(e) {
     e.preventDefault();
@@ -46,39 +76,57 @@ function onModeChanged(e) {
         return;
     }
 
+    changeLegendEntries();
+
     // Show chosen mode on dropdown button
     $mode.parents(dom.modeDropdown).find(dom.modeButton).text($mode.text());
-
-    // Show appropriate legend entries
-    var mode = $mode.attr('href').slice(1);  // strip leading #
-    $(dom.legendEntries).addClass('hidden');
-    $('[data-mode=' + mode + ']').removeClass('hidden');
 
     loadLayers($mode);
 }
 
-function loadLayers($mode) {
-    var tileUrl = $mode.data('tile-url'),
-        geojsonUrl = $mode.data('geojson-url'),
-        bounds = $mode.data('bounds');
+function changeLegendEntries() {
+    // Show appropriate legend entries
+    var mode = $mode.attr('href').slice(1);  // strip leading #
 
+    // Show different legend entries depending on zoom level if appropriate for
+    // this mode
+    if ($mode.data('tile-url-neighborhood') && progressMap.getZoom() <= zoomMaxes.neighborhood) {
+        mode = mode + '-percent';
+    }
+    $(dom.legendEntries).addClass('hidden');
+    $('[data-mode=' + mode + ']').removeClass('hidden');
+}
+
+function clearSelection() {
     // Clear action bar
     $actionBar.empty();
     $('body').removeClass('actionbar-triggered');
+    // Clear selected blockface
+    selectedLayer.clearLayers();
+}
+
+function loadLayers($mode) {
+    var tileUrl = $mode.data('tile-url'),
+        neighborhoodTileUrl = $mode.data('tile-url-neighborhood'),
+        boroughTileUrl = $mode.data('tile-url-borough'),
+        geojsonUrl = $mode.data('geojson-url'),
+        bounds = $mode.data('bounds');
 
     // Replace layers
-    if (tileLayer) {
-        progressMap.removeLayer(tileLayer);
-    }
-    if (selectedLayer) {
-        progressMap.removeLayer(selectedLayer);
-    }
-    if (geojsonLayer) {
-        progressMap.removeLayer(geojsonLayer);
-    }
+    $.each([tileLayer, geojsonLayer, neighborhoodTileLayer, boroughTileLayer], function(_, layer) {
+        if (layer) {
+            progressMap.removeLayer(layer);
+        }
+    });
+    clearSelection();
+
     if (tileUrl) {
-        addLayers(bounds, tileUrl);
+        addLayers(bounds, tileUrl, neighborhoodTileUrl, boroughTileUrl);
+        selectedLayer.clicksEnabled = true;
+    } else {
+        selectedLayer.clicksEnabled = false;
     }
+
     if (geojsonUrl) {
         $.getJSON(geojsonUrl, function(geojson) {
             geojsonLayer = L.geoJson(geojson, {
@@ -105,33 +153,53 @@ function loadLayers($mode) {
     }
 }
 
-function addLayers(bounds, tileUrl) {
-    var zooming = false;
-    if (bounds) {
-        zooming = mapModule.fitBounds(progressMap, bounds);
-    }
-    tileLayer = mapModule.addTileLayer(progressMap, {
-        url: tileUrl,
-        waitForZoom: zooming
-    });
+function addLayers(bounds, tileUrl, neighborhoodTileUrl, boroughTileUrl) {
+    // Add layer to map after zoom animation completes.
+    // (Otherwise spurious tile requests will be issued at the old zoom level.)
+    mapModule.fitBounds(progressMap, bounds).then(function() {
+        progressMap.off('zoomend', fixZoomLayerSwitch);
+        progressMap.off('zoomend', changeLegendEntries);
 
-    createSelectableLayer();
-}
+        if (neighborhoodTileUrl || boroughTileUrl) {
+            tileLayer = mapModule.addTileLayer(progressMap, {
+                url: tileUrl,
+                minZoom: zoomMaxes.neighborhood + 1,
+                maxZoom: zoom.MAX
+            });
 
-function createSelectableLayer() {
-    selectedLayer = new SelectableBlockfaceLayer(progressMap, null, {
-        onAdd: function() { return true; }, // Always try and fetch the feature
-        onAdded: function(feature, layer) {
-            selectedLayer.clearLayers();
+            boroughTileLayer = mapModule.addTileLayer(progressMap, {
+                url: boroughTileUrl,
+                minZoom: 1,
+                maxZoom: zoomMaxes.borough
+            });
 
-            // Note: this must be kept in sync with
-            // src/nyc_trees/apps/survey/urls/blockface.py
-            var url = '/blockedge/' + feature.properties.id + '/progress-page-blockedge-popup/';
+            neighborhoodTileLayer = mapModule.addTileLayer(progressMap, {
+                url: neighborhoodTileUrl,
+                minZoom: zoomMaxes.borough + 1,
+                maxZoom: zoomMaxes.neighborhood
+            });
 
-            $actionBar.load(url);
-            $('body').addClass('actionbar-triggered');
-            return true;
+            progressMap.on('zoomend', fixZoomLayerSwitch);
+            progressMap.on('zoomend', changeLegendEntries);
+        } else {
+            tileLayer = mapModule.addTileLayer(progressMap, {
+                url: tileUrl
+            });
         }
     });
-    progressMap.addLayer(selectedLayer);
+}
+
+// Work around https://github.com/Leaflet/Leaflet/issues/1905
+function fixZoomLayerSwitch(e) {
+    var zoom = progressMap.getZoom();
+    if (zoom > zoomMaxes.borough) {
+        boroughTileLayer._clearBgBuffer();
+    }
+    if (zoom < (zoomMaxes.borough + 1) || zoom > zoomMaxes.neighborhood) {
+        neighborhoodTileLayer._clearBgBuffer();
+    }
+    if (zoom < (zoomMaxes.neighborhood + 1)) {
+        clearSelection();
+        tileLayer._clearBgBuffer();
+    }
 }

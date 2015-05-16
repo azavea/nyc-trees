@@ -9,17 +9,26 @@ from django.core.management.base import BaseCommand
 from django.db import transaction, connection
 from django.utils.timezone import now
 
-from apps.core.models import TaskRun
+from apps.core.models import TaskRun, User, Group
 from apps.census_admin.tasks import (dump_model, dump_trees_to_shapefile,
                                      dump_blockface_to_shapefile, zip_dumps,
                                      dump_events_to_shapefile,
                                      write_data_dictionary)
 
+
+def _except(Model, *omitted_fields):
+    return [f.name for f in Model._meta.local_fields
+            if f.name not in omitted_fields]
+
+
 TASK_NAME = 'dump_db'
 
+CUSTOM_CSV_MODELS = [
+    ('apps.core.models.User', _except(User, 'password')),
+    ('apps.core.models.Group', _except(Group, 'border')),
+]
+
 CSV_MODELS = [
-    'apps.core.models.User',
-    'apps.core.models.Group',
     'apps.event.models.EventRegistration',
     'apps.survey.models.BlockfaceReservation',
     'apps.survey.models.Species',
@@ -37,7 +46,9 @@ GEO_MODELS = [
     'apps.survey.models.Tree',
 ]
 
-MODELS = CSV_MODELS + GEO_MODELS
+ALL_CSV_MODELS = [name for name, _ in CUSTOM_CSV_MODELS] + CSV_MODELS
+
+MODELS = ALL_CSV_MODELS + GEO_MODELS
 
 
 class Command(BaseCommand):
@@ -63,7 +74,10 @@ class Command(BaseCommand):
 
         dump_id = today.isoformat()
 
-        dump_model_tasks = [dump_model.s(fqn, dump_id) for fqn in CSV_MODELS]
+        dump_model_tasks = [dump_model.s(fqn, None, dump_id)
+                            for fqn in CSV_MODELS]
+        dump_model_tasks += [dump_model.s(fqn, fields, dump_id)
+                             for fqn, fields in CUSTOM_CSV_MODELS]
         dump_model_tasks += [dump_trees_to_shapefile.s(dump_id),
                              dump_blockface_to_shapefile.s(dump_id),
                              dump_events_to_shapefile.s(dump_id),

@@ -384,7 +384,7 @@ class FollowGroupTests(UsersTestCase):
 
 
 class IndividualMapperTests(UsersTestCase):
-    """Test that users can become individual mappers"""
+    """Test that users can become independent mappers"""
 
     def setUp(self):
         super(IndividualMapperTests, self).setUp()
@@ -401,13 +401,14 @@ class IndividualMapperTests(UsersTestCase):
         # Is the button visible on the user profile page?
         request = make_request(user=self.user)
         response = user_detail_route(request, username=self.user.username)
-        self.assertTrue('Request Individual Mapper Status' in response.content)
+        self.assertTrue(
+            'Request Independent Mapper Status' in response.content)
 
         # Is the button visible on the dashboard?
         request = make_request(user=self.user)
         response = home_page(request)
         content = response.content.decode('utf8')
-        self.assertTrue('Request Individual Mapper Status' in content)
+        self.assertTrue('Request Independent Mapper Status' in content)
 
         # Press the button.
         request = make_request(user=self.user, method='POST')
@@ -482,7 +483,8 @@ class TrustedMapperTests(UsersTestCase):
         # Does the grant access button appear on the group detail page?
         request = make_request(user=user)
         response = group_detail(request, group_slug=group.slug)
-        self.assertTrue('Request Individual Mapper Status' in response.content)
+        self.assertTrue(
+            'Request Independent Mapper Status' in response.content)
 
         # User request mapper status
         request = make_request(user=user, method='POST')
@@ -509,7 +511,7 @@ class TrustedMapperTests(UsersTestCase):
         First, disqualify user from becoming a trusted mapper.
         Then enable each qualification, one by one, to ensure that all
         conditions must be met before becoming eligible.
-        Finally, after successfully becoming an individual mapper, ensure
+        Finally, after successfully becoming an independent mapper, ensure
         that the user is no longer eligible.
         """
         self.group.allows_individual_mappers = False

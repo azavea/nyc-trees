@@ -73,7 +73,9 @@
                     {% if not event.is_past %}
                     <li><a role="menuitem" tabindex="-1" href="{% url 'event_edit' group_slug=event.group.slug event_slug=event.slug %}">Edit details</a></li>
                     {% endif %}
+                    {% if event.can_send_email %}
                     <li><a role="menuitem" tabindex="-1" href="{% url 'event_email' group_slug=event.group.slug event_slug=event.slug %}">Email attendees</a></li>
+                    {% endif %}
                     {% if not event.is_past %}
                     <li><a role="menuitem" tabindex="-1" href="{% url 'event_admin_check_in_page' group_slug=event.group.slug event_slug=event.slug %}">Event check-in</a></li>
                     {% endif %}

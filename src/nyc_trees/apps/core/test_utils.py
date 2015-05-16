@@ -12,8 +12,11 @@ from django.contrib.gis.geos import Point
 from django.test import RequestFactory
 from django.utils.timezone import now
 
+from apps.users.models import TrustedMapper
+
 from apps.event.models import Event
-from apps.survey.models import Tree, Survey, Species
+from apps.survey.models import (BlockfaceReservation, Territory,
+                                Survey, Tree, Species)
 
 
 def make_request(params={}, user=None, method='GET', body=None, file=None,
@@ -123,6 +126,33 @@ def make_species(**kwargs):
     s.clean_and_save()
 
     return s
+
+
+def make_territory(group, block):
+    return Territory.objects.create(group=group, blockface=block)
+
+
+def make_trusted_mapper(user, group, **kwargs):
+    defaults = {
+        'user': user,
+        'group': group,
+        'is_approved': True,
+    }
+    defaults.update(kwargs)
+    return TrustedMapper.objects.create(**defaults)
+
+
+def make_reservation(user, block, **kwargs):
+    defaults = {
+        'user': user,
+        'blockface': block,
+        'is_mapping_with_paper': False,
+        'expires_at': now() + timedelta(days=1),
+        'created_at': now(),
+        'updated_at': now(),
+    }
+    defaults.update(kwargs)
+    return BlockfaceReservation.objects.create(**defaults)
 
 
 def complete_online_training(user):

@@ -44,6 +44,9 @@
 .btn-mobile--max {
   @media only screen and (max-width : $screen-xs) {
     width: 100%;
+    + .btn-mobile--max {
+      margin-top: 5px;
+    }
   }
 }
 
@@ -68,4 +71,8 @@
 .btn-link {
   padding-left: 0;
   padding-right: 0;
+}
+
+.btn-lg {
+  border-radius: $border-radius-base;
 }

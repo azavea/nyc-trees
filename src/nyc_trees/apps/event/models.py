@@ -4,15 +4,17 @@ from __future__ import unicode_literals
 from __future__ import division
 
 import shortuuid
+from pytz import timezone, utc
 
 from datetime import timedelta
-from django.utils import timezone
+from django.utils.timezone import now
 
 from django.conf import settings
 from django.contrib.gis.db import models
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.core.validators import RegexValidator
+from django.db.models import Q
 from django.utils.text import slugify
 
 from apps.core.models import User, Group
@@ -24,6 +26,8 @@ from libs.pdf_maps import url_if_cooked
 # Amount of time before an event starts to display
 # the "Starting soon" notification message.
 STARTING_SOON_WINDOW = timedelta(hours=1)
+# Amount of time after the event ends when emailing attendees is allowed
+EMAIL_WINDOW = timedelta(days=7)
 
 
 class Event(NycModel, models.Model):
@@ -120,9 +124,9 @@ class Event(NycModel, models.Model):
     def starting_soon(self, target_dt=None):
         """
         Return True if `target_dt` is within the event starting period.
-        Argument `target_dt` defaults to `timezone.now` if omitted.
+        Argument `target_dt` defaults to `now` if omitted.
         """
-        target_dt = target_dt or timezone.now()
+        target_dt = target_dt or now()
         return target_dt >= self.begins_at - STARTING_SOON_WINDOW \
             and target_dt < self.ends_at
 
@@ -130,12 +134,18 @@ class Event(NycModel, models.Model):
         """
         Return True if event is in-progress in the context of `target_dt`.
         """
-        target_dt = target_dt or timezone.now()
+        target_dt = target_dt or now()
         return target_dt >= self.begins_at and target_dt < self.ends_at
+
+    def is_mapping_allowed(self):
+        now_utc = now()
+        end_of_event_day = end_of_day_in_utc(self.ends_at)
+
+        return self.begins_at <= now_utc <= end_of_event_day
 
     @property
     def has_started(self):
-        return self.begins_at <= timezone.now()
+        return self.begins_at <= now()
 
     def get_admin_checkin_url(self):
         return reverse('event_admin_check_in_page',
@@ -159,7 +169,11 @@ class Event(NycModel, models.Model):
         return url_if_cooked(self.map_pdf_filename)
 
     def is_past(self):
-        return self.ends_at < timezone.now()
+        return self.ends_at < now()
+
+    @property
+    def can_send_email(self):
+        return (self.ends_at + EMAIL_WINDOW) >= now()
 
     class Meta:
         unique_together = (("group", "slug"), ("group", "title"))
@@ -193,16 +207,60 @@ class EventRegistration(NycModel, models.Model):
         Return a tuple of (attended events, non-attended events) for upcoming
         and in-progress events for which the user has RSVPd.
         """
-        now = timezone.now()
+        now_utc = now()
+
+        end_of_day_utc = end_of_day_in_utc(now_utc)
+        beginning_of_day_utc = start_of_day_in_utc(now_utc)
+
+        # First filter to the events starting today
+        # Then get those events which are starting soon or have yet to end, or
+        # any attended events from today, which can be mapped until midnight
         registrations = EventRegistration.objects \
             .filter(user=user,
-                    event__begins_at__lte=now + STARTING_SOON_WINDOW,
-                    event__ends_at__gt=now) \
+                    event__begins_at__gte=beginning_of_day_utc) \
+            .filter(Q(did_attend=True, event__ends_at__lte=end_of_day_utc) |
+                    Q(event__begins_at__lte=now_utc + STARTING_SOON_WINDOW,
+                      event__ends_at__gt=now_utc)) \
             .prefetch_related('event')
+
         attended = [r.event for r in registrations if r.did_attend]
         non_attended = [r.event for r in registrations if not r.did_attend]
         return attended, non_attended
 
+    @classmethod
+    def next_event_starting_soon(cls, user):
+        """
+        Return the EventRegistration for the next event starting soon, or None
+        """
+        now_utc = now()
+
+        registrations = EventRegistration.objects \
+            .filter(user=user,
+                    event__begins_at__lte=now_utc + STARTING_SOON_WINDOW,
+                    event__ends_at__gt=now_utc) \
+            .prefetch_related('event') \
+            .order_by('event__begins_at')
+
+        return registrations[0] if registrations else None
+
     def __unicode__(self):
         return "'%s' registration for '%s'" % (self.user.username,
                                                self.event.title)
+
+
+def end_of_day_in_utc(dt_utc):
+    est_tz = timezone('US/Eastern')
+    now_est = dt_utc.astimezone(est_tz)
+
+    end_of_day_est = now_est.replace(hour=23, minute=59, second=59)
+
+    return end_of_day_est.astimezone(utc)
+
+
+def start_of_day_in_utc(dt_utc):
+    est_tz = timezone('US/Eastern')
+    now_est = dt_utc.astimezone(est_tz)
+
+    start_of_day_est = now_est.replace(hour=0, minute=0, second=0)
+
+    return start_of_day_est.astimezone(utc)

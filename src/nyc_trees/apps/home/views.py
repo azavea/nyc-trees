@@ -28,14 +28,10 @@ def home_page(request):
         context['counts_all'] = _global_counts()
         context['counts_week'] = _global_counts(past_week=True)
 
-        registered_events = EventRegistration.my_events_now(request.user)
-        attended_events, non_attended_events = registered_events
-        if attended_events:
-            context['event'] = attended_events[0]
-            context['did_attend_event'] = True
-        elif non_attended_events:
-            context['event'] = non_attended_events[0]
-            context['did_attend_event'] = False
+        event_reg = EventRegistration.next_event_starting_soon(request.user)
+        if event_reg:
+            context['event'] = event_reg.event
+            context['did_attend_event'] = event_reg.did_attend
     else:
         context = {
             'user': request.user,
@@ -58,7 +54,7 @@ def _global_counts(past_week=False):
     if past_week:
         blocks_mapped = get_block_count_past_week()
     else:
-        blocks_mapped = Survey.objects.all().distinct('blockface_id').count()
+        blocks_mapped = Survey.objects.complete().distinct('blockface').count()
     if blocks_mapped > 0:
         fraction_mapped = float(blocks_mapped) / float(blocks_total)
         fmt = "{:.0%}" if fraction_mapped >= .1 else "{:.1%}"

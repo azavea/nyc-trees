@@ -93,13 +93,26 @@ function createAndGetControls(options) {
     return {map: map, multiControl: multiControl};
 }
 
+// Return a promise which is resolved when map is done zooming.
 function fitBounds(map, bounds) {
+    if (!bounds) {
+        return $.Deferred().resolve().promise();
+    }
+
     // GeoDjango bounds are [xmin, ymin, xmax, ymax]
     // Leaflet wants [ [ymin, xmin], [ymax, xmax] ]
     var b = [[bounds[1], bounds[0]], [bounds[3], bounds[2]]],
-        zooming = (map.getZoom() !== map.getBoundsZoom(b));
+        zooming = (map.getZoom() !== map.getBoundsZoom(b)),
+        defer = $.Deferred();
+
+    if (zooming) {
+        map.on('zoomend', defer.resolve);
+    } else {
+        defer.resolve();
+    }
+
     map.fitBounds(b);
-    return zooming;
+    return defer.promise();
 }
 
 function isRetinaDevice() {
@@ -171,10 +184,10 @@ function addTileLayer(map, options) {
     options = options || {};
     var tileUrl = options.url || getDomMapAttribute('tile-url'),
         layer = L.tileLayer(tileUrl, {
-            minZoom: zoom.MIN,
-            maxZoom: zoom.MAX
+            minZoom: options.minZoom || zoom.MIN,
+            maxZoom: options.maxZoom || zoom.MAX
         });
-    _addLayer(map, layer, options.waitForZoom);
+    map.addLayer(layer);
     return layer;
 }
 
@@ -188,26 +201,8 @@ function addGridLayer(map, options) {
             crosshairs: options.crosshairs || false,
             pointerCursor: !options.crosshairs
         });
-    _addLayer(map, layer, options.waitForZoom);
+    map.addLayer(layer);
     return layer;
-}
-
-function _addLayer(map, layer, waitForZoom) {
-    if (waitForZoom) {
-        _addAfterZoom(map, layer);
-    } else {
-        map.addLayer(layer);
-    }
-}
-
-function _addAfterZoom(map, layer) {
-    // Add layer to map after zoom animation completes.
-    // (Otherwise spurious tile requests will be issued at the old zoom level.)
-    function addLayer() {
-        map.addLayer(layer);
-        map.off('zoomend', addLayer);
-    }
-    map.on('zoomend', addLayer);
 }
 
 function getDomMapAttribute(dataAttName, domId) {

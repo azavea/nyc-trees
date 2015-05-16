@@ -6,6 +6,7 @@ from __future__ import division
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.contrib.gis.db import models
 from django.core.exceptions import ValidationError
+from django.core.signing import TimestampSigner, BadSignature, SignatureExpired
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.utils.text import slugify
@@ -30,6 +31,7 @@ REFERRER_AD = (
 
 
 class NycUserManager(UserManager):
+
     def get_by_natural_key(self, username):
         # For login, make username case-insensitive
         return self.get(username__iexact=username)
@@ -46,7 +48,7 @@ class User(NycModel, AbstractUser):
         help_text='Can user reserve and map block edges outside of events?')
     requested_individual_mapping_at = models.DateTimeField(
         null=True, blank=True,
-        help_text='Time when user requested individual mapper status')
+        help_text='Time when user requested independent mapper status')
 
     profile_is_public = models.BooleanField(
         default=False,
@@ -196,7 +198,7 @@ class User(NycModel, AbstractUser):
         """
         Return True if user has completed online training, attended a mapping
         event, and one other training/mapping event.
-        Return False if user is *already* an individual mapper or their mapper
+        Return False if user is *already* an independent mapper or their mapper
         status was rescinded.
         """
         if self.individual_mapper is None:
@@ -216,7 +218,8 @@ class User(NycModel, AbstractUser):
     def surveys(self):
         """Return surveys user has participated in"""
         from apps.survey.models import Survey
-        return Survey.objects.filter(Q(user=self) | Q(teammate=self))
+        return Survey.objects.complete().filter(
+            Q(user=self) | Q(teammate=self))
 
     @property
     def blocks_mapped_count(self):
@@ -225,6 +228,17 @@ class User(NycModel, AbstractUser):
     @property
     def reservations_map_pdf_url(self):
         return url_if_cooked(self.reservations_map_pdf_filename)
+
+    def make_token(self):
+        return TimestampSigner().sign(self.username)
+
+    # Source: http://grokcode.com/819/one-click-unsubscribes-for-django-apps/
+    def is_valid_token(self, token):
+        try:
+            TimestampSigner().unsign(token)
+        except (BadSignature, SignatureExpired):
+            return False
+        return True
 
     class Meta:
         ordering = ['username']

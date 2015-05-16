@@ -7,10 +7,23 @@ from django.contrib.gis.db import models
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.utils.timezone import now
+from django.db import transaction
 
 from apps.core.models import User, Group
 
 from libs.mixins import NycModel
+
+
+class Borough(NycModel, models.Model):
+    geom = models.MultiPolygonField()
+    name = models.CharField(max_length=32)
+    code = models.IntegerField(unique=True)
+
+
+class NeighborhoodTabulationArea(NycModel, models.Model):
+    geom = models.MultiPolygonField()
+    name = models.CharField(max_length=75)
+    code = models.CharField(max_length=4, unique=True)
 
 
 class Blockface(models.Model):
@@ -25,6 +38,12 @@ class Blockface(models.Model):
     source = models.CharField(
         max_length=255, default='unknown',
         help_text='Source for blockface data (borough name)')
+    borough = models.ForeignKey(
+        Borough, null=True, blank=True,
+        help_text='The borough containing this blockface')
+    nta = models.ForeignKey(
+        NeighborhoodTabulationArea, null=True, blank=True,
+        help_text='The neighborhood tabulation area containing this blockface')
 
     # We can't use the NycModel mixin, because we want to add db indexes
     created_at = models.DateTimeField(
@@ -40,6 +59,21 @@ class Blockface(models.Model):
     def __unicode__(self):
         return '%s (available: %s)' % (self.pk, self.is_available)
 
+    @transaction.atomic
+    def save(self, *args, **kwargs):
+        should_cancel_reservations = False
+        if self.is_available is True:
+            is_becoming_available = (Blockface.objects
+                                     .filter(id=self.id, is_available=False)
+                                     .exists())
+            if is_becoming_available:
+                should_cancel_reservations = True
+
+        super(Blockface, self).save(*args, **kwargs)
+
+        if should_cancel_reservations:
+            self.blockfacereservation_set.update(canceled_at=now())
+
 
 class Territory(NycModel, models.Model):
     group = models.ForeignKey(
@@ -54,6 +88,11 @@ class Territory(NycModel, models.Model):
 
     class Meta:
         verbose_name_plural = "Territories"
+
+
+class SurveyQuerySet(models.QuerySet):
+    def complete(self):
+        return self.filter(quit_reason='')
 
 
 class Survey(models.Model):
@@ -93,6 +132,8 @@ class Survey(models.Model):
         auto_now=True, db_index=True, editable=False,
         help_text='Time when row was last updated'
     )
+
+    objects = SurveyQuerySet.as_manager()
 
     def __unicode__(self):
         return 'block %s on %s by %s' % (self.blockface_id, self.created_at,

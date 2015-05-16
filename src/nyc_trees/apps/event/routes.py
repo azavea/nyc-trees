@@ -93,3 +93,13 @@ increase_rsvp_limit = route(POST=group_admin_do(json_api_call,
 event_map_poll = route(GET=do(group_request,
                               json_api_call,
                               v.event_map_poll))
+
+event_email_unsubscribe = route(
+    GET=do(group_request,
+           render_template('event/event_email_unsubscribed.html'),
+           v.event_email_unsubscribe))
+
+event_email_invalid_token = route(
+    GET=do(group_request,
+           render_template('event/invalid_token.html'),
+           v.event_email_invalid_token))

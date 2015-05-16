@@ -74,3 +74,9 @@ def notify_rsvp(pdf_filename, absolute_event_url, user_id, event_id):
                    event=event,
                    event_url=absolute_event_url,
                    attachments=attachments)
+
+
+@task
+def notify_after_event_checkin(user_id):
+    return send_to(User.objects.get(pk=user_id),
+                   MessageType.AFTER_EVENT_CHECKIN)

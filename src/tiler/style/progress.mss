@@ -27,3 +27,37 @@
     }
   }
 }
+
+/* If you change these colors, also change src/nyc_trees/sass/partials/_legend.scss */
+#survey_borough,#survey_neighborhoodtabulationarea {
+  line-color: #555;
+  line-width: 1;
+  polygon-opacity: 0.50;
+  polygon-fill: #fff;
+  [percent >= 10] { polygon-fill: #F6F9F4 }
+  [percent >= 20] { polygon-fill: #D7EBC7 }
+  [percent >= 30] { polygon-fill: #B8DD9B }
+  [percent >= 40] { polygon-fill: #99CF6F }
+  [percent >= 50] { polygon-fill: #7AC143 }
+  [percent >= 60] { polygon-fill: #5BA63B }
+  [percent >= 70] { polygon-fill: #3D8C33 }
+  [percent >= 80] { polygon-fill: #1E722B }
+  [percent >= 90] { polygon-fill: #005824 }
+}
+
+/*
+
+Running this command in the windshaft module directory will list available fonts
+node -e "var m=require('mapnik');m.register_system_fonts();console.log(m.fontFiles())"
+
+*/
+
+#survey_borough::labels,
+#survey_neighborhoodtabulationarea::labels {
+  text-name: '[label]';
+  text-face-name: 'DejaVu Sans Bold';
+  text-fill: #000;
+  text-size: 12;
+  text-halo-fill:  fadeout(#fff, 30%);
+  text-halo-radius: 2;
+}

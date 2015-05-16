@@ -26,3 +26,5 @@ INSTALLED_APPS += ('sbo_selenium',)
 SELENIUM_SAUCE_CONNECT_PATH = os.environ.get('SELENIUM_SAUCE_CONNECT_PATH', '')
 SELENIUM_SAUCE_USERNAME = os.environ.get('SAUCE_USER_NAME', '')
 SELENIUM_SAUCE_API_KEY = os.environ.get('SAUCE_API_KEY', '')
+
+TILER_SQL_PATH = '/opt/tiler/sql/'

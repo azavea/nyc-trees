@@ -3,8 +3,6 @@
 set -e
 set -x
 
-DIR=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)
-
 # Export settings required to run psql non-interactively
 export PGHOST=$(cat /etc/nyc-trees.d/env/NYC_TREES_DB_HOST)
 export PGDATABASE=$(cat /etc/nyc-trees.d/env/NYC_TREES_DB_NAME)
@@ -16,12 +14,14 @@ psql -c "CREATE EXTENSION IF NOT EXISTS postgis;"
 
 # Run migrations
 envdir /etc/nyc-trees.d/env /opt/app/manage.py migrate
-# Load block face data
 
-ls /opt/app/apps/survey/fixtures/blockface_*.json | xargs -n1 envdir /etc/nyc-trees.d/env /opt/app/manage.py loaddata
+# Load regions and assign to blocks
+envdir /etc/nyc-trees.d/env /opt/app/manage.py loaddata /opt/app/apps/survey/fixtures/borough.json
+envdir /etc/nyc-trees.d/env /opt/app/manage.py loaddata /opt/app/apps/survey/fixtures/neighborhoodtabulationarea.json
+envdir /etc/nyc-trees.d/env /opt/app/manage.py assign_block_regions
 
 # Load species data
-envdir /etc/nyc-trees.d/env /opt/app/manage.py loaddata $DIR/../../src/nyc_trees/apps/survey/fixtures/species.json
+envdir /etc/nyc-trees.d/env /opt/app/manage.py loaddata /opt/app/apps/survey/fixtures/species.json
 
 # Setup soft launch flag if it does not already exist
 if ! envdir /etc/nyc-trees.d/env /opt/app/manage.py flag -l | grep full_access; then

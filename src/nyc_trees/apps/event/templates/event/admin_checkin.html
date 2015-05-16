@@ -43,9 +43,11 @@
         <div class="row">
         {% endif %}
             <div class="col-xs-12">
-                <div class="btn-checkin-container pull-right">
-                {% include "event/partials/checkin_button.html" %}
-                </div>
+                {% if event.starting_soon %}
+                    <div class="btn-checkin-container pull-right">
+                    {% include "event/partials/checkin_button.html" %}
+                    </div>
+                {% endif %}
 
                 {% if user.profile_is_public %}
                 <a href="{{ user.get_absolute_url}}">{{ user.username }}</a>
@@ -55,6 +57,10 @@
 
                 {% if user.real_name_is_public %}
                 <br />{{ user.get_full_name }}
+                {% endif %}
+
+                {% if user.is_ambassador %}
+                <br /><strong class="color--primary">Ambassador</strong>
                 {% endif %}
 
                 <hr />

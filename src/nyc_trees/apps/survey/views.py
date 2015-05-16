@@ -11,11 +11,10 @@ from pytz import timezone
 from celery import chain
 
 from django.conf import settings
-from django.contrib.gis.geos import Point, GeometryCollection
+from django.contrib.gis.geos import Point
 from django.core.exceptions import ValidationError, PermissionDenied
 from django.core.urlresolvers import reverse
 from django.db import transaction, connection
-from django.db.models import Prefetch
 from django.http import (HttpResponse, HttpResponseForbidden,
                          HttpResponseBadRequest)
 from django.shortcuts import get_object_or_404, redirect
@@ -24,7 +23,7 @@ from django.utils.timezone import now
 from apps.core.models import Group
 from apps.core.helpers import user_is_group_admin, user_is_individual_mapper
 
-from apps.event.models import Event, EventRegistration
+from apps.event.models import Event
 from apps.event.helpers import (user_is_checked_in_to_event,
                                 user_is_rsvped_for_event)
 
@@ -42,7 +41,8 @@ from apps.survey.layer_context import (
     get_context_for_reservations_layer, get_context_for_reservable_layer,
     get_context_for_progress_layer, get_context_for_territory_survey_layer,
     get_context_for_printable_reservations_layer,
-    get_context_for_group_progress_layer, get_context_for_user_progress_layer
+    get_context_for_group_progress_layer, get_context_for_user_progress_layer,
+    get_context_for_borough_progress_layer, get_context_for_nta_progress_layer
 )
 from apps.survey.helpers import group_percent_completed, teammates_for_mapping
 
@@ -61,16 +61,21 @@ def progress_page(request):
         'legend_entries': [
             {'mode': 'all', 'css_class': 'mapped', 'label': 'Mapped'},
             {'mode': 'all', 'css_class': 'not-mapped', 'label': 'Not mapped'},
+
             {'mode': 'my', 'css_class': 'mapped', 'label': 'Mapped by you'},
             {'mode': 'my', 'css_class': 'not-mapped',
              'label': 'Not mapped by you'},
+
             {'mode': 'group', 'css_class': 'mapped',
              'label': 'Mapped by this group'},
             {'mode': 'group', 'css_class': 'not-mapped',
              'label': 'Not mapped'},
         ],
-        'legend_mode': 'all',
+        'percentage_ramps': range(0, 100, 10),
+        'legend_mode': 'all-percent',
         'layer_all': get_context_for_progress_layer(),
+        'layer_all_nta': get_context_for_nta_progress_layer(),
+        'layer_all_borough': get_context_for_borough_progress_layer(),
         'help_shown': _was_help_shown(request, 'progress_page_help_shown')
     }
 
@@ -82,7 +87,7 @@ def progress_page(request):
                   .values_list('blockface_id', flat=True))
         if len(blocks) > 0:
             blockfaces = Blockface.objects.filter(id__in=blocks).collect()
-            context['bounds'] = list(blockfaces.extent)
+            context['my_bounds'] = list(blockfaces.extent)
 
     return context
 
@@ -205,10 +210,7 @@ def user_reserved_blockfaces_geojson(request):
 
 
 def group_borders_geojson(request):
-    groups = Group.objects.filter(is_active=True) \
-        .prefetch_related(
-            Prefetch('territory_set', to_attr="turf",
-                     queryset=Territory.objects.select_related('blockface')))
+    groups = Group.objects.filter(is_active=True)
 
     base_group_layer_context = get_context_for_group_progress_layer()
     base_group_tile_url = base_group_layer_context['tile_url']
@@ -226,10 +228,7 @@ def group_borders_geojson(request):
                 'gridUrl': '%s?group=%s' % (base_group_grid_url, group.id),
                 'popupUrl': reverse('group_popup',
                                     kwargs={'group_slug': group.slug}),
-                'bounds': GeometryCollection(
-                    [territory.blockface.geom
-                     for territory in group.turf]).extent
-                if group.turf else group.border.extent
+                'bounds': group.border.extent
             }
         }
         for group in groups
@@ -467,35 +466,6 @@ def _validate_event_and_group(request, event_slug):
     return event
 
 
-def redirect_to_treecorder(request):
-    user = request.user
-
-    # We assume you can't have RSVPed to events without completing training
-    attended_events, unattended_events = EventRegistration.my_events_now(user)
-
-    if attended_events:
-        event = attended_events[0]
-        return redirect('survey_from_event',
-                        group_slug=event.group.slug, event_slug=event.slug)
-    elif unattended_events:
-        event = unattended_events[0]
-        return redirect('event_user_check_in_page',
-                        group_slug=event.group.slug, event_slug=event.slug)
-
-    # Need to check indivdual mapper status first, to allow census admins to
-    # "skip" a users online training via the admin site easily
-    if user.individual_mapper:
-        if user.blockfacereservation_set.current().exists():
-            return redirect('survey')
-        else:
-            return redirect('reservations')
-
-    if not user.training_complete:
-        return redirect('training_instructions')
-
-    return redirect('reservations_instructions')
-
-
 def start_survey(request):
     reservations_for_user = (
         BlockfaceReservation.objects.remaining_for(request.user))
@@ -521,7 +491,7 @@ def start_survey_from_event(request, event_slug):
         return redirect('event_user_check_in_page',
                         group_slug=event.group.slug, event_slug=event.slug)
 
-    if not event.in_progress():
+    if not event.is_mapping_allowed():
         return HttpResponseForbidden('Event not currently in-progress')
 
     return {
@@ -579,9 +549,6 @@ def submit_survey_from_event(request, event_slug):
 
 
 def _mark_survey_blockface_availability(survey, availability):
-    if survey.quit_reason != '':
-        raise ValidationError('Cannot mark block edge complete for survey '
-                              'that has been quit.')
     if not isinstance(availability, bool):
         raise ValidationError('availability arg must be a boolean value')
 
@@ -590,9 +557,13 @@ def _mark_survey_blockface_availability(survey, availability):
     survey.blockface.save()
 
 
-def release_blockface(request, survey_id):
+def restart_blockface(request, survey_id):
     survey = get_object_or_404(Survey, id=survey_id, user=request.user)
     _mark_survey_blockface_availability(survey, True)
+    expiration_date = now() + settings.RESERVATION_TIME_PERIOD
+    BlockfaceReservation.objects.create(blockface=survey.blockface,
+                                        user=request.user,
+                                        expires_at=expiration_date)
     return {'success': True}
 
 
@@ -634,8 +605,7 @@ def _create_survey_and_trees(request, event=None):
     survey.full_clean()
     survey.save()
 
-    if survey.quit_reason == '':
-        _mark_survey_blockface_availability(survey, False)
+    _mark_survey_blockface_availability(survey, False)
 
     for tree_data in tree_list:
         if 'problems' in tree_data:

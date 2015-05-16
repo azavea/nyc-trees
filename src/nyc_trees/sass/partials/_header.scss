@@ -223,3 +223,10 @@
     cursor: pointer;
   }
 }
+
+// Modals opened from the navbar should have a higher z-index than the
+// overlay-menu, to prevent closing the nav until the modal opened from
+// the nav has been closed
+.navbar-modal {
+  z-index: $zindex-overlaymenu + 1 !important;
+}

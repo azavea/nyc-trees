@@ -90,7 +90,7 @@ def user_must_be_individual_mapper(view_fn):
         if user_is_individual_mapper(request.user):
             return view_fn(request, *args, **kwargs)
         else:
-            raise PermissionDenied('%s is not an individual mapper'
+            raise PermissionDenied('%s is not an independent mapper'
                                    % request.user)
     return wrapper
 

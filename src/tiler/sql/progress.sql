@@ -9,6 +9,7 @@
   END AS is_mapped
   FROM survey_blockface AS block
   LEFT OUTER JOIN survey_survey AS survey
-    ON block.id = survey.blockface_id
+    ON (block.id = survey.blockface_id
+        AND COALESCE(survey.quit_reason, '') = '')
   ORDER BY block.id, survey.created_at DESC NULLS LAST
 ) AS query

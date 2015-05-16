@@ -14,18 +14,26 @@ class TreeInline(admin.TabularInline):
 
 class SurveyAdmin(admin.ModelAdmin):
     inlines = [TreeInline]
-    search_fields = ('id', 'quit_reason', 'user__username')
+    search_fields = ('id', 'quit_reason', 'user__username', 'blockface__id')
     list_display = ('blockface', 'user', 'has_trees',
                     'is_flagged', 'teammate', 'quit_reason')
     list_filter = ('is_flagged', 'has_trees')
     raw_id_fields = ("blockface",)
 
 
+class BlockfaceAdmin(admin.ModelAdmin):
+    search_fields = ('id',)
+    list_filter = ('is_available',)
+
+
 class BlockfaceReservationAdmin(admin.ModelAdmin):
     raw_id_fields = ("blockface",)
+    search_fields = ('blockface__id',)
+    list_filter = ('canceled_at', 'expires_at', 'blockface__is_available')
+    list_display = ('canceled_at', 'expires_at', 'blockface', 'user')
 
 
-admin.site.register(m.Blockface)
+admin.site.register(m.Blockface, BlockfaceAdmin)
 admin.site.register(m.Territory)
 admin.site.register(m.Survey, SurveyAdmin)
 admin.site.register(m.Tree)

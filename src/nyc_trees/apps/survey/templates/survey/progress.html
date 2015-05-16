@@ -18,17 +18,17 @@
                     <li class="text-right" role="presentation">
                         <a role="menuitem" href="#all"
                            data-tile-url="{{ layer_all.tile_url }}"
-                           data-grid-url="{{ layer_all.grid_url }}"
+                           data-tile-url-neighborhood="{{ layer_all_nta.tile_url }}"
+                           data-tile-url-borough="{{ layer_all_borough.tile_url }}"
                         >All Users</a>
                     </li>
                     {% if request.user.is_authenticated %}
                     <li class="text-right" role="presentation">
                         <a role="menuitem" class="js-my-progress"
-                           {% if bounds %}
+                           {% if my_bounds %}
                                href="#my"
                                data-tile-url="{{ layer_my.tile_url }}"
-                               data-grid-url="{{ layer_my.grid_url }}"
-                               data-bounds="{{ bounds }}"
+                               data-bounds="{{ my_bounds }}"
                            {% else %}
                                style="color: #bbb"
                                title="Map a block edge to enable"
