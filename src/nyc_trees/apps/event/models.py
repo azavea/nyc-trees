@@ -114,6 +114,12 @@ class Event(NycModel, models.Model):
                 "Please choose a location in New York City"
             ]})
 
+        rsvp_count = self.eventregistration_set.count()
+        if self.max_attendees < rsvp_count:
+            raise ValidationError({'max_attendees': [
+                "Max attendees cannot be set to a value less than the number "
+                "of people currently registered (%d)" % rsvp_count]})
+
     def training_summary(self):
         return 'Training' if self.includes_training else 'Mapping'
 
