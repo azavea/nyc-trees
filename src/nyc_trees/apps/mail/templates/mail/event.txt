@@ -1,0 +1,7 @@
+{% extends "mail/base_email.txt" %}
+{% block content %}
+{{ body }}
+{% if unsubscribe_url %}
+Click here to unsubscribe from emails about this event: {{ unsubscribe_url }}
+{% endif %}
+{% endblock content %}
