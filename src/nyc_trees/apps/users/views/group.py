@@ -21,6 +21,7 @@ from libs.sql import get_group_tree_count
 
 from apps.core.helpers import (user_is_group_admin,
                                user_is_trusted_mapper,
+                               user_mapper_status_pending,
                                user_is_eligible_to_become_trusted_mapper)
 from apps.core.decorators import group_request
 from apps.core.models import Group
@@ -119,6 +120,8 @@ def group_detail(request):
         'group': group,
         'event_list': event_list,
         'user_is_following': user_is_following,
+        'user_is_trusted_mapper': user_is_trusted_mapper(user, group),
+        'mapper_status_pending': user_mapper_status_pending(user, group),
         'edit_url': reverse('group_edit', kwargs={'group_slug': group.slug}),
         'counts': {
             'tree_digits': trees_digits,
