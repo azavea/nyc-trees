@@ -35,3 +35,6 @@ DJANGO_SITE_DOMAIN=${DJANGO_SITE_DOMAIN:-treescount.nycgovparks.org}
 envdir /etc/nyc-trees.d/env /opt/app/manage.py set_django_site_domain \
     --django-site-name="${DJANGO_SITE_DOMAIN}" \
     --django-site-domain="${DJANGO_SITE_DOMAIN}"
+
+# This must be run after all data changes to refresh the map layer context
+envdir /etc/nyc-trees.d/env /opt/app/manage.py touch_blockface
