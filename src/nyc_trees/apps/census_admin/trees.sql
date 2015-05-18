@@ -3,8 +3,8 @@ WITH trees_for_this_survey AS(
   SELECT
     id,
     survey_id,
-    .3408*(CASE WHEN curb_location='OnCurb' THEN 2.5 ELSE 12 END) curb_offset,
-    .3408*distance_to_tree dist
+    1.000*(CASE WHEN curb_location='OnCurb' THEN 2.5 ELSE 12 END) curb_offset,
+    1.000*distance_to_tree dist
   FROM survey_tree
   ORDER BY id
 ),
@@ -34,7 +34,7 @@ layed AS (
              CASE WHEN is_mapped_in_blockface_polyline_direction
              THEN st_geometryn(geom,1)
              ELSE ST_Reverse(st_geometryn(geom,1)) END,
-             _ST_BestSRID(geom::geometry)),
+             102718), -- state plane, for improved accuracy, feet units
          left_side, dist, length, width) as tbeds
   FROM aggs
 ),
