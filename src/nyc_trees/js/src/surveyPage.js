@@ -156,7 +156,8 @@ var dom = {
 
     mapInteractionEnabled = true,
 
-    stickyTitles = stickyTitlesModule($(dom.actionBar), dom.treeHeading);
+    stickyTitles = stickyTitlesModule(
+        $(window), dom.treeHeading, $(dom.actionBar));
 
 statePrompter.lock();
 
