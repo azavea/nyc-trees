@@ -21,11 +21,11 @@
 
 var $ = require('jquery');
 
-module.exports = function ($container, stickiesSelector) {
+module.exports = function ($scrollContainer, stickiesSelector, $positionContainer) {
 
     var self = {};
 
-    $container.off("scroll").on("scroll", function() {
+    $scrollContainer.off("scroll").on("scroll", function() {
         self.update();
     });
 
@@ -49,7 +49,7 @@ module.exports = function ($container, stickiesSelector) {
                         updateActiveSticky($sticky, 'fixed');
                     } else {
                         updateActiveSticky($sticky, 'absolute');
-                        $sticky.css("top", $container.scrollTop() + bottom - height);
+                        $sticky.css("top", $scrollContainer.scrollTop() + bottom - height);
                     }
                 }
                 return;
@@ -67,7 +67,11 @@ module.exports = function ($container, stickiesSelector) {
     };
 
     function getTop($sticky) {
-        return $sticky.parent().offset().top - $container.offset().top;
+        var containerOffset = $scrollContainer.offset(),
+            containerTop = containerOffset ? containerOffset.top
+                : $scrollContainer.scrollTop() + $positionContainer.offset().top,
+            top = $sticky.parent().offset().top - containerTop;
+        return top;
     }
 
     function clearOverrides($stickies) {
