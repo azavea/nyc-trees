@@ -329,10 +329,10 @@ function checkFormValidity($forms) {
             $elemToFocus.closest(dom.treeForms).collapse('show');
 
             $forms.one('shown.bs.collapse', function() {
-                triggerValidationMesasages($elemToFocus, $forms, $disabledElems);
+                triggerValidationMessages($elemToFocus, $forms, $disabledElems);
             });
         } else {
-            triggerValidationMesasages($elemToFocus, $forms, $disabledElems);
+            triggerValidationMessages($elemToFocus, $forms, $disabledElems);
         }
     } else {
         $disabledElems.attr('disabled', false);
@@ -341,7 +341,7 @@ function checkFormValidity($forms) {
     return valid;
 }
 
-function triggerValidationMesasages($elemToFocus, $forms, $disabledElems) {
+function triggerValidationMessages($elemToFocus, $forms, $disabledElems) {
     $elemToFocus.focus();
 
     // "submit" the form.  This will trigger the builtin browser validation messages.
