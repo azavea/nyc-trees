@@ -33,6 +33,30 @@ class EventTestCase(UsersTestCase):
         self.event = make_event(self.group)
 
 
+class RsvpLimitTest(EventTestCase):
+    def test_decrease_max_attendees(self):
+        self.event.max_attendees = 3
+        self.event.save()
+
+        EventRegistration.objects.create(user=self.user, event=self.event)
+        EventRegistration.objects.create(user=self.other_user,
+                                         event=self.event)
+        self.event.max_attendees = 2
+        # This should not raise a validation error
+        self.event.full_clean()
+
+    def test_cannot_decrease_max_attendees_below_rsvp_count(self):
+        self.event.max_attendees = 2
+        self.event.save()
+
+        EventRegistration.objects.create(user=self.user, event=self.event)
+        EventRegistration.objects.create(user=self.other_user,
+                                         event=self.event)
+        with self.assertRaises(ValidationError):
+            self.event.max_attendees = 1
+            self.event.full_clean()
+
+
 class EventTest(UsersTestCase):
     def test_cant_save_date_with_invalid_bounds(self):
         with self.assertRaises(ValidationError):
