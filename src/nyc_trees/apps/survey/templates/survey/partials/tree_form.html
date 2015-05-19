@@ -1,4 +1,4 @@
-<div>
+<div id="tree-header-{{ tree_number }}">
     <h4 class="sticky-title color--primary">
         <a class="hidden pull-right" data-toggle="collapse" data-target="#tree-form-{{ tree_number }}">
             <i class="icon-down-open-big"></i>
@@ -11,7 +11,7 @@
         </span>
     </h4>
 </div>
-<form class="tree-form collapse in" data-class="tree-form" autocomplete="off" id="tree-form-{{ tree_number }}">
+<form class="tree-form collapse{% if tree_number == 1 %} in{% endif %}" data-class="tree-form" autocomplete="off" id="tree-form-{{ tree_number }}">
     <!-- We need a clickable submit button in order to trigger browser error validation popups -->
     <input type="submit" data-class="fake-submit" class="hidden">
 
