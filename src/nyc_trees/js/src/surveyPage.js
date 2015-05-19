@@ -73,6 +73,7 @@ var dom = {
         distanceToEnd: '#distance_to_end',
         treeForms: '[data-class="tree-form"]',
         collapseButton: '[data-toggle="collapse"]',
+        fieldset: 'fieldset',
 
         addTree: '#another-tree',
         noFurtherTrees: '#no-further-trees',
@@ -342,7 +343,10 @@ function checkFormValidity($forms) {
 }
 
 function triggerValidationMessages($elemToFocus, $forms, $disabledElems) {
-    $elemToFocus.focus();
+    // Scroll so element and its label are visible
+    var $fieldset = $elemToFocus.closest(dom.fieldset),
+        scrollPos = getScrollToTopPosition($fieldset);
+    $('body').scrollTop(scrollPos);
 
     // "submit" the form.  This will trigger the builtin browser validation messages.
     // Our submit handler will prevent this from actually submitting
