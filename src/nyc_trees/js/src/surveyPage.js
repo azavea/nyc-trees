@@ -66,6 +66,7 @@ var dom = {
         btnNext: '#btn-next',
 
         mainHeader: '.main-header',
+        mapSidebar: '.map-sidebar',
         actionBar: '.action-bar-survey',
         surveyPage: '#survey',
         treeFormTemplate: '#tree-form-template',
@@ -346,7 +347,11 @@ function triggerValidationMessages($elemToFocus, $forms, $disabledElems) {
     // Scroll so element and its label are visible
     var $fieldset = $elemToFocus.closest(dom.fieldset),
         scrollPos = getScrollToTopPosition($fieldset);
-    $('body').scrollTop(scrollPos);
+    if (isMobile()) {
+        $('body').scrollTop(scrollPos);
+    } else {
+        $(dom.mapSidebar).scrollTop(scrollPos);
+    }
 
     // "submit" the form.  This will trigger the builtin browser validation messages.
     // Our submit handler will prevent this from actually submitting
@@ -354,6 +359,10 @@ function triggerValidationMessages($elemToFocus, $forms, $disabledElems) {
 
     // Reenable things now that we're done validating
     $disabledElems.attr('disabled', false);
+}
+
+function isMobile() {
+    return $(window).width() < 768;  // Bootstrap $screen-sm
 }
 
 // We need to submit the form to see the error bubbles, but we don't want to
@@ -388,8 +397,9 @@ $(dom.addTree).click(function (){
         var treeNumber = $treeForms.length + 1;
 
         // Scroll to the first field for easier data entry
-        var $lastHeader = $("#tree-header-" + (treeNumber - 1));
-        $('html, body').stop().animate({
+        var $lastHeader = $("#tree-header-" + (treeNumber - 1)),
+            $scrollContainer = isMobile() ? $('html,body') : $(dom.mapSidebar);
+        $scrollContainer.stop().animate({
             scrollTop: getScrollToTopPosition($lastHeader)
         }, 400).promise().done(function() {
             $treeForms.collapse('hide');
@@ -413,8 +423,13 @@ $(dom.addTree).click(function (){
 });
 
 function getScrollToTopPosition($el) {
-    var scrollPosition = $el.offset().top - $(dom.mainHeader).height();
-    return scrollPosition;
+    if (isMobile()) {
+        var scrollPosition = $el.offset().top - $(dom.mainHeader).height();
+        return scrollPosition;
+    } else {
+        var scrollPosition = $el.offset().top - $(dom.surveyPage).offset().top;
+        return scrollPosition;
+    }
 }
 
 $(dom.noFurtherTrees).on('click', function(e) {
