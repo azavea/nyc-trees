@@ -65,6 +65,8 @@ var dom = {
         btnGroupNext: '#btn-group-next',
         btnNext: '#btn-next',
 
+        mainHeader: '.main-header',
+        mapSidebar: '.map-sidebar',
         actionBar: '.action-bar-survey',
         surveyPage: '#survey',
         treeFormTemplate: '#tree-form-template',
@@ -72,6 +74,7 @@ var dom = {
         distanceToEnd: '#distance_to_end',
         treeForms: '[data-class="tree-form"]',
         collapseButton: '[data-toggle="collapse"]',
+        fieldset: 'fieldset',
 
         addTree: '#another-tree',
         noFurtherTrees: '#no-further-trees',
@@ -328,10 +331,10 @@ function checkFormValidity($forms) {
             $elemToFocus.closest(dom.treeForms).collapse('show');
 
             $forms.one('shown.bs.collapse', function() {
-                triggerValidationMesasages($elemToFocus, $forms, $disabledElems);
+                triggerValidationMessages($elemToFocus, $forms, $disabledElems);
             });
         } else {
-            triggerValidationMesasages($elemToFocus, $forms, $disabledElems);
+            triggerValidationMessages($elemToFocus, $forms, $disabledElems);
         }
     } else {
         $disabledElems.attr('disabled', false);
@@ -340,8 +343,15 @@ function checkFormValidity($forms) {
     return valid;
 }
 
-function triggerValidationMesasages($elemToFocus, $forms, $disabledElems) {
-    $elemToFocus.focus();
+function triggerValidationMessages($elemToFocus, $forms, $disabledElems) {
+    // Scroll so element and its label are visible
+    var $fieldset = $elemToFocus.closest(dom.fieldset),
+        scrollPos = getScrollToTopPosition($fieldset);
+    if (isMobile()) {
+        $('body').scrollTop(scrollPos);
+    } else {
+        $(dom.mapSidebar).scrollTop(scrollPos);
+    }
 
     // "submit" the form.  This will trigger the builtin browser validation messages.
     // Our submit handler will prevent this from actually submitting
@@ -349,6 +359,10 @@ function triggerValidationMesasages($elemToFocus, $forms, $disabledElems) {
 
     // Reenable things now that we're done validating
     $disabledElems.attr('disabled', false);
+}
+
+function isMobile() {
+    return $(window).width() < 768;  // Bootstrap $screen-sm
 }
 
 // We need to submit the form to see the error bubbles, but we don't want to
@@ -382,30 +396,39 @@ $(dom.addTree).click(function (){
     if (checkFormValidity($lastTreeForm)) {
         var treeNumber = $treeForms.length + 1;
 
-        $(dom.treeFormcontainer).append(formTemplate({tree_number: treeNumber}));
+        // Scroll to the first field for easier data entry
+        var $lastHeader = $("#tree-header-" + (treeNumber - 1)),
+            $scrollContainer = isMobile() ? $('html,body') : $(dom.mapSidebar);
+        $scrollContainer.stop().animate({
+            scrollTop: getScrollToTopPosition($lastHeader)
+        }, 400).promise().done(function() {
+            $treeForms.collapse('hide');
+            $(dom.treeFormcontainer).append(formTemplate({tree_number: treeNumber}));
+            var $newForm = $(dom.treeFormcontainer).find(dom.treeForms).last();
+            setupSpeciesAutocomplete($newForm);
 
-        var $newForm = $(dom.treeFormcontainer).find(dom.treeForms).last();
-        setupSpeciesAutocomplete($newForm);
+            setTimeout(function() {
+                $newForm.collapse('show');
+                $(dom.collapseButton).removeClass('hidden');
 
-        $treeForms.collapse('hide');
-        $newForm.collapse('show');
+                // Hide delete tree button on all but last form
+                var $deleteButtons = $(dom.treeFormcontainer).find(dom.deleteTree);
+                $deleteButtons.addClass('hidden');
+                $deleteButtons.last().removeClass('hidden');
 
-        $(dom.treeFormcontainer).one('hidden.bs.collapse', function(e) {
-            // Scroll to the first field for easier data entry
-            var $firstField = $newForm.find('input[name="distance_to_tree"]');
-            $firstField.focus();
+                stickyTitles.update();
+            }, 100);
         });
-
-        $(dom.collapseButton).removeClass('hidden');
-
-        // Hide delete tree button on all but last form
-        var $deleteButtons = $(dom.treeFormcontainer).find(dom.deleteTree);
-        $deleteButtons.addClass('hidden');
-        $deleteButtons.last().removeClass('hidden');
-
-        stickyTitles.update();
     }
 });
+
+function getScrollToTopPosition($el) {
+    if (isMobile()) {
+        return $el.offset().top - $(dom.mainHeader).height();
+    } else {
+        return $el.offset().top - $(dom.surveyPage).offset().top;
+    }
+}
 
 $(dom.noFurtherTrees).on('click', function(e) {
     // Adding active class will reveal submit button,
