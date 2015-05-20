@@ -424,11 +424,9 @@ $(dom.addTree).click(function (){
 
 function getScrollToTopPosition($el) {
     if (isMobile()) {
-        var scrollPosition = $el.offset().top - $(dom.mainHeader).height();
-        return scrollPosition;
+        return $el.offset().top - $(dom.mainHeader).height();
     } else {
-        var scrollPosition = $el.offset().top - $(dom.surveyPage).offset().top;
-        return scrollPosition;
+        return $el.offset().top - $(dom.surveyPage).offset().top;
     }
 }
 
