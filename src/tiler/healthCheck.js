@@ -37,6 +37,7 @@ function checkRedis(host, port, timeout, cb) {
     var gotResponse = false;
 
     client.on('connect', function() {
+        client.quit();
         gotResponse = true;
         cb({cache: {ok: true}});
     });
@@ -44,6 +45,7 @@ function checkRedis(host, port, timeout, cb) {
     client.on('error', function() {
         // no arguments are passed when the error event is triggered
         // TODO: Find out how to return more useful failure information
+        client.quit();
         gotResponse = true;
         cb({
             cache: {
@@ -57,6 +59,7 @@ function checkRedis(host, port, timeout, cb) {
 
     setTimeout(function() {
         if (!gotResponse) {
+            client.quit();
             cb({cache: {error: 'Timeout'}});
         }
     }, timeout);
