@@ -154,8 +154,8 @@ $hero-box-side-padding: 3rem;
 }
 
 .progress-circles {
-  margin-left: $grid-gutter-width/-2;
-  margin-right: $grid-gutter-width/-2;
+  margin-left: -1rem;
+  margin-right: -1rem;
   @include clearfix;
   @media (max-width: $screen-xs) {
     margin-left: -.4rem;
