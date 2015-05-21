@@ -59,9 +59,9 @@
         </div>
     </a>
 
-    <form method="POST" action="{% url "request_individual_mapper_status" username=user.username %}">
+    <form id="request_status" method="POST" action="{% url "request_individual_mapper_status" username=user.username %}">
         {% csrf_token %}
-        <a href="javascript:;" onclick="form.submit()" class="training block item{% if not step3_complete %} inactive{% endif %}">
+        <a href="javascript:;" {% if step3_complete %}onclick="request_status.submit()"{% endif %} class="training block item{% if not step3_complete %} inactive{% endif %}">
             <div class="row">
                 <div class="col-xs-8">
                     <h5>Request independent mapper status</h5>

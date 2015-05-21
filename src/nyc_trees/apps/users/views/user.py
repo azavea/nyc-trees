@@ -104,12 +104,16 @@ def update_user(request, username):
 
 def request_individual_mapper_status(request, username):
     user = request.user
-    if not user.eligible_to_become_individual_mapper:
-        return HttpResponseForbidden()
-    if not user.individual_mapper:
+    if user.individual_mapper:
+        # Nothing to do.
+        pass
+    elif not user.individual_mapper \
+            and user.eligible_to_become_individual_mapper():
         user.individual_mapper = True
         user.requested_individual_mapping_at = timezone.now()
         user.clean_and_save()
+    else:
+        return HttpResponseForbidden()
     return redirect('individual_mapper_instructions')
 
 
