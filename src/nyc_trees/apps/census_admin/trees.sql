@@ -6,11 +6,13 @@ WITH trees_for_this_survey AS(
     1.000*(CASE WHEN curb_location='OnCurb' THEN 2.5 ELSE 12 END) curb_offset,
     1.000*distance_to_tree dist
   FROM survey_tree
-  ORDER BY id
 ),
 aggregated_trees AS (
-  SELECT survey_id, array_agg(curb_offset) width,
-         array_agg(0) length, array_agg(dist) dist, array_agg(id) tree_ids
+  SELECT survey_id,
+         array_agg(curb_offset ORDER BY id) width,
+         array_agg(0) length,
+         array_agg(dist ORDER BY id) dist,
+         array_agg(id ORDER BY id) tree_ids
   FROM trees_for_this_survey
   GROUP BY survey_id
 ),
