@@ -87,9 +87,14 @@ class EventListTest(EventTestCase):
         request = make_request(user=self.other_user)
         ctx = events_list_page(request)
         self.assertEqual(len(ctx['all_events']['event_infos']), 1)
-        self.assertEqual(len(ctx['immediate_events']['event_infos']), 0)
         self.assertFalse(
             ctx['all_events']['event_infos'][0]['user_is_registered'])
+
+        # Immediate events should return 1 event since other_user is the
+        # group admin for our test event.
+        infos = ctx['immediate_events']['event_infos']
+        self.assertEqual(len(infos), 1)
+        self.assertEqual(infos[0]['event'].group.admin, self.other_user)
 
 
 class EventEmailTest(EventTestCase):
@@ -306,3 +311,17 @@ class MyEventsNowTestCase(UsersTestCase):
     def test_has_not_started(self):
         event = self._make_event(+3, +5)
         self.assertFalse(event.has_started)
+
+    def test_group_admin(self):
+        self._make_event(-1, +1)
+
+        # User has not RSVPd so should not have any attended events.
+        attended, non_attended = EventRegistration.my_events_now(self.user)
+        self.assertEqual(len(attended), 0)
+        self.assertEqual(len(non_attended), 0)
+
+        # Group admins don't need to RSVP to their own events.
+        attended, non_attended = EventRegistration.my_events_now(
+            self.other_user)
+        self.assertEqual(len(attended), 0)
+        self.assertEqual(len(non_attended), 1)
