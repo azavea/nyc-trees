@@ -252,6 +252,7 @@ t.add_resource(cw.Alarm(
     'alarmAppServerRequestCountLow',
     AlarmDescription='Application server request count low',
     AlarmActions=[Ref(app_server_scale_down_policy)],
+    InsufficientDataActions=[Ref(app_server_scale_down_policy)],
     Statistic='Sum',
     Period=60,
     Threshold='75',

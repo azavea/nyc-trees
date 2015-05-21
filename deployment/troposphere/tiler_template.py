@@ -241,6 +241,7 @@ t.add_resource(cw.Alarm(
     'alarmTileServerRequestCountLow',
     AlarmDescription='Tile server request count low',
     AlarmActions=[Ref(tile_server_scale_down_policy)],
+    InsufficientDataActions=[Ref(tile_server_scale_down_policy)],
     Statistic='Sum',
     Period=60,
     Threshold='75',
