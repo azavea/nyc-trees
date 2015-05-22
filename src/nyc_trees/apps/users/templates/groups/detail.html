@@ -17,15 +17,17 @@
 
     <div class="pageheading-description block text--break">
         <div class="row">
+            {# TODO: Show a default image if group.image is null #}
+            {% if group.image %}
             <div class="col-xs-4 col-sm-12  col-md-12">
-                {# TODO: Show a default image if group.image is null #}
-                {% if group.image %}
                 <div class="group-branding">
                     <div class="group-image" style="background-image: url({{group.image.url}});"></div>
                 </div>
-                {% endif %}
             </div>
             <div class="col-xs-8 col-sm-12 col-md-12">
+            {% else %}
+            <div class="col-xs-12 col-sm-12 col-md-12">
+            {% endif %}
                 <h2>{{group.name}}</h2>
             </div>
         </div>
