@@ -112,6 +112,9 @@ function loadLayers($mode) {
         geojsonUrl = $mode.data('geojson-url'),
         bounds = $mode.data('bounds');
 
+    progressMap.off('zoomend', fixZoomLayerSwitch);
+    progressMap.off('zoomend', changeLegendEntries);
+
     // Replace layers
     $.each([tileLayer, geojsonLayer, neighborhoodTileLayer, boroughTileLayer], function(_, layer) {
         if (layer) {
@@ -157,9 +160,6 @@ function addLayers(bounds, tileUrl, neighborhoodTileUrl, boroughTileUrl) {
     // Add layer to map after zoom animation completes.
     // (Otherwise spurious tile requests will be issued at the old zoom level.)
     mapModule.fitBounds(progressMap, bounds).then(function() {
-        progressMap.off('zoomend', fixZoomLayerSwitch);
-        progressMap.off('zoomend', changeLegendEntries);
-
         if (neighborhoodTileUrl || boroughTileUrl) {
             tileLayer = mapModule.addTileLayer(progressMap, {
                 url: tileUrl,
