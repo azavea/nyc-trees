@@ -345,8 +345,9 @@ function checkFormValidity($forms) {
 
 function triggerValidationMessages($elemToFocus, $forms, $disabledElems) {
     // Scroll so element and its label are visible
-    var $fieldset = $elemToFocus.closest(dom.fieldset),
-        scrollPos = getScrollToTopPosition($fieldset);
+    var $fieldset = $elemToFocus.closest(dom.fieldset);
+    // If we couldn't find a fieldset (likely distance to end), just scroll to the element
+    var scrollPos = getScrollToTopPosition($fieldset.length > 0 ? $fieldset : $elemToFocus);
     if (isMobile()) {
         $('body').scrollTop(scrollPos);
     } else {
