@@ -147,6 +147,7 @@
   font-size: $font-size-h6;
   background-color: #fff;
   padding: $grid-gutter-width/2;
+  z-index: $zindex-leaflet-controls+1;
 }
 
 .location-search-results {
