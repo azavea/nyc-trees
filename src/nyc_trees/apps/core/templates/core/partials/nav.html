@@ -37,6 +37,9 @@
             <li{% if active_page == "achievements" %} class="active"{% endif %}><a href="{% url 'achievements' %}">Achievements</a></li>
         {% endflag %}
         <li{% if active_page == "about" %} class="active"{% endif %}><a href="{% url 'about_faq_page' %}">About &amp; FAQ</a></li>
+        {% if request.user.is_authenticated %}
+            <li><a href="{% url 'auth_logout' %}">Logout</a></li>
+        {% endif %}
     </ul>
     <div class="nav-side-sub">
         <img src="{{ 'img/logo-nyc.png'|static_url }}" srcset="{{ 'img/logo-nyc@2x.png'|static_url }} 2x" alt="NYC" />

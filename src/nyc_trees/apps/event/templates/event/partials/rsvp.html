@@ -23,7 +23,10 @@ The following variables must be in scope:
             <a href="{{ event_edit_url }}"
                class="btn btn-secondary"><i class="icon-cog"></i>Edit</a>
         {% endif %}
-        {% if is_rsvped %}
+        {% if is_admin %}
+           <a id="rsvp"
+               class="btn btn-secondary btn-rsvp active">Attending</a>
+        {% elif is_rsvped %}
             <a id="rsvp"
                href="#"
                data-verb="DELETE"

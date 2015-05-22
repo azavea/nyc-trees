@@ -26,8 +26,8 @@ class BotoMailer():
     def get_remaining_message_quota(self):
         response = self._connection().get_send_quota()
         quota = response['GetSendQuotaResponse']['GetSendQuotaResult']
-        limit = int(float(quota('Max24HourSend')))
-        sent_count = int(float(quota('SentLast24Hours')))
+        limit = int(float(quota['Max24HourSend']))
+        sent_count = int(float(quota['SentLast24Hours']))
         return limit - sent_count
 
     def _connection(self):

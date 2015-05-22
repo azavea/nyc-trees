@@ -158,6 +158,106 @@ tile_server_load_balancer = t.add_resource(elb.LoadBalancer(
     )
 ))
 
+#
+# Auto Scaling Group Resources
+#
+tile_server_launch_config = t.add_resource(asg.LaunchConfiguration(
+    'lcTileServer',
+    ImageId=Ref(tile_server_ami_param),
+    IamInstanceProfile=Ref(tile_server_instance_profile_param),
+    InstanceType=Ref(tile_server_instance_type_param),
+    KeyName=Ref(keyname_param),
+    SecurityGroups=[Ref(tile_server_security_group)]
+))
+
+tile_server_auto_scaling_group = t.add_resource(asg.AutoScalingGroup(
+    'asgTileServer',
+    AvailabilityZones=map(lambda x: 'us-east-1%s' % x,
+                          utils.EC2_AVAILABILITY_ZONES),
+    Cooldown=300,
+    DesiredCapacity=2,
+    HealthCheckGracePeriod=600,
+    HealthCheckType='ELB',
+    LaunchConfigurationName=Ref(tile_server_launch_config),
+    LoadBalancerNames=[Ref(tile_server_load_balancer)],
+    MaxSize=4,
+    MinSize=2,
+    NotificationConfiguration=asg.NotificationConfiguration(
+        TopicARN=Ref(notification_arn_param),
+        NotificationTypes=[
+            asg.EC2_INSTANCE_LAUNCH,
+            asg.EC2_INSTANCE_LAUNCH_ERROR,
+            asg.EC2_INSTANCE_TERMINATE,
+            asg.EC2_INSTANCE_TERMINATE_ERROR
+        ]
+    ),
+    VPCZoneIdentifier=Ref(private_subnets_param),
+    Tags=[
+        asg.Tag('Name', 'TileServer', True),
+        asg.Tag('Color', Ref(color_param), True)
+    ]
+))
+
+tile_server_scale_up_policy = t.add_resource(asg.ScalingPolicy(
+    'asgTileServerScaleUpPolicy',
+    AdjustmentType='ChangeInCapacity',
+    AutoScalingGroupName=Ref(tile_server_auto_scaling_group),
+    Cooldown=60,
+    ScalingAdjustment='2'
+))
+
+tile_server_scale_down_policy = t.add_resource(asg.ScalingPolicy(
+    'asgTileServerScaleDownPolicy',
+    AdjustmentType='ChangeInCapacity',
+    AutoScalingGroupName=Ref(tile_server_auto_scaling_group),
+    Cooldown=60,
+    ScalingAdjustment='-2'
+))
+
+#
+# CloudWatch Resources
+#
+t.add_resource(cw.Alarm(
+    'alarmTileServerRequestCountHigh',
+    AlarmDescription='Tile server request count high',
+    AlarmActions=[Ref(tile_server_scale_up_policy)],
+    Statistic='Sum',
+    Period=60,
+    Threshold='60',
+    EvaluationPeriods=2,
+    ComparisonOperator='GreaterThanThreshold',
+    MetricName='RequestCount',
+    Namespace='AWS/ELB',
+    Dimensions=[
+        cw.MetricDimension(
+            'metricLoadBalancerName',
+            Name='LoadBalancerName',
+            Value=Ref(tile_server_load_balancer)
+        )
+    ],
+))
+
+t.add_resource(cw.Alarm(
+    'alarmTileServerRequestCountLow',
+    AlarmDescription='Tile server request count low',
+    AlarmActions=[Ref(tile_server_scale_down_policy)],
+    InsufficientDataActions=[Ref(tile_server_scale_down_policy)],
+    Statistic='Sum',
+    Period=60,
+    Threshold='75',
+    EvaluationPeriods=10,
+    ComparisonOperator='LessThanThreshold',
+    MetricName='RequestCount',
+    Namespace='AWS/ELB',
+    Dimensions=[
+        cw.MetricDimension(
+            'metricLoadBalancerName',
+            Name='LoadBalancerName',
+            Value=Ref(tile_server_load_balancer)
+        )
+    ],
+))
+
 t.add_resource(cw.Alarm(
     'alarmTileServerBackend4XX',
     AlarmDescription='Tile server backend 4XXs',
@@ -198,45 +298,6 @@ t.add_resource(cw.Alarm(
     ],
 ))
 
-#
-# Auto Scaling Group Resources
-#
-tile_server_launch_config = t.add_resource(asg.LaunchConfiguration(
-    'lcTileServer',
-    ImageId=Ref(tile_server_ami_param),
-    IamInstanceProfile=Ref(tile_server_instance_profile_param),
-    InstanceType=Ref(tile_server_instance_type_param),
-    KeyName=Ref(keyname_param),
-    SecurityGroups=[Ref(tile_server_security_group)]
-))
-
-tile_server_auto_scaling_group = t.add_resource(asg.AutoScalingGroup(
-    'asgTileServer',
-    AvailabilityZones=map(lambda x: 'us-east-1%s' % x,
-                          utils.EC2_AVAILABILITY_ZONES),
-    Cooldown=300,
-    DesiredCapacity=2,
-    HealthCheckGracePeriod=600,
-    HealthCheckType='ELB',
-    LaunchConfigurationName=Ref(tile_server_launch_config),
-    LoadBalancerNames=[Ref(tile_server_load_balancer)],
-    MaxSize=2,
-    MinSize=2,
-    NotificationConfiguration=asg.NotificationConfiguration(
-        TopicARN=Ref(notification_arn_param),
-        NotificationTypes=[
-            asg.EC2_INSTANCE_LAUNCH,
-            asg.EC2_INSTANCE_LAUNCH_ERROR,
-            asg.EC2_INSTANCE_TERMINATE,
-            asg.EC2_INSTANCE_TERMINATE_ERROR
-        ]
-    ),
-    VPCZoneIdentifier=Ref(private_subnets_param),
-    Tags=[
-        asg.Tag('Name', 'TileServer', True),
-        asg.Tag('Color', Ref(color_param), True)
-    ]
-))
 
 #
 # Outputs

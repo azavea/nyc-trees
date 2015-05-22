@@ -29,9 +29,15 @@ def user_is_individual_mapper(user):
 
 def user_is_trusted_mapper(user, group):
     return user.is_authenticated() and \
-        TrustedMapper.objects.filter(group=group,
-                                     user=user,
-                                     is_approved=True).exists()
+        (user_is_group_admin(user, group) or
+         TrustedMapper.objects.filter(group=group,
+                                      user=user,
+                                      is_approved=True).exists())
+
+
+def user_mapper_status_pending(user, group):
+    return user.is_authenticated() and \
+        TrustedMapper.objects.filter(user=user, group=group).exists()
 
 
 def user_is_eligible_to_become_trusted_mapper(user, group):

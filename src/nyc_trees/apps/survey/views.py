@@ -610,6 +610,12 @@ def _create_survey_and_trees(request, event=None):
     for tree_data in tree_list:
         if 'problems' in tree_data:
             tree_data['problems'] = ','.join(tree_data['problems'])
+
+        # Convert any floats into integers for all the integer fields in Tree
+        for field in ('circumference', 'stump_diameter'):
+            if field in tree_data:
+                tree_data[field] = int(round(float(tree_data[field])))
+
         tree = Tree(survey=survey, **tree_data)
         tree.clean_and_save()
 

@@ -23,7 +23,7 @@ from apps.core.models import TaskRun
 from apps.survey.models import BlockfaceReservation
 from apps.mail.views import send_reservation_reminder
 
-_COMMAND_NAME = 'apps.survey.management.commands.send_reminder_emails'
+COMMAND_NAME = 'apps.survey.management.commands.send_reminder_emails'
 _ALREADY_SENT_MESSAGE = ('WARNING: reservation emails sent already today. '
                          'Doing nothing!')
 
@@ -35,8 +35,9 @@ _DONE = -1
 
 
 class Command(BaseCommand):
+
     def _log(self, msg):
-        self.stdout.write("%s: %s" % (_COMMAND_NAME, msg))
+        self.stdout.write("%s: %s" % (COMMAND_NAME, msg))
 
     def handle(self, *args, **options):
         right_now = now()
@@ -48,7 +49,7 @@ class Command(BaseCommand):
 
             _, unlocked = (TaskRun
                            .objects
-                           .get_or_create(name=_COMMAND_NAME,
+                           .get_or_create(name=COMMAND_NAME,
                                           date_started=today))
 
         if not unlocked:

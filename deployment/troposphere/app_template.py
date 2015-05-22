@@ -169,6 +169,106 @@ app_server_load_balancer = t.add_resource(elb.LoadBalancer(
     )
 ))
 
+#
+# Auto Scaling Group Resources
+#
+app_server_launch_config = t.add_resource(asg.LaunchConfiguration(
+    'lcAppServer',
+    ImageId=Ref(app_server_ami_param),
+    IamInstanceProfile=Ref(app_server_instance_profile_param),
+    InstanceType=Ref(app_server_instance_type_param),
+    KeyName=Ref(keyname_param),
+    SecurityGroups=[Ref(app_server_security_group)]
+))
+
+app_server_auto_scaling_group = t.add_resource(asg.AutoScalingGroup(
+    'asgAppServer',
+    AvailabilityZones=map(lambda x: 'us-east-1%s' % x,
+                          utils.EC2_AVAILABILITY_ZONES),
+    Cooldown=300,
+    DesiredCapacity=2,
+    HealthCheckGracePeriod=600,
+    HealthCheckType='ELB',
+    LaunchConfigurationName=Ref(app_server_launch_config),
+    LoadBalancerNames=[Ref(app_server_load_balancer)],
+    MaxSize=4,
+    MinSize=2,
+    NotificationConfiguration=asg.NotificationConfiguration(
+        TopicARN=Ref(notification_arn_param),
+        NotificationTypes=[
+            asg.EC2_INSTANCE_LAUNCH,
+            asg.EC2_INSTANCE_LAUNCH_ERROR,
+            asg.EC2_INSTANCE_TERMINATE,
+            asg.EC2_INSTANCE_TERMINATE_ERROR
+        ]
+    ),
+    VPCZoneIdentifier=Ref(private_subnets_param),
+    Tags=[
+        asg.Tag('Name', 'AppServer', True),
+        asg.Tag('Color', Ref(color_param), True)
+    ]
+))
+
+app_server_scale_up_policy = t.add_resource(asg.ScalingPolicy(
+    'asgAppServerScaleUpPolicy',
+    AdjustmentType='ChangeInCapacity',
+    AutoScalingGroupName=Ref(app_server_auto_scaling_group),
+    Cooldown=60,
+    ScalingAdjustment='2'
+))
+
+app_server_scale_down_policy = t.add_resource(asg.ScalingPolicy(
+    'asgAppServerScaleDownPolicy',
+    AdjustmentType='ChangeInCapacity',
+    AutoScalingGroupName=Ref(app_server_auto_scaling_group),
+    Cooldown=60,
+    ScalingAdjustment='-2'
+))
+
+#
+# CloudWatch Resources
+#
+t.add_resource(cw.Alarm(
+    'alarmAppServerRequestCountHigh',
+    AlarmDescription='Application server request count high',
+    AlarmActions=[Ref(app_server_scale_up_policy)],
+    Statistic='Sum',
+    Period=60,
+    Threshold='60',
+    EvaluationPeriods=2,
+    ComparisonOperator='GreaterThanThreshold',
+    MetricName='RequestCount',
+    Namespace='AWS/ELB',
+    Dimensions=[
+        cw.MetricDimension(
+            'metricLoadBalancerName',
+            Name='LoadBalancerName',
+            Value=Ref(app_server_load_balancer)
+        )
+    ],
+))
+
+t.add_resource(cw.Alarm(
+    'alarmAppServerRequestCountLow',
+    AlarmDescription='Application server request count low',
+    AlarmActions=[Ref(app_server_scale_down_policy)],
+    InsufficientDataActions=[Ref(app_server_scale_down_policy)],
+    Statistic='Sum',
+    Period=60,
+    Threshold='75',
+    EvaluationPeriods=10,
+    ComparisonOperator='LessThanThreshold',
+    MetricName='RequestCount',
+    Namespace='AWS/ELB',
+    Dimensions=[
+        cw.MetricDimension(
+            'metricLoadBalancerName',
+            Name='LoadBalancerName',
+            Value=Ref(app_server_load_balancer)
+        )
+    ],
+))
+
 t.add_resource(cw.Alarm(
     'alarmAppServerBackend4XX',
     AlarmDescription='Application server backend 4XXs',
@@ -207,46 +307,6 @@ t.add_resource(cw.Alarm(
             Value=Ref(app_server_load_balancer)
         )
     ],
-))
-
-#
-# Auto Scaling Group Resources
-#
-app_server_launch_config = t.add_resource(asg.LaunchConfiguration(
-    'lcAppServer',
-    ImageId=Ref(app_server_ami_param),
-    IamInstanceProfile=Ref(app_server_instance_profile_param),
-    InstanceType=Ref(app_server_instance_type_param),
-    KeyName=Ref(keyname_param),
-    SecurityGroups=[Ref(app_server_security_group)]
-))
-
-app_server_auto_scaling_group = t.add_resource(asg.AutoScalingGroup(
-    'asgAppServer',
-    AvailabilityZones=map(lambda x: 'us-east-1%s' % x,
-                          utils.EC2_AVAILABILITY_ZONES),
-    Cooldown=300,
-    DesiredCapacity=2,
-    HealthCheckGracePeriod=600,
-    HealthCheckType='ELB',
-    LaunchConfigurationName=Ref(app_server_launch_config),
-    LoadBalancerNames=[Ref(app_server_load_balancer)],
-    MaxSize=2,
-    MinSize=2,
-    NotificationConfiguration=asg.NotificationConfiguration(
-        TopicARN=Ref(notification_arn_param),
-        NotificationTypes=[
-            asg.EC2_INSTANCE_LAUNCH,
-            asg.EC2_INSTANCE_LAUNCH_ERROR,
-            asg.EC2_INSTANCE_TERMINATE,
-            asg.EC2_INSTANCE_TERMINATE_ERROR
-        ]
-    ),
-    VPCZoneIdentifier=Ref(private_subnets_param),
-    Tags=[
-        asg.Tag('Name', 'AppServer', True),
-        asg.Tag('Color', Ref(color_param), True)
-    ]
 ))
 
 #

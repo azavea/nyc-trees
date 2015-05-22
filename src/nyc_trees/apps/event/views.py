@@ -38,6 +38,9 @@ from libs.pdf_maps import create_event_map_pdf
 def add_event(request):
     form = EventForm(request.POST.copy())
     is_valid = _process_event_form(form, request)
+    cancel_url = reverse('group_edit', kwargs={
+        'group_slug': request.group.slug
+    })
 
     if is_valid:
         base_url = reverse(
@@ -47,7 +50,8 @@ def add_event(request):
     else:
         return {
             'form': form,
-            'group': request.group
+            'group': request.group,
+            'cancel_url': cancel_url,
         }
 
 
@@ -80,9 +84,13 @@ def _process_event_form(form, request, event=None):
 
 def add_event_page(request):
     form = EventForm()
+    cancel_url = reverse('group_edit', kwargs={
+        'group_slug': request.group.slug
+    })
     return {
         'form': form,
-        'group': request.group
+        'group': request.group,
+        'cancel_url': cancel_url,
     }
 
 
@@ -271,6 +279,10 @@ def edit_event_page(request, event_slug):
     # only datetime form fields.
     tz = get_current_timezone()
     event = get_object_or_404(Event, group=request.group, slug=event_slug)
+    cancel_url = reverse('event_detail', kwargs={
+        'group_slug': event.group.slug,
+        'event_slug': event.slug
+    })
 
     if event.is_past():
         return HttpResponseForbidden()
@@ -284,12 +296,17 @@ def edit_event_page(request, event_slug):
     return {
         'form': form,
         'group': request.group,
-        'event': event
+        'event': event,
+        'cancel_url': cancel_url,
     }
 
 
 def edit_event(request, event_slug):
     event = get_object_or_404(Event, group=request.group, slug=event_slug)
+    cancel_url = reverse('event_detail', kwargs={
+        'group_slug': event.group.slug,
+        'event_slug': event.slug
+    })
 
     if event.is_past():
         return HttpResponseForbidden()
@@ -307,7 +324,8 @@ def edit_event(request, event_slug):
         return {
             'form': form,
             'group': request.group,
-            'event': event
+            'event': event,
+            'cancel_url': cancel_url,
         }
 
 

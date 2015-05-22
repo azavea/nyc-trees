@@ -85,11 +85,14 @@ class _Filters(object):
 
     @staticmethod
     def get_rsvp_q(user):
-        event_registrations = (EventRegistration
-                               .objects
-                               .filter(user_id=user.pk)
-                               .values_list('event_id', flat=True))
-        return Q(pk__in=event_registrations)
+        rsvps = (EventRegistration.objects
+                 .filter(user_id=user.pk)
+                 .values_list('event_id', flat=True))
+        admin_event_ids = (Event.objects
+                           .filter(group__admin_id=user.pk)
+                           .values_list('id', flat=True))
+        event_ids = list(rsvps) + list(admin_event_ids)
+        return Q(pk__in=event_ids)
 
     @staticmethod
     def get_recommended_q(user):
@@ -333,7 +336,10 @@ def immediate_events(request):
     if user.is_authenticated():
         events = (EventRegistration.objects.filter(user=user)
                   .values_list('event_id', flat=True))
-        immediate_events = nowish.filter(id__in=events)
+        admin_events = (Event.objects.filter(group__admin=user)
+                        .values_list('id', flat=True))
+        ids = list(events) + list(admin_events)
+        immediate_events = nowish.filter(id__in=ids)
     else:
         immediate_events = nowish.none()
 

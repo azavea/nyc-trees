@@ -13,5 +13,7 @@ from django.core.files.storage import default_storage
 def wait_for_default_storage_file(self, filename):
     if default_storage.exists(filename):
         return filename
-    else:
+    elif self.request.retries < self.max_retries:
         self.retry()
+    else:
+        return None

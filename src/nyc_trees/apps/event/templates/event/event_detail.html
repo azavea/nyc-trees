@@ -20,7 +20,11 @@
                         is starting soon.
                     {% endif %}
                 </div>
-                {% if event_registration %}
+                {% if request.user == event.group.admin %}
+                    <div id="event-button" class="event-alert-button col-md-2 col-xs-4">
+                        {% include "event/partials/event_alert_button.html" with did_attend_event=True %}
+                    </div>
+                {% elif event_registration %}
                     <div id="event-button" class="event-alert-button col-md-2 col-xs-4">
                         {% include "event/partials/event_alert_button.html" with did_attend_event=event_registration.did_attend %}
                     </div>

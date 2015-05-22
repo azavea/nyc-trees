@@ -114,6 +114,12 @@ class Event(NycModel, models.Model):
                 "Please choose a location in New York City"
             ]})
 
+        rsvp_count = self.eventregistration_set.count()
+        if self.max_attendees < rsvp_count:
+            raise ValidationError({'max_attendees': [
+                "Max attendees cannot be set to a value less than the number "
+                "of people currently registered (%d)" % rsvp_count]})
+
     def training_summary(self):
         return 'Training' if self.includes_training else 'Mapping'
 
@@ -216,8 +222,8 @@ class EventRegistration(NycModel, models.Model):
         # Then get those events which are starting soon or have yet to end, or
         # any attended events from today, which can be mapped until midnight
         registrations = EventRegistration.objects \
-            .filter(user=user,
-                    event__begins_at__gte=beginning_of_day_utc) \
+            .filter(user=user) \
+            .filter(event__begins_at__gte=beginning_of_day_utc) \
             .filter(Q(did_attend=True, event__ends_at__lte=end_of_day_utc) |
                     Q(event__begins_at__lte=now_utc + STARTING_SOON_WINDOW,
                       event__ends_at__gt=now_utc)) \
@@ -225,6 +231,30 @@ class EventRegistration(NycModel, models.Model):
 
         attended = [r.event for r in registrations if r.did_attend]
         non_attended = [r.event for r in registrations if not r.did_attend]
+
+        # Group admins don't need to RSVP to be able to survey events.
+        # These filters are derived from the query directly above.
+        # The reason for copying this code rather than using queryset
+        # composition is that the filters are different enough
+        # (did_attend=True is irrelevant here) and the value of making this
+        # DRY does not seem worth the effort at this point.
+        admin_events = Event.objects \
+            .filter(group__admin=user) \
+            .filter(begins_at__gte=beginning_of_day_utc) \
+            .filter(Q(ends_at__lte=end_of_day_utc) |
+                    Q(begins_at__lte=now_utc + STARTING_SOON_WINDOW,
+                      ends_at__gt=now_utc))
+        non_attended = non_attended + list(admin_events)
+
+        # Filter non-attended events from attended events.
+        # The purpose of this is to fix an edge case where a group admin
+        # has both RSVPd and checked-into their own event. Without this,
+        # clicking the Treecorder link in the nav would display 2 links
+        # (the checkin page and the survey page). Since we filter out
+        # non-attended events, only the check-in page should appear for
+        # group admins.
+        attended = list(set(attended) - set(non_attended))
+
         return attended, non_attended
 
     @classmethod
@@ -233,13 +263,26 @@ class EventRegistration(NycModel, models.Model):
         Return the EventRegistration for the next event starting soon, or None
         """
         now_utc = now()
+        events_now = Event.objects \
+            .filter(begins_at__lte=now_utc + STARTING_SOON_WINDOW,
+                    ends_at__gt=now_utc) \
+            .order_by('begins_at')
 
         registrations = EventRegistration.objects \
-            .filter(user=user,
-                    event__begins_at__lte=now_utc + STARTING_SOON_WINDOW,
-                    event__ends_at__gt=now_utc) \
-            .prefetch_related('event') \
-            .order_by('event__begins_at')
+            .filter(user=user) \
+            .filter(event_id__in=events_now.values_list('id', flat=True)) \
+            .order_by('event__begins_at') \
+            .prefetch_related('event')
+
+        # Since this method returns EventRegistrations instead of Events,
+        # we have to union the above result with a list of artificial
+        # EventRegistration objects.
+        admin_events = events_now.filter(group__admin=user)
+        admin_rsvps = [EventRegistration(user=user,
+                                         event=event,
+                                         did_attend=True)
+                       for event in admin_events]
+        registrations = admin_rsvps + list(registrations)
 
         return registrations[0] if registrations else None
 
