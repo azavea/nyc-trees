@@ -54,9 +54,9 @@ BEGIN
       -- This is an arbitrarily small number used
       -- to obtain another point but on the same segment
       IF curdst >= roadrec.len THEN
-        distfrac := distfrac - 0.0000001;
+        distfrac := distfrac - 0.0000002;
       ELSE
-        distfrac := distfrac + 0.0000001;
+        distfrac := distfrac + 0.0000002;
       END IF;
     ELSE
       curdst := curdst + tree.len;
