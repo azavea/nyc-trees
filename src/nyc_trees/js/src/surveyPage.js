@@ -298,24 +298,18 @@ function checkFormValidity($forms) {
 
     // For each form element
     $forms.find('input, select, textarea').each(function(i, el) {
-        if (el.setCustomValidity) {
-            el.setCustomValidity('');
-        }
+        var $el = $(el),
+            $error = getErrorlistForElement($el);
 
-        if ($(el).is(':visible') && !el.validity.valid) {
-            valid = false;
+        $error.addClass('hidden');
+        if ($el.is(':visible') && !el.validity.valid) {
+            $error.removeClass('hidden');
 
-            // The problems checkboxes are a group of checkboxes, but the HTML5
-            // "required" attribute wants you to check every box.
-            // We add/remove "required" when one box is checked, but we need
-            // a better error message.
-            if (el.setCustomValidity && $(el).is('[name="problems"]')) {
-                el.setCustomValidity('Please select one or more of these options.');
+            // We keep a handle to the first invalid element so we can scroll to it.
+            if (valid) {
+                valid = false;
+                $elemToFocus = $el;
             }
-
-            $elemToFocus = $(el);
-
-            return false;
         }
     });
 
@@ -332,10 +326,10 @@ function checkFormValidity($forms) {
             $elemToFocus.closest(dom.treeForms).collapse('show');
 
             $forms.one('shown.bs.collapse', function() {
-                triggerValidationMessages($elemToFocus, $forms, $disabledElems);
+                scrollToInvalidElement($elemToFocus, $forms, $disabledElems);
             });
         } else {
-            triggerValidationMessages($elemToFocus, $forms, $disabledElems);
+            scrollToInvalidElement($elemToFocus, $forms, $disabledElems);
         }
     } else {
         $disabledElems.attr('disabled', false);
@@ -344,7 +338,11 @@ function checkFormValidity($forms) {
     return valid;
 }
 
-function triggerValidationMessages($elemToFocus, $forms, $disabledElems) {
+function getErrorlistForElement($el) {
+    return $el.closest('form').find('.errorlist[data-name="' + $el[0].name + '"]');
+}
+
+function scrollToInvalidElement($elemToFocus, $forms, $disabledElems) {
     // Scroll so element and its label are visible
     var $fieldset = $elemToFocus.closest(dom.fieldset);
     // If we couldn't find a fieldset (likely distance to end), just scroll to the element
@@ -355,24 +353,20 @@ function triggerValidationMessages($elemToFocus, $forms, $disabledElems) {
         $(dom.mapSidebar).scrollTop(scrollPos);
     }
 
-    // "submit" the form.  This will trigger the builtin browser validation messages.
-    // Our submit handler will prevent this from actually submitting
-    $elemToFocus.closest('form').find('[data-class="fake-submit"]').click();
-
     // Reenable things now that we're done validating
     $disabledElems.attr('disabled', false);
 }
 
+// Clear error bubbles when values change
+$(dom.surveyPage).on('blur change keyup paste', function(e) {
+    if (e.target.validity.valid) {
+        getErrorlistForElement($(e.target)).addClass('hidden');
+    }
+});
+
 function isMobile() {
     return $(window).width() < 768;  // Bootstrap $screen-sm
 }
-
-// We need to submit the form to see the error bubbles, but we don't want to
-// actually send any data.
-$(dom.surveyPage).on('submit', 'form', function(e) {
-    e.preventDefault();
-});
-
 
 $(dom.btnNext).click(function(e) {
     $(dom.selectSide).addClass('hidden');

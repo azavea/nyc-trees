@@ -7,6 +7,7 @@
 {% endif %}
 <div class="field">
 
+    <div class="errorlist hidden" data-name="{{ field }}">This field is required.</div>
     <div class="btn-group btn-group-toggles">
         {% for value, label in choices %}
             {# NOTE: For the styling to work correctly, the label must come directly after the radio #}
