@@ -137,15 +137,3 @@ blockface_near_point = route(GET=do(json_api_call, v.blockface_near_point))
 admin_territory_page = route(GET=census_admin_do(
     render_template('survey/admin_territory.html'),
     v.admin_territory_page))
-
-admin_blockface_partial = route(
-    GET=v.admin_blockface_partial)
-
-admin_blockface_detail_page = route(
-    GET=v.admin_blockface_detail_page)
-
-admin_extend_blockface_reservation = route(
-    POST=v.admin_extend_blockface_reservation)
-
-admin_blockface_available = route(
-    GET=v.admin_blockface_available)

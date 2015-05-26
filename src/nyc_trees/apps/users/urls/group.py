@@ -25,10 +25,6 @@ urlpatterns = patterns(
     url(r'^(?P<group_slug>[\w-]+)/unfollow/$',
         r.unfollow_group, name='unfollow_group'),
 
-    url(r'^(?P<group_slug>[\w-]+)/printable-map/$',
-        r.start_group_map_print_job,
-        name='start_group_map_print_job'),
-
     url(r'^(?P<group_slug>[\w-]+)/individual-mapper/(?P<username>[\w.@+-]+)/$',
         r.edit_user_mapping_priveleges,
         name='edit_user_mapping_priveleges'),

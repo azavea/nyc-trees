@@ -44,7 +44,6 @@ GROUP_EDIT_EVENTS_TAB_ID = 'events'
 
 
 def group_list_page(request):
-    # TODO: pagination
     groups = Group.objects.filter(is_active=True).order_by('name')
     group_ids = Follow.objects.filter(user_id=request.user.id) \
         .values_list('group_id', flat=True)
@@ -201,11 +200,6 @@ def unfollow_group(request):
     Follow.objects.filter(user_id=request.user.id, group=request.group) \
         .delete()
     return group_detail(request)
-
-
-def start_group_map_print_job(request):
-    # TODO: implement
-    pass
 
 
 def give_user_mapping_priveleges(request, username):

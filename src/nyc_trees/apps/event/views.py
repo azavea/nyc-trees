@@ -230,11 +230,6 @@ def _event_geojson(event):
     }
 
 
-def events_list_page_partial(request):
-    # TODO: implement
-    pass
-
-
 def events_list_feed(request):
     site_domain = Site.objects.get_current().domain
     events = Event.objects.order_by('-begins_at').filter(is_private=False,
@@ -265,11 +260,6 @@ def events_list_feed(request):
         'links': [{'link_url':
                    'https://' + site_domain + e.get_absolute_url()}],
     } for e in events]
-
-
-def delete_event(request, event_slug):
-    # TODO: implement
-    pass
 
 
 def edit_event_page(request, event_slug):

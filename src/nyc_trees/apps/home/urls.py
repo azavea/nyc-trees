@@ -30,9 +30,6 @@ urlpatterns = patterns(
         r.trusted_mapper_request_sent,
         name='trusted_mapper_request_sent'),
 
-    url(r'^jobs/(?P<job_id>\d+)/$', r.retrieve_job_status,
-        name='retrieve_job_status'),
-
     # `groups_to_follow` is managed out of band from the training workflow,
     # it is only merged in as part of the presentation layer.
     url(r'^training/groups_to_follow/$',
