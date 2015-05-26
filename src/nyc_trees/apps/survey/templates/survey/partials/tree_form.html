@@ -51,18 +51,7 @@
         </fieldset>
     </div>
 
-    <!-- Circumference is repeated here for convenience, to avoid having to special-case showing/hiding it. -->
-    <div data-status="Dead" class="hidden">
-        <fieldset>
-            <legend>Tree Trunk</legend>
-            <div class="field">
-                <label for="dead-circumference-{{ tree_number }}">Circumference <small>(inches)</small></label>
-                <input class="form-control" name="circumference" id="dead-circumference-{{ tree_number }}" required type="number" min="1" max="2000" step="1" placeholder="in">
-            </div>
-        </fieldset>
-    </div>
-
-    <div data-status="Alive" class="hidden">
+    <div data-status="Alive Dead" class="hidden">
         <fieldset>
             <legend>Tree Trunk</legend>
             <div class="field">
