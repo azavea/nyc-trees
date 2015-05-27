@@ -677,26 +677,6 @@ def admin_territory_page(request):
     return context
 
 
-def admin_blockface_partial(request):
-    # TODO: implement
-    pass
-
-
-def admin_blockface_detail_page(request, blockface_id):
-    # TODO: implement
-    pass
-
-
-def admin_extend_blockface_reservation(request, blockface_id):
-    # TODO: implement
-    pass
-
-
-def admin_blockface_available(request, blockface_id):
-    # TODO: implement
-    pass
-
-
 def reservations_instructions(request):
     user = request.user
     step1_complete = user.online_training_complete

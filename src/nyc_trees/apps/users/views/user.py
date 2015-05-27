@@ -21,7 +21,6 @@ from apps.users.forms import ProfileSettingsForm, EventRegistrationFormSet, \
 USER_SETTINGS_PRIVACY_TAB_ID = 'privacy-pane'
 
 
-# TODO: make a route?
 def user_detail_redirect(request):
     return HttpResponseRedirect(
         reverse('user_detail', kwargs={'username': request.user.username}))
@@ -97,11 +96,6 @@ def set_privacy(request, username):
                                       'are invalid')
 
 
-def update_user(request, username):
-    # TODO: implement
-    pass
-
-
 def request_individual_mapper_status(request, username):
     user = request.user
     if user.individual_mapper:
@@ -115,21 +109,6 @@ def request_individual_mapper_status(request, username):
     else:
         return HttpResponseForbidden()
     return redirect('individual_mapper_instructions')
-
-
-def start_form_for_reservation_job(request, username):
-    # TODO: implement
-    pass
-
-
-def start_map_for_reservation_job(request, username):
-    # TODO: implement
-    pass
-
-
-def start_map_for_tool_depots_job(request, username):
-    # TODO: implement
-    pass
 
 
 def achievements_page(request):

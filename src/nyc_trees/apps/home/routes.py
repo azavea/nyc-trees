@@ -16,8 +16,6 @@ home_page = route(GET=do(render_template('home/home.html'),
 about_faq_page = route(GET=do(render_template('home/about_faq.html'),
                               v.about_faq_page))
 
-retrieve_job_status = do(v.retrieve_job_status)
-
 individual_mapper_instructions = individual_mapper_do(
     render_template('home/individual_mapper_instructions.html'),
     v.individual_mapper_instructions)

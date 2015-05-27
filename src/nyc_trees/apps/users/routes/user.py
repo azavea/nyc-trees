@@ -37,7 +37,3 @@ request_individual_mapper_status = do(
     user_must_have_field_training,
     user_must_have_online_training,
     route(POST=v.request_individual_mapper_status))
-
-start_form_for_reservation_job = route(POST=v.start_form_for_reservation_job)
-start_map_for_reservation_job = route(POST=v.start_map_for_reservation_job)
-start_map_for_tool_depots_job = route(POST=v.start_map_for_tool_depots_job)
