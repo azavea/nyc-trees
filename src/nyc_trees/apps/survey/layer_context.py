@@ -12,6 +12,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import make_aware, utc
 
+from apps.core.helpers import user_is_census_admin
 from apps.survey.models import (Group, Blockface, Survey, BlockfaceReservation,
                                 Borough, Territory, NeighborhoodTabulationArea)
 from apps.users.models import TrustedMapper
@@ -46,9 +47,15 @@ def get_context_for_group_progress_layer():
 
 @login_required
 def get_context_for_reservable_layer(request):
-    models = [Group, Blockface, Territory, BlockfaceReservation, TrustedMapper]
-    return _get_context_for_layer("user_reservable", models,
-                                  {'user': request.user.pk})
+    if user_is_census_admin(request.user):
+        models = [Blockface, BlockfaceReservation]
+        return _get_context_for_layer("admin_reservable", models,
+                                      {'user': request.user.pk})
+    else:
+        models = [
+            Group, Blockface, Territory, BlockfaceReservation, TrustedMapper]
+        return _get_context_for_layer("user_reservable", models,
+                                      {'user': request.user.pk})
 
 
 @login_required

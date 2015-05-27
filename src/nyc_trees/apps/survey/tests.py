@@ -696,6 +696,72 @@ class TilerTests(SurveyTestCase):
         self.assertEqual(rows[0]['survey_type'], 'reserved')
         r.delete()
 
+    def test_admin_reservable(self):
+        admin = User.objects.create(
+            username='mallory',
+            password='guest',
+            email='marcher@cia.gov',
+            first_name='Mallory',
+            last_name='Archer',
+            profile_is_public=False,
+            is_superuser=True
+        )
+
+        query = partial(self._exec_tiler_query,
+                        'admin_reservable.sql',
+                        user_id=admin.id)
+
+        # Test that this shows all test blocks initially.
+        self.assertEqual(1, len(query()))
+
+        # Test 'available' case for free agent blocks (no territory and
+        # and no reservation).
+        rows = query()
+        self.assertEqual(rows[0]['survey_type'], 'available')
+        self.assertEqual(rows[0]['restriction'], 'none')
+
+        # Test that group owned blocks (with independent mappers disabled)
+        # are 'available' to census admins.
+        t = make_territory(self.group, self.block)
+        rows = query()
+        self.assertEqual(rows[0]['survey_type'], 'available')
+        self.assertEqual(rows[0]['restriction'], 'none')
+        t.delete()
+
+        # Test that "expert group" blocks are 'available' to census admins.
+        self.group.is_active = False
+        self.group.save()
+        t = make_territory(self.group, self.block)
+        rows = query()
+        self.assertEqual(rows[0]['survey_type'], 'available')
+        self.assertEqual(rows[0]['restriction'], 'none')
+        t.delete()
+        self.group.is_active = True
+        self.group.save()
+
+        # Test that block is unavailable if someone else reserved it.
+        r = make_reservation(self.other_user, self.block)
+        rows = query()
+        self.assertEqual(rows[0]['survey_type'], 'unavailable')
+        self.assertEqual(rows[0]['restriction'], 'reserved')
+        r.delete()
+
+        # Test that the block is available if the current user has reserved it.
+        r = make_reservation(admin, self.block)
+        rows = query()
+        self.assertEqual(rows[0]['survey_type'], 'available')
+        self.assertEqual(rows[0]['restriction'], 'none')
+        r.delete()
+
+        # Test that survey_type and restriction is unavailable if block has
+        # been surveyed. This should take precendence over all other
+        # restrictions.
+        self.block.is_available = False
+        self.block.save()
+        rows = query()
+        self.assertEqual(rows[0]['survey_type'], 'unavailable')
+        self.assertEqual(rows[0]['restriction'], 'unavailable')
+
 
 # Source: https://docs.djangoproject.com/en/1.8/topics/db/sql/#executing-custom-sql-directly  # NOQA
 def dictfetchall(cursor):
