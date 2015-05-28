@@ -301,9 +301,9 @@ function checkFormValidity($forms) {
         var $el = $(el),
             $error = getErrorlistForElement($el);
 
-        $error.addClass('hidden');
+        $error.hide();
         if ($el.is(':visible') && !el.validity.valid) {
-            $error.removeClass('hidden');
+            $error.show();
 
             // We keep a handle to the first invalid element so we can scroll to it.
             if (valid) {
@@ -348,7 +348,7 @@ function scrollToInvalidElement($elemToFocus, $forms, $disabledElems) {
     // If we couldn't find a fieldset (likely distance to end), just scroll to the element
     var scrollPos = getScrollToTopPosition($fieldset.length > 0 ? $fieldset : $elemToFocus);
     if (isMobile()) {
-        $('body').scrollTop(scrollPos);
+        $('html,body').scrollTop(scrollPos);
     } else {
         $(dom.mapSidebar).scrollTop(scrollPos);
     }
@@ -359,8 +359,24 @@ function scrollToInvalidElement($elemToFocus, $forms, $disabledElems) {
 
 // Clear error bubbles when values change
 $(dom.surveyPage).on('blur change keyup paste', function(e) {
-    if (e.target.validity.valid) {
-        getErrorlistForElement($(e.target)).addClass('hidden');
+    var $error = getErrorlistForElement($(e.target)),
+        currentScroll, $scrollableElem;
+
+    // We carefully scroll the page up with the same animation time as the
+    // $error.slideDown(), so that the actual input element remains in the same
+    // place on the page
+    if ($error.is(':visible') && e.target.validity.valid) {
+        $error.slideUp(300);
+
+        if (isMobile()) {
+            $scrollableElem = $('html,body');
+            currentScroll = $(document).scrollTop();
+        } else {
+            $scrollableElem = $(dom.mapSidebar);
+            currentScroll = $scrollableElem.scrollTop();
+        }
+        var newScrollPos = currentScroll - $error.outerHeight(true);
+        $scrollableElem.animate({ scrollTop: newScrollPos }, 300);
     }
 });
 

@@ -16,7 +16,7 @@
         <legend>Measurements</legend>
         <div class="field">
             <label for="distance_to_tree-{{ tree_number }}">Distance to Tree <small>(decimal feet)</small></label>
-            <div class="errorlist hidden" data-name="distance_to_tree">Please enter a number between 0 and 100,000.</div>
+            <div class="errorlist" style="display: none;" data-name="distance_to_tree">Please enter a number between 0 and 100,000.</div>
             <input class="form-control" name="distance_to_tree" id="distance_to_tree-{{ tree_number }}" required type="number" min="0" max="100000" step="any" placeholder="ft">
         </div>
     </fieldset>
@@ -44,7 +44,7 @@
             <legend>Stump Size</legend>
             <div class="stump_diameter field">
                 <label for="stump_diameter-{{ tree_number }}">Stump Diameter <small>(inches)</small></label>
-                <div class="errorlist hidden" data-name="stump_diameter">Please enter a number between 0 and 2,000.</div>
+                <div class="errorlist" style="display: none;" data-name="stump_diameter">Please enter a number between 0 and 2,000.</div>
                 <input class="form-control" name="stump_diameter" id="stump_diameter-{{ tree_number }}" required type="number" min="1" max="2000" step="1" placeholder="in">
             </div>
         </fieldset>
@@ -55,7 +55,7 @@
             <legend>Tree Trunk</legend>
             <div class="field">
                 <label for="alive-circumference-{{ tree_number }}">Circumference <small>(inches)</small></label>
-                <div class="errorlist hidden" data-name="circumference">Please enter a number between 0 and 2,000.</div>
+                <div class="errorlist" style="display: none;" data-name="circumference">Please enter a number between 0 and 2,000.</div>
                 <input class="form-control" name="circumference" id="alive-circumference-{{ tree_number }}" required type="number" min="1" max="2000" step="1" placeholder="in">
             </div>
         </fieldset>
@@ -65,7 +65,7 @@
             <legend>Tree Species</legend>
             <div class="field">
                 <label for="species_id-{{ tree_number }}">Species Name</label>
-                <div class="errorlist hidden" data-name="species_id">This field is required.</div>
+                <div class="errorlist" style="display: none;" data-name="species_id">This field is required.</div>
                 <select name="species_id" id="species_id-{{ tree_number }}" required>
                   {# A blank option so first species is not preselected #}
                   <option value="">&nbsp;</option>
@@ -99,7 +99,7 @@
             <legend>Tree Problems</legend>
             <div class="field">
                 <div>
-                    <div class="errorlist hidden" data-name="problems">Please select one or more fields.</div>
+                    <div class="errorlist" style="display: none;" data-name="problems">Please select one or more fields.</div>
                     <input id="no-problems-{{ tree_number }}" required type="checkbox" name="problems" value="None" />
                     <label class="btn btn-block" for="no-problems-{{ tree_number }}">
                         No Problems
