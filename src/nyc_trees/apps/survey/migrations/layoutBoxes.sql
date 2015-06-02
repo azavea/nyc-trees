@@ -116,6 +116,7 @@ BEGIN
       IF distfrac >= 1 - 1e-7 THEN
         distfrac := distfrac - 1e-7;
         tree.off := -tree.off;
+        tree.width := -tree.width;
       ELSE
         distfrac := distfrac + 1e-7;
       END IF;
