@@ -22,16 +22,4 @@ urlpatterns = patterns(
     url(r'^(?P<username>[\w.@+-]+)/request-individual-mapper-status/$',
         r.request_individual_mapper_status,
         name='request_individual_mapper_status'),
-
-    url(r'^(?P<username>[\w.@+-]+)/printable-survey-form/$',
-        r.start_form_for_reservation_job,
-        name='start_form_for_reservation_job'),
-
-    url(r'^(?P<username>[\w.@+-]+)/printable-map/$',
-        r.start_map_for_reservation_job,
-        name='start_map_for_reservation_job'),
-
-    url(r'^(?P<username>[\w.@+-]+)/printable-tooldepots/$',
-        r.start_map_for_tool_depots_job,
-        name='start_map_for_tool_depots_job'),
 )

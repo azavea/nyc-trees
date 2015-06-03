@@ -9,8 +9,7 @@ from django_tinsel.decorators import route, render_template, json_api_call
 
 from django_tinsel.utils import decorate as do
 
-from apps.core.decorators import (user_must_be_group_admin,
-                                  user_must_have_online_training,
+from apps.core.decorators import (user_must_have_online_training,
                                   group_request, group_admin_do)
 from apps.event import views as v
 
@@ -22,8 +21,6 @@ events_list_page = route(
     GET=do(
         render_template('event/event_list_page.html'),
         v.events_list_page))
-
-events_list_page_partial = route(GET=v.events_list_page_partial)
 
 events_list_feed = route(GET=do(json_api_call, v.events_list_feed))
 
@@ -39,8 +36,7 @@ add_event = group_admin_do(render_template('event/add_event.html'),
 
 event_detail = do(group_request,
                   route(GET=do(render_template('event/event_detail.html'),
-                               v.event_detail),
-                        DELETE=user_must_be_group_admin(v.delete_event)))
+                               v.event_detail)))
 
 event_edit = group_admin_do(render_template('event/edit_event.html'),
                             route(GET=v.edit_event_page,

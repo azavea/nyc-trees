@@ -1,36 +1,39 @@
 .errorlist {
-	color: darken($brand-warning, 20%);
-	padding: .25rem 1rem .25rem 3rem;
-	background: rgba($brand-warning, 0.3);
-	border: 1px solid $brand-warning;
-	border-radius: $border-radius-base;
-	position: relative;
-	margin: 0 0 .25rem;
-	list-style-type: circle;
+    color: darken($brand-warning, 20%);
+    padding: .25rem 1rem .25rem 3rem;
+    background: rgba($brand-warning, 0.3);
+    border: 1px solid $brand-warning;
+    border-radius: $border-radius-base;
+    position: relative;
+    margin: 0 0 .25rem;
+    list-style-type: circle;
 
-	&:after {
-		content: '';
-		border: 5px solid transparent;
-		border-top-color: $brand-warning;
-		position: absolute;
-		bottom: -10px;
-	}
+    &:after {
+        content: '';
+        border: 5px solid transparent;
+        border-top-color: $brand-warning;
+        position: absolute;
+        bottom: -10px;
+    }
+}
+.tree-form .errorlist {
+    margin-bottom: 0.5rem;
 }
 
 .non-field-errors {
-	color: darken($brand-warning, 20%);
-	padding: 1rem;
-	background: rgba($brand-warning, 0.3);
-	border: 1px solid $brand-warning;
-	border-radius: $border-radius-base;
-	position: relative;
-	margin: 0 0 .25rem;
+    color: darken($brand-warning, 20%);
+    padding: 1rem;
+    background: rgba($brand-warning, 0.3);
+    border: 1px solid $brand-warning;
+    border-radius: $border-radius-base;
+    position: relative;
+    margin: 0 0 .25rem;
 
-	.form-error {
-		margin: 0;
+    .form-error {
+        margin: 0;
 
-		+ .form-error {
-			margin-top: 10px;
-		}
-	}
+        + .form-error {
+            margin-top: 10px;
+        }
+    }
 }

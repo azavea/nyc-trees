@@ -44,7 +44,6 @@ GROUP_EDIT_EVENTS_TAB_ID = 'events'
 
 
 def group_list_page(request):
-    # TODO: pagination
     groups = Group.objects.filter(is_active=True).order_by('name')
     group_ids = Follow.objects.filter(user_id=request.user.id) \
         .values_list('group_id', flat=True)
@@ -203,11 +202,6 @@ def unfollow_group(request):
     return group_detail(request)
 
 
-def start_group_map_print_job(request):
-    # TODO: implement
-    pass
-
-
 def give_user_mapping_priveleges(request, username):
     mapper_context = _grant_mapping_access(request.group, username,
                                            is_approved=True)
@@ -298,17 +292,23 @@ def _update_territory(group, request):
                         .values_list('blockface_id', flat=True))
     ids_to_add = new_block_ids - old_block_ids
     ids_to_kill = old_block_ids - new_block_ids
+
     # Make sure no unavailable or already-assigned blocks slipped in
     filtered_ids_to_add = Blockface.objects \
         .filter(id__in=ids_to_add) \
         .filter(is_available=True) \
         .filter(territory=None) \
         .values_list('id', flat=True)
+
     new_territory = [Territory(group=group, blockface_id=id)
                      for id in filtered_ids_to_add]
     Territory.objects.bulk_create(new_territory)
+
+    # We filter out unavailable blockfaces, to prevent surveyed blockfaces from
+    # being removed
     Territory.objects \
         .filter(blockface_id__in=ids_to_kill) \
+        .filter(blockface__is_available=True) \
         .delete()
 
     # Record the current time on the group so we can use that as a cache buster

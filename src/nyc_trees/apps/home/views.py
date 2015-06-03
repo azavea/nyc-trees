@@ -101,11 +101,6 @@ def _global_counts(past_week=False):
     return global_counts
 
 
-def retrieve_job_status(request):
-    # TODO: implement
-    pass
-
-
 def individual_mapper_instructions(request):
     pass
 

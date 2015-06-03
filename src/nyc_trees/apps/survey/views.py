@@ -21,7 +21,8 @@ from django.shortcuts import get_object_or_404, redirect
 from django.utils.timezone import now
 
 from apps.core.models import Group
-from apps.core.helpers import user_is_group_admin, user_is_individual_mapper
+from apps.core.helpers import (user_is_group_admin, user_is_individual_mapper,
+                               user_is_census_admin)
 
 from apps.event.models import Event
 from apps.event.helpers import (user_is_checked_in_to_event,
@@ -359,7 +360,7 @@ def confirm_blockface_reservations(request):
 
         if ((blockface.is_available and
              blockface.id not in already_reserved_blockface_ids and
-             (territory is None or
+             (territory is None or user_is_census_admin(request.user) or
               territory.group_id in user_trusted_group_ids or
               territory.group_id in user_admin_group_ids))):
             new_reservations.append(BlockfaceReservation(
@@ -674,26 +675,6 @@ def admin_territory_page(request):
         ]
     }
     return context
-
-
-def admin_blockface_partial(request):
-    # TODO: implement
-    pass
-
-
-def admin_blockface_detail_page(request, blockface_id):
-    # TODO: implement
-    pass
-
-
-def admin_extend_blockface_reservation(request, blockface_id):
-    # TODO: implement
-    pass
-
-
-def admin_blockface_available(request, blockface_id):
-    # TODO: implement
-    pass
 
 
 def reservations_instructions(request):
