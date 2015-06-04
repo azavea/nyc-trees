@@ -183,7 +183,7 @@
 .legend-help {
   position: absolute;
   left: 220%;
-  top: -1.4em;
+  top: -2.4em;
   font-size: 180%;
   padding: 1em;
   background-color: black;
@@ -191,7 +191,7 @@
 
   &:after {
     position: absolute;
-    top: 1.4em;
+    top: 2.4em;
     right: 100%;
     height: 0;
     width: 0;
@@ -333,6 +333,9 @@
 
 .modal-dialog {
   margin-top: 7rem;
+  -webkit-animation: cssAnimation 1s 16 ease;
+  -moz-animation: cssAnimation 1s 16 ease;
+  -o-animation: cssAnimation 1s 16 ease;
 }
 
 @media (min-width: $screen-sm) {
