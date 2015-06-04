@@ -151,7 +151,7 @@ def event_email_page(request, event_slug):
 def event_email(request, event_slug):
     event = get_object_or_404(Event, slug=event_slug, group=request.group)
     form = EmailForm(request.POST)
-    extra_recipients = set([request.user, request.group.admin])
+    extra_recipients = set(filter(None, [request.user, request.group.admin]))
     rsvps = EventRegistration.objects.filter(event=event, opt_in_emails=True) \
                                      .select_related('user') \
                                      .exclude(user__in=extra_recipients)
