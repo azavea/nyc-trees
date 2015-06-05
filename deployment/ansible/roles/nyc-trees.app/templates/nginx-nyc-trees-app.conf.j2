@@ -6,6 +6,20 @@ server {
 
   access_log /var/log/nginx/nyc-trees-app.access.log logstash_json;
 
+  location /favicon.ico {
+    # we primarily use favicon link tags to server
+    # favicons more robustly. however, some clients
+    # still send requests to /favicon.ico, putting
+    # unnecessary load on gunicorn appservers. This
+    # acts as a failsafe against those cases.
+    {% if ['packer'] | is_in(group_names) -%}
+    etag on;
+    expires 2h;
+    {% endif %}
+
+    rewrite /favicon.ico /static/favicon.ico;
+  }
+
   location /static/img/training/ {
     {% if ['packer'] | is_in(group_names) -%}
     etag on;
