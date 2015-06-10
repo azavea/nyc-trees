@@ -264,9 +264,13 @@ function getSectionToggleHandler(fieldName) {
         var $sections = $form.find('[data-' + fieldName + ']');
         var currentStatus = $form.find('input[name="' + fieldName + '"]:checked').val() || "";
 
-        $sections.addClass('hidden');
-        // Note that we use '~=` which selects from a whitespace deliminated list
-        $sections.filter('[data-' + fieldName + '~="' + currentStatus + '"]').removeClass('hidden');
+        if (currentStatus) {
+            $sections.addClass('hidden');
+            // Note that we use '~=` which selects from a whitespace deliminated list
+            $sections.filter('[data-' + fieldName + '~="' + currentStatus + '"]').removeClass('hidden');
+        } else {
+            $sections.removeClass('hidden');
+        }
     };
 }
 
