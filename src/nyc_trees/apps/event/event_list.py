@@ -125,9 +125,11 @@ class EventList(object):
         right_now = now()
         filtersets = {
             EventList.trainingFilters: OrderedDict([
-                (_ALL, None),
-                (_TRAINING, lambda qs: qs.filter(includes_training=True)),
-                (_MAPPING, lambda qs: qs.filter(includes_training=False)),
+                (_ALL, lambda qs: qs.filter(is_private=False)),
+                (_TRAINING, lambda qs: qs.filter(
+                    is_private=False, includes_training=True)),
+                (_MAPPING, lambda qs: qs.filter(
+                    is_private=False, includes_training=False)),
             ]),
             EventList.chronoFilters: OrderedDict([
                 (_CURRENT, lambda qs: (qs
@@ -327,8 +329,7 @@ def immediate_events(request):
     user = request.user
     seven_days = relativedelta(days=7)
     nowish = (Event.objects
-              .filter(is_private=False,
-                      group__is_active=True,
+              .filter(group__is_active=True,
                       ends_at__gt=now(),
                       ends_at__lte=now() + seven_days)
               .order_by('begins_at'))
@@ -348,6 +349,5 @@ def immediate_events(request):
 
 @EventList
 def all_events(request):
-    return Event.objects.filter(is_private=False,
-                                group__is_active=True,
+    return Event.objects.filter(group__is_active=True,
                                 ends_at__gt=now()).order_by('begins_at')
