@@ -1,5 +1,7 @@
 "use strict";
 
+var Promise = require('promise');
+
 // Loading dependencies from a dependency is not a best practice, but
 // I think it makes sense in this situation.  We want our health
 // endpoint to check connectivity to postgres and redis in a way that
@@ -12,57 +14,55 @@ var redis = require('windshaft/node_modules/redis-mpool/node_modules/redis');
 function checkPostgres(host, port, user, password, database, timeout, cb) {
     var conString = ['postgres://', user, ':', password, '@', host, '/', database].join('');
     var client = new pg.Client(conString);
-    var gotResponse = false;
-    client.connect(function(err) {
-        client.end();
-        gotResponse = true;
-        if (err) {
-            cb({database: {error: err}});
-        } else {
-            cb({database: {ok: true}});
-        }
-    });
 
-    setTimeout(function() {
-        if (!gotResponse) {
-            cb({database: {error: 'Timeout'}});
-        }
-    }, timeout);
+    var promise = new Promise(function(resolve) {
+        client.connect(function(err) {
+            if (err) {
+                resolve({error: err});
+            } else {
+                resolve({ok: true});
+            }
+        });
+
+        setTimeout(function() {
+            resolve({error: 'Timeout'});
+        }, timeout);
+    });
+    promise.done(function(reponse) {
+        client.end();
+        cb({database: reponse});
+    });
 }
 
 function checkRedis(host, port, timeout, cb) {
     // I am skipping over connection pooling because we are most interested in
     // a basic connectivity check.
     var client = redis.createClient(port, host);
-    var gotResponse = false;
 
-    client.on('connect', function() {
-        client.quit();
-        gotResponse = true;
-        cb({cache: {ok: true}});
-    });
+    var promise = new Promise(function(resolve) {
+        client.on('connect', function() {
+            resolve({ok: true});
+        });
 
-    client.on('error', function() {
-        // no arguments are passed when the error event is triggered
-        // TODO: Find out how to return more useful failure information
-        client.quit();
-        gotResponse = true;
-        cb({
-            cache: {
+        client.on('error', function() {
+            // no arguments are passed when the error event is triggered
+            // TODO: Find out how to return more useful failure information
+            resolve({
                 error: {
                     message: ['Redis client raised an error event while connecting to ',
                               host, ':', port].join('')
                 }
-            }
+            });
         });
-    });
 
-    setTimeout(function() {
-        if (!gotResponse) {
-            client.quit();
-            cb({cache: {error: 'Timeout'}});
-        }
-    }, timeout);
+        setTimeout(function() {
+            resolve({error: 'Timeout'});
+        }, timeout);
+    });
+    promise.done(function(response) {
+        client.quit();
+        cb({cache: response});
+    });
 }
 
 function statusObjectFromException(ex) {
@@ -118,5 +118,5 @@ module.exports = function createHealthCheckHandler(config, timeout) {
                 res.json(status);
             }
         }
-   };
+    };
 };
