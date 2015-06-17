@@ -66,6 +66,7 @@ cloudfront_failover_distribution = t.add_resource(cf.Distribution(
         Enabled=True,
         ViewerCertificate=cf.ViewerCertificate(
             IamCertificateId=Ref(app_ssl_certificate_id_param),
+            MinimumProtocolVersion='TLSv1',
             SslSupportMethod='sni-only'
         )
     )

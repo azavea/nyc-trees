@@ -5,6 +5,7 @@
   "main": "server.js",
   "dependencies": {
     "lodash": "^2.4.1",
+    "promise": "^7.0.1",
     "windshaft": "^0.19.4"
   },
   "devDependencies": {

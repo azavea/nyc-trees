@@ -24,6 +24,10 @@ class SurveyAdmin(admin.ModelAdmin):
 class BlockfaceAdmin(admin.ModelAdmin):
     search_fields = ('id',)
     list_filter = ('is_available',)
+    exclude = ('geom',)
+
+    def has_add_permission(self, request):
+        return False
 
 
 class BlockfaceReservationAdmin(admin.ModelAdmin):

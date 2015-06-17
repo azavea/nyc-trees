@@ -5,6 +5,7 @@
 *.jpg  binary
 *.eot  binary
 *.pdf  binary
+*.ico  binary
 
 # When a text file is committed, convert line endings to LF.
 # When a text file is checked out, do nothing.

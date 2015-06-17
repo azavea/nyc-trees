@@ -193,7 +193,7 @@ app_server_auto_scaling_group = t.add_resource(asg.AutoScalingGroup(
     LoadBalancerNames=[Ref(app_server_load_balancer)],
     MaxSize=4,
     MinSize=2,
-    NotificationConfiguration=asg.NotificationConfiguration(
+    NotificationConfigurations=[asg.NotificationConfigurations(
         TopicARN=Ref(notification_arn_param),
         NotificationTypes=[
             asg.EC2_INSTANCE_LAUNCH,
@@ -201,7 +201,7 @@ app_server_auto_scaling_group = t.add_resource(asg.AutoScalingGroup(
             asg.EC2_INSTANCE_TERMINATE,
             asg.EC2_INSTANCE_TERMINATE_ERROR
         ]
-    ),
+    )],
     VPCZoneIdentifier=Ref(private_subnets_param),
     Tags=[
         asg.Tag('Name', 'AppServer', True),
