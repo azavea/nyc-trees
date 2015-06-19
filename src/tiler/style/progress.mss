@@ -60,4 +60,5 @@ node -e "var m=require('mapnik');m.register_system_fonts();console.log(m.fontFil
   text-size: 12;
   text-halo-fill:  fadeout(#fff, 30%);
   text-halo-radius: 2;
+  text-placement: interior;
 }
