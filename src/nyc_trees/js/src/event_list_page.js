@@ -23,6 +23,9 @@ $(dom.mapToggle).one('shown.bs.tab', function() {
             mapModule.create({
                 geolocation: true,
                 search: true,
+                // There is no raster tile layer, so labels embedded in the
+                // basemap will work just fine
+                withLabels: true
             });
             return;
         }
