@@ -6,7 +6,9 @@ var $ = require('jquery'),
 
 var zoom = require('./lib/mapUtil').ZOOM,
     SATELLITE = 'satellite',
-    searchController = require('./searchController');
+    searchController = require('./searchController'),
+    labelLayer = null;
+
 
 module.exports = {
     SATELLITE: SATELLITE,
@@ -129,16 +131,31 @@ function initBaseMap(map, options) {
             maxZoom: zoom.MAX,
             attribution: options.forPdf ? attributionForPdf : attribution
         },
+        labelLayerOptions =  {
+            subdomains: 'abcd',
+            minZoom: zoom.MIN,
+            maxZoom: zoom.MAX,
+            opacity: 0.75,
+            attribution: 'Map labels by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>'
+        },
         satelliteUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-        strandardResUrl = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
-        retinaSuffix = 'cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}@2x.png',
-        retinaUrl = 'https://' + retinaSuffix,
-        retinaUrlForPdf = 'http://' + retinaSuffix,  // PhantomJS fails with https
-        url =
-            options.baseMap === SATELLITE ? satelliteUrl :
-            options.forPdf ? retinaUrlForPdf :
-            isRetinaDevice() ? retinaUrl : strandardResUrl;
+        withoutLabelsUrl = 'cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}',
+        withLabelsUrl = 'cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}',
+        labelsOnlyUrl = 'stamen-tiles-{s}.a.ssl.fastly.net/toner-labels/{z}/{x}/{y}',
+
+        protocol = options.forPdf ? 'http://' : 'https://',  // PhantomJS fails with https
+        standardUrl = options.withLabels ? withLabelsUrl : withoutLabelsUrl,
+        suffix = (options.forPdf || isRetinaDevice()) ? '@2x.png' : '.png',
+
+        url = options.baseMap === SATELLITE ? satelliteUrl : protocol + standardUrl + suffix;
+
     map.addLayer(new L.TileLayer(url, layerOptions));
+
+    if (options.baseMap !== SATELLITE && !options.withLabels) {
+        labelLayer = new L.TileLayer(protocol + labelsOnlyUrl + suffix, layerOptions);
+        labelLayer.setOpacity(0.75);
+        map.addLayer(labelLayer);
+    }
 }
 
 function initGeolocation($controlsContainer, map) {
@@ -188,6 +205,9 @@ function addTileLayer(map, options) {
             maxZoom: options.maxZoom || zoom.MAX
         });
     map.addLayer(layer);
+    if (labelLayer) {
+        labelLayer.bringToFront();
+    }
     return layer;
 }
 
