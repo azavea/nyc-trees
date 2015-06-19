@@ -16,7 +16,9 @@ module.exports = {
     addGridLayer: addGridLayer,
     fitBounds: fitBounds,
     getDomMapAttribute: getDomMapAttribute,
-    hideCrosshairs: hideCrosshairs
+    hideCrosshairs: hideCrosshairs,
+    startTrackingUserPosition: startTrackingUserPosition,
+    stopTrackingUserPosition: stopTrackingUserPosition
 };
 
 function create(options) {
@@ -210,4 +212,59 @@ function getDomMapAttribute(dataAttName, domId) {
     var $map = $('#' + domId),
         value = $map.data(dataAttName);
     return value;
+}
+
+function startTrackingUserPosition(map) {
+    map.on('locationfound', onLocationFound);
+    map.on('locationerror', onLocationError);
+    map.on('unload', stopTrackingUserPosition);
+    map.locate({watch: true, enableHighAccuracy: true});
+}
+
+function stopTrackingUserPosition(map) {
+    var marker = map._userLocationMarker;
+    if (marker) {
+        map.removeLayer(marker);
+    }
+    map.off('locationfound', onLocationFound);
+    map.off('locationerror', onLocationError);
+    map.off('unload', stopTrackingUserPosition);
+    map.stopLocate();
+}
+
+function onLocationFound(e) {
+    var map = e.target,
+        marker = map._userLocationMarker,
+        latlng = e.latlng;
+
+    // For testing, move points near Azavea to southern Manhattan
+    var azaveaLatLng = L.latLng(39.9583208, -75.1585257),
+        manhattanLatLng = L.latLng(40.7030809, -74.0129269);
+    if (latlng.distanceTo(azaveaLatLng) < 1000) {
+        latlng.lat += manhattanLatLng.lat - azaveaLatLng.lat;
+        latlng.lng += manhattanLatLng.lng - azaveaLatLng.lng;
+    }
+
+    if (!marker) {
+        marker = map._userLocationMarker = L.circleMarker(latlng, {
+            color: '#0E9C4B',
+            fillColor: '#00EB66',
+            fillOpacity: 1.0,
+            weight: 2,
+            opacity: 1.0,
+            radius: 8
+        });
+    }
+    if (!map.hasLayer(marker)) {
+        map.addLayer(marker);
+    }
+    marker.setLatLng(latlng);
+}
+
+function onLocationError(e) {
+    var map = e.target;
+    if (e.code == 3) {
+        return;  // ignore timeouts
+    }
+    stopTrackingUserPosition(map);
 }
