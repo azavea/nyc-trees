@@ -613,8 +613,6 @@ function submitSurveyWithTrees() {
         })
         .fail(function(jqXHR, textStatus, errorThrown) {
             toastr.warning('Double-check your survey and try resubmitting it.', 'Something went wrong...');
-        })
-        .always(function() {
             // Re-enable the submit button
             $(dom.submitSurvey).on('click', submitSurveyWithTrees);
         });
