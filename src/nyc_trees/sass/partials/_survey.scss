@@ -21,7 +21,7 @@
     left: 0;
     right: 0;
     @media (max-width: $screen-sm - 1) {
-        bottom: 15rem;
+        bottom: 20rem;
     }
     @media (max-height: $screen-xs-height) and (max-width: $screen-sm) {
         top: 4.5rem;
@@ -37,7 +37,7 @@
         left: 0;
         bottom: 0;
         width: 100%;
-        height: 15rem;
+        height: 20rem;
         padding: 0 $grid-gutter-width/2;
         z-index: 1;
         background-color: #fff;
