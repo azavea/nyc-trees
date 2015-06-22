@@ -5,6 +5,7 @@ var $ = require('jquery'),
 
 var _ZOOM = {
     NEIGHBORHOOD: 16,
+    LOCATION: 18,
     MIN: 8,
     MAX: 19
 };

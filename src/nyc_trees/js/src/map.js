@@ -66,9 +66,9 @@ function createAndGetControls(options) {
     } else if (options.bounds) {
         map.fitBounds(options.bounds, {maxZoom: zoom.NEIGHBORHOOD});
     } else if (mapLocation) {
-        map.setView(mapLocation, zoom.NEIGHBORHOOD);
+        map.setView(mapLocation, zoom.LOCATION);
     } else if (options.location && options.location.lat !== 0) {
-        map.setView(options.location, zoom.NEIGHBORHOOD);
+        map.setView(options.location, zoom.LOCATION);
     } else {
         map.fitBounds(config.bounds);
     }
@@ -168,7 +168,7 @@ function initGeolocation($controlsContainer, map) {
 
     function showPosition(position) {
         var center = L.latLng(position.coords.latitude, position.coords.longitude);
-        map.setView(center, zoom.NEIGHBORHOOD);
+        map.setView(center, zoom.LOCATION);
     }
 
     function showError() {
