@@ -119,7 +119,7 @@ function create($controlsContainer, map) {
 
         zoomToCandidate = function(candidate) {
             var point = L.latLng(candidate.y, candidate.x);
-            setCenterAndZoomLL(map, zoom.NEIGHBORHOOD, point);
+            setCenterAndZoomLL(map, zoom.LOCATION, point);
             dismiss();
         },
 
