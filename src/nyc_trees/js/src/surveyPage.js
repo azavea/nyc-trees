@@ -167,6 +167,7 @@ statePrompter.lock();
 selectedLayer.clicksEnabled = false;
 blockfaceMap.addLayer(selectedLayer);
 blockfaceMap.addLayer(endPointLayers);
+mapModule.startTrackingUserPosition(blockfaceMap);
 
 grid.on('mapMove', function(e) {
     var data = e.data;
@@ -403,6 +404,7 @@ $(dom.btnNext).click(function(e) {
     blockfaceMap.keyboard.disable();
     blockfaceMap.removeLayer(grid);
     mapModule.hideCrosshairs();
+    mapModule.stopTrackingUserPosition(blockfaceMap);
 });
 
 $(dom.addTree).click(function (){
