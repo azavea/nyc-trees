@@ -130,6 +130,9 @@ blockface = route(GET=do(json_api_call, v.blockface))
 
 blockface_near_point = route(GET=do(json_api_call, v.blockface_near_point))
 
+teammates_for_mapping = route(GET=do(
+    login_required, json_api_call, v.teammates_for_mapping))
+
 #####################################
 # ADMIN ROUTES
 #####################################
