@@ -94,7 +94,7 @@ var dom = {
         btnGroupToTeammate: '#btn-group-to-teammate',
         btnToTeammate: '#btn-to-teammate',
         selectTeammate: '#select-teammate',
-        teammateSelectElement: 'select.teammate',
+        teammateSelectElement: '#teammate-select',
 
         btnNoTrees: '#no-trees',
         noTreesPopup: '#no-trees-popup',
@@ -680,7 +680,21 @@ $(dom.quitPopup).on('shown.bs.modal', function () {
 
 $(dom.teammateSelectElement).select2({
     placeholder: "Username",
-    allowClear: true
+    allowClear: true,
+    minimumInputLength: 1,
+    ajax: {
+        // Note: changes here must be kept in sync with
+        // src/nyc_trees/survey/urls/survey.py
+        url: "/survey/teammates/",
+        dataType: 'json',
+        quietMillis: 100,
+        data: function (term) {
+            return {q: term};
+        },
+        results: function(data) {
+            return {results: data};
+        }
+    }
 });
 
 $(dom.btnNoTrees).on('click', function(e) {

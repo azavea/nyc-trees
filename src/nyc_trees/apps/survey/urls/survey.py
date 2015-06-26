@@ -8,7 +8,7 @@ from django.conf.urls import patterns, url
 from apps.survey.routes import (survey, survey_from_event,
                                 flag_survey, survey_detail,
                                 confirm_survey, confirm_survey_from_event,
-                                restart_blockface)
+                                restart_blockface, teammates_for_mapping)
 
 
 # These URLs have the prefix 'survey/'
@@ -34,4 +34,8 @@ urlpatterns = patterns(
 
     url(r'^restart_blockedge/(?P<survey_id>\d+)/$',
         restart_blockface, name='restart_blockface'),
+
+    # Note: changes here must be kept in sync with
+    # src/nyc_trees/js/src/surveyPage.js
+    url(r'^teammates/$', teammates_for_mapping)
 )

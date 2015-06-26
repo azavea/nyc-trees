@@ -15,12 +15,14 @@ from django.contrib.gis.geos import Point
 from django.core.exceptions import ValidationError, PermissionDenied
 from django.core.urlresolvers import reverse
 from django.db import transaction, connection
+from django.db.models import Q
 from django.http import (HttpResponse, HttpResponseForbidden,
                          HttpResponseBadRequest)
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.timezone import now
+from django.utils.html import escape
 
-from apps.core.models import Group
+from apps.core.models import User, Group
 from apps.core.helpers import (user_is_group_admin, user_is_individual_mapper,
                                user_is_census_admin)
 
@@ -31,6 +33,7 @@ from apps.event.helpers import (user_is_checked_in_to_event,
 from apps.mail.tasks import notify_reservation_confirmed
 from libs.pdf_maps import create_reservations_map_pdf
 
+from apps.users import can_show_full_name
 from apps.users.models import TrustedMapper
 from apps.survey.models import (BlockfaceReservation, Blockface, Territory,
                                 Survey, Tree, Species, CURB_CHOICES,
@@ -45,7 +48,7 @@ from apps.survey.layer_context import (
     get_context_for_group_progress_layer, get_context_for_user_progress_layer,
     get_context_for_borough_progress_layer, get_context_for_nta_progress_layer
 )
-from apps.survey.helpers import group_percent_completed, teammates_for_mapping
+from apps.survey.helpers import group_percent_completed
 
 from libs.pdf_maps import create_and_save_pdf
 
@@ -474,7 +477,6 @@ def start_survey(request):
         'layer': get_context_for_reservations_layer(request),
         'bounds': _user_reservation_bounds(request.user),
         'choices': _get_survey_choices(),
-        'teammates': teammates_for_mapping(request.user),
         'no_more_reservations': reservations_for_user <= 1,
         'geolocate_help_shown': _was_help_shown(request,
                                                 'survey_geolocate_help_shown'),
@@ -499,9 +501,38 @@ def start_survey_from_event(request, event_slug):
         'layer': get_context_for_territory_survey_layer(group.id),
         'location': [event.location.y, event.location.x],
         'choices': _get_survey_choices(),
-        'teammates': teammates_for_mapping(request.user),
         'geolocate_help_shown': _was_help_shown(request,
                                                 'survey_geolocate_help_shown'),
+    }
+
+
+def teammates_for_mapping(request):
+    query = request.GET.get('q', None)
+
+    users = User.objects.exclude(id=request.user.id) \
+                        .filter(is_active=True) \
+                        .order_by('username')
+
+    if query:
+        users = users.filter(
+            Q(username__icontains=query) |
+            (Q(real_name_is_public=True) & (Q(first_name__icontains=query) |
+                                            Q(last_name__icontains=query))))
+
+    return [_teammate_user_context(u) for u in users]
+
+
+def _teammate_user_context(user):
+    if can_show_full_name(user):
+        text = "{} — {} {}".format(
+            escape(user.username), escape(user.first_name),
+            escape(user.last_name))
+    else:
+        text = user.username
+
+    return {
+        "id": user.id,
+        "text": text.strip()
     }
 
 
