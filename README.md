@@ -106,4 +106,4 @@ In addition, other [scripts](scripts/) exist if you want to test just one of the
 
 ## Deployment
 
-For more details around the Amazon Web Services deployment process, please see the deployment [README](deployment/README.md).d
+For more details around the Amazon Web Services deployment process, please see the deployment [README](deployment/README.md).

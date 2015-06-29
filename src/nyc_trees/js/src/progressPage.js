@@ -11,7 +11,9 @@ require('./lib/mapHelp');
 var progressMap = mapModule.create({
         geolocation: true,
         legend: true,
-        search: true
+        search: true,
+        // Using a separate layer for labels interferes with the neighborhood and borough layers
+        withLabels: true
     }),
     tileLayer = null,
     neighborhoodTileLayer=null,

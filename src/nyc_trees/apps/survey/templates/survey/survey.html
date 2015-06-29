@@ -11,10 +11,18 @@
 
     <div class="action-bar-survey">
         <div id="select-starting-point">
-            <p>Drag the map to choose a block edge.<br/>Then choose a starting point.</p>
+            <p>
+                Drag the map and zoom in to choose a block edge.
+                Double check that you're on the right street! Then
+                choose a starting point.
+            </p>
         </div>
         <div id="select-side" class="hidden">
-            <p>What side of the street are you on?</p>
+            <p>
+                Face the direction you will be walking to move down
+                the block and map trees. Which side of the street are
+                you on?
+            </p>
             <div class="btn-group btn-group-justified" role="group">
                 <a id="btn-left" class="btn btn-switch">Left</a>
                 <a id="btn-right" class="btn btn-switch">Right</a>
@@ -26,7 +34,7 @@
         <div id="select-teammate" class="hidden">
             <p>Is someone helping you count trees? Enter their user name. If not, click Next.</p>
             <div id="teammate-list">
-                {% include "event/partials/teammates.html" %}
+                <input class="teammate" id="teammate-select" />
             </div>
             <div id="btn-group-next" class="hidden" role="group">
                 <button id="btn-next" class="btn btn-primary btn-block">Next</button>
