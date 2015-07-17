@@ -24,10 +24,12 @@ from django.template.loader import render_to_string
 
 
 class NycAuthenticationForm(AuthenticationForm):
+    username = forms.CharField(max_length=254,
+                               label="Username or Email Address")
 
     error_messages = {
-        'invalid_login': 'Please enter a correct username and password. '
-                         'Note that password is case-sensitive',
+        'invalid_login': 'Please enter a correct username or email address '
+                         'and password. Note that password is case-sensitive',
         'inactive': 'Please click the account activation link you received by '
                     'email before trying to log in.'
     }
