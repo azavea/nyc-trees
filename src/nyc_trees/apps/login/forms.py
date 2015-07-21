@@ -72,9 +72,25 @@ class NycRegistrationForm(RegistrationFormUniqueEmail):
     )
 
     def clean_username(self):
-        if self.cleaned_data['username'].lower() in User.reserved_usernames:
+        username = self.cleaned_data['username']
+
+        if username.lower() in User.reserved_usernames:
             raise ValidationError('This username is not available.')
+
+        if User.objects.filter(email__iexact=username).exists():
+            raise ValidationError('That username is already in use. '
+                                  'Please supply a different username.')
+
         return super(NycRegistrationForm, self).clean_username()
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+
+        if User.objects.filter(username__iexact=email).exists():
+            raise ValidationError('That email address is already in use. '
+                                  'Please supply a different email address.')
+
+        return super(NycRegistrationForm, self).clean_email()
 
 
 class UsernameOrEmailPasswordResetForm(forms.Form):
