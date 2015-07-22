@@ -264,6 +264,9 @@ ROOT_URLCONF = '%s.urls' % SITE_NAME
 
 AUTH_USER_MODEL = 'core.User'
 
+AUTHENTICATION_BACKENDS = [
+    'libs.auth_backend.EmailOrUsernameAuthentication'
+]
 
 # APP CONFIGURATION
 DJANGO_APPS = (

@@ -8,7 +8,7 @@ from django.conf.urls import patterns, url
 from apps.login import routes as r
 
 
-# Everything is mounted on login/
+# Everything is mounted on accounts/
 urlpatterns = patterns(
     '',
     url(r'^forgot-username/$',
