@@ -31,7 +31,7 @@ from apps.core.tasks import wait_for_default_storage_file
 from apps.mail.tasks import notify_rsvp, notify_after_event_checkin
 from apps.mail.libs import send_to
 
-from apps.survey.layer_context import get_context_for_territory_layer
+from apps.survey.layer_context import get_context_for_printable_event_map
 from libs.pdf_maps import create_event_map_pdf
 
 
@@ -373,7 +373,7 @@ def printable_event_map(request, event_slug):
     context = {
         'event': event,
         'location': [event.location.y, event.location.x],
-        'layer': get_context_for_territory_layer(request.group.id),
+        'layer': get_context_for_printable_event_map(request.group.id),
     }
     return context
 

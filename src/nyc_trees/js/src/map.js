@@ -59,7 +59,8 @@ function createAndGetControls(options) {
         multiControl = L.control.zoom({position: 'bottomleft'}).addTo(map),
         $multiControlContainer = $(multiControl.getContainer()),
         bounds = getDomMapAttribute('bounds', options.domId),
-        mapLocation = getDomMapAttribute('location', options.domId);
+        mapLocation = getDomMapAttribute('location', options.domId),
+        zoomSpec = getDomMapAttribute('zoom', options.domId);
 
     map.addControl(L.control.attribution({prefix: false}));
 
@@ -68,9 +69,10 @@ function createAndGetControls(options) {
     } else if (options.bounds) {
         map.fitBounds(options.bounds, {maxZoom: zoom.NEIGHBORHOOD});
     } else if (mapLocation) {
-        map.setView(mapLocation, zoom.LOCATION);
+        var z = (zoomSpec === 'LOCATION' ? zoom.LOCATION : zoom.NEIGHBORHOOD);
+        map.setView(mapLocation, z);
     } else if (options.location && options.location.lat !== 0) {
-        map.setView(options.location, zoom.LOCATION);
+        map.setView(options.location, zoom.NEIGHBORHOOD);
     } else {
         map.fitBounds(config.bounds);
     }

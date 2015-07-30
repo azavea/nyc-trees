@@ -45,6 +45,12 @@ def get_context_for_group_progress_layer():
     return _get_context_for_layer("group_progress", models)
 
 
+def get_context_for_printable_event_map(group_id):
+    models = [Blockface, Survey, Territory]
+    return _get_context_for_layer("event_pdf", models,
+                                  {'group': group_id})
+
+
 @login_required
 def get_context_for_reservable_layer(request):
     if user_is_census_admin(request.user):

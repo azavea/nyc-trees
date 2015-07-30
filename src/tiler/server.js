@@ -134,6 +134,8 @@ function req2style(req) {
     if (type === 'progress' || type === 'user_progress' || type === 'group_progress' ||
             type === 'borough_progress' || type === 'nta_progress') {
         return styles.progress();
+    } else if (type === 'event_pdf') {
+        return styles.event_pdf();
     } else {
         return styles.default();
     }
