@@ -109,6 +109,8 @@ POSTGIS_VERSION = tuple(
 
 
 # LOGGING CONFIGURATION
+LOGGING_CONFIG = None
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
@@ -118,12 +120,23 @@ LOGGING = {
         },
     },
     'loggers': {
+        'apps.core.mail.backends.boto': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+        'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
         'django': {
             'handlers': ['console'],
             'level': 'INFO',
         },
     }
 }
+
+import logging.config
+logging.config.dictConfig(LOGGING)
 # END LOGGING CONFIGURATION
 
 
