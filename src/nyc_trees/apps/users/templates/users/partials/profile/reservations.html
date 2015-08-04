@@ -24,7 +24,7 @@
 {% if reservations.count > 0 %}
     {% include "core/partials/polling_download_section.html" with poll_url=reservations.map_poll_url %}
 {% else %}
-    Ready to map on your own as an independent volun<b>treer</b>? <a href="{{ reservations_url }}">Reserve available block edges</a> for mapping!
+    Ready to map on your own? <a href="{{ reservations_url }}">Reserve available block edges</a> for mapping!
 {% endif %}
 
 {% endblock section_content %}

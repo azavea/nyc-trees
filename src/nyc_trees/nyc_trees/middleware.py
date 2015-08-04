@@ -35,4 +35,4 @@ class BannedUserMiddleware(object):
         if not request.user.is_authenticated():
             return
         if request.user.is_banned:
-           logout(request)
+            logout(request)

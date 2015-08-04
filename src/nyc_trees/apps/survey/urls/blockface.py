@@ -22,6 +22,8 @@ urlpatterns = patterns(
     url(r'^printable-map/$', printable_reservations_map,
         name='printable_reservations_map'),
 
+    # Note: changes here must be kept in sync with URL in achievement text
+    # src/nyc_trees/apps/users/models.py
     url(r'^reserve/$', reserve_blockface_page, name='reservations'),
 
     url(r'^reservations-instructions/$', reservations_instructions,

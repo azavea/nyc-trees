@@ -15,7 +15,7 @@ urlpatterns = patterns(
 
     url(r'^settings/$', r.user_profile_settings, name='user_profile_settings'),
 
-    url(r'^achievements/$', r.achievements, name='achievements'),
+    url(r'^rewards/$', r.achievements, name='achievements'),
 
     url(r'^(?P<username>[\w.@+-]+)/$', r.user_detail, name='user_detail'),
 

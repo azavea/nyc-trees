@@ -61,24 +61,45 @@ achievements = OrderedDict([
     (AchievementDefinition.ONLINE_TRAINING, AchievementDefinition(
         name='Ready, Set, Roll',
         description='Finish Online Training',
-        description_achieved='Finished Online Training',
+        # NOTE: using hard-coded URL here because it's too early for reverse()
+        description_achieved="""Finished Online Training
+            <div><a class="h6 color--secondary" href="/event/">
+                Register for an event today</a>!</div>""",
         badge='img/badges/ic_badge_online_training.png',
         achieved=lambda user: user.online_training_complete
     )),
     (AchievementDefinition.TRAINING_EVENT, AchievementDefinition(
         name='Treerifically Trained',
         description='Attend a Training Event',
+        # NOTE: using hard-coded URLs here because it's too early for reverse()
         description_achieved='Attended a Training Event',
         badge='img/badges/ic_badge_training_event.png',
         achieved=lambda user: user.field_training_complete,
-        reward='Receive a Census Gear Pack with a measuring tape, '
-        'Tree Species ID Guide, volun<b>treer</b> lanyard and badge, and a '
-        'TreesCount safety vest!'
+        reward="""Join us at a training event, and you will receive
+            a Census Gear Pack with your very own
+            portable Tree Species ID Guide, so you can
+            identify every tree in NYC! You'll also get all the
+            tools you need to keep mapping all summer: a
+            TreesCount! performance baseball cap,
+            safety vest, Metrocard holder, measuring tape
+            and volun<b>treer</b> badge to check out equipment
+            at future events or from loaning hubs."""
     )),
     (AchievementDefinition.MAPPING_EVENT, AchievementDefinition(
         name='Counter Cultured',
         description='Attend a Mapping Event',
-        description_achieved='Attended a Mapping Event',
+        # NOTE: using hard-coded URLs here because it's too early for reverse()
+        description_achieved="""Attended a Mapping Event
+            <div><a class="h6 color--secondary" href="/blockedge/reserve/">
+                Reserve blocks today</a> to map on your own!</div>
+            <div>
+                Need a wheel? Visit one of our nearby
+                <a class="h6 color--secondary"
+        href="http://www.nycgovparks.org/trees/treescount/independent-mapping">
+                    loaning hubs</a>
+                or check one out at your next NYC Parks
+                <a class="h6 color--secondary" href="/event/">
+                    mapping event</a>!</div>""",
         badge='img/badges/ic_badge_mapping_event.png',
         achieved=lambda user: user.attended_at_least_two_events()
     )),
@@ -89,10 +110,10 @@ achievements = OrderedDict([
         badge='img/badges/ic_badge_map_50.png',
         achieved=lambda user: user.blocks_mapped_count >= 50,
         sponsor='Various sponsors',
-        reward='The first 250 volun<b>treers</b> to reach this level will '
-        'receive tickets to a NY Liberty Game! All volun<b>treers</b> will '
-        'be entered into lotteries to win a personal Tree Care Workshop, '
-        'Knicks gift bag and other great prizes, while supplies last.'
+        reward="""The first 250 volun<b>treer</b>s to reach this level by
+            August 28, 2015 will receive tickets to a NY
+            Liberty Game! How many 1, 2, tree pointers
+            will you see?"""
     )),
     (AchievementDefinition.MAP_100, AchievementDefinition(
         name='Mapping Machine',
@@ -101,8 +122,12 @@ achievements = OrderedDict([
         badge='img/badges/ic_badge_map_100.png',
         achieved=lambda user: user.blocks_mapped_count >= 100,
         sponsor='Sponsored by Whole Foods Market',
-        reward='Tree Care Kit that includes gloves, weeder, cultivator, '
-        'trowel, a collapsible bucket and other helpful tools.'
+        reward="""When you reach this level, you'll receive a Tree
+            Care Kit, which includes high quality gloves,
+            weeder, cultivator, trowel, a collapsible
+            watering bucket and more! With this kit, you'll
+            have everything you need to take care of your
+            newly counted trees!"""
     )),
     (AchievementDefinition.MAP_200, AchievementDefinition(
         name='Sprout Mapper',
@@ -111,9 +136,9 @@ achievements = OrderedDict([
         badge='img/badges/ic_badge_map_200.png',
         achieved=lambda user: user.blocks_mapped_count >= 200,
         sponsor='Sponsored by Whole Foods Market',
-        reward='TreesCount! Tote &amp; Tree Care Kit that includes a limited '
-        'edition TreesCount! t-shirt, gloves, weeder, cultivator, trowel, '
-        'a collapsible bucket and other helpful tools.'
+        reward="""Show your NYC pride and travel the city in style
+            with your new Tree-rrific tote and limited
+            edition TreesCount! t-shirt."""
     )),
     (AchievementDefinition.MAP_400, AchievementDefinition(
         name='Seedling Mapper',
@@ -121,7 +146,12 @@ achievements = OrderedDict([
         description_achieved='Mapped 400 Block Edges',
         badge='img/badges/ic_badge_map_400.png',
         achieved=lambda user: user.blocks_mapped_count >= 400,
-        reward='Picnic Basket for Two'
+        reward="""Replace those worn-out shoes with a brand
+            new pair of Timberland boots! The first 5
+            volun<b>treer</b>s to reach this level will receive a gift
+            card for some new kicks.  A special TreesCount!
+            picnic basket for two will be awarded to other
+            Seedling Mappers."""
     )),
     (AchievementDefinition.MAP_1000, AchievementDefinition(
         name='Sapling Mapper',
@@ -129,7 +159,10 @@ achievements = OrderedDict([
         description_achieved='Mapped 1000 Block Edges',
         badge='img/badges/ic_badge_map_1000.png',
         achieved=lambda user: user.blocks_mapped_count >= 1000,
-        reward='Details coming soon!'
+        reward="""Celebrate your civic contribution at the Global
+            Citizen Festival in Central Park on September
+            26, 2015! <i>Limited number of general admission
+            tickets available.</i>"""
     )),
     (AchievementDefinition.MAP_MOST, AchievementDefinition(
         name='Mayoral Mapper',
@@ -137,9 +170,11 @@ achievements = OrderedDict([
         description_achieved='Mapped the Most Block Edges in NYC',
         badge='img/badges/ic_badge_top_mapper.png',
         achieved=lambda user: False,  # doesn't need to be live updated
-        reward='The volun<b>treer</b> that maps the most trees will earn a '
-        'pair of VIP Tickets to the Global Citizen Festival in Central Park '
-        'on September 26, 2015.'
+        reward="""Map the most blocks in the city by September
+            22nd and get a free pair of tickets to check out
+            Pearl Jam, Beyonce, Ed Sheeran and Coldplay
+            from the VIP seats at the Global Citizen Festival
+            in Central Park on September 26, 2015."""
     )),
 ])
 
