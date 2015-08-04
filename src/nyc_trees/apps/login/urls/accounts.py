@@ -21,6 +21,9 @@ urlpatterns = patterns(
     # password reset URLs are mapped to the customized view.
     url(r'^password_reset/$', r.password_reset, name='password_reset_alt'),
 
+    url(r'^password-reset-failure/$', r.password_reset_impossible,
+        name='password_reset_impossible'),
+
     # Shadows django-registration-redux endpoint.
     # Ref: https://github.com/macropin/django-registration/blob/master/registration/backends/default/urls.py # NOQA
     url(r'^activate/complete/$', r.activation_complete,
