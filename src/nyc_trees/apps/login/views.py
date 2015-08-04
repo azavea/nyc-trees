@@ -3,12 +3,16 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
+from datetime import timedelta
+
 import django.contrib.auth.views as contrib_auth
 
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
+from django.db.models import Q
 from django.template.loader import render_to_string
+from django.utils.timezone import now
 from django.shortcuts import redirect
 
 from registration.models import RegistrationProfile
@@ -27,9 +31,28 @@ def logout(request):
 
 
 def password_reset(request):
+    if request.method == "POST":
+        form = UsernameOrEmailPasswordResetForm(request.POST)
+        if form.is_valid():
+            email_or_username = form.cleaned_data["email_or_username"]
+            users = User.objects \
+                .filter(is_active=False) \
+                .filter(Q(email__iexact=email_or_username) |
+                        Q(username__iexact=email_or_username))
+
+            if len(users) == 1:
+                user = users[0]
+                expiration_date = user.date_joined + timedelta(
+                    settings.ACCOUNT_ACTIVATION_DAYS)
+                if expiration_date > now():
+                    return redirect('password_reset_resend_activation')
+                else:
+                    return redirect('password_reset_impossible')
+
     return contrib_auth.password_reset(
         request,
-        password_reset_form=UsernameOrEmailPasswordResetForm)
+        password_reset_form=UsernameOrEmailPasswordResetForm,
+        post_reset_redirect=reverse('password_reset_done'))
 
 
 def forgot_username_page(request):

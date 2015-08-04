@@ -27,6 +27,9 @@ activation_complete = do(
 
 register = NycRegistrationView.as_view()
 
+password_reset_impossible = route(
+    GET=render_template('login/password_reset_impossible.html')())
+
 #####################################
 # LOGIN ROUTES
 #####################################
@@ -38,6 +41,11 @@ forgot_username = do(
 forgot_username_sent = do(
     render_template('login/forgot_username_complete.html'),
     v.forgot_username_sent)
+
+# We use a slightly different template when coming from a failed password reset
+password_reset_resend_activation = do(
+    render_template('login/password_reset_activation_email.html'),
+    route(GET=v.send_activation_email_page, POST=v.send_activation_email))
 
 send_activation_email = do(
     render_template('login/send_activation_email.html'),

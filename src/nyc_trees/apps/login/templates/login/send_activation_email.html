@@ -10,10 +10,12 @@
     <form method="POST" id="send-activation-email-form">
       <fieldset>
         {% csrf_token %}
+        {% block message %}
         <p>
             Need us to send you an account activation email? Enter the Email address you used to register
             with TreesCount! and click the “Send” button below.
         </p>
+        {% endblock message %}
         {% include "core/partials/non_field_errors.html" %}
         <p>
           <div class="fieldWrapper">

@@ -19,6 +19,10 @@ urlpatterns = patterns(
         r.forgot_username_sent,
         name='forgot_username_sent'),
 
+    url(r'^password-reset-activation-email/$',
+        r.password_reset_resend_activation,
+        name='password_reset_resend_activation'),
+
     url(r'^send-activation-email/$',
         r.send_activation_email,
         name='send_activation_email'),
