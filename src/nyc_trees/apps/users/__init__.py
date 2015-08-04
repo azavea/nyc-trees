@@ -86,7 +86,7 @@ def get_privacy_categories(form):
         make_category('Name', 'real_name_is_public'),
         make_category('Groups', 'group_follows_are_public'),
         make_category('Contributions', 'contributions_are_public'),
-        make_category('Achievements', 'achievements_are_public'),
+        make_category('Rewards', 'achievements_are_public'),
     ]
 
 
