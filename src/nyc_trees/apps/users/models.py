@@ -173,7 +173,7 @@ achievements = OrderedDict([
         reward="""Map the most blocks in the city by September
             22nd and get a free pair of tickets to check out
             Pearl Jam, Beyonce, Ed Sheeran and Coldplay
-            from the VIP seats at the Global Citizen Festival
+            from the <b>VIP</b> seats at the Global Citizen Festival
             in Central Park on September 26, 2015."""
     )),
 ])
