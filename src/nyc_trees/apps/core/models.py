@@ -161,7 +161,15 @@ class User(NycModel, AbstractUser):
 
     def clean(self):
         if ((User.objects.exclude(pk=self.pk)
-             .filter(email__iexact=self.email).exists())):
+             .filter(email__iexact=self.username).exists())):
+            raise ValidationError({'username': [
+                'That username is already in use. '
+                'Please supply a different username.']
+            })
+
+        if ((User.objects.exclude(pk=self.pk)
+             .filter(Q(email__iexact=self.email) |
+                     Q(username__iexact=self.email)).exists())):
             raise ValidationError({'email': [
                 'This email address is already in use. '
                 'Please supply a different email address.']

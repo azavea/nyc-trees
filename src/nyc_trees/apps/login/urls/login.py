@@ -8,7 +8,7 @@ from django.conf.urls import patterns, url
 from apps.login import routes as r
 
 
-# Everything is mounted on login/
+# Everything is mounted on accounts/
 urlpatterns = patterns(
     '',
     url(r'^forgot-username/$',
@@ -18,6 +18,10 @@ urlpatterns = patterns(
     url(r'^forgot-username/sent/$',
         r.forgot_username_sent,
         name='forgot_username_sent'),
+
+    url(r'^password-reset-activation-email/$',
+        r.password_reset_resend_activation,
+        name='password_reset_resend_activation'),
 
     url(r'^send-activation-email/$',
         r.send_activation_email,

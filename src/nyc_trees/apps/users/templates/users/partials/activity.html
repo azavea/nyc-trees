@@ -42,7 +42,7 @@
     {% if show_achievements %}
     <section class="achievements">
         {% url 'achievements' as achievements_url %}
-        {% with title="Achievements" url=achievements_url public=user.achievements_are_public %}
+        {% with title="Rewards" url=achievements_url public=user.achievements_are_public %}
             {% include "users/partials/profile/achievements.html" %}
         {% endwith %}
     </section>

@@ -12,6 +12,8 @@ from apps.event.event_list import all_events, immediate_events
 # These URLs have the prefix 'event/'
 urlpatterns = patterns(
     '',
+    # Note: changes to this URL must be kept in sync with achievement text in
+    # src/nyc_trees/apps/users/models.py
     url(r'^$',
         events_list_page, name='events_list_page'),
 

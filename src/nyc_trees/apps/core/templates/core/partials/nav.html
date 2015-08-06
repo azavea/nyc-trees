@@ -34,7 +34,7 @@
             <li{% if active_page == "groups" %} class="active"{% endif %}><a href="{% url 'group_list_page' %}">Groups</a></li>
             <li{% if active_page == "events" %} class="active"{% endif %}><a href="{% url 'events_list_page' %}">Events</a></li>
             <li{% if active_page == "reservations" %} class="active"{% endif %}><a href="{% url 'reservations' %}">Reservations</a></li>
-            <li{% if active_page == "achievements" %} class="active"{% endif %}><a href="{% url 'achievements' %}">Achievements</a></li>
+            <li{% if active_page == "achievements" %} class="active"{% endif %}><a href="{% url 'achievements' %}">Rewards</a></li>
         {% endflag %}
         <li{% if active_page == "about" %} class="active"{% endif %}><a href="{% url 'about_faq_page' %}">About &amp; FAQ</a></li>
         {% if request.user.is_authenticated %}

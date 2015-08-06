@@ -6,11 +6,13 @@
 
 {% block aside %}
 <div class="pageheading-description block">
-    <h2>Achievements</h2>
+    <h2>Rewards</h2>
     <p class="pageheading-description-detail">
       Track your progress in becoming a master
       mapper! Earn badges and become eligible for
-      prizes the more block edges you map!</p>
+      prizes the more block edges you map!
+      Service letters available on request.
+    </p>
 </div>
 {% endblock aside %}
 
@@ -21,7 +23,7 @@
         {% for key, achievement in achievements.achieved %}
             {% include "users/partials/achievement.html" with description=achievement.description_achieved %}
         {% empty %}
-            <p>You haven't unlocked any achievements yet!</p>
+            <p>You haven't unlocked any rewards yet!</p>
         {% endfor %}
     </section>
 {% endif %}
@@ -30,7 +32,7 @@
     {% if user.is_authenticated %}
         <h3 class="color--primary">In Progress</h3>
     {% else %}
-        <h3 class="color--primary">All Achievements</h3>
+        <h3 class="color--primary">All Rewards</h3>
     {% endif %}
 
     {% for key, achievement in achievements.remaining %}

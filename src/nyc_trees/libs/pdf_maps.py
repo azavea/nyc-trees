@@ -50,6 +50,13 @@ def create_pdf(request, url, filename):
     host = request.get_host()
     if hasattr(request, 'session'):  # prevent test failure
         session_id = request.session.session_key
+
+        # `execv` inside `subprocess.check_output` wants all strings as
+        # arguments, but users who aren't logged in return a `None`
+        # session ID. Here we convert `None` to an empty string.
+        if session_id is None:
+            session_id = ''
+
         create_and_save_pdf.delay(session_id, host, url, filename)
 
 

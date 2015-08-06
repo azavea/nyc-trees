@@ -109,6 +109,8 @@ POSTGIS_VERSION = tuple(
 
 
 # LOGGING CONFIGURATION
+LOGGING_CONFIG = None
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
@@ -118,12 +120,23 @@ LOGGING = {
         },
     },
     'loggers': {
+        'apps.core.mail.backends.boto': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+        'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
         'django': {
             'handlers': ['console'],
             'level': 'INFO',
         },
     }
 }
+
+import logging.config
+logging.config.dictConfig(LOGGING)
 # END LOGGING CONFIGURATION
 
 
@@ -264,6 +277,9 @@ ROOT_URLCONF = '%s.urls' % SITE_NAME
 
 AUTH_USER_MODEL = 'core.User'
 
+AUTHENTICATION_BACKENDS = [
+    'libs.auth_backend.EmailOrUsernameAuthentication'
+]
 
 # APP CONFIGURATION
 DJANGO_APPS = (

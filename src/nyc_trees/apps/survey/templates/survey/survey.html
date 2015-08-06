@@ -94,7 +94,7 @@
                 data-grid-url="{{ layer.grid_url }}"
                 data-geolocate-help-shown="{{ geolocate_help_shown }}"
                 {% if bounds %}data-bounds="{{ bounds }}"
-                {% elif location %}data-location="{{ location }}"
+                {% elif location %}data-location="{{ location }}" data-zoom="LOCATION"
                 {% endif %}>
             </div>
         </div>
