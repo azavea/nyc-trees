@@ -66,9 +66,8 @@ class Command(BaseCommand):
         soon = right_now + timedelta(days=settings.RESERVATION_REMINDER_WINDOW)
         expiring_soon = (BlockfaceReservation
                          .objects
+                         .current()
                          .filter(reminder_sent_at__isnull=True,
-                                 canceled_at__isnull=True,
-                                 expires_at__gte=right_now,
                                  expires_at__lte=soon))
 
         if not expiring_soon:
