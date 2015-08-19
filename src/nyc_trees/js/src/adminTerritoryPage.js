@@ -104,7 +104,9 @@ function initSelectionLayer(blockDataList) {
     selectionLayer = new SelectableBlockfaceLayer(territoryMap, grid, {
         onAdd: onBlockfaceMaybeAdd,
         onAdded: onBlockfaceAdded,
-        onRemove: onBlockfaceRemove
+        onRemove: onBlockfaceRemove,
+        opacity: 0.4,
+        thin: true
     }).addTo(territoryMap);
 
     selectBlockfaces(blockDataList);
