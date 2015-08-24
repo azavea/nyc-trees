@@ -15,7 +15,17 @@ var $ = require('jquery'),
         surveyUrlAttr: 'data-survey-url',
         abandonIncomplete: '#survey-detail-abandon-incomplete',
         submitIncomplete: '#survey-detail-submit-incomplete',
-        submitComplete: '#survey-detail-submit-complete'
+        submitComplete: '#survey-detail-submit-complete',
+
+        firstSection: '#choose-action',
+
+        restartSection: '#restart',
+        restartComment: '#restart-submit-comment',
+        confirmRestart: '#survey-detail-restart-confirm',
+
+        reviewSection: '#review',
+        reviewComment: '#review-submit-comment',
+        confirmReview: '#survey-detail-review-confirm',
     },
 
     $map = $(dom.mapSelector),
@@ -35,10 +45,13 @@ var $ = require('jquery'),
         }
     });
 
-function postThen(postUrl, callback) {
+function postThen(postUrl, comment, callback) {
     return function () {
         var p = $.ajax({
             url: postUrl + surveyId + '/',
+            data: {
+                comment: $(comment).val()
+            },
             type: 'POST',
             dataType: 'json'
         });
@@ -64,13 +77,27 @@ $.each($(JSON.parse(treesJSON)), function (__, tree) {
     drawLayer.addData({ 'type': 'Feature', 'geometry': JSON.parse(tree) });
 });
 
-$(dom.abandonIncomplete).on(
-    'click', postThen('/survey/restart_blockedge/', function () {
-        // Note: this URL needs to be kept in sync with
-        // src/nyc_trees/apps/survey/urls/survey.py
-        window.location.href = surveyUrl + '#' + blockfaceId;
-    }));
+$(dom.abandonIncomplete).on('click', function() {
+    $(dom.firstSection).addClass('hidden');
+    $(dom.restartSection).removeClass('hidden');
+});
 
-$(dom.submitIncomplete).on('click', postThen('/survey/flag/', mapAnotherPopup.show));
+$(dom.submitIncomplete).on('click', function() {
+    $(dom.firstSection).addClass('hidden');
+    $(dom.reviewSection).removeClass('hidden');
+});
+
+$(dom.reviewComment).on('blur change keyup paste', function() {
+    var text = $(dom.reviewComment).val();
+    $(dom.confirmReview).prop('disabled', text.trim() === '');
+});
+
+$(dom.confirmRestart).on('click', postThen('/survey/restart_blockedge/', dom.restartComment, function () {
+    // Note: this URL needs to be kept in sync with
+    // src/nyc_trees/apps/survey/urls/survey.py
+    window.location.href = surveyUrl + '#' + blockfaceId;
+}));
+
+$(dom.confirmReview).on('click', postThen('/survey/flag/', dom.reviewComment, mapAnotherPopup.show));
 
 $(dom.submitComplete).on('click', mapAnotherPopup.show);

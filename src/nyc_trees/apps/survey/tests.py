@@ -151,7 +151,8 @@ class SurveySubmitTests(SurveyTestCase):
     def test_flag_survey(self):
         survey = make_survey(self.user, self.block)
         self.assertFalse(survey.is_flagged)
-        req = make_request(user=self.user, method="POST")
+        req = make_request({'comment': 'My species guide blew away'},
+                           user=self.user, method="POST")
         result = flag_survey(req, survey.id)
         self.assertTrue(result['success'])
         survey = Survey.objects.get(id=survey.id)

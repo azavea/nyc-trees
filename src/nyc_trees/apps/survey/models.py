@@ -123,6 +123,10 @@ class Survey(models.Model):
     quit_reason = models.TextField(
         blank=True,
         help_text='Description of why survey was abandoned')
+    submit_comment = models.TextField(
+        blank=True,
+        help_text='Description of why survey was remapped or submitted for '
+                  'review')
 
     # We can't use the NycModel mixin, because we want to add db indexes
     created_at = models.DateTimeField(
