@@ -591,7 +591,13 @@ def _mark_survey_blockface_availability(survey, availability):
 
 def restart_blockface(request, survey_id):
     survey = get_object_or_404(Survey, id=survey_id, user=request.user)
+
+    survey.submit_comment = request.POST.get('comment', '')
+    survey.full_clean()
+    survey.save()
+
     _mark_survey_blockface_availability(survey, True)
+
     expiration_date = now() + settings.RESERVATION_TIME_PERIOD
     BlockfaceReservation.objects.create(blockface=survey.blockface,
                                         user=request.user,
@@ -656,11 +662,18 @@ def _create_survey_and_trees(request, event=None):
 
 def flag_survey(request, survey_id):
     survey = get_object_or_404(Survey, id=survey_id, user=request.user)
-    survey.is_flagged = True
-    survey.full_clean()
-    survey.save()
-    ctx = {'success': True}
-    return ctx
+    comment = request.POST.get('comment', None)
+
+    if comment:
+        survey.submit_comment = comment
+        survey.is_flagged = True
+        survey.full_clean()
+        survey.save()
+
+        return {'success': True}
+    else:
+        return HttpResponseBadRequest("The 'comment' field is required when "
+                                      "flagging surveys for review")
 
 
 def _survey_detail(request, survey_id):
