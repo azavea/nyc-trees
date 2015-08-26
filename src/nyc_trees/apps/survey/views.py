@@ -65,15 +65,21 @@ def progress_page(request):
         'legend_entries': [
             {'mode': 'all', 'css_class': 'mapped', 'label': 'Mapped'},
             {'mode': 'all', 'css_class': 'not-mapped', 'label': 'Not mapped'},
+            {'mode': 'all', 'css_class': 'unmappable',
+             'label': 'Could not be mapped'},
 
             {'mode': 'my', 'css_class': 'mapped', 'label': 'Mapped by you'},
             {'mode': 'my', 'css_class': 'not-mapped',
              'label': 'Not mapped by you'},
+            {'mode': 'my', 'css_class': 'unmappable',
+             'label': 'Could not be mapped'},
 
             {'mode': 'group', 'css_class': 'mapped',
              'label': 'Mapped by this group'},
             {'mode': 'group', 'css_class': 'not-mapped',
              'label': 'Not mapped'},
+            {'mode': 'group', 'css_class': 'unmappable',
+             'label': 'Could not be mapped'},
         ],
         'percentage_ramps': range(0, 100, 10),
         'legend_mode': 'all-percent',
@@ -151,6 +157,9 @@ def _get_survey_type(blockface, user, group):
         latest_survey = Survey.objects \
             .filter(blockface=blockface) \
             .latest('created_at')
+
+        if latest_survey.quit_reason:
+            return 'unmappable'
 
         if user.is_authenticated() and user.pk in {
            latest_survey.user_id, latest_survey.teammate_id}:

@@ -7,6 +7,8 @@
             reserved by you.
         {% elif survey_type == "unavailable" %}
             reserved
+        {% elif survey_type == "unmappable" %}
+            could not be mapped.
         {% elif survey_type == "surveyed-by-me" %}
             mapped by you.
         {% elif survey_type == "surveyed-by-others" %}

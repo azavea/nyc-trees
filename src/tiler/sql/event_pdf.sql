@@ -11,8 +11,7 @@
   JOIN survey_territory AS turf
     ON block.id = turf.blockface_id
   LEFT OUTER JOIN survey_survey AS survey
-    ON (block.id = survey.blockface_id
-        AND COALESCE(survey.quit_reason, '') = '')
+    ON block.id = survey.blockface_id
   WHERE turf.group_id = <%= group_id %>
   ORDER BY block.id, survey.created_at DESC NULLS LAST
 ) AS query
