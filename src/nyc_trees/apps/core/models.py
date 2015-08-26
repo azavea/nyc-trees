@@ -226,7 +226,7 @@ class User(NycModel, AbstractUser):
     def surveys(self):
         """Return surveys user has participated in"""
         from apps.survey.models import Survey
-        return Survey.objects.complete().filter(
+        return Survey.objects.filter(
             Q(user=self) | Q(teammate=self))
 
     @property
