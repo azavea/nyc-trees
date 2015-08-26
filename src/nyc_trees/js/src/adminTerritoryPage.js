@@ -104,7 +104,9 @@ function initSelectionLayer(blockDataList) {
     selectionLayer = new SelectableBlockfaceLayer(territoryMap, grid, {
         onAdd: onBlockfaceMaybeAdd,
         onAdded: onBlockfaceAdded,
-        onRemove: onBlockfaceRemove
+        onRemove: onBlockfaceRemove,
+        dashArray: "5, 25",
+        thin: true
     }).addTo(territoryMap);
 
     selectBlockfaces(blockDataList);
@@ -141,6 +143,17 @@ function onBlockfaceAdded(feature, layer) {
 
 function onBlockfaceMaybeAdd(gridData) {
     var type = gridData.survey_type;
+    // Sometimes the clicks go through the geojson layer and hit the underlying
+    // UtfGrid layer.  If the gridData.id is in the selectedBlockfaces map,
+    // that is what happened, and should *remove* the blockface, instead of adding
+    if (gridData.id in selectedBlockfaces) {
+        selectionLayer.removeLayer(selectedBlockfaces[gridData.id]);
+        delete selectedBlockfaces[gridData.id];
+        statePrompter.lock();
+
+        return false;
+    }
+
     if (type === 'available' || type === 'reserved') {
         return true;
     } else if (gridData.survey_type === 'unavailable') {

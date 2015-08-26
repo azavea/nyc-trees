@@ -9,7 +9,9 @@ var $ = require('jquery'),
  * level */
 module.exports = L.GeoJSON.extend({
     options: {
-        color: undefined
+        color: undefined,
+        dashArray: undefined,
+        thin: false
     },
 
     initialize: function(map, options) {
@@ -22,24 +24,25 @@ module.exports = L.GeoJSON.extend({
         var self = this;
 
         this.options.style = function() {
-            return getStyle(map, self.options.color);
+            return getStyle(map, self.options);
         };
 
         map.on('zoomend', function() {
-            self.setStyle(getStyle(map, self.options.color));
+            self.setStyle(getStyle(map, self.options));
         });
     }
 });
 
-function getStyle(map, color) {
+function getStyle(map, options) {
     return {
-        color: color,
-        fillColor: color,
-        opacity: 1,
+        color: options.color,
+        fillColor: options.color,
+        dashArray: options.dashArray,
         lineCap: 'round',
         lineJoin: 'round',
         clickable: true,
-        weight: getLineWidth(map.getZoom())
+        opacity: 1,
+        weight: getLineWidth(map.getZoom(), options.thin)
     };
 }
 
@@ -47,13 +50,23 @@ function getStyle(map, color) {
 // Line widths are purposefully 2 pixels wider than the tiler styling
 // The "Mapped" lines on the progress map never get smaller than 6 pixels,
 // so we never make our selected line smaller than 8 pixels
-// (even for unmapped / non progress page lines)
-function getLineWidth(zoom) {
+// (even for unmapped / non progress page lines), unless the "thin" option
+// is provided when creating this layer.
+function getLineWidth(zoom, thin) {
     if (zoom >= 19) {
         return 18;
     } else if (zoom === 18) {
         return 10;
-    } else if (zoom <= 17) {
+    } else if (thin) {
+        if (zoom === 17) {
+            return 6;
+        } else if (zoom === 16) {
+            return 4;
+        } else if (zoom <= 15) {
+            return 3;
+        }
+    } else {
+        // The selected lines on the progress page are always 6px or greater
         return 8;
     }
 }
