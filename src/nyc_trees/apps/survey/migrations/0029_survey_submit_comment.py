@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='survey',
             name='submit_comment',
-            field=models.TextField(help_text='Description of why survey was remapped or submitted for review', blank=True),
+            field=models.TextField(help_text='Description of why survey was remapped or submitted for review', null=True, blank=True),
             preserve_default=True,
         ),
     ]
