@@ -1,7 +1,7 @@
 /* If you change these colors, also change src/nyc_trees/sass/partials/_legend.scss */
+@unmappable: #888;
 @mapped: #8BC34A;
 @not-mapped: #85664B;
-@not-mapped-zoomed-out: #85664B;
 
 #survey_blockface {
   line-join: round;
@@ -16,15 +16,15 @@
   [zoom = 18]{ line-width: 8; }
   [zoom = 19]{ line-width: 16; }
 
+  [is_mapped = 'Q'] {
+    line-color: @unmappable;
+  }
   [is_mapped = 'T'] {
     line-color: @mapped;
     [zoom <= 17]{ line-width: 6; }
   }
   [is_mapped = 'F'] {
     line-color: @not-mapped;
-    [zoom <= 15]{
-      line-color: @not-mapped-zoomed-out;
-    }
   }
 }
 

@@ -90,11 +90,6 @@ class Territory(NycModel, models.Model):
         verbose_name_plural = "Territories"
 
 
-class SurveyQuerySet(models.QuerySet):
-    def complete(self):
-        return self.filter(quit_reason='')
-
-
 class Survey(models.Model):
     # We do not anticipate deleting a Blockface, but we definitely
     # should not allow it to be deleted if there is a related Survey
@@ -123,6 +118,11 @@ class Survey(models.Model):
     quit_reason = models.TextField(
         blank=True,
         help_text='Description of why survey was abandoned')
+    submit_comment = models.TextField(
+        null=True,
+        blank=True,
+        help_text='Description of why survey was remapped or submitted for '
+                  'review')
 
     # We can't use the NycModel mixin, because we want to add db indexes
     created_at = models.DateTimeField(
@@ -132,8 +132,6 @@ class Survey(models.Model):
         auto_now=True, db_index=True, editable=False,
         help_text='Time when row was last updated'
     )
-
-    objects = SurveyQuerySet.as_manager()
 
     def __unicode__(self):
         return 'block %s on %s by %s' % (self.blockface_id, self.created_at,

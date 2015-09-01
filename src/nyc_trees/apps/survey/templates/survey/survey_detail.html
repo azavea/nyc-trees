@@ -5,13 +5,27 @@
 {% if show_controls %}
 <div class="map-sidebar">
     <div class="action-bar-survey">
-        <div>
+        <div id="choose-action">
             <p>Does this look right?</p>
             <div class="block--bottom">
                 <button id="survey-detail-submit-complete" class="btn btn-primary btn-block btn-lg">Yes</button>
             </div>
-                <button id="survey-detail-abandon-incomplete" class="btn btn-default btn-block">No, Restart</button>
-                <button id="survey-detail-submit-incomplete" class="btn btn-default btn-block">No, Submit For Review</button>
+            <button id="survey-detail-abandon-incomplete" class="btn btn-default btn-block">No, Restart</button>
+            <button id="survey-detail-submit-incomplete" class="btn btn-default btn-block">No, Submit For Review</button>
+        </div>
+        <div id="restart" class="hidden">
+            <p>Why are you restarting?</p>
+            <div class="block--bottom">
+                <textarea id="restart-submit-comment" class="form-control"></textarea>
+            </div>
+            <button id="survey-detail-restart-confirm" class="btn btn-default btn-block">Restart</button>
+        </div>
+        <div id="review" class="hidden">
+            <p>Why are you submitting this for review?</p>
+            <div class="block--bottom">
+                <textarea id="review-submit-comment" class="form-control"></textarea>
+            </div>
+            <button id="survey-detail-review-confirm" class="btn btn-default btn-block" disabled="disabled">Submit for Review</button>
         </div>
     </div>
 </div>

@@ -65,15 +65,21 @@ def progress_page(request):
         'legend_entries': [
             {'mode': 'all', 'css_class': 'mapped', 'label': 'Mapped'},
             {'mode': 'all', 'css_class': 'not-mapped', 'label': 'Not mapped'},
+            {'mode': 'all', 'css_class': 'unmappable',
+             'label': 'Could not be mapped'},
 
             {'mode': 'my', 'css_class': 'mapped', 'label': 'Mapped by you'},
             {'mode': 'my', 'css_class': 'not-mapped',
              'label': 'Not mapped by you'},
+            {'mode': 'my', 'css_class': 'unmappable',
+             'label': 'Could not be mapped'},
 
             {'mode': 'group', 'css_class': 'mapped',
              'label': 'Mapped by this group'},
             {'mode': 'group', 'css_class': 'not-mapped',
              'label': 'Not mapped'},
+            {'mode': 'group', 'css_class': 'unmappable',
+             'label': 'Could not be mapped'},
         ],
         'percentage_ramps': range(0, 100, 10),
         'legend_mode': 'all-percent',
@@ -151,6 +157,9 @@ def _get_survey_type(blockface, user, group):
         latest_survey = Survey.objects \
             .filter(blockface=blockface) \
             .latest('created_at')
+
+        if latest_survey.quit_reason:
+            return 'unmappable'
 
         if user.is_authenticated() and user.pk in {
            latest_survey.user_id, latest_survey.teammate_id}:
@@ -591,7 +600,13 @@ def _mark_survey_blockface_availability(survey, availability):
 
 def restart_blockface(request, survey_id):
     survey = get_object_or_404(Survey, id=survey_id, user=request.user)
+
+    survey.submit_comment = request.POST.get('comment', '')
+    survey.full_clean()
+    survey.save()
+
     _mark_survey_blockface_availability(survey, True)
+
     expiration_date = now() + settings.RESERVATION_TIME_PERIOD
     BlockfaceReservation.objects.create(blockface=survey.blockface,
                                         user=request.user,
@@ -656,11 +671,18 @@ def _create_survey_and_trees(request, event=None):
 
 def flag_survey(request, survey_id):
     survey = get_object_or_404(Survey, id=survey_id, user=request.user)
-    survey.is_flagged = True
-    survey.full_clean()
-    survey.save()
-    ctx = {'success': True}
-    return ctx
+    comment = request.POST.get('comment', None)
+
+    if comment:
+        survey.submit_comment = comment
+        survey.is_flagged = True
+        survey.full_clean()
+        survey.save()
+
+        return {'success': True}
+    else:
+        return HttpResponseBadRequest("The 'comment' field is required when "
+                                      "flagging surveys for review")
 
 
 def _survey_detail(request, survey_id):
