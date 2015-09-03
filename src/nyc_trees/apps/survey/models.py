@@ -119,7 +119,6 @@ class Survey(models.Model):
         blank=True,
         help_text='Description of why survey was abandoned')
     submit_comment = models.TextField(
-        null=True,
         blank=True,
         help_text='Description of why survey was remapped or submitted for '
                   'review')
