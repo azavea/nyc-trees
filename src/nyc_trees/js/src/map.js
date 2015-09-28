@@ -155,7 +155,7 @@ function initBaseMap(map, options) {
 
     map.addLayer(new L.TileLayer(url, layerOptions));
 
-    if (options.baseMap !== SATELLITE && !options.withLabels) {
+    if (!options.withLabels) {
         labelLayer = new L.TileLayer(protocol + labelsOnlyUrl + suffix, layerOptions);
         labelLayer.setOpacity(0.75);
         map.addLayer(labelLayer);
