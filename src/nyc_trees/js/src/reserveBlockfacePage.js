@@ -76,6 +76,8 @@ var reservationMap = mapModule.create({
     search: true
 });
 
+mapModule.startTrackingUserPosition(reservationMap);
+
 var $current = $(dom.currentReservations),
     $hiddenInput = $(dom.hiddenInput),
     $finishButton = $(dom.finishReservations),
