@@ -1,3 +1,5 @@
+{% load waffle_tags %}
+
 {% with event=info.event %}
 {# If the user can edit the group, this section should be a div with hrefs, otherwise the whole thing should be an href #}
 {% if event_list.user_can_edit_group %}
@@ -70,15 +72,19 @@
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="group-detail-event-info-submenu-{{ event.id }}">
                     <li><a role="menuitem" tabindex="-1" href="{{ event.get_absolute_url }}">View event</a></li>
-                    {% if not event.is_past %}
-                    <li><a role="menuitem" tabindex="-1" href="{% url 'event_edit' group_slug=event.group.slug event_slug=event.slug %}">Edit details</a></li>
-                    {% endif %}
+                    {% flag full_access %}
+                        {% if not event.is_past %}
+                        <li><a role="menuitem" tabindex="-1" href="{% url 'event_edit' group_slug=event.group.slug event_slug=event.slug %}">Edit details</a></li>
+                        {% endif %}
+                    {% endflag %}
                     {% if event.can_send_email %}
                     <li><a role="menuitem" tabindex="-1" href="{% url 'event_email' group_slug=event.group.slug event_slug=event.slug %}">Email attendees</a></li>
                     {% endif %}
-                    {% if not event.is_past %}
-                    <li><a role="menuitem" tabindex="-1" href="{% url 'event_admin_check_in_page' group_slug=event.group.slug event_slug=event.slug %}">Event check-in</a></li>
-                    {% endif %}
+                    {% flag full_access %}
+                        {% if not event.is_past %}
+                        <li><a role="menuitem" tabindex="-1" href="{% url 'event_admin_check_in_page' group_slug=event.group.slug event_slug=event.slug %}">Event check-in</a></li>
+                        {% endif %}
+                    {% endflag %}
                     <li><a role="menuitem" tabindex="-1" href="javascript:;" class="js-copy-event-url"
                             data-event-url="{{ info.event_share_url }}">Get shareable link</a></li>
                 </ul>

@@ -26,16 +26,18 @@
                     <a href="javascript:" data-toggle="modal" data-target="#treecorder-survey-modal">Treecorder</a>
                 {% endif %}
             </li>
-            <li{% if active_page == "dashboard" %} class="active"{% endif %}>
-                <a href="{% url 'home_page' %}">{% if user.is_authenticated %}Dashboard{% else %}Homepage{% endif %}</a>
-            </li>
-            <li{% if active_page == "progress_page" %} class="active"{% endif %}><a href="{% url 'progress_page' %}">Progress Map</a></li>
-            <li{% if active_page == "training" %} class="active"{% endif %}><a href="{% url 'training_summary_pure' %}">Training</a></li>
-            <li{% if active_page == "groups" %} class="active"{% endif %}><a href="{% url 'group_list_page' %}">Groups</a></li>
-            <li{% if active_page == "events" %} class="active"{% endif %}><a href="{% url 'events_list_page' %}">Events</a></li>
-            <li{% if active_page == "reservations" %} class="active"{% endif %}><a href="{% url 'reservations' %}">Reservations</a></li>
-            <li{% if active_page == "achievements" %} class="active"{% endif %}><a href="{% url 'achievements' %}">Rewards</a></li>
         {% endflag %}
+        <li{% if active_page == "dashboard" %} class="active"{% endif %}>
+            <a href="{% url 'home_page' %}">{% if user.is_authenticated %}Dashboard{% else %}Homepage{% endif %}</a>
+        </li>
+        <li{% if active_page == "progress_page" %} class="active"{% endif %}><a href="{% url 'progress_page' %}">Progress Map</a></li>
+        <li{% if active_page == "training" %} class="active"{% endif %}><a href="{% url 'training_summary_pure' %}">Training</a></li>
+        <li{% if active_page == "groups" %} class="active"{% endif %}><a href="{% url 'group_list_page' %}">Groups</a></li>
+        <li{% if active_page == "events" %} class="active"{% endif %}><a href="{% url 'events_list_page' %}">Events</a></li>
+        {% flag full_access %}
+            <li{% if active_page == "reservations" %} class="active"{% endif %}><a href="{% url 'reservations' %}">Reservations</a></li>
+        {% endflag %}
+        <li{% if active_page == "achievements" %} class="active"{% endif %}><a href="{% url 'achievements' %}">Rewards</a></li>
         <li{% if active_page == "about" %} class="active"{% endif %}><a href="{% url 'about_faq_page' %}">About &amp; FAQ</a></li>
         {% if request.user.is_authenticated %}
             <li><a href="{% url 'auth_logout' %}">Logout</a></li>

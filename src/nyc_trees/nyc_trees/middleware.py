@@ -11,10 +11,10 @@ from django.contrib.auth import logout
 from django.shortcuts import redirect
 
 
-class SoftLaunchMiddleware(object):
+class FullAccessMiddleware(object):
     def __init__(self):
-        self.redirect_url = getattr(settings, 'SOFT_LAUNCH_REDIRECT_URL', '/')
-        regexes = getattr(settings, 'SOFT_LAUNCH_REGEXES', [])
+        self.redirect_url = settings.LIMITED_ACCESS_REDIRECT_URL
+        regexes = settings.LIMITED_ACCESS_REGEXES
         self.regexes = [re.compile(r) for r in regexes]
 
     def process_view(self, request, view_func, view_args, view_kwargs):

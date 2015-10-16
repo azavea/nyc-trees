@@ -14,11 +14,9 @@
                     <div class="col-sm-8 col-sm-push-4 col-md-6 col-md-push-6">
                         <div class="hero-content">
                             <h1 class="hero-heading">We're mapping <span class="color--primary">every&nbsp;street&nbsp;tree</span> in&nbsp;New&nbsp;York&nbsp;City!</h1>
-                            {% flag full_access %}
-                                <div class="text-right">
-                                    <a class="hero-link hero-text text-center color--secondary h4" href="{% url 'progress_page' %}">Show me the map →</a>
-                                </div>
-                            {% endflag %}
+                            <div class="text-right">
+                                <a class="hero-link hero-text text-center color--secondary h4" href="{% url 'progress_page' %}">Show me the map →</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -50,7 +48,6 @@
                     </div>
                 </section>
 
-                {% flag full_access %}
                 <section class="section-ticker text-center">
                     <div class="home-container">
                         <h2>Help us count our <span class="color--primary">street&nbsp;trees</span>!</h2>
@@ -69,7 +66,6 @@
                         </div>
                     </div>
                 </section>
-                {% endflag %}
 
                 <section class="section-appeal">
                     <div class="row">
