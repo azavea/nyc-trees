@@ -358,7 +358,7 @@ NYC_BOUNDS = (-74.259088, 40.495996, -73.700272, 40.915256)
 GEOCODE_FALLBACK_SUFFIX = ', New York, NY'
 
 # The maximum number of blockface reservations per user
-RESERVATIONS_LIMIT = 12
+RESERVATIONS_LIMIT = 50
 
 # How long blockface reservations will last
 RESERVATION_TIME_PERIOD = timedelta(days=7)
