@@ -1,5 +1,6 @@
-{% comment %}
+{% load waffle_tags %}
 
+{% comment %}
 The following variables must be in scope:
 ===
   - user (object)      Model object
@@ -20,8 +21,10 @@ The following variables must be in scope:
         <a id="rsvp" href="#" class="btn btn-switch disabled">This event has ended.</a>
     {% else %}
         {% if is_admin %}
+            {% flag full_access %}
             <a href="{{ event_edit_url }}"
                class="btn btn-secondary"><i class="icon-cog"></i>Edit</a>
+            {% endflag %}
         {% endif %}
         {% if is_admin %}
            <a id="rsvp"

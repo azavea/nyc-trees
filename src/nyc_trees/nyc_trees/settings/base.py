@@ -263,7 +263,7 @@ MIDDLEWARE_CLASSES = (
     'django_statsd.middleware.GraphiteRequestTimingMiddleware',
     'django_statsd.middleware.GraphiteMiddleware',
     'waffle.middleware.WaffleMiddleware',
-    'nyc_trees.middleware.SoftLaunchMiddleware',
+    'nyc_trees.middleware.FullAccessMiddleware',
     'nyc_trees.middleware.BannedUserMiddleware',
 )
 # END MIDDLEWARE CONFIGURATION
@@ -367,14 +367,28 @@ TILER_URL = '//%s' % environ.get('TILER_HOST', 'localhost')
 
 MAX_GROUP_IMAGE_SIZE_IN_BYTES = 102400  # 100 KB
 
-SOFT_LAUNCH_REDIRECT_URL = "/"
-SOFT_LAUNCH_REGEXES = [
-    r'^/user/',
+LIMITED_ACCESS_REDIRECT_URL = "/"
+# The following regexes control what pages users are allowed to access
+LIMITED_ACCESS_REGEXES = [
+    r'^/$',
     r'^/accounts/',
-    r'^/login/',
-    r'^/faq/',
     r'^/admin/',
+    r'^/blockedge/(progress|printable-map|near|map-poll|group-popup)/',
+    r'^/blockedge/group-borders.json',
+    r'^/blockedge/\d+/',
+    r'^/event/',
+    r'^/faq/',
+    r'^/geocode/',
+    r'^/group/$',
+    r'^/group/[\w-]+/$',
+    r'^/group/[\w-]+/events/',
+    r'^/group/[\w-]+/event/[\w-]+/$',
+    r'^/group/[\w-]+/event/[\w-]+/(email|popup|printable-map|map-poll|unsubscribe)',  # NOQA
+    r'^/group/\d+/territory.json',
     r'^/health-check/',
+    r'^/login/',
+    r'^/training/$',
+    r'^/user/',
 ]
 
 RESERVATION_REMINDER_WINDOW = 3
