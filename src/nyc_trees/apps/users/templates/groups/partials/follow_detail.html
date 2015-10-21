@@ -1,3 +1,5 @@
+{% load waffle_tags %}
+
 {% if render_follow_button_without_count %}
     {% include 'groups/partials/follow_button.html' %}
 {% else %}
@@ -6,12 +8,18 @@
         <span class="h6">Follower{{ counts.follows|pluralize }}</span>
     </div>
     <div class="col-xs-6 text-right">
+    {% flag full_access %}
         {% if event_list.user_can_edit_group %}
             <a href="{{edit_url}}" class="btn btn-switch icon-cog">Admin</a>
         {% else %}
+            <div class="btn-follow-container">
+                {% include 'groups/partials/follow_button.html' %}
+            </div>
+        {% endif %}
+    {% else %}
         <div class="btn-follow-container">
             {% include 'groups/partials/follow_button.html' %}
         </div>
-        {% endif %}
+    {% endflag %}
     </div>
 {% endif  %}

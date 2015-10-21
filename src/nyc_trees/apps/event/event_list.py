@@ -9,6 +9,7 @@ from urllib import urlencode
 from django.db.models import Q
 from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
+from django.template.context import RequestContext
 
 from dateutil.relativedelta import relativedelta
 from django.utils.timezone import now
@@ -242,13 +243,14 @@ class EventList(object):
     def url_name(self):
         return self.name + '_partial'
 
-    def endpoint(self, *args, **kwargs):
+    def endpoint(self, request, *args, **kwargs):
         """
         The endpoint used to render a partial.
         """
         return render_to_response(
             self.template_path,
-            {'event_list': self.as_context(*args, **kwargs)})
+            {'event_list': self.as_context(request, *args, **kwargs)},
+            context_instance=RequestContext(request))
 
     #########################################
     # event list control management

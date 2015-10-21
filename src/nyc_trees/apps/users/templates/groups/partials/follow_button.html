@@ -1,3 +1,5 @@
+{% load waffle_tags %}
+
 {% comment %}
 
 The following variables must be in scope:
@@ -7,17 +9,23 @@ The following variables must be in scope:
   - user_is_following (bool)  Is the current user following this group?
 
 {% endcomment %}
-{% if user_is_following %}
-<a href="javascript:void(0)"
-    class="btn btn-default btn-unfollow"
-    data-url="{% url 'unfollow_group' group_slug=group.slug %}"
-    data-verb="POST">Following</a>
-{% elif not user.is_authenticated %}
-<a href="{% url 'login' %}?next={% url 'follow_group' group_slug=group.slug  %}"
-    class="btn btn-switch btn-follow">Follow</a>
+{% flag full_access %}
+    {% if user_is_following %}
+    <a href="javascript:void(0)"
+        class="btn btn-default btn-unfollow"
+        data-url="{% url 'unfollow_group' group_slug=group.slug %}"
+        data-verb="POST">Following</a>
+    {% elif not user.is_authenticated %}
+    <a href="{% url 'login' %}?next={% url 'follow_group' group_slug=group.slug  %}"
+        class="btn btn-switch btn-follow">Follow</a>
+    {% else %}
+    <a href="javascript:void(0)"
+        class="btn btn-switch btn-follow"
+        data-url="{% url 'follow_group' group_slug=group.slug %}"
+        data-verb="POST">Follow</a>
+    {% endif %}
 {% else %}
-<a href="javascript:void(0)"
-    class="btn btn-switch btn-follow"
-    data-url="{% url 'follow_group' group_slug=group.slug %}"
-    data-verb="POST">Follow</a>
-{% endif %}
+    {% if user_is_following %}
+    <a class="btn btn-default btn-follow" href="javascript:void(0)">Following</a>
+    {% endif %}
+{% endflag %}

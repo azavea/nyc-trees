@@ -1,60 +1,65 @@
 {% load utils %}
+{% load waffle_tags %}
 
-{% if user.online_training_complete %}
-<h3>Online Training Complete!</h3>
-<p>Visit <a href="{% url 'home_page' %}">the dashboard</a> to explore the site and start mapping!</p>
+{% flag full_access %}
+    {% if user.online_training_complete %}
+    <h3>Online Training Complete!</h3>
+    <p>Visit <a href="{% url 'home_page' %}">the dashboard</a> to explore the site and start mapping!</p>
 
-<p>You can also visit the Groups page to learn more about mapping opportunities and follow groups for event information.</p>
+    <p>You can also visit the Groups page to learn more about mapping opportunities and follow groups for event information.</p>
 
-<p>The next step after completing online training is to sign up for a training event where you will practice what you've learned in the field! <a href="{% url 'events_list_page' %}?active_filter=training">Sign up for training events here.</a></p>
+    <p>The next step after completing online training is to sign up for a training event where you will practice what you've learned in the field! <a href="{% url 'events_list_page' %}?active_filter=training">Sign up for training events here.</a></p>
 
-{% elif is_started %}
-<h3>You're almost there!</h3>
-<p>Continue your training and help us make trees count!</p>
+    {% elif is_started %}
+    <h3>You're almost there!</h3>
+    <p>Continue your training and help us make trees count!</p>
 
-{% else %}
-<h3>Become a trained volun<span class="color--primary">treer</span> today!</h3>
+    {% else %}
+    <h3>Become a trained volun<span class="color--primary">treer</span> today!</h3>
 
-<p>Before you can RSVP to mapping events, you need to be trained to map trees as a volun<b>treer</b>!
-   Click Start below to continue and help make trees count!</p>
+    <p>Before you can RSVP to mapping events, you need to be trained to map trees as a volun<b>treer</b>!
+    Click Start below to continue and help make trees count!</p>
 
-{% endif %}
+    {% endif %}
 
-<p>You can also download a PDF of the training materials <a target="_blank" href="{{ STATIC_URL }}training/TreesCount2015Training.pdf">here.</a></p>
+    <p>You can also download a PDF of the training materials <a target="_blank" href="{{ STATIC_URL }}training/TreesCount2015Training.pdf">here.</a></p>
 
-{% for step_info in training_steps %}
-<div class="row training block item {% if not step_info.is_visitable %}inactive{% endif %}">
-    <div class="col-xs-8">
-        <h5>
-            <a {% if step_info.is_visitable %}href="{{ step_info.step.pure_url }}"{% endif %}>
-                {{ step_info.step.description }}</a>
-        </h5>
-    </div>
-    <div class="col-xs-4 text-right">
-        <a {% if step_info.is_visitable %}href="{{ step_info.step.pure_url }}"{% endif %}>
-            {% if step_info.is_complete %}
-            <i class="icon-check h4"></i>
-            {% elif step_info.is_next %}
-            <span class="btn-primary btn">Start</span>
-            {% endif %}
-        </a>
-    </div>
-</div>
-{% endfor %}
-{% if user.online_training_complete %}
-<a href="{% url 'groups_to_follow' %}"
-   class="training block item">
-    <div class="row">
+    {% for step_info in training_steps %}
+    <div class="row training block item {% if not step_info.is_visitable %}inactive{% endif %}">
         <div class="col-xs-8">
-            <h5>Groups to Follow</h5>
+            <h5>
+                <a {% if step_info.is_visitable %}href="{{ step_info.step.pure_url }}"{% endif %}>
+                    {{ step_info.step.description }}</a>
+            </h5>
         </div>
         <div class="col-xs-4 text-right">
-          {% if user.training_finished_groups_to_follow %}
-              <i class="icon-check h4"></i>
-          {% else %}
-              <button class="btn-primary btn">Go</button>
-          {% endif %}
+            <a {% if step_info.is_visitable %}href="{{ step_info.step.pure_url }}"{% endif %}>
+                {% if step_info.is_complete %}
+                <i class="icon-check h4"></i>
+                {% elif step_info.is_next %}
+                <span class="btn-primary btn">Start</span>
+                {% endif %}
+            </a>
         </div>
     </div>
-</a>
-{% endif %}
+    {% endfor %}
+    {% if user.online_training_complete %}
+    <a href="{% url 'groups_to_follow' %}"
+    class="training block item">
+        <div class="row">
+            <div class="col-xs-8">
+                <h5>Groups to Follow</h5>
+            </div>
+            <div class="col-xs-4 text-right">
+            {% if user.training_finished_groups_to_follow %}
+                <i class="icon-check h4"></i>
+            {% else %}
+                <button class="btn-primary btn">Go</button>
+            {% endif %}
+            </div>
+        </div>
+    </a>
+    {% endif %}
+{% else %}
+    <p>You can download a PDF of the training materials <a target="_blank" href="{{ STATIC_URL }}training/TreesCount2015Training.pdf">here.</a></p>
+{% endflag %}
