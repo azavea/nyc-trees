@@ -1,6 +1,7 @@
 {% extends "base_two_frames.html" %}
 
 {% load utils %}
+{% load waffle_tags %}
 
 {% block top %}
 
@@ -113,11 +114,13 @@
         </div>
     </div>
 
+    {% flag full_access %}
     <div class="pageheading-controls block">
         <div id="rsvp-section" class="row">
             {% include "event/partials/rsvp.html" %}
         </div>
     </div>
+    {% endflag %}
 
 {% endblock aside %}
 
