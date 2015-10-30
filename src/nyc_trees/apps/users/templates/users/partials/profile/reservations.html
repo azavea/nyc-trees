@@ -24,13 +24,10 @@
 {% if reservations.count > 0 %}
     {% include "core/partials/polling_download_section.html" with poll_url=reservations.map_poll_url %}
 {% else %}
-    <p>Ready to map on your own? If you&rsquo;re interested in mapping over the winter, please email
-        <a href="mailto:Treescount@parks.nyc.gov">Treescount@parks.nyc.gov</a>
-        to sign up for a winter data collection course and learn how to
-        keep rolling.</p>
-    <p>You can also check back in the spring to see where we still need your help, and
-        <a href="{{ reservations_url }}">reserve more available block edges for mapping</a>.
-    </p>
+    Ready to map on your own? If you&rsquo;re interested in mapping over the winter, please email
+    <a href="mailto:Treescount@parks.nyc.gov">Treescount@parks.nyc.gov</a>
+    to sign up for a winter data collection course and learn how to
+    keep rolling.
 <!--
     Ready to map on your own? <a href="{{ reservations_url }}">Reserve available block edges</a> for mapping!
 -->
