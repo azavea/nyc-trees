@@ -22,15 +22,6 @@
 </section>
 {% endif %}
 
-{% if show_groups and follows.follows %}
-<section class="groups">
-    {% url 'group_list_page' as groups_url %}
-    {% with title="Groups" url=groups_url public=user.group_follows_are_public %}
-        {% include "users/partials/profile/groups.html" %}
-    {% endwith %}
-</section>
-{% endif %}
-
 {% flag full_access %}
     {% if show_reservations %}
     <section class="reservations">
@@ -47,6 +38,15 @@
     {% url 'achievements' as achievements_url %}
     {% with title="Rewards" url=achievements_url public=user.achievements_are_public %}
         {% include "users/partials/profile/achievements.html" %}
+    {% endwith %}
+</section>
+{% endif %}
+
+{% if show_groups and follows.follows %}
+<section class="groups">
+    {% url 'group_list_page' as groups_url %}
+    {% with title="Groups" url=groups_url public=user.group_follows_are_public %}
+        {% include "users/partials/profile/groups.html" %}
     {% endwith %}
 </section>
 {% endif %}
