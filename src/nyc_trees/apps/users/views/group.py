@@ -92,7 +92,7 @@ def group_detail(request):
 
     event_list = (group_detail_events
                   .configure(chunk_size=3,
-                             active_filter=EventList.Filters.CURRENT,
+                             active_filter=EventList.Filters.PAST,
                              filterset_name=EventList.chronoFilters)
                   .as_context(request, group_slug=group.slug))
     user_is_following = Follow.objects.filter(user_id=request.user.id,
@@ -161,7 +161,7 @@ def edit_group(request, form=None):
         form = GroupSettingsForm(instance=request.group, label_suffix='')
     event_list = (group_edit_events
                   .configure(chunk_size=3,
-                             active_filter=EventList.Filters.CURRENT,
+                             active_filter=EventList.Filters.PAST,
                              filterset_name=EventList.chronoFilters)
                   .as_context(request, group_slug=group.slug))
     pending_mappers = TrustedMapper.objects.filter(group=request.group,
