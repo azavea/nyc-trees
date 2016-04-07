@@ -1,9 +1,9 @@
 {% extends "event/partials/event_list.html" %}
 
-
-{% block filter_ul_extra_controls %}
-<li><a href="{% url 'add_event' group_slug=event_list.group_slug %}">+ New</a></li>
-{% endblock filter_ul_extra_controls %}
+{# Removing the ability to add an event for the 2016 season #}
+{#{% block filter_ul_extra_controls %}#}
+{#<li><a href="{% url 'add_event' group_slug=event_list.group_slug %}">+ New</a></li>#}
+{#{% endblock filter_ul_extra_controls %}#}
 
 {% block event_list_loop %}
     {% for info in event_list.event_infos %}
