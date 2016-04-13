@@ -3,7 +3,10 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
-from datetime import timedelta
+from datetime import timedelta, datetime
+from unittest import skip
+
+from dateutil.relativedelta import relativedelta
 from waffle.models import Flag
 
 from django.contrib.auth.models import AnonymousUser
@@ -14,25 +17,25 @@ from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpResponseRedirect
 from django.test import TestCase
 from django.test.utils import override_settings
-from django.utils.timezone import now
+from django.utils.timezone import now, get_current_timezone
 
 from apps.core.models import User, Group
 from apps.core.test_utils import (make_request, make_event, make_tree,
-                                  make_survey, make_species,
+                                  make_survey, make_species, tree_defaults,
                                   complete_online_training, survey_defaults)
 
 from apps.event.models import EventRegistration
 from apps.event.routes import event_registration, check_in_user_to_event
 
-from apps.survey.models import Blockface, Territory, Survey
+from apps.home.routes import home_page
+
+from apps.survey.models import Blockface, Territory, Survey, Tree
 
 from apps.users.models import (Follow, Achievement, achievements,
                                AchievementDefinition, TrustedMapper,
                                update_achievements)
 from apps.users.views.user import user_detail as user_detail_view
 from apps.users.views.group import group_detail as group_detail_view
-
-from apps.home.routes import home_page
 from apps.users.routes.user import (user_detail as user_detail_route,
                                     request_individual_mapper_status)
 from apps.users.routes.group import (group_detail, group_edit,
@@ -570,6 +573,7 @@ class AchievementTests(UsersTestCase):
                             for a in self.user.achievement_set.all()])
         self.assertEqual(set(expected_ids), achieved_ids)
 
+    @skip("2015 achievements are now inactive")
     def testGroupFollows(self):
         self._assertAchievements([])
         for i in range(0, 5):
@@ -577,16 +581,19 @@ class AchievementTests(UsersTestCase):
             Follow.objects.create(group=group, user=self.user)
         self._assertAchievements([AchievementDefinition.FOLLOW_GROUPS])
 
+    @skip("2015 achievements are now inactive")
     def testOnlineTraining(self):
         self._assertAchievements([])
         complete_online_training(self.user)
         self._assertAchievements([AchievementDefinition.ONLINE_TRAINING])
 
+    @skip("2015 achievements are now inactive")
     def testTrainingEvent(self):
         self._assertAchievements([])
         self.user.field_training_complete = True
         self._assertAchievements([AchievementDefinition.TRAINING_EVENT])
 
+    @skip("2015 achievements are now inactive")
     def testMappingEvent(self):
         self._assertAchievements([])
         for title in {'Event 1', 'Event 2', 'Event 3'}:
@@ -595,6 +602,7 @@ class AchievementTests(UsersTestCase):
                                              did_attend=True)
         self._assertAchievements([AchievementDefinition.MAPPING_EVENT])
 
+    @skip("2015 achievements are now inactive")
     def test50Blocks(self):
         self._assertAchievements([])
         geom = MultiLineString(LineString(((0, 0), (1, 1))))
@@ -610,3 +618,43 @@ class AchievementTests(UsersTestCase):
 
         self._assertAchievements([AchievementDefinition.MAP_50,
                                   AchievementDefinition.MAP_100])
+
+    def test_600_trees(self):
+        self._assertAchievements([])
+        geom = MultiLineString(LineString(((0, 0), (1, 1))))
+        blockface = Blockface.objects.create(geom=geom)
+
+        survey = make_survey(self.user, blockface)
+
+        t = tree_defaults()
+        t['survey'] = survey
+
+        trees = [Tree(**t) for _ in xrange(0, 600)]
+        Tree.objects.bulk_create(trees)
+
+        self._assertAchievements([AchievementDefinition.TREES_100,
+                                  AchievementDefinition.TREES_300,
+                                  AchievementDefinition.TREES_500])
+
+    def test_four_seasons(self):
+        self._assertAchievements([])
+        tz = get_current_timezone()
+        july_2015 = datetime(2015, 7, 1, tzinfo=tz)
+
+        geom = MultiLineString(LineString(((0, 0), (1, 1))))
+        blocks = [Blockface(geom=geom) for i in range(0, 12)]
+        Blockface.objects.bulk_create(blocks)
+
+        surveys = []
+        s = survey_defaults()
+        for b in Blockface.objects.all():
+            s.update(user=self.user, blockface=b)
+            surveys.append(Survey(**s))
+        Survey.objects.bulk_create(surveys)
+
+        # Backdate created_at on each survey
+        for i, survey in enumerate(self.user.surveys):
+            survey.created_at = july_2015 + relativedelta(months=i)
+            survey.save()
+
+        self._assertAchievements([AchievementDefinition.FOUR_SEASONS])
