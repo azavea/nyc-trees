@@ -36,5 +36,5 @@
 - name: Create JS test harness
   template: src=testem-harness.html.j2
             dest={{ app_static_root }}/test.html
-  sudo_user: nyc-trees
+  become_user: nyc-trees
   when: "['development', 'test'] | some_are_in(group_names)"

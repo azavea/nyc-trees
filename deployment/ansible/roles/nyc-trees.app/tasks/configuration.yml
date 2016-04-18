@@ -39,7 +39,7 @@
         owner=root
         group=nyc-trees
         mode=0750
-  with_items: app_config
+  with_items: "{{ app_config }}"
   notify:
     - Restart nyc-trees-app
 

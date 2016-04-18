@@ -1,0 +1,89 @@
+- src: azavea.apache2
+  version: 0.2.2
+
+- src: azavea.ntp
+  version: 0.1.1
+
+- src: azavea.pip
+  version: 0.1.1
+
+- src: azavea.nodejs
+  version: 0.3.0
+
+- src: azavea.postgresql
+  version: 0.3.0
+
+- src: azavea.postgresql-support
+  version: 0.3.0
+
+- src: azavea.postgis
+  version: 0.3.0
+
+- src: azavea.redis
+  version: 0.1.0
+
+- src: azavea.nginx
+  version: 0.2.1
+
+- src: azavea.mapnik
+  version: 0.1.0
+
+- src: azavea.logstash
+  version: 0.1.0
+
+- src: azavea.relp
+  version: 0.1.1
+
+- src: azavea.kibana
+  version: 0.3.1
+
+- src: azavea.unzip
+  version: 0.1.2
+
+- src: azavea.graphite
+  version: 0.6.0
+
+- src: azavea.statsite
+  version: 0.1.1
+
+- src: azavea.daemontools
+  version: 0.1.0
+
+- src: azavea.collectd
+  version: 0.2.0
+
+- src: azavea.git
+  version: 0.1.0
+
+- src: azavea.pgweb
+  version: 1.0.0
+
+- src: azavea.elasticsearch
+  version: 0.2.0
+
+- src: azavea.java
+  version: 0.1.1
+
+- src: azavea.curator
+  version: 0.1.0
+
+- src: azavea.ruby
+  version: 0.3.0
+
+- src: azavea.beaver
+  version: 1.0.1
+
+- src: azavea.swapfile
+  version: 0.1.0
+
+- src: azavea.build-essential
+  version: 0.1.0
+
+- src: azavea.tasseo
+  version: 0.1.1
+
+- src: azavea.phantomjs
+  version: 0.1.0
+
+- src: azavea.celery
+  version: 0.2.0
