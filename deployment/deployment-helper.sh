@@ -150,6 +150,9 @@ function get_latest_internal_ami() {
 }
 
 function create_ami() {
+  # Remove all symlinks so that Packer does not complain
+  find . -type l -delete
+
   packer build \
     -only="${1}" \
     -var "aws_ubuntu_ami=$(get_latest_ubuntu_ami)" \
