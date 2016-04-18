@@ -1,7 +1,6 @@
 ---
 - name: Touch application log file if it does not exist
-  command: touch {{ item }}
-           creates={{ item }}
+  copy: content="" dest="{{ item }}" force=no
   with_items:
     - "{{ app_log }}"
     - "{{ app_gunicorn_log }}"

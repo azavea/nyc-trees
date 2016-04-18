@@ -33,7 +33,7 @@
         owner=root
         group=nyc-trees
         mode=0750
-  with_items: tiler_config
+  with_items: "{{ tiler_config }}"
   notify:
     - Restart nyc-trees-tiler
 

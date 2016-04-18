@@ -20,18 +20,6 @@ app_config:
   - { file: "DJANGO_SECRET_KEY", content: "{{ app_secret_key }}" }
   - { file: "TILER_HOST", content: "{{ tiler_host }}" }
 
-app_sauce_labs_config:
-  - { file: "SELENIUM_HOST", content: "{{ lookup('env', 'SELENIUM_HOST') }}" }
-  - { file: "SELENIUM_PORT", content: "{{ lookup('env', 'SELENIUM_PORT') }}" }
-  - { file: "SELENIUM_PLATFORM", content: "{{ lookup('env', 'SELENIUM_PLATFORM') }}" }
-  - { file: "SELENIUM_BROWSER", content: "{{ lookup('env', 'SELENIUM_BROWSER') }}" }
-  - { file: "SELENIUM_VERSION", content: "{{ lookup('env', 'SELENIUM_VERSION') }}" }
-  - { file: "SAUCE_USER_NAME", content: "{{ lookup('env', 'SAUCE_USER_NAME') }}" }
-  - { file: "SAUCE_API_KEY", content: "{{ lookup('env', 'SAUCE_API_KEY') }}" }
-  - { file: "BUILD_NUMBER", content: "{{ lookup('env', 'BUILD_NUMBER') }}" }
-  - { file: "JOB_NAME", content: "{{ lookup('env', 'JOB_NAME') }}" }
-  - { file: "SELENIUM_SAUCE_CONNECT_PATH", content: "/opt/sc-{{ sc_version }}-{{ sc_os }}/bin/sc" }
-
 app_log: /var/log/nyc-trees-app.log
 app_log_rotate_count: 5
 app_log_rotate_interval: daily
