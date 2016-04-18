@@ -72,11 +72,7 @@ The main tool used is [gulp](http://gulpjs.com/), which is exposed through `npm 
 
 ### Caching
 
-In order to speed up things up, you may want to consider using a local caching proxy. The `VAGRANT_PROXYCONF_ENDPOINT` environment variable provides a way to supply a caching proxy endpoint for the virtual machines to use:
-
-```bash
-$ VAGRANT_PROXYCONF_ENDPOINT="http://192.168.96.10:8123/" vagrant up
-```
+In order to speed up things up, you may want to consider leveraging the `vagrant-cachier` plugin. If installed, it is automatically used by Vagrant.
 
 ## Data
 

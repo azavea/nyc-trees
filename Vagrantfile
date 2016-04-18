@@ -32,22 +32,13 @@ else
   VAGRANT_NETWORK_OPTIONS = { auto_correct: false }
 end
 
-VAGRANT_PROXYCONF_ENDPOINT = ENV["VAGRANT_PROXYCONF_ENDPOINT"]
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "ubuntu/trusty64"
 
-  # Wire up the proxy if:
-  #
-  #   - The vagrant-proxyconf Vagrant plugin is installed
-  #   - The user set the VAGRANT_PROXYCONF_ENDPOINT environment variable
-  #
-  if Vagrant.has_plugin?("vagrant-proxyconf") &&
-     !VAGRANT_PROXYCONF_ENDPOINT.nil?
-    config.proxy.http     = VAGRANT_PROXYCONF_ENDPOINT
-    config.proxy.https    = VAGRANT_PROXYCONF_ENDPOINT
-    config.proxy.no_proxy = "localhost,127.0.0.1"
+  if Vagrant.has_plugin?("vagrant-cachier")
+    config.cache.scope = :machine
   end
 
   config.vm.define "services" do |services|
