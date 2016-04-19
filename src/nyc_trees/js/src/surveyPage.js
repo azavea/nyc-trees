@@ -100,7 +100,8 @@ var dom = {
         noTreesPopup: '#no-trees-popup',
         noTreesConfirm: '#no-trees-confirm',
 
-        treeHeading: '.sticky-title'
+        treeHeading: '.sticky-title',
+        blockId: '[data-block-id]'
     },
 
     showSelectStart = makeMutexShow([
@@ -198,6 +199,8 @@ function selectBlockface(data) {
     endPointLayers.addLayer(endCircle);
 
     showSelectStart();
+
+    $(dom.blockId).html(Number(blockfaceId).toLocaleString());
 }
 
 endPointLayers.setStyle(defaultStyle);
