@@ -11,6 +11,9 @@ set -x
 # command itself fails.
 vagrant ssh app -c "flake8 /opt/app/apps --exclude migrations || echo flake8 check failed"
 
+# Run the production JS pipeline if it hasn't been run yet
+vagrant ssh app -c "if [ ! -e /var/cache/nyc-trees/static/rev-manifest.json ]; then cd /opt/app && npm run build; fi"
+
 # Run the Django test suite with --noinput flag.
 vagrant ssh app -c "cd /opt/app && envdir /etc/nyc-trees.d/env ./manage.py test --noinput"
 
