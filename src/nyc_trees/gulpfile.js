@@ -93,9 +93,7 @@ gulp.task('version', buildTasks, function(cb) {
                 // Ignore test bundle.
                 /test\.bundle\.js$/,
                 // Ignore typography.com font bundle
-                /^\/font\/298264\//,
-                // Ignore training assets
-                /^\/img\/training\//
+                /^\/font\/298264\//
             ]
         }))
         .pipe(gulp.dest(versionedDir, {mode: '0775'}))
