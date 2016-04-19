@@ -4,12 +4,41 @@ from __future__ import unicode_literals
 from __future__ import division
 
 from collections import OrderedDict
+from datetime import datetime
+from itertools import groupby
+
+from dateutil import rrule
 
 from django.db import models
+from django.utils.timezone import get_current_timezone
 
 from apps.core.models import User, Group
 
 from libs.mixins import NycModel
+from libs.sql import get_user_tree_count
+
+
+def _has_mapped_in_four_seasons(user):
+    tz = get_current_timezone()
+    june_2015 = datetime(2015, 6, 1, tzinfo=tz)
+    sept_2016 = datetime(2016, 9, 30, tzinfo=tz)
+
+    seasons = rrule.rrule(rrule.MONTHLY, bymonth=(3, 6, 9, 12), bysetpos=1,
+                          cache=True, dtstart=june_2015, until=sept_2016)
+
+    surveys = user.surveys \
+        .filter(created_at__gt=june_2015, created_at__lt=sept_2016) \
+        .order_by('created_at')
+
+    survey_groups = groupby(surveys,
+                            lambda survey: seasons.before(survey.created_at))
+
+    matching_seasons = 0
+    for _, survey_group in survey_groups:
+        if len(list(survey_group)) >= 3:
+            matching_seasons += 1
+
+    return matching_seasons >= 4
 
 
 class AchievementDefinition(object):
@@ -19,9 +48,12 @@ class AchievementDefinition(object):
     description_future - requirements (before achievement)
     badge - path for a static image file
     achieved - a function which takes a user and returns a boolean
+    sponsor - (optional) the sponsor of the achievement
+    reward - (optional) the description of the reward
+    active - if it is still possible to unlock at this time
     """
     def __init__(self, name, description, description_achieved, badge,
-                 achieved, sponsor=None, reward=None):
+                 achieved, sponsor=None, reward=None, active=False):
         assert isinstance(name, basestring)
         assert isinstance(description, basestring)
         assert isinstance(description_achieved, basestring)
@@ -29,6 +61,7 @@ class AchievementDefinition(object):
         assert callable(achieved)
         assert sponsor is None or isinstance(sponsor, basestring)
         assert reward is None or isinstance(reward, basestring)
+        assert isinstance(active, bool)
 
         self.name = name
         self.description = description
@@ -37,6 +70,7 @@ class AchievementDefinition(object):
         self.achieved = achieved
         self.sponsor = sponsor
         self.reward = reward
+        self.active = active
 
     ONLINE_TRAINING = 0
     FOLLOW_GROUPS = 1
@@ -48,6 +82,12 @@ class AchievementDefinition(object):
     MAP_400 = 7
     MAP_1000 = 8
     MAP_MOST = 9
+    TREES_100 = 10
+    TREES_300 = 11
+    TREES_500 = 12
+    TREES_750 = 13
+    TREES_MOST = 14
+    FOUR_SEASONS = 15
 
 
 achievements = OrderedDict([
@@ -176,6 +216,58 @@ achievements = OrderedDict([
             from the <b>VIP</b> seats at the Global Citizen Festival
             in Central Park on September 26, 2015."""
     )),
+    (AchievementDefinition.TREES_100, AchievementDefinition(
+        name='Lavender Linden',
+        description='Map 100 Trees',
+        description_achieved='Mapped 100 Trees',
+        badge='img/badges/ic_badge_top_mapper.png',
+        achieved=lambda user: get_user_tree_count(user) >= 100,
+        active=True
+    )),
+    (AchievementDefinition.TREES_300, AchievementDefinition(
+        name='Magenta Maple',
+        description='Map 300 Trees',
+        description_achieved='Mapped 300 Trees',
+        badge='img/badges/ic_badge_top_mapper.png',
+        achieved=lambda user: get_user_tree_count(user) >= 300,
+        active=True
+    )),
+    (AchievementDefinition.TREES_500, AchievementDefinition(
+        name='Silver Sophora',
+        description='Map 500 Trees',
+        description_achieved='Mapped 500 Trees',
+        badge='img/badges/ic_badge_top_mapper.png',
+        achieved=lambda user: get_user_tree_count(user) >= 500,
+        active=True
+    )),
+    (AchievementDefinition.TREES_750, AchievementDefinition(
+        name='Gold Gingko',
+        description='Map 750 Trees',
+        description_achieved='Mapped 750 Trees',
+        badge='img/badges/ic_badge_top_mapper.png',
+        achieved=lambda user: get_user_tree_count(user) >= 750,
+        active=True
+    )),
+    (AchievementDefinition.TREES_MOST, AchievementDefinition(
+        name='Platinum Planetree',
+        description='Map the Most Trees',
+        description_achieved='Mapped the most trees',
+        badge='img/badges/ic_badge_top_mapper.png',
+        achieved=lambda user: False,  # doesn't need to be live updated
+        active=True
+    )),
+    (AchievementDefinition.FOUR_SEASONS, AchievementDefinition(
+        name='Four Season Mapper',
+        description="""Map at Least 3 Block Edges in Four of the Five Mapping
+            Seasons (Summer 2015, Fall 2015, Winter 2015, Spring 2016, Summer
+            2016)""",
+        description_achieved="""Mapped at Least 3 Block Edges in Four of the
+            Five Mapping Seasons (Summer 2015, Fall 2015, Winter 2015, Spring
+            2016, Summer 2016)""",
+        badge='img/badges/ic_badge_top_mapper.png',
+        achieved=_has_mapped_in_four_seasons,
+        active=True
+    )),
 ])
 
 
@@ -188,7 +280,8 @@ def update_achievements(user):
                         for a in user.achievement_set.all()])
 
     for id, definition in achievements.iteritems():
-        if id not in achieved_ids and definition.achieved(user):
+        if ((id not in achieved_ids and definition.active and
+             definition.achieved(user))):
             a = Achievement(user=user, achievement_id=id)
             a.save()
 

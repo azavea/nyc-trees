@@ -103,9 +103,10 @@ def get_achievements_for_user(user):
         'achieved': [(key, achievements[key])
                      for key in achievements.iterkeys()
                      if key in user_achievements],
-        'remaining': [(key, achievements[key])
-                      for key in achievements.iterkeys()
-                      if key not in user_achievements],
+        'remaining': [
+            (key, achievements[key])
+            for key in achievements.iterkeys()
+            if key not in user_achievements and achievements[key].active],
         'all': achievements
     }
 
