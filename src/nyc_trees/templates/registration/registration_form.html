@@ -6,21 +6,11 @@
 
 {% block registration_content %}
 <p>
-    Training for new TreesCount! volun<b>treers</b> has ended for 2015, but there are still
-    many opportunities to get involved in the urban forest. For immediate volunteer
-    opportunities, please visit the NYC Parks
-    <a href="http://www.nycgovparks.org/reg/stewardship">stewardship page</a>.
-    If you&rsquo;d like updates on TreesCount! progress and the future Street Tree Map,
-    please create a username and choose a password.
-    If you are already a trained volun<b>treer</b>, you can
-    <a href="{% url "auth_login" %}">log in</a> to your dashboard
-    using the link in the top right corner.
-<!--
-    TreesCount! 2015 volunteers will use equipment and materials provided by NYC Parks and Partner Groups
-    to inventory street trees throughout New York City. Create a username and choose a password to get started
-    or <a href="{% url "auth_login" %}">log in</a> using the link in the top right corner to participate
-    if you have already created an account.
--->
+    Training for new TreesCount! volun<b>treers</b> has ended.
+    Sign up below to be notified when TreesCount! data collection is complete,
+    or learn about other volunteer opportunities. Please create a username and choose a password.
+    If you are already a trained volun<b>treer</b>, you can <a href="{% url "auth_login" %}">log in</a>
+    to your dashboard using the link in the top right corner.
 </p>
 <form method="post" action="{{ request.path }}">
     {% csrf_token %}

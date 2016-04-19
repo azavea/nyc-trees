@@ -480,12 +480,6 @@ class TrustedMapperTests(UsersTestCase):
     def _become_trusted_mapper(self):
         user, group = self.user, self.group
 
-        # Does the grant access button appear on the group detail page?
-        request = make_request(user=user)
-        response = group_detail(request, group_slug=group.slug)
-        self.assertTrue(
-            'Request Independent Mapper Status' in response.content)
-
         # User request mapper status
         request = make_request(user=user, method='POST')
         request_mapper_status(request, group_slug=group.slug)
@@ -495,13 +489,11 @@ class TrustedMapperTests(UsersTestCase):
 
         # Group admin approve mapper status
         request = make_request(user=group.admin, method='PUT')
-        response = edit_user_mapping_priveleges(request,
-                                                group_slug=group.slug,
-                                                username=user.username)
+        edit_user_mapping_priveleges(request, group_slug=group.slug,
+                                     username=user.username)
         self.assertEqual(1, len(mail.outbox),
                          'Expected approving a trusted mapper to send an '
                          'email')
-        self.assertTrue('btn-approve' in response.content)
 
     def _is_eligible(self):
         return self.user.eligible_to_become_trusted_mapper(self.group)

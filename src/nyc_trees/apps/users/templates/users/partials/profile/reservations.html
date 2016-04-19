@@ -24,13 +24,8 @@
 {% if reservations.count > 0 %}
     {% include "core/partials/polling_download_section.html" with poll_url=reservations.map_poll_url %}
 {% else %}
-    Ready to map on your own? If you&rsquo;re interested in mapping over the winter, please email
-    <a href="mailto:Treescount@parks.nyc.gov">Treescount@parks.nyc.gov</a>
-    to sign up for a winter data collection course and learn how to
-    keep rolling.
-<!--
-    Ready to map on your own? <a href="{{ reservations_url }}">Reserve available block edges</a> for mapping!
--->
+    If you are an independent mapper, <b>register for a Leafout Workshop</b>,
+    to find out what’s new and receive helpful mapping tips from Parks staff.
 {% endif %}
 
 {% endblock section_content %}
