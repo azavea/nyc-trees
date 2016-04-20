@@ -489,6 +489,8 @@ def start_survey(request):
         'no_more_reservations': reservations_for_user <= 1,
         'geolocate_help_shown': _was_help_shown(request,
                                                 'survey_geolocate_help_shown'),
+        'preview_help_shown': _was_help_shown(request,
+                                              'survey_preview_help_shown'),
     }
 
 
@@ -512,6 +514,8 @@ def start_survey_from_event(request, event_slug):
         'choices': _get_survey_choices(),
         'geolocate_help_shown': _was_help_shown(request,
                                                 'survey_geolocate_help_shown'),
+        'preview_help_shown': _was_help_shown(request,
+                                              'survey_preview_help_shown'),
     }
 
 
