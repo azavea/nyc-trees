@@ -10,8 +10,7 @@
     <div class="map-sidebar">
         <div class="map-sidebar-context block">
             <h2 class="pull-left">Progress</h2>
-            {% if request.user.is_authenticated %}
-                <div class="dropdown pull-right">
+            <div class="dropdown pull-right {% if not request.user.is_authenticated %}hidden{% endif %}">
                     <button type="button" class="btn btn-default dropdown-toggle progress-toggle" data-toggle="dropdown">
                         All Users
                     </button>
@@ -45,7 +44,6 @@
     {#                    </li>#}
                     </ul>
                 </div>
-            {% endif %}
             <div class="clear">
                 {% include 'survey/partials/progress_legend.html' %}
             </div>
