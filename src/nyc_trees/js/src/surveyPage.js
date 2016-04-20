@@ -91,6 +91,8 @@ var dom = {
         quitReason: '#quit-reason',
         quit: '#quit',
 
+        previewHelpPopup: '#preview-button-help',
+
         btnGroupToTeammate: '#btn-group-to-teammate',
         btnToTeammate: '#btn-to-teammate',
         selectTeammate: '#select-teammate',
@@ -405,6 +407,10 @@ $(dom.btnNext).click(function(e) {
     blockfaceMap.removeLayer(grid);
     mapModule.hideCrosshairs();
     mapModule.stopTrackingUserPosition(blockfaceMap);
+
+    if ($(dom.previewHelpPopup).length > 0) {
+        $(dom.previewHelpPopup).modal('show');
+    }
 });
 
 $(dom.addTree).click(function (){

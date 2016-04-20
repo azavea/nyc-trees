@@ -137,6 +137,9 @@ class User(NycModel, AbstractUser):
     reservations_page_help_shown = models.BooleanField(
         default=False,
         help_text='Seen help text on Reservations page?')
+    survey_preview_help_shown = models.BooleanField(
+        default=False,
+        help_text='Seen preview button help text on Survey page?')
 
     reservation_ids_in_map_pdf = models.TextField(
         default='', blank=True,
