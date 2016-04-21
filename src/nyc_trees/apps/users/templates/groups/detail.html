@@ -98,34 +98,6 @@
           {% include "groups/partials/detail_event_list.html" %}
         </div>
     </section>
-    {% if group.allows_individual_mappers %}
-    <section>
-        <form method="POST" action="{% url 'request_mapper_status' group_slug=group.slug %}">
-            {% csrf_token %}
-            <h4 class="section-heading">Independent Mapping</h4>
-            {% if user_is_trusted_mapper %}
-            <p>
-                You are an approved independent mapper for this group, so you
-                can reserve and map blocks in its Census Zone. Remember to
-                contact your local loaning hub to check out individual tools.
-            </p>
-            {% elif mapper_status_pending %}
-            <p>
-                You have requested independent mapper status for this group.
-                Your request is pending.
-            </p>
-            {% else %}
-            <p>
-                Volun<b>treers</b> are able to map trees on their own, outside of scheduled events!
-                Click the button below to request independent mapping status within this group&rsquo;s Census Zone.
-                Remember to contact your local loaning hub to check out individual tools and start mapping on your own.
-            </p>
-            <button class="btn btn-primary btn-mobile--max">Request Independent Mapper Status</button>
-            {% endif %}
-        </form>
-    </section>
-    {% endif %}
-
 {% endblock main %}
 
 {% block page_js %}

@@ -10,7 +10,7 @@
 <body>
 
 <p>
-    Thank you for signing up for TreesCount!
+    Thank you for your interest in TreesCount!
 </p>
 <p>
     Your username is {{ user.username }}<br />
@@ -22,13 +22,21 @@
     </a>
 </p>
 <p>
-    Your email address has now been added to our list for updates on TreesCount! progress.
-    If you have questions about the project, please email us at treescount@parks.nyc.gov.
-    <a href="mailto:treescount@parks.nyc.gov">treescount@parks.nyc.gov</a>
+    Your email has now been added to our list for updates on TreesCount! <a href="{% url 'progress_page' %}">progress</a>.
 </p>
 <p>
     If you&rsquo;re interested in immediate opportunities to volunteer, please visit the NYC Parks
     <a href="http://www.nycgovparks.org/reg/stewardship">stewardship page</a>.
+</p>
+<p>
+    As a reward for your interest, we wanted you to be among the first people in New York City with access to our
+    <a href="https://tree-map.nycgovparks.org/">NYC Street Tree Map</a>. This map lets you browse the street trees of New York City,
+    mark trees as your favorite, share them with your friends, review species information and tree stats, and keep a record of your
+    stewardship activities, so that you can see how much your work affects our urban forest! We ask you to use this map and share
+    your feedback with us. 
+</p>
+<p>
+    If you have questions about the project, please email us at {{ "treescount@parks.nyc.gov"|urlize }}.
 </p>
 </body>
 
