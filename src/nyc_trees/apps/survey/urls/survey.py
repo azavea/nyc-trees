@@ -6,7 +6,7 @@ from __future__ import division
 from django.conf.urls import patterns, url
 
 from apps.survey.routes import (survey, survey_from_event,
-                                flag_survey, survey_detail,
+                                flag_survey, survey_detail, survey_preview,
                                 confirm_survey, confirm_survey_from_event,
                                 restart_blockface, teammates_for_mapping)
 
@@ -37,5 +37,9 @@ urlpatterns = patterns(
 
     # Note: changes here must be kept in sync with
     # src/nyc_trees/js/src/surveyPage.js
-    url(r'^teammates/$', teammates_for_mapping)
+    url(r'^teammates/$', teammates_for_mapping),
+
+    # Note: changes here must be kept in sync with
+    # src/nyc_trees/js/src/surveyPage.js
+    url(r'^preview/$', survey_preview)
 )

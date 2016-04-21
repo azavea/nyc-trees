@@ -8,6 +8,7 @@ import json
 from datetime import timedelta
 
 from waffle.models import Flag
+from django_tinsel.exceptions import HttpBadRequestException
 
 from functools import partial
 
@@ -15,7 +16,6 @@ from django.contrib.gis.geos import LineString, MultiLineString
 from django.conf import settings
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.db import connection
-from django.http import HttpResponseBadRequest
 from django.test import TestCase
 from django.utils.timezone import now
 
@@ -130,12 +130,12 @@ class SurveySubmitTests(SurveyTestCase):
         self.assertEqual(tree.problems, 'Stones,Sneakers')
 
     def test_missing_trees(self):
-        error = self.submit_survey({'has_trees': True}, [])
-        self.assertTrue(isinstance(error, HttpResponseBadRequest))
+        with self.assertRaises(HttpBadRequestException):
+            self.submit_survey({'has_trees': True}, [])
 
     def test_extra_trees(self):
-        error = self.submit_survey({'has_trees': False}, [tree_defaults()])
-        self.assertTrue(isinstance(error, HttpResponseBadRequest))
+        with self.assertRaises(HttpBadRequestException):
+            self.submit_survey({'has_trees': False}, [tree_defaults()])
 
     def test_missing_blockface(self):
         with self.assertRaises(ObjectDoesNotExist):

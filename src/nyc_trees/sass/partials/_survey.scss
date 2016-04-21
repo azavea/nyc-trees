@@ -21,7 +21,12 @@
     left: 0;
     right: 0;
     @media (max-width: $screen-sm - 1) {
-        bottom: 20rem;
+        #map {
+            bottom: 20rem;
+        }
+        #preview-map {
+            bottom: 4rem;
+        }
     }
     @media (max-height: $screen-xs-height) and (max-width: $screen-sm) {
         top: 4.5rem;
@@ -62,6 +67,9 @@
             @media (max-height: $screen-xs-height) and (max-width: $screen-sm) {
                 top: 4.5rem;
             }
+        }
+        &.skinny {
+            height: 4rem;
         }
     }
 
@@ -300,14 +308,16 @@
 #preview-survey-container {
     @media (max-width: $screen-sm - 1) {
         padding: 0;
+    }
+}
 
-        #preview-survey {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            border-radius: 0;
-        }
+@media (max-width: $screen-sm - 1) {
+    .preview-btn {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border-radius: 0;
     }
 }
 
