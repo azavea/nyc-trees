@@ -42,13 +42,16 @@
         </div>
         <div id="survey" class="hidden">
             <div id="tree-form-header">
-                <h4>Treecorder</h4>
+                <h4>Treecorder &ndash; Block <span data-block-id></span></h4>
             </div>
             <div id="tree-form-container" class="clearfix">
                 <a class="btn btn-warning btn-block" href="#no-trees-popup" data-toggle="modal" id="no-trees">No Trees On This Block</a>
                 {% include "survey/partials/tree_form.html" with tree_number=1 %}
             </div>
             <div class="tree-form-block">
+                <div class="field" id="preview-survey-container">
+                    <button class="btn btn-secondary btn-block" id="preview-survey">Preview Block <span data-block-id></span></button>
+                </div>
                 <div class="field">
                     <button class="btn btn-primary btn-block" id="another-tree">+ Another Tree</button>
                     <button class="btn btn-gray btn-block" id="no-further-trees">No Further Trees on Block</button>

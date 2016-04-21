@@ -297,6 +297,20 @@
     top: -.75rem;
 }
 
+#preview-survey-container {
+    @media (max-width: $screen-sm - 1) {
+        padding: 0;
+
+        #preview-survey {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            border-radius: 0;
+        }
+    }
+}
+
 #survey {
     position: relative;  // for sticky titles
     background-color: #fff;
