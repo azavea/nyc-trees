@@ -50,7 +50,7 @@
             </div>
             <div class="tree-form-block">
                 <div class="field" id="preview-survey-container">
-                    <button class="btn btn-secondary btn-block" id="preview-survey">Preview Block <span data-block-id></span></button>
+                    <button class="btn btn-secondary btn-block preview-btn" id="preview-survey">Preview Block <span data-block-id></span></button>
                 </div>
                 <div class="field">
                     <button class="btn btn-primary btn-block" id="another-tree">+ Another Tree</button>
@@ -77,6 +77,9 @@
                 <img src="{{ "img/logo-treekit.png"|static_url }}" alt="TreeKit" />
             </div>
         </div>
+        <div id="close-preview-section" class="hidden">
+            <button class="btn btn-secondary btn-block preview-btn" id="close-preview">Close Block Preview</button>
+        </div>
     </div>
 </div>
 
@@ -100,6 +103,7 @@
                 {% elif location %}data-location="{{ location }}" data-zoom="LOCATION"
                 {% endif %}>
             </div>
+            <div id="preview-map" class="map-survey preview-map hidden"></div>
         </div>
     </div>
 {% endblock main %}

@@ -92,6 +92,9 @@ survey_detail = individual_mapper_do(
     route(GET=do(render_template('survey/survey_detail.html'),
                  v.survey_detail)))
 
+survey_preview = login_required(
+    route(POST=json_api_call(v.survey_preview)))
+
 confirm_survey = individual_mapper_do(
     route(GET=do(render_template('survey/survey_detail.html'),
                  update_with({'show_controls': True}),

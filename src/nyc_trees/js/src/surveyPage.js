@@ -103,7 +103,14 @@ var dom = {
         noTreesConfirm: '#no-trees-confirm',
 
         treeHeading: '.sticky-title',
-        blockId: '[data-block-id]'
+        blockId: '[data-block-id]',
+
+        previewButton: '#preview-survey',
+        closePreviewSection: '#close-preview-section',
+        closePreview: '#close-preview',
+
+        blockfaceMapId: 'map',
+        previewMapId: 'preview-map'
     },
 
     showSelectStart = makeMutexShow([
@@ -130,6 +137,7 @@ var dom = {
 
     blockfaceId = mapUtil.getBlockfaceIdFromUrl(),
     mapObjects = mapModule.createAndGetControls({
+        domId: dom.blockfaceMapId,
         legend: false,
         search: true,
         geolocation: true,
@@ -163,7 +171,11 @@ var dom = {
     mapInteractionEnabled = true,
 
     stickyTitles = stickyTitlesModule(
-        $(window), dom.treeHeading, $(dom.actionBar));
+        $(window), dom.treeHeading, $(dom.actionBar)),
+
+    previewMap = null,
+    previewLayer = null,
+    savedScrollPosition = 0;
 
 statePrompter.lock();
 
@@ -449,6 +461,88 @@ $(dom.addTree).click(function (){
     }
 });
 
+$(dom.previewButton).on('click', previewSurvey);
+
+function previewSurvey(e) {
+    var $forms = $(dom.surveyPage).find('form'),
+        $treeForms = $forms.filter(dom.treeForms);
+
+    if (checkFormValidity($forms)) {
+        // Disable preview button to prevent double POSTs
+        $(dom.previewButton).off('click', previewSurvey);
+
+        var data = createSurveyDataWithTrees($treeForms);
+
+        // Keep this URL in sync with src/nyc_trees/apps/survey/urls/survey.py
+        $.ajax({
+            url: '/survey/preview/',
+            type: 'POST',
+            dataType: 'json',
+            data: JSON.stringify(data)
+        })
+        .done(showPreview)
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            toastr.warning('Double-check your survey and try previewing it again.', 'Something went wrong...');
+        })
+        .always(function() {
+            // Re-enable the preview button
+            $(dom.previewButton).on('click', previewSurvey);
+        });
+    }
+}
+
+function showPreview(trees) {
+    if (isMobile()) {
+        // Some browsers scroll <html>, some scroll <body>, have to query both
+        savedScrollPosition = $('html').scrollTop() || $('body').scrollTop();
+    } else {
+        savedScrollPosition = $(dom.mapSidebar).scrollTop();
+    }
+
+    $(dom.surveyPage).addClass('hidden');
+    $(dom.actionBar).removeClass('expanded').addClass('skinny');
+    $(dom.closePreviewSection).removeClass('hidden');
+    $('#' + dom.blockfaceMapId).addClass('hidden');
+    $('#' + dom.previewMapId).removeClass('hidden');
+
+    if (previewMap === null) {
+        previewMap = mapModule.create({
+            domId: dom.previewMapId,
+            legend: false,
+            search: false,
+            baseMap: mapModule.SATELLITE,
+            bounds: selectedLayer.getBounds()
+        });
+        previewLayer = new L.geoJson(null, {
+            pointToLayer: function(feature, latLng) {
+                return mapUtil.styledCircleMarker(latLng);
+            }
+        });
+        previewLayer.addTo(previewMap);
+    }
+    previewLayer.clearLayers();
+    previewLayer.addData(selectedLayer.toGeoJSON());
+    previewLayer.setStyle(mapUtil.styledStreetConfirmation);
+
+    $.each(trees, function (__, tree) {
+        previewLayer.addData({ 'type': 'Feature', 'geometry': tree });
+    });
+}
+
+$(dom.closePreview).click(function () {
+    $(dom.surveyPage).removeClass('hidden');
+    $(dom.actionBar).addClass('expanded').removeClass('skinny');
+    $(dom.closePreviewSection).addClass('hidden');
+    $('#' + dom.blockfaceMapId).removeClass('hidden');
+    $('#' + dom.previewMapId).addClass('hidden');
+
+    if (isMobile()) {
+        $('html,body').scrollTop(savedScrollPosition);
+    } else {
+        $(dom.mapSidebar).scrollTop(savedScrollPosition);
+    }
+});
+
 function getScrollToTopPosition($el) {
     if (isMobile()) {
         return $el.offset().top - $(dom.mainHeader).height();
@@ -582,6 +676,21 @@ function createSurveyData() {
     };
 }
 
+function createSurveyDataWithTrees($treeForms) {
+    var treeData = $treeForms.map(function(i, form) {
+        return getTreeData(form);
+    }).get();
+
+    // Only the last tree has "distance_to_end", so it gets special handling
+    treeData[treeData.length - 1].distance_to_end = $(dom.distanceToEnd).val();
+
+    var data = createSurveyData();
+    data.survey.has_trees = true;
+    data.trees = treeData;
+
+    return data;
+}
+
 function submitSurveyWithTrees() {
     var $forms = $(dom.surveyPage).find('form'),
         $treeForms = $forms.filter(dom.treeForms);
@@ -590,16 +699,7 @@ function submitSurveyWithTrees() {
         // Disable submit button to prevent double POSTs
         $(dom.submitSurvey).off('click', submitSurveyWithTrees);
 
-        var treeData = $treeForms.map(function(i, form) {
-            return getTreeData(form);
-        }).get();
-
-        // Only the last tree has "distance_to_end", so it gets special handling
-        treeData[treeData.length - 1].distance_to_end = $(dom.distanceToEnd).val();
-
-        var data = createSurveyData();
-        data.survey.has_trees = true;
-        data.trees = treeData;
+        var data = createSurveyDataWithTrees($treeForms);
 
         // There are two views we could POST to, 'survey' and
         // 'survey_from_event', depending on how we got to this page.
