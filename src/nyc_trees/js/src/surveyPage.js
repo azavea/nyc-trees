@@ -108,6 +108,7 @@ var dom = {
         previewButton: '#preview-survey',
         closePreviewSection: '#close-preview-section',
         closePreview: '#close-preview',
+        restartSurvey: '#restart-survey',
 
         blockfaceMapId: 'map',
         previewMapId: 'preview-map'
@@ -930,3 +931,8 @@ if (!helpShown) {
         $('.geolocate-help').hide();
     });
 }
+
+$(dom.restartSurvey).on('click', function() {
+    window.location.hash = blockfaceId;
+    window.location.reload();
+});

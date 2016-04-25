@@ -315,9 +315,19 @@
     .preview-btn {
         position: fixed;
         bottom: 0;
+        border-radius: 0;
+        width: 50%;
+    }
+    #close-preview {
+        left: 0;
+    }
+    #restart-survey {
+        right: 0;
+    }
+    #preview-survey {
         left: 0;
         right: 0;
-        border-radius: 0;
+        width: 100%;
     }
 }
 
