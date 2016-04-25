@@ -33,8 +33,8 @@ function createAndGetControls(options) {
     }, options);
 
     var mapOptions = {
-        minZoom: zoom.MIN,
-        maxZoom: zoom.MAX,
+        minZoom: options.minZoom || zoom.MIN,
+        maxZoom: options.maxZoom || zoom.MAX,
         attributionControl: false,
         zoomControl: false,
         maxBounds: L.latLngBounds(config.bounds[0], config.bounds[1]).pad(4)

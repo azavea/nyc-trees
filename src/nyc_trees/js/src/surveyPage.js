@@ -506,13 +506,14 @@ function showPreview(trees) {
     $('#' + dom.blockfaceMapId).addClass('hidden');
     $('#' + dom.previewMapId).removeClass('hidden');
 
+    var bounds = selectedLayer.getBounds();
     if (previewMap === null) {
         previewMap = mapModule.create({
             domId: dom.previewMapId,
             legend: false,
             search: false,
             baseMap: mapModule.SATELLITE,
-            bounds: selectedLayer.getBounds()
+            minZoom: blockfaceMap.getBoundsZoom(bounds) - 1,
         });
         previewLayer = new L.geoJson(null, {
             pointToLayer: function(feature, latLng) {
@@ -521,6 +522,9 @@ function showPreview(trees) {
         });
         previewLayer.addTo(previewMap);
     }
+    previewMap.fitBounds(bounds);
+    previewMap.setMaxBounds(bounds);
+
     previewLayer.clearLayers();
     previewLayer.addData(selectedLayer.toGeoJSON());
     previewLayer.setStyle(mapUtil.styledStreetConfirmation);
