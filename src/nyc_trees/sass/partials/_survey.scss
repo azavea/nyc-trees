@@ -354,7 +354,6 @@
 
 #treeform-sponsor {
     text-align: center;
-    margin-top: 30px;
     background: #f3f3f3;
     margin-bottom: -10px;
     position: absolute;
@@ -363,6 +362,7 @@
         width: auto;
         left: -2rem;
         right: -2rem;
+        margin-top: 30px;
     }
     span {
         font-size: $font-size-small;
