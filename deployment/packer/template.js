@@ -77,6 +77,7 @@
         "sleep 5",
         "sudo apt-get update -qq",
         "sudo apt-get install python-pip python-dev -y",
+        "sudo pip install paramiko==1.16.0",
         "sudo pip install ansible==2.0.1.0"
       ]
     },
