@@ -9,7 +9,7 @@ Please click on this link to confirm your email address.
 
 http://{{site.domain}}{% url 'registration_activate' activation_key %}{% endblock content %}
 
-Once your account is activated, your email address will be added to our list for updates on TreesCount! progress.
+Once you have clicked the link above, your email address will be added to our list for updates on TreesCount! progress.
 
 If you’re interested in immediate opportunities to volunteer, please visit http://www.nycgovparks.org/reg/stewardship.
 
