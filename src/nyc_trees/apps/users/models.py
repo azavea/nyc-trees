@@ -222,7 +222,8 @@ achievements = OrderedDict([
         description_achieved='Mapped 100 Trees',
         badge='img/badges/ic_badge_top_mapper.png',
         achieved=lambda user: get_user_tree_count(user) >= 100,
-        active=True
+        active=True,
+        reward="Reward in development. Stay tuned!"
     )),
     (AchievementDefinition.TREES_300, AchievementDefinition(
         name='Magenta Maple',
@@ -230,7 +231,8 @@ achievements = OrderedDict([
         description_achieved='Mapped 300 Trees',
         badge='img/badges/ic_badge_top_mapper.png',
         achieved=lambda user: get_user_tree_count(user) >= 300,
-        active=True
+        active=True,
+        reward="Reward in development. Stay tuned!"
     )),
     (AchievementDefinition.TREES_500, AchievementDefinition(
         name='Silver Sophora',
@@ -238,7 +240,8 @@ achievements = OrderedDict([
         description_achieved='Mapped 500 Trees',
         badge='img/badges/ic_badge_top_mapper.png',
         achieved=lambda user: get_user_tree_count(user) >= 500,
-        active=True
+        active=True,
+        reward="Reward in development. Stay tuned!"
     )),
     (AchievementDefinition.TREES_750, AchievementDefinition(
         name='Gold Gingko',
@@ -246,7 +249,8 @@ achievements = OrderedDict([
         description_achieved='Mapped 750 Trees',
         badge='img/badges/ic_badge_top_mapper.png',
         achieved=lambda user: get_user_tree_count(user) >= 750,
-        active=True
+        active=True,
+        reward="Reward in development. Stay tuned!"
     )),
     (AchievementDefinition.TREES_MOST, AchievementDefinition(
         name='Platinum Planetree',
@@ -254,7 +258,8 @@ achievements = OrderedDict([
         description_achieved='Mapped the most trees',
         badge='img/badges/ic_badge_top_mapper.png',
         achieved=lambda user: False,  # doesn't need to be live updated
-        active=True
+        active=True,
+        reward="Reward in development. Stay tuned!"
     )),
     (AchievementDefinition.FOUR_SEASONS, AchievementDefinition(
         name='Four Season Mapper',
@@ -266,7 +271,8 @@ achievements = OrderedDict([
             2016, Summer 2016)""",
         badge='img/badges/ic_badge_top_mapper.png',
         achieved=_has_mapped_in_four_seasons,
-        active=True
+        active=True,
+        reward="Reward in development. Stay tuned!"
     )),
 ])
 
