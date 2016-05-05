@@ -33,7 +33,7 @@ from apps.survey.models import Blockface, Territory, Survey, Tree
 
 from apps.users.models import (Follow, Achievement, achievements,
                                AchievementDefinition, TrustedMapper,
-                               update_achievements)
+                               update_achievements, REWARD_START)
 from apps.users.views.user import user_detail as user_detail_view
 from apps.users.views.group import group_detail as group_detail_view
 from apps.users.routes.user import (user_detail as user_detail_route,
@@ -618,6 +618,10 @@ class AchievementTests(UsersTestCase):
 
         survey = make_survey(self.user, blockface)
 
+        # Change date to after reward start date
+        survey.created_at = REWARD_START + timedelta(hours=1)
+        survey.save()
+
         t = tree_defaults()
         t['survey'] = survey
 
@@ -631,10 +635,10 @@ class AchievementTests(UsersTestCase):
     def test_four_seasons(self):
         self._assertAchievements([])
         tz = get_current_timezone()
-        july_2015 = datetime(2015, 7, 1, tzinfo=tz)
+        july_2015 = datetime(2015, 6, 1, tzinfo=tz)
 
         geom = MultiLineString(LineString(((0, 0), (1, 1))))
-        blocks = [Blockface(geom=geom) for i in range(0, 12)]
+        blocks = [Blockface(geom=geom) for i in range(0, 14)]
         Blockface.objects.bulk_create(blocks)
 
         surveys = []

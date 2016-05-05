@@ -303,7 +303,7 @@ $(dom.treeFormcontainer).on('change', 'input[name="guard_installation"]', getSec
 $(dom.treeFormcontainer).on('change', 'input[name="problems"][value="None"]', getSectionToggleHandler('problems'));
 
 // Helper for checking the validity of forms
-function checkFormValidity($forms) {
+function checkFormValidity($forms, previewFieldsOnly) {
     var valid = true;
 
     // If any forms are collapsed, show them temporarily
@@ -320,7 +320,12 @@ function checkFormValidity($forms) {
     var $elemToFocus = null;
 
     // For each form element
-    $forms.find('input, select, textarea').each(function(i, el) {
+    var $elems = $forms.find('input, select, textarea');
+    if (previewFieldsOnly) {
+        $elems = $elems.filter('[name="distance_to_tree"],[name="curb_location"]');
+    }
+
+    $elems.each(function(i, el) {
         var $el = $(el),
             $error = getErrorlistForElement($el);
 
@@ -468,7 +473,7 @@ function previewSurvey(e) {
     var $forms = $(dom.surveyPage).find('form'),
         $treeForms = $forms.filter(dom.treeForms);
 
-    if (checkFormValidity($forms)) {
+    if (checkFormValidity($forms, true)) {
         // Disable preview button to prevent double POSTs
         $(dom.previewButton).off('click', previewSurvey);
 

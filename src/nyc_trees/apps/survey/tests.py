@@ -25,7 +25,7 @@ from apps.core.test_utils import (make_request, make_tree, tree_defaults,
                                   make_trusted_mapper, make_reservation)
 
 from apps.users import get_achievements_for_user
-from apps.users.models import TrustedMapper, Achievement
+from apps.users.models import TrustedMapper, Achievement, REWARD_START
 
 from apps.survey.models import (Blockface, BlockfaceReservation, Territory,
                                 Survey, Tree)
@@ -255,6 +255,10 @@ class TeammateTests(SurveyTestCase):
             has_trees=True,
             is_left_side=True,
             is_mapped_in_blockface_polyline_direction=True)
+
+        # Change date to after reward start date
+        survey.created_at = REWARD_START + timedelta(hours=1)
+        survey.save()
 
         # Create trees
         t = tree_defaults()

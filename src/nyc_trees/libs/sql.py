@@ -25,16 +25,22 @@ def _get_rows(sql, params=[]):
         return cursor.fetchall()
 
 
-def get_user_tree_count(user):
+def get_user_tree_count(user, from_date=None):
     sql = _survey_sql + """
         SELECT COUNT(*)
         FROM survey_tree AS tree
         JOIN most_recent_survey
           ON tree.survey_id = most_recent_survey.id
-        WHERE most_recent_survey.user_id = %s
-          OR most_recent_survey.teammate_id = %s"""
+        WHERE (most_recent_survey.user_id = %s
+          OR most_recent_survey.teammate_id = %s)"""
 
-    return _get_count(sql, [user.pk, user.pk])
+    params = [user.pk, user.pk]
+
+    if from_date is not None:
+        sql += " AND most_recent_survey.created_at > %s at time zone 'utc'"
+        params.append(from_date)
+
+    return _get_count(sql, params)
 
 
 def get_group_tree_count(group):
