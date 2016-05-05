@@ -16,3 +16,13 @@ $('.nav-menubutton').on('click', function (a) {
 $('.overlay-menued').on('click', function (a) {
     $('body').removeClass('menu-active');
 });
+
+if ('ontouchstart' in window) {
+  /* cache dom references */ 
+  var $body = $('body'); 
+
+  /* bind events */
+  $(document).ready(function() {
+      $body.addClass('fixfixed');
+  });
+}

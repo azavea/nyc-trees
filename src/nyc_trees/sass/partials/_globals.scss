@@ -442,3 +442,15 @@ aside {
     cursor: auto;
   }
 }
+
+.fixfixed {
+
+  .main-header,
+  .map-survey {
+    position: absolute;
+  }
+
+  .right-content {
+    position: static
+  }
+}
