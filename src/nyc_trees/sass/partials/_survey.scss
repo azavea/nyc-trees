@@ -20,16 +20,17 @@
     bottom: 0;
     left: 0;
     right: 0;
-    @media (max-width: $screen-sm - 1) {
-        #map {
-            bottom: 20rem;
-        }
-        #preview-map {
-            bottom: 4rem;
-        }
-    }
     @media (max-height: $screen-xs-height) and (max-width: $screen-sm) {
         top: 4.5rem;
+    }
+}
+
+@media (max-width: $screen-sm - 1) {
+    #map {
+        bottom: 20rem;
+    }
+    #preview-map {
+        bottom: 4rem;
     }
 }
 
@@ -339,6 +340,10 @@
     .tree-form .btn-group > input:first-child + .btn {
         border-radius: $border-radius-base 0 0 $border-radius-base;
     }
+
+    @media (max-width: $screen-sm - 1) {
+        min-height: 93vh;
+    }
 }
 
 .distance-end-form {
@@ -363,6 +368,10 @@
         left: -2rem;
         right: -2rem;
         margin-top: 30px;
+    }
+    @media (max-width: $screen-sm - 1) {
+        bottom: 0;
+        margin-bottom: -5rem;
     }
     span {
         font-size: $font-size-small;
