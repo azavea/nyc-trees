@@ -20,16 +20,17 @@
     bottom: 0;
     left: 0;
     right: 0;
-    @media (max-width: $screen-sm - 1) {
-        #map {
-            bottom: 20rem;
-        }
-        #preview-map {
-            bottom: 4rem;
-        }
-    }
     @media (max-height: $screen-xs-height) and (max-width: $screen-sm) {
         top: 4.5rem;
+    }
+}
+
+@media (max-width: $screen-sm - 1) {
+    #map {
+        bottom: 20rem;
+    }
+    #preview-map {
+        bottom: 4rem;
     }
 }
 
@@ -66,6 +67,14 @@
             display: block;
             @media (max-height: $screen-xs-height) and (max-width: $screen-sm) {
                 top: 4.5rem;
+            }
+            /**
+             * iPhone 5
+             * Fixes vh unit issue
+             */
+            @media screen and (device-aspect-ratio: 40/71) {
+              min-height: 540px;
+              background: #F3F3F3;
             }
         }
         &.skinny {
@@ -339,6 +348,15 @@
     .tree-form .btn-group > input:first-child + .btn {
         border-radius: $border-radius-base 0 0 $border-radius-base;
     }
+
+    @media (max-width: $screen-sm - 1) {
+        min-height: 93vh;
+    }
+    
+    // Fixes vh unit issue
+    @media screen and (device-aspect-ratio: 40/71) {
+        min-height: 540px;
+    }
 }
 
 .distance-end-form {
@@ -363,6 +381,10 @@
         left: -2rem;
         right: -2rem;
         margin-top: 30px;
+    }
+    @media (max-width: $screen-sm - 1) {
+        bottom: 0;
+        margin-bottom: -5rem;
     }
     span {
         font-size: $font-size-small;
