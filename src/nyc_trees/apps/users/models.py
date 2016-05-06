@@ -7,8 +7,6 @@ from collections import OrderedDict
 from datetime import datetime
 from itertools import groupby
 
-from dateutil import rrule
-
 from django.db import models
 from django.utils.timezone import get_current_timezone
 
@@ -18,24 +16,41 @@ from libs.mixins import NycModel
 from libs.sql import get_user_tree_count
 
 
+tz = get_current_timezone()
+REWARD_START = datetime(2016, 5, 11, tzinfo=tz)
+
+SEASONS = {
+    'summer_2015': (datetime(2015, 6, 1, tzinfo=tz),
+                    datetime(2015, 9, 1, tzinfo=tz)),
+    'fall_2015': (datetime(2015, 9, 1, tzinfo=tz),
+                  datetime(2015, 12, 1, tzinfo=tz)),
+    'winter_2015': (datetime(2015, 12, 1, tzinfo=tz),
+                    datetime(2016, 3, 1, tzinfo=tz)),
+    # The 2016 spring "season" is 4 months long
+    'spring_2016': (datetime(2016, 3, 1, tzinfo=tz),
+                    datetime(2016, 7, 1, tzinfo=tz)),
+    'summer_2016': (datetime(2016, 7, 1, tzinfo=tz),
+                    datetime(2016, 10, 1, tzinfo=tz))
+}
+
+
 def _has_mapped_in_four_seasons(user):
-    tz = get_current_timezone()
-    june_2015 = datetime(2015, 6, 1, tzinfo=tz)
-    sept_2016 = datetime(2016, 9, 30, tzinfo=tz)
-
-    seasons = rrule.rrule(rrule.MONTHLY, bymonth=(3, 6, 9, 12), bysetpos=1,
-                          cache=True, dtstart=june_2015, until=sept_2016)
-
     surveys = user.surveys \
-        .filter(created_at__gt=june_2015, created_at__lt=sept_2016) \
+        .filter(created_at__gte=SEASONS['summer_2015'][0],
+                created_at__lt=SEASONS['summer_2016'][1]) \
         .order_by('created_at')
 
-    survey_groups = groupby(surveys,
-                            lambda survey: seasons.before(survey.created_at))
+    def get_season_for_survey(survey):
+        for name, daterange in SEASONS.iteritems():
+            if daterange[0] <= survey.created_at < daterange[1]:
+                return name
+        return None
+
+    survey_groups = groupby(surveys, get_season_for_survey)
 
     matching_seasons = 0
-    for _, survey_group in survey_groups:
-        if len(list(survey_group)) >= 3:
+    for name, survey_group in survey_groups:
+        if name is not None and len(list(survey_group)) >= 3:
             matching_seasons += 1
 
     return matching_seasons >= 4
@@ -102,9 +117,7 @@ achievements = OrderedDict([
         name='Ready, Set, Roll',
         description='Finish Online Training',
         # NOTE: using hard-coded URL here because it's too early for reverse()
-        description_achieved="""Finished Online Training
-            <div><a class="h6 color--secondary" href="/event/">
-                Register for an event today</a>!</div>""",
+        description_achieved="Finished Online Training",
         badge='img/badges/ic_badge_online_training.png',
         achieved=lambda user: user.online_training_complete
     )),
@@ -131,15 +144,7 @@ achievements = OrderedDict([
         # NOTE: using hard-coded URLs here because it's too early for reverse()
         description_achieved="""Attended a Mapping Event
             <div><a class="h6 color--secondary" href="/blockedge/reserve/">
-                Reserve blocks today</a> to map on your own!</div>
-            <div>
-                Need a wheel? Visit one of our nearby
-                <a class="h6 color--secondary"
-        href="http://www.nycgovparks.org/trees/treescount/independent-mapping">
-                    loaning hubs</a>
-                or check one out at your next NYC Parks
-                <a class="h6 color--secondary" href="/event/">
-                    mapping event</a>!</div>""",
+                Reserve blocks today</a> to map on your own!</div>""",
         badge='img/badges/ic_badge_mapping_event.png',
         achieved=lambda user: user.attended_at_least_two_events()
     )),
@@ -220,8 +225,8 @@ achievements = OrderedDict([
         name='Lavender Linden',
         description='Map 100 Trees',
         description_achieved='Mapped 100 Trees',
-        badge='img/badges/ic_badge_top_mapper.png',
-        achieved=lambda user: get_user_tree_count(user) >= 100,
+        badge='img/badges/Lavender-Linden.png',
+        achieved=lambda user: get_user_tree_count(user, REWARD_START) >= 100,
         active=True,
         reward="Reward in development. Stay tuned!"
     )),
@@ -229,8 +234,8 @@ achievements = OrderedDict([
         name='Magenta Maple',
         description='Map 300 Trees',
         description_achieved='Mapped 300 Trees',
-        badge='img/badges/ic_badge_top_mapper.png',
-        achieved=lambda user: get_user_tree_count(user) >= 300,
+        badge='img/badges/Magenta-Maple.png',
+        achieved=lambda user: get_user_tree_count(user, REWARD_START) >= 300,
         active=True,
         reward="Reward in development. Stay tuned!"
     )),
@@ -238,8 +243,8 @@ achievements = OrderedDict([
         name='Silver Sophora',
         description='Map 500 Trees',
         description_achieved='Mapped 500 Trees',
-        badge='img/badges/ic_badge_top_mapper.png',
-        achieved=lambda user: get_user_tree_count(user) >= 500,
+        badge='img/badges/Silver-sophora.png',
+        achieved=lambda user: get_user_tree_count(user, REWARD_START) >= 500,
         active=True,
         reward="Reward in development. Stay tuned!"
     )),
@@ -247,8 +252,8 @@ achievements = OrderedDict([
         name='Gold Gingko',
         description='Map 750 Trees',
         description_achieved='Mapped 750 Trees',
-        badge='img/badges/ic_badge_top_mapper.png',
-        achieved=lambda user: get_user_tree_count(user) >= 750,
+        badge='img/badges/gold-gingko.png',
+        achieved=lambda user: get_user_tree_count(user, REWARD_START) >= 750,
         active=True,
         reward="Reward in development. Stay tuned!"
     )),
@@ -256,7 +261,7 @@ achievements = OrderedDict([
         name='Platinum Planetree',
         description='Map the Most Trees',
         description_achieved='Mapped the most trees',
-        badge='img/badges/ic_badge_top_mapper.png',
+        badge='img/badges/plat_planetree_2.png',
         achieved=lambda user: False,  # doesn't need to be live updated
         active=True,
         reward="Reward in development. Stay tuned!"
@@ -269,7 +274,7 @@ achievements = OrderedDict([
         description_achieved="""Mapped at Least 3 Block Edges in Four of the
             Five Mapping Seasons (Summer 2015, Fall 2015, Winter 2015, Spring
             2016, Summer 2016)""",
-        badge='img/badges/ic_badge_top_mapper.png',
+        badge='img/badges/4_season_mapper-2.png',
         achieved=_has_mapped_in_four_seasons,
         active=True,
         reward="Reward in development. Stay tuned!"
