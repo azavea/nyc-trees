@@ -68,6 +68,14 @@
             @media (max-height: $screen-xs-height) and (max-width: $screen-sm) {
                 top: 4.5rem;
             }
+            /**
+             * iPhone 5
+             * Fixes vh unit issue
+             */
+            @media screen and (device-aspect-ratio: 40/71) {
+              min-height: 540px;
+              background: #F3F3F3;
+            }
         }
         &.skinny {
             height: 4rem;
@@ -343,6 +351,11 @@
 
     @media (max-width: $screen-sm - 1) {
         min-height: 93vh;
+    }
+    
+    // Fixes vh unit issue
+    @media screen and (device-aspect-ratio: 40/71) {
+        min-height: 540px;
     }
 }
 
