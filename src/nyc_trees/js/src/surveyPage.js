@@ -522,6 +522,10 @@ function showPreview(trees) {
         });
         previewLayer.addTo(previewMap);
     }
+    // If the browser window is resized when the preview map is hidden
+    // (from the phone switching orientation for example), the map won't display properly
+    // Calling .invalidateSize() should fix that
+    previewMap.invalidateSize();
     previewMap.fitBounds(bounds);
     previewMap.setMaxBounds(bounds);
 
@@ -546,6 +550,11 @@ $(dom.closePreview).click(function () {
     } else {
         $(dom.mapSidebar).scrollTop(savedScrollPosition);
     }
+    //
+    // If the browser window is resized when the blockface map is hidden
+    // (from the phone switching orientation for example), the map won't display properly
+    // Calling .invalidateSize() should fix that
+    blockfaceMap.invalidateSize();
 });
 
 function getScrollToTopPosition($el) {
