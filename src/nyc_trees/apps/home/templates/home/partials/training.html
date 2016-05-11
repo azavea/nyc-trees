@@ -6,10 +6,6 @@
     <h3>Online Training Complete!</h3>
     <p>Visit <a href="{% url 'home_page' %}">the dashboard</a> to explore the site and start mapping!</p>
 
-    <p>You can also visit the Groups page to learn more about mapping opportunities and follow groups for event information.</p>
-
-    <p>The next step after completing online training is to sign up for a training event where you will practice what you've learned in the field! <a href="{% url 'events_list_page' %}?active_filter=training">Sign up for training events here.</a></p>
-
     {% elif is_started %}
     <h3>You're almost there!</h3>
     <p>Continue your training and help us make trees count!</p>
@@ -22,7 +18,7 @@
 
     {% endif %}
 
-    <p>You can also download a PDF of the training materials <a target="_blank" href="{{ STATIC_URL }}training/TreesCount2015Training.pdf">here.</a></p>
+    <p>For a refresher, you can also download a PDF of the training materials <a target="_blank" href="{{ STATIC_URL }}training/TreesCount2015Training.pdf">here.</a></p>
 
     {% for step_info in training_steps %}
     <div class="row training block item {% if not step_info.is_visitable %}inactive{% endif %}">

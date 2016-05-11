@@ -12,8 +12,7 @@
     - Restart pgweb
 
 - name: Touch log file if it does not exist
-  command: touch {{ pgweb_log }}
-           creates={{ pgweb_log }}
+  copy: content="" dest="{{ pgweb_log }}" force=no
 
 - name: Set log file permissions
   file: path={{ pgweb_log }} owner=pgweb group=pgweb mode=0644

@@ -4,12 +4,56 @@ from __future__ import unicode_literals
 from __future__ import division
 
 from collections import OrderedDict
+from datetime import datetime
+from itertools import groupby
 
 from django.db import models
+from django.utils.timezone import get_current_timezone
 
 from apps.core.models import User, Group
 
 from libs.mixins import NycModel
+from libs.sql import get_user_tree_count
+
+
+tz = get_current_timezone()
+REWARD_START = datetime(2016, 5, 11, tzinfo=tz)
+
+SEASONS = {
+    'summer_2015': (datetime(2015, 6, 1, tzinfo=tz),
+                    datetime(2015, 9, 1, tzinfo=tz)),
+    'fall_2015': (datetime(2015, 9, 1, tzinfo=tz),
+                  datetime(2015, 12, 1, tzinfo=tz)),
+    'winter_2015': (datetime(2015, 12, 1, tzinfo=tz),
+                    datetime(2016, 3, 1, tzinfo=tz)),
+    # The 2016 spring "season" is 4 months long
+    'spring_2016': (datetime(2016, 3, 1, tzinfo=tz),
+                    datetime(2016, 7, 1, tzinfo=tz)),
+    'summer_2016': (datetime(2016, 7, 1, tzinfo=tz),
+                    datetime(2016, 10, 1, tzinfo=tz))
+}
+
+
+def _has_mapped_in_four_seasons(user):
+    surveys = user.surveys \
+        .filter(created_at__gte=SEASONS['summer_2015'][0],
+                created_at__lt=SEASONS['summer_2016'][1]) \
+        .order_by('created_at')
+
+    def get_season_for_survey(survey):
+        for name, daterange in SEASONS.iteritems():
+            if daterange[0] <= survey.created_at < daterange[1]:
+                return name
+        return None
+
+    survey_groups = groupby(surveys, get_season_for_survey)
+
+    matching_seasons = 0
+    for name, survey_group in survey_groups:
+        if name is not None and len(list(survey_group)) >= 3:
+            matching_seasons += 1
+
+    return matching_seasons >= 4
 
 
 class AchievementDefinition(object):
@@ -19,9 +63,12 @@ class AchievementDefinition(object):
     description_future - requirements (before achievement)
     badge - path for a static image file
     achieved - a function which takes a user and returns a boolean
+    sponsor - (optional) the sponsor of the achievement
+    reward - (optional) the description of the reward
+    active - if it is still possible to unlock at this time
     """
     def __init__(self, name, description, description_achieved, badge,
-                 achieved, sponsor=None, reward=None):
+                 achieved, sponsor=None, reward=None, active=False):
         assert isinstance(name, basestring)
         assert isinstance(description, basestring)
         assert isinstance(description_achieved, basestring)
@@ -29,6 +76,7 @@ class AchievementDefinition(object):
         assert callable(achieved)
         assert sponsor is None or isinstance(sponsor, basestring)
         assert reward is None or isinstance(reward, basestring)
+        assert isinstance(active, bool)
 
         self.name = name
         self.description = description
@@ -37,6 +85,7 @@ class AchievementDefinition(object):
         self.achieved = achieved
         self.sponsor = sponsor
         self.reward = reward
+        self.active = active
 
     ONLINE_TRAINING = 0
     FOLLOW_GROUPS = 1
@@ -48,6 +97,12 @@ class AchievementDefinition(object):
     MAP_400 = 7
     MAP_1000 = 8
     MAP_MOST = 9
+    TREES_100 = 10
+    TREES_300 = 11
+    TREES_500 = 12
+    TREES_750 = 13
+    TREES_MOST = 14
+    FOUR_SEASONS = 15
 
 
 achievements = OrderedDict([
@@ -62,9 +117,7 @@ achievements = OrderedDict([
         name='Ready, Set, Roll',
         description='Finish Online Training',
         # NOTE: using hard-coded URL here because it's too early for reverse()
-        description_achieved="""Finished Online Training
-            <div><a class="h6 color--secondary" href="/event/">
-                Register for an event today</a>!</div>""",
+        description_achieved="Finished Online Training",
         badge='img/badges/ic_badge_online_training.png',
         achieved=lambda user: user.online_training_complete
     )),
@@ -91,15 +144,7 @@ achievements = OrderedDict([
         # NOTE: using hard-coded URLs here because it's too early for reverse()
         description_achieved="""Attended a Mapping Event
             <div><a class="h6 color--secondary" href="/blockedge/reserve/">
-                Reserve blocks today</a> to map on your own!</div>
-            <div>
-                Need a wheel? Visit one of our nearby
-                <a class="h6 color--secondary"
-        href="http://www.nycgovparks.org/trees/treescount/independent-mapping">
-                    loaning hubs</a>
-                or check one out at your next NYC Parks
-                <a class="h6 color--secondary" href="/event/">
-                    mapping event</a>!</div>""",
+                Reserve blocks today</a> to map on your own!</div>""",
         badge='img/badges/ic_badge_mapping_event.png',
         achieved=lambda user: user.attended_at_least_two_events()
     )),
@@ -176,6 +221,64 @@ achievements = OrderedDict([
             from the <b>VIP</b> seats at the Global Citizen Festival
             in Central Park on September 26, 2015."""
     )),
+    (AchievementDefinition.TREES_100, AchievementDefinition(
+        name='Lavender Linden',
+        description='Map 100 Trees',
+        description_achieved='Mapped 100 Trees',
+        badge='img/badges/Lavender-Linden.png',
+        achieved=lambda user: get_user_tree_count(user, REWARD_START) >= 100,
+        active=True,
+        reward="Reward in development. Stay tuned!"
+    )),
+    (AchievementDefinition.TREES_300, AchievementDefinition(
+        name='Magenta Maple',
+        description='Map 300 Trees',
+        description_achieved='Mapped 300 Trees',
+        badge='img/badges/Magenta-Maple.png',
+        achieved=lambda user: get_user_tree_count(user, REWARD_START) >= 300,
+        active=True,
+        reward="Reward in development. Stay tuned!"
+    )),
+    (AchievementDefinition.TREES_500, AchievementDefinition(
+        name='Silver Sophora',
+        description='Map 500 Trees',
+        description_achieved='Mapped 500 Trees',
+        badge='img/badges/Silver-sophora.png',
+        achieved=lambda user: get_user_tree_count(user, REWARD_START) >= 500,
+        active=True,
+        reward="Reward in development. Stay tuned!"
+    )),
+    (AchievementDefinition.TREES_750, AchievementDefinition(
+        name='Gold Gingko',
+        description='Map 750 Trees',
+        description_achieved='Mapped 750 Trees',
+        badge='img/badges/gold-gingko.png',
+        achieved=lambda user: get_user_tree_count(user, REWARD_START) >= 750,
+        active=True,
+        reward="Reward in development. Stay tuned!"
+    )),
+    (AchievementDefinition.TREES_MOST, AchievementDefinition(
+        name='Platinum Planetree',
+        description='Map the Most Trees',
+        description_achieved='Mapped the most trees',
+        badge='img/badges/plat_planetree_2.png',
+        achieved=lambda user: False,  # doesn't need to be live updated
+        active=True,
+        reward="Reward in development. Stay tuned!"
+    )),
+    (AchievementDefinition.FOUR_SEASONS, AchievementDefinition(
+        name='Four Season Mapper',
+        description="""Map at Least 3 Block Edges in Four of the Five Mapping
+            Seasons (Summer 2015, Fall 2015, Winter 2015, Spring 2016, Summer
+            2016)""",
+        description_achieved="""Mapped at Least 3 Block Edges in Four of the
+            Five Mapping Seasons (Summer 2015, Fall 2015, Winter 2015, Spring
+            2016, Summer 2016)""",
+        badge='img/badges/4_season_mapper-2.png',
+        achieved=_has_mapped_in_four_seasons,
+        active=True,
+        reward="Reward in development. Stay tuned!"
+    )),
 ])
 
 
@@ -188,7 +291,8 @@ def update_achievements(user):
                         for a in user.achievement_set.all()])
 
     for id, definition in achievements.iteritems():
-        if id not in achieved_ids and definition.achieved(user):
+        if ((id not in achieved_ids and definition.active and
+             definition.achieved(user))):
             a = Achievement(user=user, achievement_id=id)
             a.save()
 

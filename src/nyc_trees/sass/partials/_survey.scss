@@ -20,11 +20,17 @@
     bottom: 0;
     left: 0;
     right: 0;
-    @media (max-width: $screen-sm - 1) {
-        bottom: 20rem;
-    }
     @media (max-height: $screen-xs-height) and (max-width: $screen-sm) {
         top: 4.5rem;
+    }
+}
+
+@media (max-width: $screen-sm - 1) {
+    #map {
+        bottom: 20rem;
+    }
+    #preview-map {
+        bottom: 4rem;
     }
 }
 
@@ -62,6 +68,17 @@
             @media (max-height: $screen-xs-height) and (max-width: $screen-sm) {
                 top: 4.5rem;
             }
+            /**
+             * iPhone 5
+             * Fixes vh unit issue
+             */
+            @media screen and (device-aspect-ratio: 40/71) {
+              min-height: 540px;
+              background: #F3F3F3;
+            }
+        }
+        &.skinny {
+            height: 4rem;
         }
     }
 
@@ -297,6 +314,32 @@
     top: -.75rem;
 }
 
+#preview-survey-container {
+    @media (max-width: $screen-sm - 1) {
+        padding: 0;
+    }
+}
+
+@media (max-width: $screen-sm - 1) {
+    .preview-btn {
+        position: fixed;
+        bottom: 0;
+        border-radius: 0;
+        width: 50%;
+    }
+    #close-preview {
+        left: 0;
+    }
+    #restart-survey {
+        right: 0;
+    }
+    #preview-survey {
+        left: 0;
+        right: 0;
+        width: 100%;
+    }
+}
+
 #survey {
     position: relative;  // for sticky titles
     background-color: #fff;
@@ -304,6 +347,15 @@
     // Requires such specifity in order to override bootstrap default behavior
     .tree-form .btn-group > input:first-child + .btn {
         border-radius: $border-radius-base 0 0 $border-radius-base;
+    }
+
+    @media (max-width: $screen-sm - 1) {
+        min-height: 93vh;
+    }
+    
+    // Fixes vh unit issue
+    @media screen and (device-aspect-ratio: 40/71) {
+        min-height: 540px;
     }
 }
 
@@ -320,7 +372,6 @@
 
 #treeform-sponsor {
     text-align: center;
-    margin-top: 30px;
     background: #f3f3f3;
     margin-bottom: -10px;
     position: absolute;
@@ -329,6 +380,11 @@
         width: auto;
         left: -2rem;
         right: -2rem;
+        margin-top: 30px;
+    }
+    @media (max-width: $screen-sm - 1) {
+        bottom: 0;
+        margin-bottom: -5rem;
     }
     span {
         font-size: $font-size-small;

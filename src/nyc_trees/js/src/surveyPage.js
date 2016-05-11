@@ -91,6 +91,8 @@ var dom = {
         quitReason: '#quit-reason',
         quit: '#quit',
 
+        previewHelpPopup: '#preview-button-help',
+
         btnGroupToTeammate: '#btn-group-to-teammate',
         btnToTeammate: '#btn-to-teammate',
         selectTeammate: '#select-teammate',
@@ -100,7 +102,16 @@ var dom = {
         noTreesPopup: '#no-trees-popup',
         noTreesConfirm: '#no-trees-confirm',
 
-        treeHeading: '.sticky-title'
+        treeHeading: '.sticky-title',
+        blockId: '[data-block-id]',
+
+        previewButton: '#preview-survey',
+        closePreviewSection: '#close-preview-section',
+        closePreview: '#close-preview',
+        restartSurvey: '#restart-survey',
+
+        blockfaceMapId: 'map',
+        previewMapId: 'preview-map'
     },
 
     showSelectStart = makeMutexShow([
@@ -127,6 +138,7 @@ var dom = {
 
     blockfaceId = mapUtil.getBlockfaceIdFromUrl(),
     mapObjects = mapModule.createAndGetControls({
+        domId: dom.blockfaceMapId,
         legend: false,
         search: true,
         geolocation: true,
@@ -160,7 +172,11 @@ var dom = {
     mapInteractionEnabled = true,
 
     stickyTitles = stickyTitlesModule(
-        $(window), dom.treeHeading, $(dom.actionBar));
+        $(window), dom.treeHeading, $(dom.actionBar)),
+
+    previewMap = null,
+    previewLayer = null,
+    savedScrollPosition = 0;
 
 statePrompter.lock();
 
@@ -198,6 +214,8 @@ function selectBlockface(data) {
     endPointLayers.addLayer(endCircle);
 
     showSelectStart();
+
+    $(dom.blockId).html(Number(blockfaceId).toLocaleString());
 }
 
 endPointLayers.setStyle(defaultStyle);
@@ -285,7 +303,7 @@ $(dom.treeFormcontainer).on('change', 'input[name="guard_installation"]', getSec
 $(dom.treeFormcontainer).on('change', 'input[name="problems"][value="None"]', getSectionToggleHandler('problems'));
 
 // Helper for checking the validity of forms
-function checkFormValidity($forms) {
+function checkFormValidity($forms, previewFieldsOnly) {
     var valid = true;
 
     // If any forms are collapsed, show them temporarily
@@ -302,7 +320,12 @@ function checkFormValidity($forms) {
     var $elemToFocus = null;
 
     // For each form element
-    $forms.find('input, select, textarea').each(function(i, el) {
+    var $elems = $forms.find('input, select, textarea');
+    if (previewFieldsOnly) {
+        $elems = $elems.filter('[name="distance_to_tree"],[name="curb_location"]');
+    }
+
+    $elems.each(function(i, el) {
         var $el = $(el),
             $error = getErrorlistForElement($el);
 
@@ -405,6 +428,10 @@ $(dom.btnNext).click(function(e) {
     blockfaceMap.removeLayer(grid);
     mapModule.hideCrosshairs();
     mapModule.stopTrackingUserPosition(blockfaceMap);
+
+    if ($(dom.previewHelpPopup).length > 0) {
+        $(dom.previewHelpPopup).modal('show');
+    }
 });
 
 $(dom.addTree).click(function (){
@@ -438,6 +465,101 @@ $(dom.addTree).click(function (){
             }, 100);
         });
     }
+});
+
+$(dom.previewButton).on('click', previewSurvey);
+
+function previewSurvey(e) {
+    var $forms = $(dom.surveyPage).find('form'),
+        $treeForms = $forms.filter(dom.treeForms);
+
+    if (checkFormValidity($forms, true)) {
+        // Disable preview button to prevent double POSTs
+        $(dom.previewButton).off('click', previewSurvey);
+
+        var data = createSurveyDataWithTrees($treeForms);
+
+        // Keep this URL in sync with src/nyc_trees/apps/survey/urls/survey.py
+        $.ajax({
+            url: '/survey/preview/',
+            type: 'POST',
+            dataType: 'json',
+            data: JSON.stringify(data)
+        })
+        .done(showPreview)
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            toastr.warning('Double-check your survey and try previewing it again.', 'Something went wrong...');
+        })
+        .always(function() {
+            // Re-enable the preview button
+            $(dom.previewButton).on('click', previewSurvey);
+        });
+    }
+}
+
+function showPreview(trees) {
+    if (isMobile()) {
+        // Some browsers scroll <html>, some scroll <body>, have to query both
+        savedScrollPosition = $('html').scrollTop() || $('body').scrollTop();
+    } else {
+        savedScrollPosition = $(dom.mapSidebar).scrollTop();
+    }
+
+    $(dom.surveyPage).addClass('hidden');
+    $(dom.actionBar).removeClass('expanded').addClass('skinny');
+    $(dom.closePreviewSection).removeClass('hidden');
+    $('#' + dom.blockfaceMapId).addClass('hidden');
+    $('#' + dom.previewMapId).removeClass('hidden');
+
+    var bounds = selectedLayer.getBounds();
+    if (previewMap === null) {
+        previewMap = mapModule.create({
+            domId: dom.previewMapId,
+            legend: false,
+            search: false,
+            baseMap: mapModule.SATELLITE,
+            minZoom: blockfaceMap.getBoundsZoom(bounds) - 1,
+        });
+        previewLayer = new L.geoJson(null, {
+            pointToLayer: function(feature, latLng) {
+                return mapUtil.styledCircleMarker(latLng);
+            }
+        });
+        previewLayer.addTo(previewMap);
+    }
+    // If the browser window is resized when the preview map is hidden
+    // (from the phone switching orientation for example), the map won't display properly
+    // Calling .invalidateSize() should fix that
+    previewMap.invalidateSize();
+    previewMap.fitBounds(bounds);
+    previewMap.setMaxBounds(bounds);
+
+    previewLayer.clearLayers();
+    previewLayer.addData(selectedLayer.toGeoJSON());
+    previewLayer.setStyle(mapUtil.styledStreetConfirmation);
+
+    $.each(trees, function (__, tree) {
+        previewLayer.addData({ 'type': 'Feature', 'geometry': tree });
+    });
+}
+
+$(dom.closePreview).click(function () {
+    $(dom.surveyPage).removeClass('hidden');
+    $(dom.actionBar).addClass('expanded').removeClass('skinny');
+    $(dom.closePreviewSection).addClass('hidden');
+    $('#' + dom.blockfaceMapId).removeClass('hidden');
+    $('#' + dom.previewMapId).addClass('hidden');
+
+    if (isMobile()) {
+        $('html,body').scrollTop(savedScrollPosition);
+    } else {
+        $(dom.mapSidebar).scrollTop(savedScrollPosition);
+    }
+    //
+    // If the browser window is resized when the blockface map is hidden
+    // (from the phone switching orientation for example), the map won't display properly
+    // Calling .invalidateSize() should fix that
+    blockfaceMap.invalidateSize();
 });
 
 function getScrollToTopPosition($el) {
@@ -573,6 +695,21 @@ function createSurveyData() {
     };
 }
 
+function createSurveyDataWithTrees($treeForms) {
+    var treeData = $treeForms.map(function(i, form) {
+        return getTreeData(form);
+    }).get();
+
+    // Only the last tree has "distance_to_end", so it gets special handling
+    treeData[treeData.length - 1].distance_to_end = $(dom.distanceToEnd).val();
+
+    var data = createSurveyData();
+    data.survey.has_trees = true;
+    data.trees = treeData;
+
+    return data;
+}
+
 function submitSurveyWithTrees() {
     var $forms = $(dom.surveyPage).find('form'),
         $treeForms = $forms.filter(dom.treeForms);
@@ -581,16 +718,7 @@ function submitSurveyWithTrees() {
         // Disable submit button to prevent double POSTs
         $(dom.submitSurvey).off('click', submitSurveyWithTrees);
 
-        var treeData = $treeForms.map(function(i, form) {
-            return getTreeData(form);
-        }).get();
-
-        // Only the last tree has "distance_to_end", so it gets special handling
-        treeData[treeData.length - 1].distance_to_end = $(dom.distanceToEnd).val();
-
-        var data = createSurveyData();
-        data.survey.has_trees = true;
-        data.trees = treeData;
+        var data = createSurveyDataWithTrees($treeForms);
 
         // There are two views we could POST to, 'survey' and
         // 'survey_from_event', depending on how we got to this page.
@@ -821,3 +949,8 @@ if (!helpShown) {
         $('.geolocate-help').hide();
     });
 }
+
+$(dom.restartSurvey).on('click', function() {
+    window.location.hash = blockfaceId;
+    window.location.reload();
+});

@@ -93,7 +93,8 @@ class NycUserAdmin(UserAdmin):
 
         ('Help', {'fields': ('progress_page_help_shown',
                              'reservations_page_help_shown',
-                             'survey_geolocate_help_shown')})
+                             'survey_geolocate_help_shown',
+                             'survey_preview_help_shown')})
     )
 
     add_fieldsets = UserAdmin.add_fieldsets + (

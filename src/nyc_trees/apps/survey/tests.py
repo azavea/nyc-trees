@@ -6,7 +6,9 @@ from __future__ import division
 import os
 import json
 from datetime import timedelta
+
 from waffle.models import Flag
+from django_tinsel.exceptions import HttpBadRequestException
 
 from functools import partial
 
@@ -14,7 +16,6 @@ from django.contrib.gis.geos import LineString, MultiLineString
 from django.conf import settings
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.db import connection
-from django.http import HttpResponseBadRequest
 from django.test import TestCase
 from django.utils.timezone import now
 
@@ -24,7 +25,7 @@ from apps.core.test_utils import (make_request, make_tree, tree_defaults,
                                   make_trusted_mapper, make_reservation)
 
 from apps.users import get_achievements_for_user
-from apps.users.models import TrustedMapper, Achievement
+from apps.users.models import TrustedMapper, Achievement, REWARD_START
 
 from apps.survey.models import (Blockface, BlockfaceReservation, Territory,
                                 Survey, Tree)
@@ -129,12 +130,12 @@ class SurveySubmitTests(SurveyTestCase):
         self.assertEqual(tree.problems, 'Stones,Sneakers')
 
     def test_missing_trees(self):
-        error = self.submit_survey({'has_trees': True}, [])
-        self.assertTrue(isinstance(error, HttpResponseBadRequest))
+        with self.assertRaises(HttpBadRequestException):
+            self.submit_survey({'has_trees': True}, [])
 
     def test_extra_trees(self):
-        error = self.submit_survey({'has_trees': False}, [tree_defaults()])
-        self.assertTrue(isinstance(error, HttpResponseBadRequest))
+        with self.assertRaises(HttpBadRequestException):
+            self.submit_survey({'has_trees': False}, [tree_defaults()])
 
     def test_missing_blockface(self):
         with self.assertRaises(ObjectDoesNotExist):
@@ -230,37 +231,40 @@ class ConfirmBlockfaceReservationTests(SurveyTestCase):
 
 class TeammateTests(SurveyTestCase):
     def test_survey_achievements(self):
-        self._assert_blockface_achievements(0, 0)
-        self._assert_blockface_achievements(50, 1)
-        self._assert_blockface_achievements(100, 2)
-        self._assert_blockface_achievements(200, 3)
-        self._assert_blockface_achievements(400, 4)
-        self._assert_blockface_achievements(1000, 5)
+        self._assert_tree_achievements(0, 0)
+        self._assert_tree_achievements(100, 1)
+        self._assert_tree_achievements(300, 2)
+        self._assert_tree_achievements(500, 3)
+        self._assert_tree_achievements(750, 4)
 
-    def _assert_blockface_achievements(self, amount_blockfaces,
-                                       amount_achievements):
+    def _assert_tree_achievements(self, amount_trees, amount_achievements):
         Survey.objects.all().delete()
         Blockface.objects.all().delete()
         Achievement.objects.all().delete()
 
-        # Add blocks
-        Blockface.objects.bulk_create(
-            Blockface(
-                geom=MultiLineString(LineString(((0, 0), (1, 1)))),
-                created_at=now())
-            for i in xrange(amount_blockfaces))
+        # Add block
+        blockface = Blockface.objects.create(
+            geom=MultiLineString(LineString(((0, 0), (1, 1)))))
 
-        # Survey blocks (solo)
-        ids = Blockface.objects.values_list('id', flat=True)
-        Survey.objects.bulk_create(
-            Survey(blockface_id=id,
-                   user=self.user,
-                   created_at=now(),
-                   is_flagged=False,
-                   has_trees=True,
-                   is_left_side=True,
-                   is_mapped_in_blockface_polyline_direction=True)
-            for id in ids)
+        # Survey block (solo)
+        survey = Survey.objects.create(
+            blockface=blockface,
+            user=self.user,
+            created_at=now(),
+            is_flagged=False,
+            has_trees=True,
+            is_left_side=True,
+            is_mapped_in_blockface_polyline_direction=True)
+
+        # Change date to after reward start date
+        survey.created_at = REWARD_START + timedelta(hours=1)
+        survey.save()
+
+        # Create trees
+        t = tree_defaults()
+        t['survey'] = survey
+        trees = [Tree(**t) for _ in xrange(0, amount_trees)]
+        Tree.objects.bulk_create(trees)
 
         # Assert first user (only) has achievements
         achievements = get_achievements_for_user(self.user)['achieved']

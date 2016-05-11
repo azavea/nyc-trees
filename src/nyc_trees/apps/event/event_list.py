@@ -133,9 +133,10 @@ class EventList(object):
                     is_private=False, includes_training=False)),
             ]),
             EventList.chronoFilters: OrderedDict([
-                (_CURRENT, lambda qs: (qs
-                                       .filter(ends_at__gte=right_now)
-                                       .order_by('begins_at'))),
+                # Hiding the "current" category for the 2016 season
+                # (_CURRENT, lambda qs: (qs
+                #                        .filter(ends_at__gte=right_now)
+                #                        .order_by('begins_at'))),
                 (_PAST, lambda qs: (qs
                                     .filter(ends_at__lt=right_now)
                                     .order_by('-begins_at'))),

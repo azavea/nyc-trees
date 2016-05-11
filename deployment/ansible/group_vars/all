@@ -1,8 +1,6 @@
 ---
 django_test_database: "{{ lookup('env', 'NYC_TREES_TEST_DB_NAME') | default('test_nyc_trees', true) }}"
 
-sauce_labs_api_key_is_defined: lookup('env', 'SAUCE_API_KEY') != ''
-
 redis_port: 6379
 postgresql_port: 5432
 kibana_port: 5601
@@ -24,5 +22,5 @@ elasticsearch_cluster_name: "logstash"
 
 nodejs_npm_version: 2.1.14
 
-java_version: "7u75-*"
+java_version: "7u95-*"
 relp_version: "7.4.4-*"

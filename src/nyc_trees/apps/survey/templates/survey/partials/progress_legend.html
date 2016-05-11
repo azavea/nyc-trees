@@ -5,25 +5,18 @@ Progress
 {% endblock %}
 
 {% block legend_text %}
-<div data-mode="default">
-    <p>Welcome to the TreesCount! 2015 progress map!</p>
-
-    <p>This map shows where your fellow tree-loving citizens have already mapped street trees in NYC.
-       Explore the map to view overall progress, your progress, and the progress of TreesCount! Partner groups!</p>
+<div data-mode="all-percent">
+    This map shows the block edges mapped so far.
+    Go to the <a href="{% url 'reservations' %}">Reservations tab</a> to help us finish mapping our street trees!
 </div>
 <div data-mode="all" class="hidden">
-    This map shows the block edges mapped so far by all volun<b>treers</b> for TreesCount! 2015. Sign up for an event to help us finish mapping our street trees!
-</div>
-<div data-mode="all-percent" class="hidden">
-    This map shows the block edges mapped so far by all volun<b>treers</b> for TreesCount! 2015. Sign up for an event to help us finish mapping our street trees!
+    This map shows the block edges mapped so far.
+    Go to the <a href="{% url 'reservations' %}">Reservations tab</a> to help us finish mapping our street trees!
 </div>
 <div data-mode="my" class="hidden">
     <p>This map shows the block edges that have been mapped by you!</p>
 
-    <p>Sign up for an event or make a block edge reservation to keep on mapping!</p>
-</div>
-<div data-mode="group" class="hidden">
-    This map shows you our TreesCount! Partner groups’ Census Zones and their mapping progress. Click on a Census Zone for more details!
+    <p>Go to the <a href="{% url 'reservations' %}">Reservations tab</a> to help us finish mapping our street trees!</p>
 </div>
 {% endblock %}
 

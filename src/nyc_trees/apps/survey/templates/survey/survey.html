@@ -42,13 +42,16 @@
         </div>
         <div id="survey" class="hidden">
             <div id="tree-form-header">
-                <h4>Treecorder</h4>
+                <h4>Treecorder &ndash; Block <span data-block-id></span></h4>
             </div>
             <div id="tree-form-container" class="clearfix">
                 <a class="btn btn-warning btn-block" href="#no-trees-popup" data-toggle="modal" id="no-trees">No Trees On This Block</a>
                 {% include "survey/partials/tree_form.html" with tree_number=1 %}
             </div>
             <div class="tree-form-block">
+                <div class="field" id="preview-survey-container">
+                    <button class="btn btn-secondary btn-block preview-btn" id="preview-survey">Preview Block <span data-block-id></span></button>
+                </div>
                 <div class="field">
                     <button class="btn btn-primary btn-block" id="another-tree">+ Another Tree</button>
                     <button class="btn btn-gray btn-block" id="no-further-trees">No Further Trees on Block</button>
@@ -74,6 +77,10 @@
                 <img src="{{ "img/logo-treekit.png"|static_url }}" alt="TreeKit" />
             </div>
         </div>
+        <div id="close-preview-section" class="hidden">
+            <button class="btn btn-secondary btn-block preview-btn" id="close-preview">Close Block Preview</button>
+            <button class="btn btn-warning btn-block preview-btn" id="restart-survey">Restart</button>
+        </div>
     </div>
 </div>
 
@@ -97,6 +104,7 @@
                 {% elif location %}data-location="{{ location }}" data-zoom="LOCATION"
                 {% endif %}>
             </div>
+            <div id="preview-map" class="map-survey preview-map hidden"></div>
         </div>
     </div>
 {% endblock main %}
@@ -164,6 +172,28 @@
         </div>
     </div>
 </div>
+
+{% if not preview_help_shown %}
+<div class="modal fade" id="preview-button-help" tabindex="-1" role="dialog" aria-labelledby="preview-button-help-title" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close btn btn-link pull-right" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="preview-button-help-title">Treecorder</h4>
+            </div>
+            <div class="modal-body">
+                <p>Welcome to the Treecorder!</p>
+                <h5>Block Preview</h5>
+                <p>Click on the "<i>Preview Block</i>" button at any time during your Treecorder session to
+                   get an overall glimpse of your progress on the current block.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
 
 {% include "survey/partials/map_another_popup.html" %}
 

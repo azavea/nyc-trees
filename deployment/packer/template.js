@@ -4,7 +4,7 @@
     "branch": "{{env `GIT_BRANCH`}}",
     "postgresql_password": "{{env `NYC_TREES_DB_PASSWORD`}}",
     "aws_region": "us-east-1",
-    "aws_instance_type": "m3.large",
+    "aws_instance_type": "t2.large",
     "aws_ssh_username": "ubuntu",
     "aws_ubuntu_ami": ""
   },
@@ -77,7 +77,8 @@
         "sleep 5",
         "sudo apt-get update -qq",
         "sudo apt-get install python-pip python-dev -y",
-        "sudo pip install ansible==1.8.2"
+        "sudo pip install paramiko==1.16.0",
+        "sudo pip install ansible==2.0.1.0"
       ]
     },
     {

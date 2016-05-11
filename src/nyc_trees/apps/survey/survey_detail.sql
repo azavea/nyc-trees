@@ -1,35 +1,18 @@
--- Note: This was adapted into trees.sql.  Try to keep changes in sync
-WITH trees_for_this_survey AS(
+-- Note: This was adapted into trees.sql, and then further adapted to pull data
+-- from the view in src/nyc_trees/survey/views.py.  Try to keep changes in sync
+WITH aggs AS (
   SELECT
-    id,
-    survey_id,
-    1.000*(CASE WHEN curb_location='OnCurb' THEN 2.5 ELSE 12 END) curb_offset,
-    1.000*distance_to_tree dist
-  FROM survey_tree
-  WHERE survey_id = %s
-  ORDER BY id
-),
-aggregated_trees AS (
-  SELECT survey_id, array_agg(curb_offset) width,
-         array_agg(0) length, array_agg(dist) dist
-  FROM trees_for_this_survey
-  GROUP BY survey_id
-),
-aggs AS (
-  SELECT
-    s.blockface_id,
-    s.is_mapped_in_blockface_polyline_direction,
-    s.is_left_side as left_side,
-    s.user_id, b.geom,
-    r.survey_id, width, length, dist
-  FROM
-    aggregated_trees r, survey_survey s, survey_blockface b
-  WHERE
-    r.survey_id = s.id AND b.id = s.blockface_id
+    %(survey_dir)s as is_mapped_in_blockface_polyline_direction,
+    %(left_side)s as left_side,
+    b.geom,
+    %(tree_offsets)s as width,
+    %(tree_distances)s as dist,
+    array_fill(0, array[array_length(%(tree_distances)s, 1)]) as length
+  FROM survey_blockface b
+  WHERE b.id = %(blockface_id)s
 ),
 layed AS (
-  SELECT survey_id,
-         layoutBoxes(ST_Transform(
+  SELECT layoutBoxes(ST_Transform(
              CASE WHEN is_mapped_in_blockface_polyline_direction
              THEN st_geometryn(geom,1)
              ELSE ST_Reverse(st_geometryn(geom,1)) END,

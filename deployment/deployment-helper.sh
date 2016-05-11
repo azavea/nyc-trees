@@ -75,7 +75,6 @@ toggle_app_server_stack() {
 
   # Build parameters argument
   AWS_STACK_PARAMS="ParameterKey=PublicHostedZone,ParameterValue=${AWS_PUBLIC_HOSTED_ZONE}"
-  AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=AppSSLCertificateId,ParameterValue=${AWS_SSL_CERTIFICATE_ID}"
   AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=AppServerAliasTarget,ParameterValue=${AWS_ELB_APP_ENDPOINT}"
   AWS_STACK_PARAMS="${AWS_STACK_PARAMS} ParameterKey=AppServerLoadBalancerHostedZoneNameID,ParameterValue=${AWS_ELB_APP_HOSTED_ZONE_ID}"
 
@@ -150,6 +149,9 @@ function get_latest_internal_ami() {
 }
 
 function create_ami() {
+  # Remove all symlinks so that Packer does not complain
+  find . -type l -delete
+
   packer build \
     -only="${1}" \
     -var "aws_ubuntu_ami=$(get_latest_ubuntu_ami)" \

@@ -36,11 +36,8 @@
                             <h1 class="hero-heading">Welcome back,
                             volun<span class="color--primary">treer!</span></h1>
                             <p>Thank you for playing a key role in the future of our urban forest!
-                                Volun<b>treer</b> data collection will begin again in spring 2016
-                                and you&rsquo;ll be able to make block edge reservations to map more trees across NYC.</p>
-                            <!--
-                            <p>Play a key role in the future of our urban forest! Sign up for a mapping event or make a block edge reservation to map more trees across NYC!</p>
-                            -->
+                               Volun<b>treer</b> data collection has resumed for 2016, and ‘Leafout’ refresher
+                               workshops will be offered to independent mappers this spring and summer.</p>
                         </div>
                     </div>
                 </div>
@@ -128,19 +125,6 @@
                 {% if user.online_training_complete %}
                     <div class="dashboard-columns">
                         {% include "users/partials/activity.html" %}
-                        <section class="events">
-                            <div class="home-container">
-                                <h4 class="section-heading"><a href="{% url 'events_list_page' %}">Events</a></h4>
-                                <p>Check back in spring 2016 for more opportunities to join other tree-loving citizens
-                                    at street tree mapping events across the five boroughs!</p>
-                                <!--
-                                <p>Join other tree-loving citizens at street tree mapping events across the five boroughs! Sign up and help us make trees count!</p>
-                                <div data-class="event-list-container">
-                                    {% include "event/partials/event_list.html" with event_list=all_events %}
-                                </div>
-                                -->
-                            </div>
-                        </section>
                     </div>
                 {% endif %}
             </main>

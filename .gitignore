@@ -57,6 +57,7 @@ target/
 
 # Ansible
 deployment/ansible/roles/*
+deployment/ansible/*.retry
 !deployment/ansible/roles/nyc-trees.*
 
 # AWS

@@ -10,6 +10,8 @@ from pytz import timezone
 
 from celery import chain
 
+from django_tinsel.exceptions import HttpBadRequestException
+
 from django.conf import settings
 from django.contrib.gis.geos import Point
 from django.core.exceptions import ValidationError, PermissionDenied
@@ -489,6 +491,8 @@ def start_survey(request):
         'no_more_reservations': reservations_for_user <= 1,
         'geolocate_help_shown': _was_help_shown(request,
                                                 'survey_geolocate_help_shown'),
+        'preview_help_shown': _was_help_shown(request,
+                                              'survey_preview_help_shown'),
     }
 
 
@@ -512,6 +516,8 @@ def start_survey_from_event(request, event_slug):
         'choices': _get_survey_choices(),
         'geolocate_help_shown': _was_help_shown(request,
                                                 'survey_geolocate_help_shown'),
+        'preview_help_shown': _was_help_shown(request,
+                                              'survey_preview_help_shown'),
     }
 
 
@@ -614,6 +620,21 @@ def restart_blockface(request, survey_id):
     return {'success': True}
 
 
+def _get_survey_data(request):
+    data = json.loads(request.body)
+    survey_data = data['survey']
+    tree_list = data.get('trees', [])
+
+    survey = Survey(user=request.user, **survey_data)
+
+    if survey.has_trees and len(tree_list) == 0:
+        raise HttpBadRequestException('Trees expected but absent')
+    if not survey.has_trees and len(tree_list) > 0:
+        raise HttpBadRequestException('Trees not expected but present')
+
+    return survey, tree_list
+
+
 @transaction.atomic
 def _create_survey_and_trees(request, event=None):
     """
@@ -626,17 +647,7 @@ def _create_survey_and_trees(request, event=None):
     }
     trees.problems should be a list of problem codes -- ["Stones", "Sneakers"]
     """
-    data = json.loads(request.body)
-    survey_data = data['survey']
-    tree_list = data.get('trees', [])
-
-    survey = Survey(user=request.user, **survey_data)
-
-    if survey.has_trees and len(tree_list) == 0:
-        return HttpResponseBadRequest('Trees expected but absent')
-    if not survey.has_trees and len(tree_list) > 0:
-        return HttpResponseBadRequest('Trees not expected but present')
-
+    survey, tree_list = _get_survey_data(request)
     blockface = survey.blockface
 
     if event:
@@ -687,15 +698,35 @@ def flag_survey(request, survey_id):
 
 def _survey_detail(request, survey_id):
     survey = Survey.objects.get(id=survey_id)
-    with connection.cursor() as cursor:
-        cursor.execute(_SURVEY_DETAIL_QUERY, [survey_id])
-        trees = [tree[0] for tree in cursor]
+    trees = survey.tree_set \
+        .values('distance_to_tree', 'curb_location') \
+        .order_by('id')
+
     return {
         'survey_id': survey_id,
         'blockface_id': survey.blockface_id,
-        'trees': json.dumps(trees),
+        'trees': json.dumps(_survey_geojson(survey, trees)),
         'bounds': list(survey.blockface.geom.extent),
     }
+
+
+def _survey_geojson(survey, trees):
+    tree_distances = [float(tree['distance_to_tree']) for tree in trees]
+    tree_offsets = [2.5 if tree['curb_location'] == 'OnCurb' else 12
+                    for tree in trees]
+
+    params = {
+        'blockface_id': survey.blockface_id,
+        'survey_dir': survey.is_mapped_in_blockface_polyline_direction,
+        'left_side': survey.is_left_side,
+        'tree_distances': tree_distances,
+        'tree_offsets': tree_offsets
+    }
+    with connection.cursor() as cursor:
+        cursor.execute(_SURVEY_DETAIL_QUERY, params)
+        trees = [tree[0] for tree in cursor]
+
+    return trees
 
 
 def survey_detail_from_event(request, event_slug, survey_id):
@@ -709,6 +740,11 @@ def survey_detail(request, survey_id):
         BlockfaceReservation.objects.remaining_for(request.user))
     ctx.update({'no_more_reservations': reservations_for_user == 0})
     return ctx
+
+
+def survey_preview(request):
+    survey, tree_list = _get_survey_data(request)
+    return [json.loads(tree) for tree in _survey_geojson(survey, tree_list)]
 
 
 def admin_territory_page(request):

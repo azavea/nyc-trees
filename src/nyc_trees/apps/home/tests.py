@@ -3,6 +3,8 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 
+from unittest import skip
+
 from waffle.models import Flag
 
 from django.test import TestCase
@@ -243,6 +245,7 @@ class HomeTestCase(UsersTestCase):
         response.assert_training_finished(False)
         response.assert_achievements_visible(False)
 
+    @skip("2015 achievements are now inactive")
     def test_online_trained_user_content(self):
         self._complete_user_online_training()
         response = self._render_homepage(self.user)
