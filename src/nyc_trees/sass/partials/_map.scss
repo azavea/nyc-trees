@@ -35,6 +35,11 @@
     top: 12.6rem;
     right: 0;
     left: 0;
+    @media (max-width: $screen-sm - 1) {
+      #map {
+        bottom: 0;
+      }
+    }
     @media (min-width: $screen-sm) {
       top: $navbar-height;
       bottom: 0;
@@ -239,7 +244,15 @@
   body:not(.actionbar-triggered) {
     .map-container.progress-map {
       bottom: 0;
+
+      #map {
+        bottom: 0;
+      }
     }
+  }
+
+  .page-group #map {
+    bottom: 0;
   }
 
   .geolocate-help {
