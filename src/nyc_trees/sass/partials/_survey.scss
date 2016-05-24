@@ -26,7 +26,7 @@
 }
 
 @media (max-width: $screen-sm - 1) {
-    #map {
+    #map.map-survey {
         bottom: 20rem;
     }
     #preview-map {
