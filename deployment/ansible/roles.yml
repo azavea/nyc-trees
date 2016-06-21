@@ -1,5 +1,5 @@
 - src: azavea.apache2
-  version: 0.2.2
+  version: 0.2.4
 
 - src: azavea.ntp
   version: 0.1.1
