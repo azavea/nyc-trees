@@ -108,24 +108,22 @@ class AchievementDefinition(object):
 achievements = OrderedDict([
     (AchievementDefinition.FOLLOW_GROUPS, AchievementDefinition(
         name='In Pursuit of Mappiness',
-        description='Follow 5 Groups',
-        description_achieved='Followed 5 Groups',
+        description='Follow 5 Groups - 2015',
+        description_achieved='Followed 5 Groups - 2015',
         badge='img/badges/ic_badge_follow.png',
         achieved=lambda user: Follow.objects.filter(user=user).count() >= 5
     )),
     (AchievementDefinition.ONLINE_TRAINING, AchievementDefinition(
         name='Ready, Set, Roll',
-        description='Finish Online Training',
-        # NOTE: using hard-coded URL here because it's too early for reverse()
-        description_achieved="Finished Online Training",
+        description='Finish Online Training - 2015',
+        description_achieved="Finished Online Training - 2015",
         badge='img/badges/ic_badge_online_training.png',
         achieved=lambda user: user.online_training_complete
     )),
     (AchievementDefinition.TRAINING_EVENT, AchievementDefinition(
         name='Treerifically Trained',
-        description='Attend a Training Event',
-        # NOTE: using hard-coded URLs here because it's too early for reverse()
-        description_achieved='Attended a Training Event',
+        description='Attend a Training Event - 2015',
+        description_achieved='Attended a Training Event - 2015',
         badge='img/badges/ic_badge_training_event.png',
         achieved=lambda user: user.field_training_complete,
         reward="""Join us at a training event, and you will receive
@@ -140,9 +138,9 @@ achievements = OrderedDict([
     )),
     (AchievementDefinition.MAPPING_EVENT, AchievementDefinition(
         name='Counter Cultured',
-        description='Attend a Mapping Event',
+        description='Attend a Mapping Event - 2015',
         # NOTE: using hard-coded URLs here because it's too early for reverse()
-        description_achieved="""Attended a Mapping Event
+        description_achieved="""Attended a Mapping Event - 2015
             <div><a class="h6 color--secondary" href="/blockedge/reserve/">
                 Reserve blocks today</a> to map on your own!</div>""",
         badge='img/badges/ic_badge_mapping_event.png',
@@ -150,8 +148,8 @@ achievements = OrderedDict([
     )),
     (AchievementDefinition.MAP_50, AchievementDefinition(
         name='Rolling Revolutionary',
-        description='Map 50 Block Edges',
-        description_achieved='Mapped 50 Block Edges',
+        description='Map 50 Block Edges - 2015',
+        description_achieved='Mapped 50 Block Edges - 2015',
         badge='img/badges/ic_badge_map_50.png',
         achieved=lambda user: user.blocks_mapped_count >= 50,
         sponsor='Various sponsors',
@@ -162,8 +160,8 @@ achievements = OrderedDict([
     )),
     (AchievementDefinition.MAP_100, AchievementDefinition(
         name='Mapping Machine',
-        description='Map 100 Block Edges',
-        description_achieved='Mapped 100 Block Edges',
+        description='Map 100 Block Edges - 2015',
+        description_achieved='Mapped 100 Block Edges - 2015',
         badge='img/badges/ic_badge_map_100.png',
         achieved=lambda user: user.blocks_mapped_count >= 100,
         sponsor='Sponsored by Whole Foods Market',
@@ -176,8 +174,8 @@ achievements = OrderedDict([
     )),
     (AchievementDefinition.MAP_200, AchievementDefinition(
         name='Sprout Mapper',
-        description='Map 200 Block Edges',
-        description_achieved='Mapped 200 Block Edges',
+        description='Map 200 Block Edges - 2015',
+        description_achieved='Mapped 200 Block Edges - 2015',
         badge='img/badges/ic_badge_map_200.png',
         achieved=lambda user: user.blocks_mapped_count >= 200,
         sponsor='Sponsored by Whole Foods Market',
@@ -187,8 +185,8 @@ achievements = OrderedDict([
     )),
     (AchievementDefinition.MAP_400, AchievementDefinition(
         name='Seedling Mapper',
-        description='Map 400 Block Edges',
-        description_achieved='Mapped 400 Block Edges',
+        description='Map 400 Block Edges - 2015',
+        description_achieved='Mapped 400 Block Edges - 2015',
         badge='img/badges/ic_badge_map_400.png',
         achieved=lambda user: user.blocks_mapped_count >= 400,
         reward="""Replace those worn-out shoes with a brand
@@ -200,8 +198,8 @@ achievements = OrderedDict([
     )),
     (AchievementDefinition.MAP_1000, AchievementDefinition(
         name='Sapling Mapper',
-        description='Map 1000 Block Edges',
-        description_achieved='Mapped 1000 Block Edges',
+        description='Map 1000 Block Edges - 2015',
+        description_achieved='Mapped 1000 Block Edges - 2015',
         badge='img/badges/ic_badge_map_1000.png',
         achieved=lambda user: user.blocks_mapped_count >= 1000,
         reward="""Celebrate your civic contribution at the Global
@@ -211,8 +209,8 @@ achievements = OrderedDict([
     )),
     (AchievementDefinition.MAP_MOST, AchievementDefinition(
         name='Mayoral Mapper',
-        description='Map the Most Block Edges in NYC',
-        description_achieved='Mapped the Most Block Edges in NYC',
+        description='Map the Most Block Edges in NYC - 2015',
+        description_achieved='Mapped the Most Block Edges in NYC - 2015',
         badge='img/badges/ic_badge_top_mapper.png',
         achieved=lambda user: False,  # doesn't need to be live updated
         reward="""Map the most blocks in the city by September
@@ -223,35 +221,38 @@ achievements = OrderedDict([
     )),
     (AchievementDefinition.TREES_100, AchievementDefinition(
         name='Lavender Linden',
-        description='Map 100 Trees',
-        description_achieved='Mapped 100 Trees',
+        description='Map 100 Trees - 2016',
+        description_achieved='Mapped 100 Trees - 2016',
         badge='img/badges/Lavender-Linden.png',
         achieved=lambda user: get_user_tree_count(user, REWARD_START) >= 100,
         active=True,
-        reward="Reward in development. Stay tuned!"
+        reward="1, 2, Tree Shirts 2016 edition"
     )),
     (AchievementDefinition.TREES_300, AchievementDefinition(
         name='Magenta Maple',
-        description='Map 300 Trees',
-        description_achieved='Mapped 300 Trees',
+        description='Map 300 Trees - 2016',
+        description_achieved='Mapped 300 Trees - 2016',
         badge='img/badges/Magenta-Maple.png',
         achieved=lambda user: get_user_tree_count(user, REWARD_START) >= 300,
         active=True,
-        reward="Reward in development. Stay tuned!"
+        reward="""TreesCount! 2015 branded coffee tumbler.
+            Keeps your coffee warm or cold!"""
     )),
     (AchievementDefinition.TREES_500, AchievementDefinition(
         name='Silver Sophora',
-        description='Map 500 Trees',
-        description_achieved='Mapped 500 Trees',
+        description='Map 500 Trees - 2016',
+        description_achieved='Mapped 500 Trees - 2016',
         badge='img/badges/Silver-sophora.png',
         achieved=lambda user: get_user_tree_count(user, REWARD_START) >= 500,
         active=True,
-        reward="Reward in development. Stay tuned!"
+        reward="""TreesCount! 2015 branded sports duffel bag – The first 50
+            volun<b>treer</b>s to reach 500 trees since 5/11/2016 will receive
+            an enviable bright green bag for your sports duds."""
     )),
     (AchievementDefinition.TREES_750, AchievementDefinition(
         name='Gold Gingko',
-        description='Map 750 Trees',
-        description_achieved='Mapped 750 Trees',
+        description='Map 750 Trees - 2016',
+        description_achieved='Mapped 750 Trees - 2016',
         badge='img/badges/gold-gingko.png',
         achieved=lambda user: get_user_tree_count(user, REWARD_START) >= 750,
         active=True,
@@ -259,8 +260,8 @@ achievements = OrderedDict([
     )),
     (AchievementDefinition.TREES_MOST, AchievementDefinition(
         name='Platinum Planetree',
-        description='Map the Most Trees',
-        description_achieved='Mapped the most trees',
+        description='Map the Most Trees - 2016',
+        description_achieved='Mapped the most trees - 2016',
         badge='img/badges/plat_planetree_2.png',
         achieved=lambda user: False,  # doesn't need to be live updated
         active=True,
