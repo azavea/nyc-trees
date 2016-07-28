@@ -51,12 +51,12 @@ public_dns_records_sets = t.add_resource(r53.RecordSetGroup(
         r53.RecordSet(
             'dnsTileServers',
             AliasTarget=r53.AliasTarget(
-                Ref(tile_server_load_balancer_hosted_zone_id_param),
-                Join(
+                HostedZoneId=Ref(
+                    tile_server_load_balancer_hosted_zone_id_param),
+                DNSName=Join(
                     '',
-                    [Ref(tile_server_hosted_zone_alias_target_param), '.']
-                ),
-                True
+                    [Ref(tile_server_hosted_zone_alias_target_param), '.']),
+                EvaluateTargetHealth=True
             ),
             Name=Join('', ['tiles.', Ref(hosted_zone_name_param), '.']),
             Type='A'
