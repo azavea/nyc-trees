@@ -6,6 +6,9 @@
     - name: Update APT cache
       apt: update_cache=yes cache_valid_time=3600
 
+    - name: Install ACL utilities
+      apt: pkg="acl" state=present
+
   roles:
     - { role: "nyc-trees.common" }
 

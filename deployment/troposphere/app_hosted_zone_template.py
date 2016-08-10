@@ -40,12 +40,12 @@ public_dns_records_sets = t.add_resource(r53.RecordSetGroup(
         r53.RecordSet(
             'dnsAppServers',
             AliasTarget=r53.AliasTarget(
-                Ref(app_server_load_balancer_hosted_zone_id_param),
-                Join(
+                HostedZoneId=Ref(
+                    app_server_load_balancer_hosted_zone_id_param),
+                DNSName=Join(
                     '',
-                    [Ref(app_server_hosted_zone_alias_target_param), '.']
-                ),
-                True
+                    [Ref(app_server_hosted_zone_alias_target_param), '.']),
+                EvaluateTargetHealth=True
             ),
             Failover='PRIMARY',
             Name=Ref(hosted_zone_name_param),
