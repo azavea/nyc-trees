@@ -22,5 +22,5 @@ elasticsearch_cluster_name: "logstash"
 
 nodejs_npm_version: 2.1.14
 
-java_version: "7u101-*"
+java_version: "7u111-*"
 relp_version: "7.4.4-*"
