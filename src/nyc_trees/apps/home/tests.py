@@ -236,7 +236,7 @@ class HomeTestCase(UsersTestCase):
         response.assert_about_visible(True)
         response.assert_training_visible(False)
         response.assert_training_finished(False)
-        response.assert_progress_visible(True)
+        response.assert_progress_visible(False)
 
     def test_untrained_user_content(self):
         response = self._render_homepage(self.user)
