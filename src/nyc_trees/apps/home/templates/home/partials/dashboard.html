@@ -31,13 +31,23 @@
         <div class="hero-box">
             <div class="container">
                 <div class="row">
-                    <div class="col-sm-12 col-md-6 col-md-push-6">
+                    <div class="col-sm-12">
                         <div class="hero-content">
-                            <h1 class="hero-heading">Welcome back,
-                            volun<span class="color--primary">treer!</span></h1>
-                            <p>Thank you for playing a key role in the future of our urban forest!
-                               Volun<b>treer</b> data collection has resumed for 2016, and ‘Leafout’ refresher
-                               workshops will be offered to independent mappers this spring and summer.</p>
+                            <h1 class="hero-heading">Congratulations volun<span class="color--primary">treer!</span></h1>
+                            <p>Data collection for NYC’s third street tree census has officially ended.
+                               Thank you for playing a key role in the future of our urban forest.
+                               Volunteers like you helped map and collect data from over 650,000 street trees.
+                               This information will help us better maintain and care for our
+                               existing street trees and plan for the future of our urban forest.</p>
+                            <p>Using TreesCount! data, NYC Parks will launch the
+                               <a href="https://tree-map.nycgovparks.org/">NYC Street Tree Map</a>.
+                               You will be able to see and explore the forest, and record and share
+                               tree stewardship like weeding, watering and mulching.</p>
+                            <p>Stay tuned for the final number to be announced in early November.</p>
+                            <p>There are many opportunities year round to continue caring for the urban forest.
+                               Check out NYC Parks’
+                               <a href="http://www.nycgovparks.org/reg/stewardship">Stewardship page</a>
+                               to find out more!</p>
                         </div>
                     </div>
                 </div>
@@ -60,65 +70,10 @@
                     {% endif %}
                 {% endflag %}
 
-                <section class="section-home">
+                <section class="section-home text-center">
                     <div class="home-container clearfix">
-                        <h4 class="section-heading">Progress</h4>
-                        <p>See the progress you and other volun<b>treers</b> have made in helping us count our street trees!</p>
-                        <ul class="nav nav-tabs nav-tabs--filter">
-                            <li class="active">
-                                <a data-toggle="tab" href="#all-time">All Time</a>
-                            </li>
-                            <li>
-                                <a data-toggle="tab" href="#past-week">Past Week</a>
-                            </li>
-                            <li>
-                                <a data-toggle="tab" href="#my-trees">My Trees</a>
-                            </li>
-                        </ul>
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="all-time">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="progress-circles">
-                                            {% include "home/partials/circle.html" with label="Blocks" n=counts_all.block color="primary" url=progress_page_url %}
-                                            {% include "home/partials/circle.html" with label="Complete" n=counts_all.block_percent color="primary" url=progress_page_url %}
-                                            {% include "home/partials/circle.html" with label="Users" n=counts_all.user color="primary" modal="#users-modal" %}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        {% include "home/partials/ticker.html" with n=counts_all.tree %}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tab-pane" id="past-week">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="progress-circles">
-                                            {% include "home/partials/circle.html" with label="Blocks" n=counts_week.block color="primary" url=progress_page_url %}
-                                            {% include "home/partials/circle.html" with label="Complete" n=counts_week.block_percent color="primary" url=progress_page_url %}
-                                            {% include "home/partials/circle.html" with label="Events" n=counts_week.event color="primary" url=events_page_url %}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        {% include "home/partials/ticker.html" with n=counts_week.tree %}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tab-pane" id="my-trees">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="progress-circles">
-                                            {% include "home/partials/circle.html" with label="Blocks" n=counts.block color="primary" url=progress_page_url %}
-                                            {% include "home/partials/circle.html" with label="Species" n=counts.species color="primary" modal="#species-modal" %}
-                                            {% include "home/partials/circle.html" with label="Events" n=counts.event color="primary" url=events_page_url %}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        {% include "home/partials/ticker.html" with n=counts.tree_digits %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <h2 class="color--primary">We’re almost done.</h2>
+                        <h2 class="color--primary">Final count coming soon!</h2>
                     </div>
                 </section>
 

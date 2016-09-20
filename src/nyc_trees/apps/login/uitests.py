@@ -5,6 +5,8 @@ from __future__ import division
 
 import re
 
+from unitest import skip
+
 from django.core import mail
 from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site
@@ -27,6 +29,7 @@ class NycUITest(NycTreesSeleniumTestCase):
         return matches[0]
 
 
+@skip("Registration has been disabled")
 class FullRegistrationUITest(NycUITest):
     def setUp(self):
         super(FullRegistrationUITest, self).setUp()

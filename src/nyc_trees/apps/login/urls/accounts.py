@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from __future__ import division
 
 from django.conf.urls import patterns, url, include
+from django.views.defaults import page_not_found
 
 from apps.login import routes as r
 from apps.login.forms import NycAuthenticationForm
@@ -31,7 +32,8 @@ urlpatterns = patterns(
 
     # Shadows django-registration-redux endpoint.
     # Ref: https://github.com/macropin/django-registration/blob/master/registration/backends/default/urls.py # NOQA
-    url(r'^register/$', r.register, name='registration_register'),
+    # Since we've disabled registration, this just goes to a 404 page
+    url(r'^register/$', page_not_found, name='registration_register'),
 
     url(r'^login/$', 'django.contrib.auth.views.login', {
         'template_name': 'registration/login.html',
