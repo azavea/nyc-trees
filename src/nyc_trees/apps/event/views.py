@@ -64,20 +64,11 @@ def _process_event_form(form, request, event=None):
         # Lat/lng were not submitted or could not be converted to floats.
         pass
 
-    if event:
-        event_location = event.location
-
     is_valid = form.is_valid()
 
     if is_valid:
-        needs_pdf_map = (
-            event is None or
-            not event_location.equals_exact(form.data['location']))
-
         event = form.save()
-
-        if needs_pdf_map:
-            create_event_map_pdf(request, event)
+        create_event_map_pdf(request, event)
 
     return is_valid
 
